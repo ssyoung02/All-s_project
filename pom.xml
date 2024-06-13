@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>kr.bit</groupId>
   <artifactId>navercloudSpring</artifactId>
@@ -8,13 +8,12 @@
   <name>navercloudSpring Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <java-version>1.6</java-version>
-    <org.springframework-version>5.0.2.RELEASE</org.springframework-version>
-    <org.aspectj-version>1.6.10</org.aspectj-version>
-    <org.slf4j-version>1.6.6</org.slf4j-version>
-    <org.springframework-version>5.0.2.RELEASE</org.springframework-version>
-    <org.springsecurity-version>5.0.2.RELEASE</org.springsecurity-version>
-
+    <java-version>17</java-version> <!-- JDK 17 사용 -->
+    <org.springframework-version>5.3.23</org.springframework-version>
+    <org.aspectj-version>1.9.7</org.aspectj-version>
+    <org.slf4j-version>1.7.36</org.slf4j-version>
+    <org.springsecurity-version>5.8.3</org.springsecurity-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- 인코딩 설정 추가 -->
   </properties>
   <dependencies>
     <!-- Spring -->
@@ -50,39 +49,15 @@
       <version>${org.slf4j-version}</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>${org.slf4j-version}</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>2.17.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${org.slf4j-version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.15</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.mail</groupId>
-          <artifactId>mail</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.jms</groupId>
-          <artifactId>jms</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jdmk</groupId>
-          <artifactId>jmxtools</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jmx</groupId>
-          <artifactId>jmxri</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.17.1</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -97,7 +72,7 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.1.0</version>
+      <version>4.0.1</version>
       <scope>provided</scope>
     </dependency>
 
@@ -137,7 +112,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
-      <version>5.0.2.RELEASE</version>
+      <version>${org.springframework-version}</version>
     </dependency>
 
     <dependency>
@@ -161,15 +136,11 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.12</version>
+      <version>1.18.24</version> <!-- 최신 버전 -->
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.9.8</version>
-    </dependency>
+    <!-- 중복된 jackson-databind 제거 -->
     <!-- https://mvnrepository.com/artifact/servlets.com/cos -->
     <dependency>
       <groupId>servlets.com</groupId>
@@ -195,22 +166,49 @@
       <version>${org.springsecurity-version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-websocket</artifactId>
+      <version>${org.springframework-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>2.0.1.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.0.13.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>bootstrap</artifactId>
+      <version>5.2.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jquery</artifactId>
+      <version>3.6.4</version>
+    </dependency>
 
   </dependencies>
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.9</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version> <!-- 최신 버전 사용 -->
         <configuration>
-          <additionalProjectnatures>
-            <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
-          </additionalProjectnatures>
-          <additionalBuildcommands>
-            <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
-          </additionalBuildcommands>
-          <downloadSources>true</downloadSources>
-          <downloadJavadocs>true</downloadJavadocs>
+          <source>17</source> <!-- JDK 17 사용 -->
+          <target>17</target> <!-- JDK 17 사용 -->
+          <fork>false</fork> <!-- 변경된 부분 -->
         </configuration>
       </plugin>
       <plugin>
@@ -224,6 +222,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.1</version> <!-- 버전 지정 -->
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
