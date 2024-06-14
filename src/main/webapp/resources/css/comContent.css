@@ -1,0 +1,290 @@
+/*nav*/
+.menu{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+#lnb{
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #dad8cc;
+    padding: 1em;
+    border-radius: 10px;
+    background-color: white;
+}
+.lnb > ul{
+    padding: 0;
+}
+.menu-top{
+    font-weight: bold;
+    margin-top: 3px;
+}
+.menu-icon button{
+    padding: 5px;
+}
+.menu-text{
+    display: inline-block;
+    width: 100%;
+}
+.submenu{
+    padding-left: 1em;
+}
+.dropdown-menu{
+    padding-left: 1em;
+}
+.menu-area{
+    padding: 0.7em 1em;
+    border-radius: 5px;
+}
+.menu-area a{
+    display: inline-block;
+    width: 100%;
+}
+.menu-select{
+    background-color: #f5f5f5;
+}
+#timestart{
+    width: 100%;
+}
+.m-size-nav{
+    display: none;
+}
+
+/*header*/
+#skipnav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #3b593f;
+    text-align: center;
+    padding: 1em;
+    width: 100%;
+    opacity: 0;
+}
+#skipnav a{
+    color: #D0D8C4;
+}
+.r-header{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+#topmenu{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1em;
+    padding: 1em 0;
+    font-size: 1.2em;
+}
+.topmenu i{
+    margin-right: 0.3em;
+}
+.profile-img{
+    display: inline-block;
+    width: 3em;
+    height: 3em;
+    border: 1px solid green;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.profile-img img{
+    width: 100%;
+    height: 100%;
+}
+.new-mark{
+    float: right;
+    color:#FFF500;
+}
+.alarm{
+    position: absolute;
+    right: 4%; 
+    top: 120px;
+    gap: 5px;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #588159;
+    background-color: white;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.3);
+}
+.profile-username{
+    margin: 5px 0 10px 0;
+}
+.alarmList ul{
+    padding: 5px;
+    margin: 0;
+}
+.alarmList li{
+    margin: 7px 0;
+}
+.alarm button{
+    width: 100%;
+}
+.alarm h3{
+    margin: 5px;
+}
+
+/*main*/
+#content h1{
+    font-size: 2em;
+    margin: 0 0 20px 0;
+}
+
+/*footer*/
+footer {
+    display: block;
+    text-align: center;
+    height: 200px;
+    padding: 2em;
+    background-color: #dad8cc;
+    color: #545454;
+    margin-top: 2em;
+}
+
+.teammember {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6%;
+}
+
+footer p{
+    margin: 2em 0 0 0;
+}
+
+.top {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    padding: 10px 13px;
+    opacity: 0.8;
+}
+
+.top i {
+    font-size: 15px;
+}
+
+.top span {
+    font-size: 12px;
+}
+
+.top:hover,
+.top:focus {
+    opacity: 1;
+}
+
+/*타이머 영역*/
+#timer{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+}
+.time-area{
+    flex-wrap: wrap;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-80%);
+    font-size: 7em;
+    width: 50%;
+}
+.time-area p{
+    margin: 0 0.4em;
+}
+.time-button{
+    width: 100%;
+}
+.time-button button{
+    width: 100%;
+    margin: 2em 0.3em;
+    font-size: medium;
+    font-weight: bold;
+}
+#time-stop{
+    background-color: #D0D8C4;
+    color: #545454;
+}
+#time-pause{
+    background-color: #A2B18A;
+    color: #222222;
+}
+.unfinished-todo{
+    color: #898989;
+    width: 80%;
+    text-align: left;
+    position: absolute;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.unfinished-todo .todolist{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2em;
+    font-size: 1.2em;
+    margin: 2em 0.2em;
+}
+
+/*타이머 영역*/
+#timer{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+}
+.time-area{
+    flex-wrap: wrap;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-80%);
+    font-size: 7em;
+    width: 50%;
+}
+.time-area p{
+    margin: 0 0.4em;
+}
+.time-button{
+    width: 100%;
+}
+.time-button button{
+    width: 100%;
+    margin: 2em 0.3em;
+    font-size: medium;
+    font-weight: bold;
+}
+#time-stop{
+    background-color: #D0D8C4;
+    color: #545454;
+}
+#time-pause{
+    background-color: #A2B18A;
+    color: #222222;
+}
+.unfinished-todo{
+    color: #898989;
+    width: 80%;
+    text-align: left;
+    position: absolute;
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.unfinished-todo .todolist{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2em;
+    font-size: 1.2em;
+    margin: 2em 0.2em;
+}

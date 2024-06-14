@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     이렇게 하면 SecurityConfig와 UsersUserDetailsService 사이의 직접적인 의존 관계가 제거되어 순환 참조 문제가 해결됩니다.
      */
 
+
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
         web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","webapp/resources/**","/webapp/resources/css/**");
@@ -69,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
         http
                 .authorizeRequests()
                 // 모든 사용자 접근 허용 경로
+
                     .antMatchers("/resources/**","/webapp/resources/css/**",
                         "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
                     .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
