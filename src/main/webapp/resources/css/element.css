@@ -1,0 +1,166 @@
+/*요소*/
+a{
+    text-decoration: none;
+    color: #545454;
+}
+ul{
+    list-style: none;
+    padding: 0;
+}
+button{
+    border: none;
+    border-radius: 5px;
+    padding: 1em;
+    background-color: white;
+    cursor: pointer;
+}
+input, select{
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    padding: 10px;
+}
+h1, h2, h3, h4, p {
+    margin: 0;
+}
+.hidden{
+    display: none !important;
+}
+.hide{
+    position: absolute;
+    top: -999px;
+    left: -999px;
+}
+
+/*박스 공통*/
+.bg-green{
+    background-color: rgba(162, 177, 138, 0.4);
+    border-radius: 5px;
+}
+.bgwhite{
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #C6C6C6;
+}
+
+/*버튼 공통*/
+.primary-default{
+    background-color: #3b593f;
+    color: #f5f5f5;
+}
+
+.primary-focus{
+    background-color: #588159;
+    color: #f5f5f5;
+}
+
+.button-disabled{
+    background-color: #898989;
+    color: #f5f5f5;
+}
+
+.secondary-default{
+    background-color: #fff;
+    color: #588159;
+    border: 1px solid #A2B18A;
+}
+
+.secondary-focus{
+    background-color: #66BB69;
+    color: #ffffff;
+}
+
+.tertiary-default{
+    background-color: #ffffff;
+    color: #588159;
+}
+
+.tertiary-focus{
+    background-color: #E8F5E9;
+    color: #588159;
+}
+/*커스텀 입력서식*/
+input[type="checkbox"]{
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+.todo-label{
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+input[type="checkbox"]:focus + .todo-label {
+    border: 1px solid #a3b18a;
+}
+
+/*슬라이드 배너*/
+.slide-button-group{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+.slide-button{
+    background-color: white;
+    padding: 5px;
+    margin-left: 2px;
+}
+.banner-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+.banner-item{
+    display: flex;
+    flex-direction: column;
+    flex-basis: 150px;
+    flex-grow: 1;
+    padding: 20px;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+}
+.banner-img{
+    display: inline-block;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.banner-img img{
+    width: 100%;
+    height: 100%;
+}
+.banner-item-top{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+}
+.banner-title{
+    margin-left: 5px;
+}
+.banner-main-title{
+    font-weight: bold;
+}
+.banner-id{
+    font-size: 0.9em;
+}
+.banner-item-top p{
+    margin: 1px;
+}
+.banner-tag{
+    border: 1px solid #A2B18A;
+    color: #588159;
+    border-radius: 5px;
+    padding: 3px 7px;
+}
+/*슬라이드 배너 medium 사이즈*/
+@media (max-width: 1200px) {
+    .banner-item{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+    }
+}
