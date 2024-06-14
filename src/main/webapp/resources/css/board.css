@@ -1,0 +1,59 @@
+/*게시글 수, 검색어 박스*/
+.list-title{
+    margin-bottom: 1em;
+}
+.search-box{
+    border: none;
+    padding: 0;
+    gap: 5px;
+}
+.search-field{
+    border-radius: 5px;
+    border: 1px solid #bbbbbb;
+}
+.search-field input{
+    border: none;
+}
+
+/*내 스터디 목록*/
+.board-list{
+    padding: 1em;
+    border-radius: 5px;
+    border: 1px solid #bbbbbb;
+    margin-bottom: 2em;
+}
+.imgtitle{
+    gap: 1em;
+}
+.studygroup-item {
+    width: 100%;
+    gap: 1em;
+}
+.studygroup-profile-s{
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: gray;
+}
+.studygroup-profile-s img{
+    width: 100%;
+}
+.board-item{
+    gap: 3px;
+}
+.board-title{
+    font-weight: bold;
+}
+.operate{
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/*게시판 하위*/
+.board-bottom{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+}

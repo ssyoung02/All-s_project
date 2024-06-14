@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean; // Bean 등록 어노테이�
 import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
@@ -49,13 +50,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     이렇게 하면 SecurityConfig와 UsersUserDetailsService 사이의 직접적인 의존 관계가 제거되어 순환 참조 문제가 해결됩니다.
      */
 
+//  커밋할때 지우기
+    @Override
+    public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
+        web.ignoring().antMatchers("/resources/**");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 // 모든 사용자 접근 허용 경로
-                .antMatchers("/resources/**", "/", "/main", "/about").permitAll()
+                .antMatchers("/resources/**","/webapp/resources/css/**","/webapp/resources/js/**", "/", "/main", "/about").permitAll()
                 .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister", "/Users/Join", "/Users/Login", "/Users/UsersLoginForm", "/Users/access-denied").permitAll()
                 // 관리자만 접근 허용 경로
                 .antMatchers("/admin/**").hasRole("ADMIN")
