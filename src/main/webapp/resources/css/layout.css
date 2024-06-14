@@ -1,0 +1,60 @@
+/*레이아웃*/
+body {
+    height: 100vh;
+    margin: 0;
+}
+
+section {
+    display: flex;
+    padding: 0 2em;
+    gap: 20px;
+}
+
+nav {
+    flex: 1;
+    max-width: 300px;
+}
+
+main {
+    flex: 3;
+}
+
+header{
+    display: flex;
+    padding: 2em;
+    gap: 20px;
+}
+.logoarea{
+    flex: 1;
+    max-width: 300px;
+}
+.r-header{
+    flex: 3;
+}
+
+/*flex 공통*/
+.flex-colum{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.flex-columleft{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.flex-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.flex-between{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

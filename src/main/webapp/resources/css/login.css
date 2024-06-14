@@ -1,0 +1,90 @@
+/*로그인*/
+.loginbg{
+    background-image: url(../img/loginbg.jpg);
+    background-size: 100% auto;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.loginbg .logo{
+    padding: 20px;
+}
+.loginbox{
+    position: absolute;
+    top: 10px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 30px;
+    width: 500px;
+    margin: 3em 10em;
+    background-color: rgba(255,255,255,0.7);
+}
+.underline{
+    text-decoration: underline;
+}
+.inputbox{
+    display: flex;
+    flex-direction: column;
+}
+.inputbox label{
+    margin-bottom: 0.5em;
+}
+.idpwsearch{
+    display: flex;
+    justify-content: flex-end
+}
+.loginbutton{
+    width: 100%;
+    margin: 1em 0;
+}
+.orline p{
+    margin: 0 20px;
+}
+.orline hr{
+    border: 1px solid #A2B18A;
+    width: 80%;
+}
+.snsloginarea{
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+}
+
+/*회원가입*/
+#registerForm{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.inputbox{
+    margin: 10px 0;
+}
+.input-row{
+    gap: 10px;
+}
+#username{
+    width: 100%;
+}
+.double-check{
+    width: 23%;
+}
+.essential{
+    color: red;
+}
+.error {
+    color: red;
+    font-weight: bold;
+    margin: 0.3em 0 0 0;
+}
+.success {
+    color: green;
+    font-weight: bold;
+    margin: 0.3em 0 0 0;
+}
+
+/*내 공부노트*/
+.list-title{
+    width: 100%;
+}

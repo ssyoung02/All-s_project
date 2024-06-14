@@ -38,6 +38,10 @@ public class UsersUser implements UserDetails {
         this.user = user;
     }
 
+    public Users getUsers() { // Users 객체를 반환하는 메서드
+        return user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));

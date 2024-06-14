@@ -1,0 +1,36 @@
+/*비로그인 메인 영역*/
+/*홈페이지 소개 및 로그인*/
+.non-login-section{
+    display: flex;
+    gap: 1em;
+    margin-bottom: 3em;
+}
+.service-info{
+    padding: 2em;
+    display: flex;
+    gap: 1em;
+}
+.service-info-left{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.service-info-right{
+    gap: 5px;
+}
+.service-info-left p{
+    line-height: 200%;
+}
+.service-info-right button{
+    width: 150px;
+}
+.iogin-info{
+    width: 400px;
+    padding: 3em;
+    text-align: center;
+    gap: 0.5em;
+}
+.iogin-info button{
+    width: 100%;
+}
+
