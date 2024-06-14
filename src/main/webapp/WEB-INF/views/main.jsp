@@ -34,6 +34,7 @@
     <div>
         <a href="${root}/Users/UsersUpdateForm">회원 정보 수정</a>
         <a href="${root}/Users/UsersImageForm">프로필 이미지 변경</a>
+        <a href="${root}/StudyReferences/StudyReferencesDetail">공부자료</a>
         <form method="POST" action="${root}/logout">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <button type="submit">로그아웃</button>

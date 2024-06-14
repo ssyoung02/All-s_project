@@ -89,17 +89,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
             현재 상태:
             주석 처리된 부분을 제외하면 기존의 폼 로그인 방식으로 동작합니다. 추후 OAuth2 소셜 로그인 기능을 추가할 때 주석을 해제하고 필요한 클래스들을 구현하면 됩니다.
              */
-                .and()
-                .sessionManagement() // 세션 관리 설정 시작
-                .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
-                .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
-                .expiredUrl("/login?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)
-                // invalidSessionUrl 메서드 호출 위치 변경 및 and() 추가
-                .and()
-                .invalidSessionUrl("/login?invalid") // 유효하지 않은 세션 접근 시 이동할 URL(유효하지 않은 세션 메시지 표시)
+//                .and()
+//                .sessionManagement() // 세션 관리 설정 시작
+//                .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
+//                .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
+//                .expiredUrl("/main") // 세션 만료 시 이동할 URL(만료 메시지 표시)
+//                // invalidSessionUrl 메서드 호출 위치 변경 및 and() 추가
+//                .and()
+//                .invalidSessionUrl("/main") // 유효하지 않은 세션 접근 시 이동할 URL(유효하지 않은 세션 메시지 표시)
                 .and()
                 .csrf() // CSRF 보호 활성화
-                .ignoringAntMatchers("/Users/checkDuplicate","/main") // 중복확인 csrf 예외처리
+                .disable();
+//                .ignoringAntMatchers("/Users/checkDuplicate","/main") // 중복확인 csrf 예외처리
         ;
         /*
             추가 설정 시 필요:
