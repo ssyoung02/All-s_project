@@ -3,9 +3,9 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
-
+<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/> --%>
+<%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
+<%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,16 +25,17 @@
 <sec:authorize access="isAuthenticated()"> <%-- 로그인한 사용자에게만 정보 표시 --%>
     <div>
         <c:if test="${not empty userVo.profileImage}">
-            <img src="${root}/resources/images/${userVo.profileImage}" alt="프로필 이미지" class="profile-image">
+            <img src="${root }/resources/images/${userVo.profileImage}" alt="프로필 이미지" class="profile-image">
+            <img src="${root}${userVo.profileImage}" alt="">
         </c:if>
-        <p>환영합니다, ${userVo.name}님!</p>
+        <p>환영합니다, ${userVo.name} 님!</p>
         <p>아이디: ${userVo.username}</p>
         <p>이메일: ${userVo.email}</p>
     </div>
     <div>
         <a href="${root}/Users/UsersUpdateForm">회원 정보 수정</a>
         <a href="${root}/Users/UsersImageForm">프로필 이미지 변경</a>
-        <form method="POST" action="${root}/logout">
+        <form method="POST" action="${root}/Users/logout">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <button type="submit">로그아웃</button>
         </form>

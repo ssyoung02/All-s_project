@@ -47,6 +47,7 @@ public class ServletAppContext implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         WebMvcConfigurer.super.addResourceHandlers(registry);
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/"); // 정적 자원 경로 설정
+        registry.addResourceHandler("/resources/images/**").addResourceLocations("/resources/images/");
     }
 
     // addResourceHandlers 메서드는 웹 애플리케이션에서 사용하는 정적 자원(CSS, JavaScript, 이미지 등)의 경로를 설정하는 역할을 합니다.
