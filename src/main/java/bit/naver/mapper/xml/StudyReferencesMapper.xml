@@ -3,11 +3,121 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="bit.naver.mapper.StudyReferencesMapper">
-    <select id="getAllPosts" resultType="bit.naver.entity.StudyReferencesEntity">
-        SELECT * FROM StudyReferences
+
+    <!-- 공부자료 List를 조회하는 SQL 쿼리 -->
+    <select id="getAllStudyReferences" resultType="bit.naver.entity.StudyReferencesEntity">
+        SELECT study.reference_idx         AS referenceIdx,
+               study.user_idx              AS userIdx,
+               name,
+               title,
+               isPrivate,
+               content,
+               category,
+               file_attachments,
+                #{limits}                       AS limits,
+               likes_count                 AS likesCount,
+               report_count                AS reportCount,
+               comments_count              AS commentsCount,
+               views_count                 AS viewsCount,
+               study.created_at            AS createdAt,
+               study.updated_at            AS updatedAt,
+               IFNULL(lr.reference_idx, 0) AS isLike,
+               COUNT(*) OVER ()            AS TOTALCOUNT
+        FROM StudyReferences study
+                 LEFT JOIN Users user
+                           ON user.user_idx = study.user_idx
+                 LEFT JOIN LikeReferences lr
+                           ON study.reference_idx = lr.reference_idx
+                               AND lr.user_idx = #{userIdx}
+        <where>
+            <if test="searchOption != null and searchOption == 'all-post'">
+                title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%' , #{searchKeyword} , '%')
+            </if>
+            <if test="searchOption != null and searchOption == 'title-post'">
+                title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchOption == 'writer-post'">
+                name LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+        </where>
+        LIMIT 0, ${limits}
+
     </select>
 
-    <select id="getTotalPosts" resultType="int">
-        SELECT COUNT(*) FROM StudyReferences
+    <!-- 공부자료 한개의 글 조회하는 SQl 쿼리 -->
+    <select id="getStudyReferenceById" resultType="bit.naver.entity.StudyReferencesEntity">
+        SELECT study.reference_idx         AS referenceIdx,
+               study.user_idx              AS userIdx,
+               name,
+               title,
+               isPrivate,
+               study.content,
+               category,
+               file_attachments,
+               likes_count                 AS likesCount,
+               report_count                AS reportCount,
+               comments_count              AS commentsCount,
+               views_count                 AS viewsCount,
+               study.created_at            AS createdAt,
+               study.updated_at            AS updatedAt,
+               IFNULL(lr.reference_idx, 0) AS isLike,
+               COUNT(*) OVER ()            AS TOTALCOUNT
+        FROM StudyReferences study
+                 LEFT JOIN Users user
+                           ON user.user_idx = study.user_idx
+                 LEFT JOIN LikeReferences lr
+                           ON study.reference_idx = lr.reference_idx
+                               AND lr.user_idx = #{userIdx}
+        WHERE study.reference_idx = #{referenceIdx}
     </select>
+
+    <select id="getCommentsByReferenceIdx"  resultType="bit.naver.entity.CommentsEntity">
+        SELECT comment.comment_idx   AS commentIdx,
+               comment.user_idx      AS userIdx,
+               comment.reference_idx AS referenceIdx,
+               comment.content       AS content,
+               comment.created_at    AS createdAt,
+               name,
+               COUNT(*) OVER ()    AS TOTALCOUNT
+        FROM Comments comment
+        LEFT JOIN Users user ON user.user_idx = comment.user_idx
+        WHERE comment.reference_idx = #{referenceIdx}
+        ORDER BY comment.created_at DESC
+    </select>
+
+    <delete id="deleteComment">
+        DELETE FROM Comments
+        WHERE comment_idx = #{commentIdx}
+    </delete>
+
+    <insert id="insertComment">
+        INSERT INTO Comments ( user_idx, reference_idx, content, created_at)
+        VALUES ( #{userIdx}, #{referenceIdx}, #{content}, now())
+    </insert>
+
+    <update id="updateViewsCount">
+        UPDATE StudyReferences
+        SET views_count = views_count + 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
+
+    <insert id="insertLike">
+        INSERT INTO LikeReferences( user_idx, reference_idx, created_at)
+        VALUES (
+                   #{userIdx},#{referenceIdx},now()
+               )
+    </insert>
+
+    <delete id="deleteLike">
+        DELETE FROM LikeReferences
+        WHERE reference_idx = #{referenceIdx}
+        AND user_idx = #{userIdx}
+    </delete>
+
+    <insert id="updateReport">
+        UPDATE StudyReferences
+        SET report_count = report_count + 1
+        WHERE reference_idx = #{referenceIdx}
+    </insert>
+
 </mapper>

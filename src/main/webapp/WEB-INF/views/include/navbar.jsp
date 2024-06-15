@@ -71,7 +71,7 @@
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">공부 자료</a>
+                                <a href="/StudyReferences/referencesList">공부 자료</a>
                             </div>
                         </li>
                         <li class="submenu-item">

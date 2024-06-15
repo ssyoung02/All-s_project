@@ -20,4 +20,8 @@ public class StudyReferencesEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private String name;
+    private String TOTALCOUNT;
+
+    private Integer isLike;
 }
