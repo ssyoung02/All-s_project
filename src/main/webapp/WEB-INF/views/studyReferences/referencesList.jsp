@@ -259,6 +259,8 @@
         <!-- 본문영역 -->
         <main>
 
+                <button onclick="location.href='referencesWrite'">글작성</button>
+
             <h1>공부자료</h1>
 
             <!-- 전체글(n) 검색창 -->
@@ -311,7 +313,11 @@
             <button type="button" class="load-more-button" onclick="loadMore()">목록 더보기</button>
         </main>
     </section>
+    <!--푸터-->
+    <jsp:include page="../include/footer.jsp" />
 </div>
+
+
 <jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

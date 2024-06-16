@@ -11,7 +11,7 @@ public class CommentsEntity {
     private Long userIdx;
     private Long referenceIdx;
     private String content;
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     private String name;
     private String TOTALCOUNT;

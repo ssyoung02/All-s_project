@@ -332,6 +332,7 @@
                     url: '/StudyReferences/deleteComment',
                     data: {commentIdx: idx}
                 }).done(function (result) {
+                    /* alert(result) 삭제가 완료되었습니다 띄우는 작업 */
                 })
 
                 const commentItem = element.parentElement;
@@ -348,6 +349,23 @@
                 }
             });
         });
+
+        function deletePost(idx) {
+            if (confirm("게시글을 삭제하시겠습니까?")) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/StudyReferences/deletePost',
+                    data: {referenceIdx: idx}
+                }).done(function (result) {
+                    location.href='/StudyReferences/referencesList'
+                })
+            }
+        }
+
+        function modifyPost(idx){
+            location.href ="/StudyReferences/referencesModify?referenceIdx=" + idx;
+        }
+
     </script>
 </head>
 <body>
@@ -430,13 +448,15 @@
             <!-- 수정 삭제 목록 -->
             <div class="button-group">
                 <c:if test="${userIdx eq studyReferencesEntity.userIdx}">
-                    <button type="button" class="button-delete" onclick="location.href='referencesDelete'">삭제</button>
-                    <button type="button" class="button-modify" onclick="location.href='referencesModify'">수정</button>
+                    <button type="button" class="button-delete" onclick="deletePost(${studyReferencesEntity.referenceIdx})">삭제</button>
+                    <button type="button" class="button-modify" onclick="modifyPost(${studyReferencesEntity.referenceIdx})">수정</button>
                 </c:if>
                 <button type="button" class="button-list" onclick="location.href='referencesList'">목록</button>
             </div>
         </main>
     </section>
+    <!--푸터-->
+    <jsp:include page="../include/footer.jsp" />
 </div>
 
 <jsp:include page="../include/timer.jsp"/>

@@ -17,7 +17,7 @@ public class StudyReferencesEntity {
     private Integer commentsCount;
     private Integer viewsCount;
     private Integer reportCount;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private LocalDateTime updatedAt;
 
     private String name;
