@@ -5,28 +5,30 @@ import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
 import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.ls.LSOutput;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.io.File;
 import java.security.Principal;
 import java.sql.Timestamp;
@@ -39,10 +41,10 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequestMapping("/Users")
 @RequiredArgsConstructor
 public class UsersController {
-    private static final Logger log = Logger.getLogger(UsersController.class); // Logger 객체 선언 및 초기화
     @Autowired
     private UsersMapper usersMapper;
 
@@ -87,20 +89,47 @@ public class UsersController {
         }
 
         // 4. 이메일 중복 검사
-        if (usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
+        if (!usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
             rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
             return "redirect:/Users/Join";
         }
         try {
-            // 생년월일 변환
-            LocalDate birthdate;
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                birthdate = LocalDate.parse(birthdateStr, formatter);
-            } catch (DateTimeParseException e) {
-                rttr.addFlashAttribute("error", "올바른 생년월일 형식이 아닙니다.");
-                return "redirect:/Users/Join";
-            }
+        // 생년월일 변환
+        LocalDate birthdate;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            birthdate = LocalDate.parse(birthdateStr, formatter);
+        } catch (DateTimeParseException e) {
+            rttr.addFlashAttribute("error", "올바른 생년월일 형식이 아닙니다.");
+            return "redirect:/Users/Join";
+        }
+
+        // Users 객체 생성 및 데이터 설정
+        Users user = new Users();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+        user.setName(name);
+        user.setBirthdate(birthdate);
+        user.setGender(gender);
+        user.setEnabled(true);
+        user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
+            ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID-
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, zoneId).toLocalDateTime();
+            Timestamp createdAt = Timestamp.valueOf(zonedDateTime);
+            Timestamp updatedAt = Timestamp.valueOf(zonedDateTime);
+            user.setCreatedAt(createdAt.toLocalDateTime()); // createdAt은 Timestamp 타입
+            user.setUpdatedAt(updatedAt.toLocalDateTime());
+            System.out.println("서울 타임존 현재 시간: " + currentDateTime);
+
+
+        // 사용자 정보 저장
+        usersMapper.insertUser(user);
+
+        rttr.addFlashAttribute("msg1", "성공");
+        rttr.addFlashAttribute("msg2", "회원가입에 성공했습니다.");
+
 
             // Users 객체 생성 및 데이터 설정
             Users user = new Users();
@@ -134,6 +163,7 @@ public class UsersController {
             return "redirect:/Users/Join"; // 회원가입 페이지로 리다이렉트
         }
     }
+    //-----------------------------------------------------------------------------------------------------------------
 
     // 로그인 페이지
     @RequestMapping("/UsersLoginForm")
@@ -143,7 +173,7 @@ public class UsersController {
 
     // 로그인 처리
     @RequestMapping("/Login")
-    public String usersLogin(Users user, RedirectAttributes rttr, HttpSession session) {
+    public String usersLogin(Users user, RedirectAttributes rttr, HttpSession session, Principal principal) {
 
 
         System.out.println("로그인 버튼 누른 후 작업");
@@ -153,9 +183,8 @@ public class UsersController {
             System.out.println("로그인 입력 비었음");
             log.warn("로그인 실패: 아이디 또는 비밀번호가 비어있습니다."); // 로그 추가
 
-            rttr.addFlashAttribute("msg1", "실패");
-            rttr.addFlashAttribute("msg2", "아이디와 비밀번호를 입력하세요");
-            return "redirect:/UsersLoginForm";
+            rttr.addFlashAttribute("error", "아이디와 비밀번호를 입력하세요");
+            return "redirect:/Users/UsersLoginForm";
         }
 
         // 사용자 정보 조회 및 비밀번호 검증
@@ -171,20 +200,104 @@ public class UsersController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // 세션에 사용자 정보 저장
-            session.setAttribute("userVo", userVo);
+            log.info("로그인 성공 (username: {})", userVo.getUsername()); // 로그 추가
 
-//            rttr.addFlashAttribute("msg1", "성공");
-//            rttr.addFlashAttribute("msg2", "로그인에 성공했습니다");
+            session.setAttribute("userVo", userVo);
+            session.setAttribute("msg", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
-            return "/main";
+            return "forward:/main";
         } else {
             System.out.println("회원 정보 없음");
             log.warn("로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다."); // 로그 추가
-            rttr.addFlashAttribute("msg1", "실패");
-            rttr.addFlashAttribute("msg2", "로그인에 실패했습니다");
-            return "redirect:/UsersLoginForm";
+            // 오류 메시지 설정 (기존 msg1, msg2 대신 error 사용)
+            if (userVo == null) {
+                rttr.addFlashAttribute("error", "존재하지 않는 아이디입니다.");
+            } else {
+                rttr.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+            }
+            rttr.addFlashAttribute("username", user.getUsername()); // 아이디 값 유지
+            return "redirect:/Users/UsersLoginForm";
         }
     }
+
+
+
+
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/main"; // 로그아웃 후 메인 페이지로 이동
+    }
+    //------------------------------------------------------------------------------------------------------------------------
+
+    //회원정보 (내정보) 조회 처리 --추후 캘린더 기능, 차트기능, 공부시간 기록에 대한 기능이 추가될 경우 추가 수정
+
+    @RequestMapping("/userInfoProcess")
+    public String userInfoProcess(Model model, Principal principal, RedirectAttributes rttr) {
+        if (principal == null) { // principal 객체가 null인지 확인
+            log.warn("회원정보 조회 실패: 로그인되지 않은 사용자입니다.");
+            System.out.println("InfoProcess 실행실패 Principal: " + principal.getName());
+            rttr.addFlashAttribute("error", "로그인 후 이용 가능합니다.");
+            return "redirect:/main";
+        }
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+        log.info("내정보 조회 실패"); // 로그 추가
+        if (user == null) {
+            log.warn("회원정보 조회 실패: 사용자 정보를 찾을 수 없습니다. (username: {})"); // 로그 추가
+            rttr.addFlashAttribute("error", "회원정보를 찾을 수 없습니다.");
+            return "redirect:/main";
+        }
+
+        model.addAttribute("userVo", user);
+        return "Users/userInfo";
+    }
+
+//    @RequestMapping("/userInfoProcess")
+//    public String userInfoProcess(Model model, @AuthenticationPrincipal UsersUser usersUser, RedirectAttributes rttr) {
+//        if (usersUser == null) {
+//            // 로그인하지 않은 경우 에러 처리
+//            log.warn("회원정보 조회 실패: 로그인되지 않은 사용자입니다.");
+//            rttr.addFlashAttribute("error", "로그인 후 이용 가능합니다.");
+//            return "redirect:/Users/UsersLoginForm";
+//        }
+//        Users user = usersMapper.findByUsername(usersUser.getUsername()); // 사용자 정보 조회
+//        if (user == null) {
+//            // 사용자 정보를 찾을 수 없는 경우 에러 처리
+//            log.warn("회원정보 조회 실패: 사용자 정보를 찾을 수 없습니다. (username: {})", usersUser.getUsername());
+//            rttr.addFlashAttribute("error", "회원정보를 찾을 수 없습니다.");
+//            return "redirect:/main";
+//        }
+//        model.addAttribute("userVo", user); // 조회한 사용자 정보를 모델에 추가
+//        return "Users/userInfo"; // userInfo.jsp 뷰 이름 반환
+//    }
+
+
+
+    @RequestMapping(value = "/userInfo", method = RequestMethod.POST) // GET 방식으로 변경
+    public String userInfo(Model model, Principal principal) {
+        System.out.println("userInfo 메서드 실행");
+        log.info("내정보조회실패"); // 로그 추가
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+        System.out.println(user.toString());
+        if (user == null) {
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        model.addAttribute("userVo", user);
+        return "Users/userInfo";
+    }
+
+
+
+
+
+    //------------------------------------------------------------------------------------------------------------------------
 
     @RequestMapping("/UsersUpdateForm")
     public String usersUpdateForm(Model model, Principal principal) { // Principal 추가
@@ -226,6 +339,8 @@ public class UsersController {
         return "redirect:/";
     }
 
+
+    //---------------------------------------------------------------------------------------------------------------------
 
     // 프로필 이미지 수정 페이지
     @RequestMapping("/UsersImageForm")
@@ -293,7 +408,7 @@ public class UsersController {
         rttr.addFlashAttribute("msg2", "프로필 이미지가 업데이트되었습니다.");
         return "redirect:/";
     }
-
+//------------------------------------------------------------------------------------------------------------------------
     // 접근 거부 페이지
     @GetMapping("/access-denied")
     public String accessDenied() {

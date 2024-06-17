@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 
 import javax.servlet.Filter; // 서블릿 필터 인터페이스 임포트
+import javax.servlet.ServletRegistration;
 
 public class SpringConfigClass extends AbstractAnnotationConfigDispatcherServletInitializer {
 
@@ -55,6 +56,8 @@ public class SpringConfigClass extends AbstractAnnotationConfigDispatcherServlet
         characterEncodingFilter.setForceEncoding(true);
         return new Filter[] { characterEncodingFilter };
     }
+
+
 
 
 }

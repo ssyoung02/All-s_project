@@ -31,7 +31,9 @@ import javax.sql.DataSource; // DataSource 인터페이스
 // bit.naver 패키지 내의 컴포넌트들을 스캔하여 Spring 컨테이너에 빈으로 등록합니다.
 // bit.naver.mapper 패키지 내의 MyBatis Mapper 인터페이스를 스캔하여 자동으로 빈으로 등록합니다.
 @MapperScan("bit.naver.mapper")  // UsersMapper가 위치한 패키지 경로
-@ComponentScan(basePackages = {"bit.naver.mapper", "bit.naver.security"}) // bit.naver.security 패키지 추가
+
+@ComponentScan(basePackages = {"bit.naver.mapper", "bit.naver.security", "bit.naver.service","bit.naver.listener"}) // bit.naver.security 패키지 추가, service 패키지 추가
+
 @PropertySource({"classpath:db.properties"})
 // classpath 경로에 있는 db.properties 파일을 로드하여 프로퍼티 값을 사용할 수 있도록 설정합니다.
 public class RootAppContext {
@@ -49,7 +51,6 @@ public class RootAppContext {
         hikari.setUsername(env.getProperty("jdbc.user"));
         hikari.setPassword(env.getProperty("jdbc.password"));
         // db.properties 파일에서 데이터베이스 연결 정보를 읽어와 HikariCP 설정에 적용합니다.
-
         HikariDataSource myDataSource = new HikariDataSource(hikari);
         return myDataSource;
         // HikariCP 데이터 소스 객체를 생성하여 반환합니다.

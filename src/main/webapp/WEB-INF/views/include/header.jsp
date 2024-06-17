@@ -34,12 +34,13 @@
                         <img src="../img/manggom.png" alt="내 프로필">
                     </div>
                     <div class="status"><span class="status">접속중</span></div>
-                </a>                    <!-- 알림 영역 -->
+                </a>                    
+                <!-- 알림 영역 -->
                 <div class="alarm flex-colum hidden">
                     <div class="alarmprofile">
                         <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
                         <p class="profile-username">
-                            Jihyeon
+                            ${userVo.name}
                             <a class="manager-page" href="${root}/Users/UsersUpdateForm" aria-label="회원정보 수정"><i class="bi bi-gear"></i></a>
                         </p>
                     </div>
@@ -73,7 +74,7 @@
                         </ul>
                     </div>
                     <!-- 로그아웃 버튼 -->
-                    <form method="POST" action="${root}/logout">
+                    <form method="POST" action="${root}/Users/logout">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <button class="secondary-default" type="submit">로그아웃</button>
                     </form>

@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/> --%>
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -53,12 +52,6 @@
                                     <button class="secondary-default">공부 자료<i class="bi bi-arrow-right"></i></button>
                                     <button class="secondary-default">이력서 작성<i class="bi bi-arrow-right"></i></button>
                                 </div>
-                            </div>
-                            <div class="iogin-info flex-colum bg-green">
-                                <h3>지금부터<br> 함께 공부해봐요!</h3>
-                                <button class="primary-default" onclick="location.href='${root}/Users/UserLoginForm'">로그인</button>
-                                <button class="secondary-default" onclick="location.href='${root}/Users/Join'">회원가입</button>
-                            </div>
                         </div>
                     </sec:authorize>
                     <%-- 로그인한 사용자에게만 표시 --%>
@@ -208,15 +201,15 @@
                                             <p class="banner-id">Jihyeon</p>
                                         </div>
                                     </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/manggom.png" alt="스터디 그룹 로고"/>
                                     </div>
                                 </dlv>
                                 <dlv class="banner-item bgwhite" tabindex="0" onclick="">
@@ -229,47 +222,85 @@
                                             <p class="banner-id">Jihyeon</p>
                                         </div>
                                     </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
+                                </div>
+                                <p>강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
                                     </div>
-                                </dlv>
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="../img/manggom.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                            <div class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/manggom.png" alt="스터디 그룹 로고"/>
                                     </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                        <p class="banner-id">Jihyeon</p>
                                     </div>
-                                </dlv>
+                                </div>
+                                <p>강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
+                                    </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
                 <%--콘텐츠 끝--%>
             </main>
         </section>
+      
+    <%-- 로그인 성공 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>알림</h4>
+                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div id="messageContent" class="modal-center">
+                <%-- 메시지 내용이 여기에 표시됩니다. --%>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+      
     <!--푸터-->
     <jsp:include page="include/footer.jsp" />
-    </div>
+
+</div>
+  <script>
+      $(document).ready(function () {
+          if ("${error}" !== "") {
+              $("#messageContent").text("${error}");
+              $('#modal-container').toggleClass('opaque'); //모달 활성화
+              $('#modal-container').toggleClass('unstaged');
+              $('#modal-close').focus();
+          }
+
+          if ("${msg}" !== "") {
+              $("#messageContent").text("${msg}");
+              $('#modal-container').toggleClass('opaque'); //모달 활성화
+              $('#modal-container').toggleClass('unstaged');
+              $('#modal-close').focus();
+          }
+      });
+  </script>
 </body>
 </html>

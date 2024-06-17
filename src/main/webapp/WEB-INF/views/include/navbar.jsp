@@ -3,8 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 
 <!DOCTYPE html>
 <html>
@@ -92,7 +91,10 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="${root}/Users/userInfo">나의 정보</a>
+                                <form method="POST" action="<c:url value='${root }/Users/userInfoProcess' />">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <button type="submit" class="link-button">나의 정보</button>
+                            </form>
                             </div>
                         </li>
                         <li class="submenu-item">
