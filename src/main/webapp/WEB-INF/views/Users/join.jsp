@@ -3,8 +3,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
+<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
+<%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 
 <!DOCTYPE html>
 <html>
@@ -142,6 +142,5 @@
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>
