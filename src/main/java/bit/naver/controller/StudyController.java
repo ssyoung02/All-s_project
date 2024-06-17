@@ -26,16 +26,19 @@ public class StudyController {
     public String WebsiteInfo() {
         return "admin/websiteInfo";
     }
+
     //어드민 - 회원 관리
     @RequestMapping("/admin/userManagement")
     public String UserManagement() {
         return "admin/userManagement";
     }
+
     //어드민 - 게시판 관리
     @RequestMapping("/admin/boardManagement")
     public String BoardManagement() {
         return "admin/boardManagement";
     }
+
     //어드민 - 스터디 관리
     @RequestMapping("/admin/studyManagement")
     public String StudyManagement() {
@@ -48,14 +51,19 @@ public class StudyController {
     public String NoteList() {
         return "studyNote/noteList";
     }
+
     //공부노트 - 글쓰기
     @RequestMapping("/studyNote/noteWrite")
-    public String NoteWrite() { return "studyNote/noteWrite"; }
+    public String NoteWrite() {
+        return "studyNote/noteWrite";
+    }
+
     //공부노트 - 상세
     @RequestMapping("/studyNote/noteRead")
     public String NoteRead() {
         return "studyNote/noteRead";
     }
+
     //공부노트 - 수정
     @RequestMapping("/studyNote/noteModify")
     public String NoteModify() {
@@ -65,55 +73,82 @@ public class StudyController {
 
     //캘린더
     @RequestMapping("/calender/calender")
-    public String Calender() { return "calender/calender"; }
+    public String Calender() {
+        return "calender/calender";
+    }
 
 
     //내 스터디
     @RequestMapping("/studyGroup/studyGroupList")
-    public String StudyGroupList() { return "studyGroup/studyGroupList"; }
+    public String StudyGroupList() {
+        return "studyGroup/studyGroupList";
+    }
+
     //내 스터디 - 글쓰기
     @RequestMapping("/studyGroup/studyGroupCreate")
-    public String StudyGroupCreate() { return "studyGroup/studyGroupCreate"; }
+    public String StudyGroupCreate() {
+        return "studyGroup/studyGroupCreate";
+    }
+
     //내 스터디 - 그룹 상세
     @RequestMapping("/studyGroup/studyGroupMain")
-    public String StudyGroupMain() { return "studyGroup/studyGroupMain"; }
+    public String StudyGroupMain() {
+        return "studyGroup/studyGroupMain";
+    }
+
     //내 스터디 - 그룹 관리 - 스터디 정보
     @RequestMapping("/studyGroup/studyGroupManagerInfo")
-    public String StudyGroupManagerInfo() { return "studyGroup/studyGroupManagerInfo"; }
+    public String StudyGroupManagerInfo() {
+        return "studyGroup/studyGroupManagerInfo";
+    }
+
     //내 스터디 - 그룹 관리 - 멤버 관리
     @RequestMapping("/studyGroup/studyGroupManagerMember")
-    public String StudyGroupManagerMember() { return "studyGroup/studyGroupManagerMember"; }
+    public String StudyGroupManagerMember() {
+        return "studyGroup/studyGroupManagerMember";
+    }
+
     //내 스터디 - 그룹 관리 - 스케쥴 관리
     @RequestMapping("/studyGroup/studyGroupManagerSchedule")
-    public String StudyGroupManagerSchedule() { return "studyGroup/studyGroupManagerSchedule"; }
+    public String StudyGroupManagerSchedule() {
+        return "studyGroup/studyGroupManagerSchedule";
+    }
+
     //내 스터디 - 그룹 관리 - 스터디 관리
     @RequestMapping("/studyGroup/studyGroupManagerManagement")
-    public String StudyGroupManagerManagement() { return "studyGroup/studyGroupManagerManagement"; }
+    public String StudyGroupManagerManagement() {
+        return "studyGroup/studyGroupManagerManagement";
+    }
 
 
     //스터디 모집
     @RequestMapping("/studyRecruit/recruitList")
-    public String RecruitList() { return "studyRecruit/recruitList"; }
+    public String RecruitList() {
+        return "studyRecruit/recruitList";
+    }
+
     //스터디 모집 - 상세
     @RequestMapping("/studyRecruit/recruitReadForm")
-    public String RecruitReadForm() { return "studyRecruit/recruitReadForm"; }
+    public String RecruitReadForm() {
+        return "studyRecruit/recruitReadForm";
+    }
 
 
     //공부 자료
-    @RequestMapping("/studyReferences/referencesList")
-    public String ReferencesList() { return "studyReferences/referencesList"; }
-    //관련 사이트
-    @RequestMapping("/studyReferences/referencesSite")
-    public String ReferencesSite() { return "studyReferences/referencesSite"; }
+//    @RequestMapping("/studyReferences/referencesList")
+//    public String ReferencesList() { return "studyReferences/referencesList"; }
+//    //관련 사이트
+//    @RequestMapping("/studyReferences/referencesSite")
+//    public String ReferencesSite() { return "studyReferences/referencesSite"; }
 
 
-    //나의 정보
-    @RequestMapping("/Users/userInfo")
-    public String UserInfo() { return "Users/userInfo"; }
-    //정보 수정
-    @RequestMapping("/Users/userEdit")
-    public String UserEdit() { return "Users/userEdit"; }
-    //회원 탈퇴
-    @RequestMapping("/Users/userDelete")
-    public String UserDelete() { return "Users/userDelete"; }
+//    //나의 정보
+//    @RequestMapping("/Users/userInfo")
+//    public String UserInfo() { return "Users/userInfo"; }
+//    //정보 수정
+//    @RequestMapping("/Users/userEdit")
+//    public String UserEdit() { return "Users/userEdit"; }
+//    //회원 탈퇴
+//    @RequestMapping("/Users/userDelete")
+//    public String UserDelete() { return "Users/userDelete"; }
 }

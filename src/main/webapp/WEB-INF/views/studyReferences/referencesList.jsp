@@ -17,12 +17,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+<%--    <script>--%>
+<%--        $(document).ajaxSend(function(e, xhr, options) {--%>
+<%--            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));--%>
+<%--        });--%>
+<%--    </script>--%>
     <script>
-        $(document).ajaxSend(function(e, xhr, options) {
-            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-        });
-    </script>
-        <script>
         function toggleLike(element, idx) {
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {

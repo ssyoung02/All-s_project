@@ -124,30 +124,6 @@ public class UsersController {
             System.out.println("서울 타임존 현재 시간: " + currentDateTime);
 
 
-        // 사용자 정보 저장
-        usersMapper.insertUser(user);
-
-        rttr.addFlashAttribute("msg1", "성공");
-        rttr.addFlashAttribute("msg2", "회원가입에 성공했습니다.");
-
-
-            // Users 객체 생성 및 데이터 설정
-            Users user = new Users();
-            user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setEmail(email);
-            user.setName(name);
-            user.setBirthdate(birthdate);
-            user.setGender(gender);
-            user.setEnabled(true);
-            user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
-            ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID-
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            Timestamp createdAt = Timestamp.valueOf(currentDateTime);
-            Timestamp updatedAt = Timestamp.valueOf(currentDateTime);
-            user.setCreatedAt(createdAt.toLocalDateTime()); // createdAt은 Timestamp 타입
-            user.setUpdatedAt(updatedAt.toLocalDateTime());
-            System.out.println("서울 타임존 현재 시간: " + currentDateTime);
 
 
             // 사용자 정보 저장
