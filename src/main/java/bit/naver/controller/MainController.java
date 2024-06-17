@@ -35,11 +35,49 @@ public class MainController {
         if (userVo != null) {
             log.info("메인 페이지 접속 (username: {})", userVo.getUsername()); // 로그 추가
             model.addAttribute("userVo", userVo);
+            session.setAttribute("userVo", userVo);
         } else {
             log.warn("메인 페이지 접근 시도 (로그인되지 않은 사용자)"); // 로그 추가
         }
         return "/main";
     }
+
+
+    @RequestMapping("/include/header")
+    public String header (Model model,HttpSession session, Principal principal) {
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+        model.addAttribute("user", user);
+        session.setAttribute("userVo", user);
+        return "/include/header";
+    }
+
+    @RequestMapping("/include/footer")
+    public String footer(Model model,HttpSession session, Principal principal) {
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+        model.addAttribute("user", user);
+        session.setAttribute("userVo", user);
+        return "/include/footer";
+    }
+    @RequestMapping("/include/navbar")
+    public String navbar(Model model,HttpSession session, Principal principal) {
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+        model.addAttribute("user", user);
+        session.setAttribute("userVo", user);
+        return "/include/navbar";
+    }
+    @RequestMapping("/include/timer")
+    public String timer(Model model,HttpSession session, Principal principal) {
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+        model.addAttribute("user", user);
+        session.setAttribute("userVo", user);
+        return "/include/timer";
+    }
+
+
 
 }
 

@@ -8,11 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,20 +196,31 @@
         }
     </style>
     <script>
+        $(document).ajaxSend(function(e, xhr, options) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+        });
+    </script>
+    <script>
         function toggleLike(element, idx) {
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {
                 element.className = 'fa-solid fa-heart heart-icon liked';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/insertLike',
+                    url: '/studyReferences/insertLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
                 element.className = 'fa-regular fa-heart heart-icon';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteLike',
+                    url: '/studyReferences/deleteLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             }
@@ -217,7 +230,7 @@
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
 
-            location.href="/StudyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
+            location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
 
         }
 
@@ -232,7 +245,7 @@
 
             }else{
                 limits += 5;
-                location.href="/StudyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+                location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
             }
         }
 

@@ -9,9 +9,15 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ajaxSend(function(e, xhr, options) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+        });
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -34,21 +40,22 @@
 <%--        </c:if>--%>
 
 <%--    });--%>
-<%--</script>--%>
+ <%--</script>--%>
 
-<jsp:include page="${root}include/header.jsp"/>
+<jsp:include page="include/header.jsp"/>
+
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section>
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="${root}include/navbar.jsp"/>
+            <jsp:include page="include/navbar.jsp"/>
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="${root}include/navbar.jsp"/>
+                <jsp:include page="include/navbar.jsp"/>
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
@@ -102,6 +109,7 @@
                                         <p class="banner-main-title">강남인근 면접 스터디 모집</p>
                                         <p class="banner-id">Jihyeon</p>
                                     </div>
+                                    <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
                                     <div class="menu-area">
                                         <form method="POST" action="<c:url value='${root }/Users/userInfoProcess' />">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -188,9 +196,9 @@
 
     </div>
 
-    <jsp:include page="${root}include/footer.jsp"/>
+    <jsp:include page="include/footer.jsp"/>
 </div>
-<jsp:include page="${root}include/timer.jsp"/>
+<jsp:include page="include/timer.jsp"/>
 
 <script>
     $(document).ready(function () {

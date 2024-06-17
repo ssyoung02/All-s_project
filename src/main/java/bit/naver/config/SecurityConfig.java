@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
 import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
@@ -105,6 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .ignoringAntMatchers("/Users/checkDuplicate")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
+//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
                 .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
                 .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
                 .expiredUrl("/Users/UsersLoginForm?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)

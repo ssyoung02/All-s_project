@@ -9,6 +9,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -39,7 +40,10 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="/StudyReferences/referencesMyList">내 공부노트</a>
+                                <form method="POST" action="<c:url value='${root }studyReferences/referencesMyList' />">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                    <button type="submit" class="link-button">내 공부자료</button>
+                                </form>
                             </div>
                         </li>
                         <li class="submenu-item">
@@ -70,7 +74,10 @@
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="/StudyReferences/referencesList">공부 자료</a>
+                                <form method="POST" action="<c:url value='${root }/studyReferences/referencesList' />">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                    <button type="submit" class="link-button">공부 자료</button>
+                                </form>
                             </div>
                         </li>
                         <li class="submenu-item">
@@ -99,7 +106,10 @@
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="${root}/Users/UsersUpdateForm">정보 수정</a>
+                                <form method="POST" action="<c:url value='${root }/Users/UsersUpdateForm' />">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                    <button type="submit" class="link-button">정보 수정</button>
+                                </form>
                             </div>
                         </li>
                         <li class="submenu-item">

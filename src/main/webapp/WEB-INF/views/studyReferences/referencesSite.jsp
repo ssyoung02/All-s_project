@@ -9,9 +9,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
@@ -273,14 +275,20 @@
                 element.className = 'fa-solid fa-heart heart-icon liked';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/insertLike',
+                    url: '/studyReferences/insertLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
                 element.className = 'fa-regular fa-heart heart-icon';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteLike',
+                    url: '/studyReferences/deleteLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             }
@@ -290,7 +298,10 @@
             if(confirm("게시글을 신고하시겠습니까?")) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/updateReport',
+                    url: '/studyReferences/updateReport',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx : idx}
                 })
                 alert("게시글 신고가 완료되었습니다.");
@@ -309,14 +320,17 @@
             }
             $.ajax({
                 method: 'POST',
-                url: '/StudyReferences/insertComment',
+                url: '/studyReferences/insertComment',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                },
                 data: {
                     content: commentInput.value,
                     referenceIdx: referenceIdx.value
                 },  // 여기서 'content' 키를 사용합니다.
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (response) {
-                    location.href = "/StudyReferences/referencesSite?referenceIdx=" + referenceIdx.value
+                    location.href = "/studyReferences/referencesSite?referenceIdx=" + referenceIdx.value
                 },
                 error: function () {
                     alert("댓글 작성에 실패하였습니다.");
@@ -329,7 +343,10 @@
             if (confirm('댓글을 삭제하시겠습니까?')) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteComment',
+                    url: '/studyReferences/deleteComment',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {commentIdx: idx}
                 }).done(function (result) {
                     /* alert(result) 삭제가 완료되었습니다 띄우는 작업 */
@@ -355,15 +372,18 @@
                 $.ajax({
                     method: 'POST',
                     url: '/StudyReferences/deletePost',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx}
                 }).done(function (result) {
-                    location.href='/StudyReferences/referencesList'
+                    location.href='/studyReferences/referencesList'
                 })
             }
         }
 
         function modifyPost(idx){
-            location.href ="/StudyReferences/referencesModify?referenceIdx=" + idx;
+            location.href ="/studyReferences/referencesModify?referenceIdx=" + idx;
         }
 
     </script>
