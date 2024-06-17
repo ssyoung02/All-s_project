@@ -39,7 +39,7 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">내 공부노트</a>
+                                <a href="/StudyReferences/referencesMyList">내 공부노트</a>
                             </div>
                         </li>
                         <li class="submenu-item">
@@ -70,7 +70,7 @@
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">공부 자료</a>
+                                <a href="/StudyReferences/referencesList">공부 자료</a>
                             </div>
                         </li>
                         <li class="submenu-item">

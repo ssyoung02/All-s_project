@@ -185,6 +185,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <jsp:include page="${root}include/footer.jsp"/>
