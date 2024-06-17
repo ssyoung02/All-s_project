@@ -1,9 +1,4 @@
-<%--
-  Created by IntelliJ IDEA.
-  Date: 2024-06-14
-  Time: 오후 12:15
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -11,27 +6,36 @@
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/> --%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>내 정보</title>
+    <title>나의 정보 > 내 정보 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="${root}/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="${root}/resources/css/common.css">
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
+<jsp:include page="../include/timer.jsp" />
+<jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section>
         <!-- 메뉴 영역 -->
-
+        <nav>
+            <jsp:include page="../include/navbar.jsp" />
+        </nav>
         <!-- 본문 영역 -->
         <main>
+            <!--모바일 메뉴 영역-->
+            <div class="m-menu-area" style="display: none;">
+                <jsp:include page="../include/navbar.jsp" />
+            </div>
             <%-- 로그인한 사용자에게만 정보 표시 --%>
             <sec:authorize access="isAuthenticated()">
                 <c:if test="${not empty error}">
@@ -116,31 +120,28 @@
         </main>
     </section>
 
-
-
-
-<%-- Modal 추가 --%>
-<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">알림</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="messageContent">
-                <%-- 메시지 내용이 여기에 표시됩니다. --%>
-                <c:if test="${not empty error}">
-                    <p>${error}</p>
-                </c:if>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
+  <%-- Modal 추가 --%>
+  <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="messageModalLabel">알림</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body" id="messageContent">
+                  <%-- 메시지 내용이 여기에 표시됩니다. --%>
+                  <c:if test="${not empty error}">
+                      <p>${error}</p>
+                  </c:if>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+              </div>
+          </div>
+      </div>
+  </div>
 
 </body>
 </html>

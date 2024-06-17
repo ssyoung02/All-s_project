@@ -18,3 +18,9 @@
 
 /*게시판 스타일*/
 @import url(board.css);
+
+/*탭메뉴 스타일*/
+@import url(tab.css);
+
+/*회원정보 스타일*/
+@import url(user.css);

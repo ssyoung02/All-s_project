@@ -1,4 +1,7 @@
 /*요소*/
+*{
+    color: #263238;
+}
 a{
     text-decoration: none;
     color: #545454;
@@ -17,10 +20,13 @@ button{
 input, select{
     border: 1px solid #bbbbbb;
     border-radius: 5px;
-    padding: 10px;
+    padding: 1em;
 }
 h1, h2, h3, h4, p {
     margin: 0;
+}
+.s-header{
+    margin: 1em 0;
 }
 .hidden{
     display: none !important;
@@ -29,6 +35,9 @@ h1, h2, h3, h4, p {
     position: absolute;
     top: -999px;
     left: -999px;
+}
+.bi {
+    margin: 0 3px;
 }
 
 /*박스 공통*/
@@ -52,7 +61,11 @@ h1, h2, h3, h4, p {
     background-color: #588159;
     color: #f5f5f5;
 }
-
+.primary-focus:hover {
+    background-color: #fff;
+    color: #588159;
+    border: 1px solid #A2B18A;
+}
 .button-disabled{
     background-color: #898989;
     color: #f5f5f5;
@@ -63,7 +76,10 @@ h1, h2, h3, h4, p {
     color: #588159;
     border: 1px solid #A2B18A;
 }
-
+.secondary-default:hover {
+    background-color: #3b593f;
+    color: white;
+}
 .secondary-focus{
     background-color: #66BB69;
     color: #ffffff;
@@ -73,7 +89,10 @@ h1, h2, h3, h4, p {
     background-color: #ffffff;
     color: #588159;
 }
-
+.tertiary-default:hover {
+    background-color: #3b593f;
+    color: white;
+}
 .tertiary-focus{
     background-color: #E8F5E9;
     color: #588159;
@@ -81,10 +100,6 @@ h1, h2, h3, h4, p {
 /*커스텀 입력서식*/
 input[type="checkbox"]{
     position: absolute;
-    top: 7px;
-    left: 7px;
-    width: 1px;
-    height: 1px;
     opacity: 0;
 }
 .todo-label{
@@ -163,4 +178,20 @@ input[type="checkbox"]:focus + .todo-label {
         padding: 20px;
         box-shadow: 0 3px 3px rgba(0,0,0,0.1);
     }
+}
+
+/*프로세스바*/
+#progress {
+    appearance: none;
+}
+#progress::-webkit-progress-bar {
+    background:#f0f0f0;
+    border-radius:10px;
+    /* box-shadow: inset 3px 3px 10px #dad7cd; */
+}
+#progress::-webkit-progress-value {
+    border-radius:10px;
+    background: #1D976C;
+    background: -webkit-linear-gradient(to right, #dad7cd, #2E7D31);
+    background: linear-gradient(to right, #dad7cd, #2E7D31);
 }

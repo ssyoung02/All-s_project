@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
         http
                 .authorizeRequests()
                 // 모든 사용자 접근 허용 경로
+
 //                    .antMatchers("/Users/userInfo").authenticated()
                     .antMatchers("/resources/**","/webapp/resources/css/**",
                         "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
@@ -95,10 +96,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .permitAll()
                 .and()
                 .logout()
-                    .logoutUrl("/Users/logout")
-                    .logoutSuccessUrl("/main")
-                    .invalidateHttpSession(true)
-                    .permitAll()
+                .logoutUrl("/Users/logout")
+                .logoutSuccessUrl("/main")
+                .invalidateHttpSession(true)
+                .permitAll()
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
@@ -116,7 +117,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
         http.addFilterAfter(new CharacterEncodingFilter("UTF-8", true), SecurityContextPersistenceFilter.class);
         //
-
 
 
                 /*
