@@ -51,8 +51,8 @@
                                     <i class="bi bi-search"></i>
                                 </button>
                             </p>
-                        </fieldset>
-                    </div>
+                            <button type="button" class="primary-default" onclick="location.href='${root}/studyNote/noteWrite'">글쓰기</button>
+                        </fieldset>                    </div>
                     <div class="boardContent flex-colum">
                         <div class="board-listline flex-columleft" onclick="location.href='${root}/studyNote/noteRead'">
                             <div class="studygroup-item flex-between">

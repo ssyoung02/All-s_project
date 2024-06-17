@@ -203,7 +203,7 @@
     min-height: 200px;
     border:none;
 }
-#comment-input{
+#input-comment{
     width: 85%;
 }
 .comment-profile{
@@ -218,6 +218,9 @@
 }
 .comment-detail{
     margin: 1em 0;
+}
+.post-content{
+    margin-top: 1em;
 }
 
 /*태그 목록*/
