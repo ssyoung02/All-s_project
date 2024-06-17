@@ -56,8 +56,8 @@ public class ServletAppContext implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("redirect:/main"); // 루트 경로 접근 시 메인 페이지리다이렉트
-    }
+        WebMvcConfigurer.super.addViewControllers(registry);
+        registry.addViewController("/").setViewName("forward:/main");    }
 
     @Bean
     public MessageSource messageSource() {

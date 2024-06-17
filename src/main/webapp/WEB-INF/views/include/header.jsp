@@ -3,8 +3,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
+<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
+<%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 
 <!DOCTYPE html>
 <html>
@@ -83,7 +83,7 @@
                             </ul>
                         </div>
                         <!-- 로그아웃 버튼 -->
-                        <form method="POST" action="${root}/logout">
+                        <form method="POST" action="${root}/Users/logout">
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <button class="secondary-default" type="submit">로그아웃</button>
                         </form>
@@ -101,5 +101,6 @@
             </div>
         </div>
     </header>
+
 </body>
 </html>
