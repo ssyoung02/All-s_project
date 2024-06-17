@@ -1,0 +1,156 @@
+/*탭 메뉴*/
+.tapMenu{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.tapItem{
+    width: 100%;
+    padding: 1em;
+    border-bottom: 2px solid #898989;
+    margin-bottom: 2em;
+}
+.tapSelect{
+    border-bottom: 4px solid #263238;
+}
+
+/*탭 메뉴 상세 - 2열 소개*/
+.tabInfo{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    border-top: 1px solid #3b593f;
+    border-bottom: 1px solid #3b593f;
+    padding-top: 1em;
+    margin-bottom: 1em;
+}
+.webInfo-item{
+    flex: 1 1 calc(50% - 2em);
+    display: flex;
+    flex-direction: row;
+}
+.webInfo-item dt{
+    font-weight: bold;
+    width: 95px;
+    text-align: justify;
+}
+.webInfo-item dt:after{
+    content: "";
+    width: 100%;
+    display: inline-block;
+}
+
+/*탭 메뉴 상세 - 1열 소개*/
+.webInfo-itemfull{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.webInfo-itemfull dt{
+    font-weight: bold;
+    width: 95px;
+    text-align: justify;
+}
+.webInfo-itemfull input[type=radio], .webInfo-itemfull a {
+    margin: 1em 0;
+}
+.webInfo-itemfull a{
+    text-decoration: underline;
+}
+
+.webInfo-itemfull ul{
+    display: flex;
+    margin: 0;
+}
+
+.webInfo-itemfull textarea{
+    width: 50em;
+    height: 3em;
+    padding: 10px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    resize: none;
+}
+
+.group-imgChange{
+    width: 100px;
+    height: 100px;
+}
+.profile-chage{
+    display: flex;
+    gap: 1em;
+}
+
+#imageChange{
+    position: absolute;
+    opacity: 0;
+}
+
+.group-imgChange label{
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+}
+
+.group-imgChange i{
+    position: absolute;
+    font-size: 2em;
+    color: black;
+}
+.group-imgChange img{
+    opacity: 0.3;
+}
+
+/*탭 메뉴 상세 - 테이블*/
+.manager-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+.manager-table td, .manager-table th{
+    text-align: center;
+    padding: 0.5em;
+}
+.manager-table tr{
+    border-bottom: 1px solid #898989;
+}
+.manager-table caption {
+    opacity: 0;
+    position: absolute;
+}
+
+.manager-table thead {
+    background-color: #D0D8C4;
+}
+
+.tableList:hover {
+    background-color: #fffcec;
+}
+.tableList button{
+    padding: 10px;
+}
+
+.trselect{
+    width: 40px;
+}
+.trname, trtime{
+    width: 130px;
+}
+.trbutton{
+    width: 150px;
+}
+
+.studyGroupDelet{
+
+}

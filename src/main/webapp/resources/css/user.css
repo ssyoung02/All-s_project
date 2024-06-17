@@ -1,0 +1,15 @@
+.updateForm{
+    margin: 0 auto;
+    padding: 2em;
+    width: 50%;
+}
+.buttonBox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+}
+.updatebutton{
+    width: 10em;
+}

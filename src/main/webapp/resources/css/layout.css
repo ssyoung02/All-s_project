@@ -1,4 +1,6 @@
-/*레이아웃*/
+p, span{
+    font-size: 90%;
+}
 body {
     height: 100vh;
     margin: 0;
@@ -6,7 +8,7 @@ body {
 
 section {
     display: flex;
-    padding: 0 2em;
+    padding: 0 5em;
     gap: 20px;
 }
 
@@ -16,12 +18,12 @@ nav {
 }
 
 main {
-    flex: 3;
+    flex: 4;
 }
 
 header{
     display: flex;
-    padding: 2em;
+    padding: 3em 5em;
     gap: 20px;
 }
 .logoarea{
@@ -29,7 +31,7 @@ header{
     max-width: 300px;
 }
 .r-header{
-    flex: 3;
+    flex: 4;
 }
 
 /*flex 공통*/
@@ -57,4 +59,9 @@ header{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+header, section{
+    max-width: 1440px;
+    position: relative;
+    margin: 0 auto;
 }

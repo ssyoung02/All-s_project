@@ -71,28 +71,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .authorizeRequests()
                 // 모든 사용자 접근 허용 경로
 
-                    .antMatchers("/resources/**","/webapp/resources/css/**",
+                .antMatchers("/resources/**","/webapp/resources/css/**",
                         "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
-                    .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
-                          "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
+                .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
+                        "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/Users/access-denied").permitAll()
+                // 임의로 추가함. commit할 때 지우기!
+                .antMatchers("/admin/**", "/studyNote/**", "/calender/calender","/studyGroup/**","/studyRecruit/**","/studyReferences/**","/studyReferences/**","/Users/**")
+                .permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
-                    .anyRequest().authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                    .loginPage("/Users/UsersLoginForm")
-                    .defaultSuccessUrl("/main")
-                   .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
-                    .permitAll()
+                .loginPage("/Users/UsersLoginForm")
+                .defaultSuccessUrl("/main")
+                .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                .permitAll()
                 .and()
                 .logout()
-                    .logoutUrl("/Users/logout")
-                    .logoutSuccessUrl("/main")
-                    .invalidateHttpSession(true)
-                    .permitAll()
+                .logoutUrl("/Users/logout")
+                .logoutSuccessUrl("/main")
+                .invalidateHttpSession(true)
+                .permitAll()
                 .and()
                 .csrf()
-                    .ignoringAntMatchers("/Users/checkDuplicate");//csrf 활성화
+                .ignoringAntMatchers("/Users/checkDuplicate");//csrf 활성화
 
 
                 /*

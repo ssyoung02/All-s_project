@@ -13,32 +13,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body class="loginbg">
-  <script>
-    $("#registerForm").submit(function(event) {
-        const password = $("#password").val();
-        const password2 = $("#password2").val();
-
-        if (password !== password2) {
-            $("#passwordCheckResult").text("비밀번호가 일치하지 않습니다.");
-            $("#passwordCheckResult").removeClass("success").addClass("error");
-            event.preventDefault(); // 폼 제출 방지
-        } else {
-            // 비밀번호가 일치하면 password2 필드 제거 후 제출
-            $("#password2").remove();
-            $("#passwordCheckResult").remove(); // 오류 메시지 제거
-            this.submit(); // 폼 제출
-        }
-    });
+<script>
     $(document).ready(function() {
         // 회원가입 결과 메시지 처리 (모달 표시)
         <c:if test="${not empty error}">
-        $("#messageContent").text("${error}");
-        $("#messageModal").modal("show");
+            $("#messageContent").text("${error}");
+            $('#modal-container').toggleClass('opaque'); //모달 활성화
+            $('#modal-container').toggleClass('unstaged');
+            $('#modal-close').focus();
         </c:if>
     });
 
@@ -66,7 +54,7 @@
     }
 </script>
     <div class="logo">
-        <a href="01. main.html"><img class="logo" src="${root}/resources/images/logo.png" style="width:15%" alt="all's 로고"/></a>
+        <a href="${root}/main"><img class="logo" src="${root}/resources/images/logo.png" style="width:15%" alt="all's 로고"/></a>
     </div>
     <div class="loginbox bgwhite">
         <div class="login-title flex-between">
@@ -84,7 +72,7 @@
                 <label for="username">아이디<span class="essential">*</span></label>
                 <div class="input-row flex-between">
                     <input type="text" id="username" name="username" placeholder="이름을 입력해주세요" required>
-                    <button class="double-check primary-default" onclick="checkDuplicate()">중복확인</button>
+                    <button class="double-check primary-default" type="button" onclick="checkDuplicate()">중복확인</button>
                 </div>
                 <span id="usernameCheckResult"></span>
             </div>
@@ -120,28 +108,26 @@
         </form>
     </div>
 
-    <%-- Modal 추가 --%>
-    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="messageModalLabel">알림</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="messageContent">
-                    <%-- 메시지 내용이 여기에 표시됩니다. --%>
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                <%-- 메시지 내용이 여기에 표시됩니다. --%>
                     <c:if test="${not empty error}">
                         <p>${error}</p>
                     </c:if>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                </div>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
-</div>
+
 </body>
 </html>

@@ -1,4 +1,3 @@
-//스킵 내비게이션
 const skipnavLink = document.querySelector('#skipnav a');
 skipnavLink.addEventListener('focus', function () {
     const skipnav = document.querySelector('#skipnav');
@@ -108,8 +107,22 @@ document.querySelectorAll('.profile').forEach(function (profileOpen) {
     })
 });
 
-//좋아요 버튼 선택 
+//배너 좋아요 버튼 선택
 document.querySelectorAll('.banner-like').forEach(function (button) {
+    button.addEventListener('click', function () {
+        const icon = this.querySelector('i');
+        if (icon.classList.contains('bi-heart')) {
+            icon.classList.remove('bi-heart');
+            icon.classList.add('bi-heart-fill');
+        } else {
+            icon.classList.remove('bi-heart-fill');
+            icon.classList.add('bi-heart');
+        }
+    });
+});
+
+//게시글 좋아요 버튼 선택
+document.querySelectorAll('.board-like').forEach(function (button) {
     button.addEventListener('click', function () {
         const icon = this.querySelector('i');
         if (icon.classList.contains('bi-heart')) {
@@ -149,3 +162,4 @@ checkboxes.forEach(checkbox => {
         label.style.border = 'none';
     });
 });
+

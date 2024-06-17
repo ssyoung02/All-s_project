@@ -78,10 +78,13 @@
     justify-content: flex-end;
     gap: 1em;
     padding: 1em 0;
-    font-size: 1.2em;
 }
 .topmenu i{
     margin-right: 0.3em;
+}
+/*프로필 이미지*/
+.profile{
+    display: flex;
 }
 .profile-img{
     display: inline-block;
@@ -95,13 +98,20 @@
     width: 100%;
     height: 100%;
 }
-.new-mark{
-    float: right;
-    color:#FFF500;
+.status{
+    border-radius: 50%;
+    width: 0.6em;
+    height: 0.6em;
+    background-color: yellow;
 }
+.status span{
+    position: absolute;
+    opacity: 0;
+}
+/*알림 목록*/
 .alarm{
     position: absolute;
-    right: 4%; 
+    right: 4%;
     top: 120px;
     gap: 5px;
     padding: 20px;
@@ -233,58 +243,67 @@ footer p{
     margin: 2em 0.2em;
 }
 
-/*타이머 영역*/
-#timer{
-    display: none;
+/*할 일 목록*/
+.todolist{
+    position: relative;
+}
+.todolist li{
+    margin: 5px 0;
+}
+
+/*모달*/
+.modal{
+    opacity : 0;
     position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    color: white;
-}
-.time-area{
-    flex-wrap: wrap;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-80%);
-    font-size: 7em;
-    width: 50%;
-}
-.time-area p{
-    margin: 0 0.4em;
-}
-.time-button{
-    width: 100%;
-}
-.time-button button{
-    width: 100%;
-    margin: 2em 0.3em;
-    font-size: medium;
-    font-weight: bold;
-}
-#time-stop{
-    background-color: #D0D8C4;
-    color: #545454;
-}
-#time-pause{
-    background-color: #A2B18A;
-    color: #222222;
-}
-.unfinished-todo{
-    color: #898989;
-    width: 80%;
-    text-align: left;
-    position: absolute;
-    bottom: 0%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-}
-.unfinished-todo .todolist{
+    top: 0px; left: 0;
+    width: 100%; height: 100%;
+    max-width : 100%;
+    max-height : 100%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 2em;
-    font-size: 1.2em;
-    margin: 2em 0.2em;
+    justify-content: center;
+    align-items : center;
+    transition : opacity 0.5s;
+}
+.modal.opaque{
+    opacity : 1;
+    transition : opacity 0.5s;
+}
+.modal.unstaged {
+    top:-100px;
+    height : 0;
+}
+
+.modal-overlay{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : RGBA(0, 0, 0, 0.6);
+}
+
+.modal-contents{
+    display:flex;
+    flex-direction : column;
+    align-items : center;
+    position: relative;
+    padding: 1em 2em;
+    background-color: rgb(255,255,255);
+    border-radius: 5px;
+    margin: 2em 0;
+}
+
+.modal-text{
+    gap: 7em;
+}
+
+.modal-bottom .modal-close{
+    color: white;
+    background-color : #3b593f;
+    border-radius: 5px;
+}
+.modal-close:hover{
+    color: white;
+    background-color : #3b593f;
+}
+.modal-center{
+    margin: 3em 0;
 }

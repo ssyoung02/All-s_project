@@ -13,15 +13,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-    <jsp:include page="include/header.jsp" />
+    <jsp:include page="include/timer.jsp" />
     <!-- 중앙 컨테이너 -->
+    <jsp:include page="include/header.jsp" />
     <div id="container">
         <section>
             <!-- 메뉴 영역 -->
@@ -62,6 +62,129 @@
                         </div>
                     </sec:authorize>
                     <%-- 로그인한 사용자에게만 표시 --%>
+                    <sec:authorize access="isAuthenticated()">
+                        <div class="loginMain">
+                            <div class="loginUserInfoLeft">
+                                <div class="sceduler-area">
+                                    <div class="sceduler">
+                                        달력 영역
+                                    </div>
+                                    <div class="todo">
+                                        <h3>6월 15일</h3>
+                                        <div class="achieve">
+                                            <div class="todoTitle">달성도</div>
+                                            <div class="gaugeBar">
+                                             `   <progress id="progress" value="60" max="100"></progress>
+                                            </div>
+                                            <p class="percent">60%</p>
+                                        </div>
+                                        <div class="todoList">
+                                            <div class="todoTitle">할 일</div>
+                                            <ul class="todolist">
+                                                <li>
+                                                    <input type="checkbox" id="todolist11" class="todo-checkbox">
+                                                    <label for="todolist11" class="todo-label">
+                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
+                                                        자바 공부
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox" id="todolist22" class="todo-checkbox">
+                                                    <label for="todolist22" class="todo-label">
+                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
+                                                        면접 준비
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox" id="todolist33" class="todo-checkbox">
+                                                    <label for="todolist33" class="todo-label">
+                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
+                                                        UI 설계
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <input type="checkbox" id="todolist44" class="todo-checkbox">
+                                                    <label for="todolist44" class="todo-label">
+                                                        <span class="checkmark"><i class="bi bi-check-square"></i></span>
+                                                        자소서 작성
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="weekly">
+                                    <h2>주간 공부시간</h2>
+                                    <div class="weeklyGrape">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="loginUserInfoRight">
+                                <div class="studyTime">
+                                    <h2 class="">오늘의 공부 시간</h2>
+                                    <div>
+                                        <div class="todoTitle">Total</div>
+                                        <p id="totalstudytime">127시간</p>
+                                    </div>
+                                    <div>
+                                        <div class="todoTitle">Today</div>
+                                        <p id="todaystudytime">5시간</p>
+                                    </div>
+                                </div>
+                                <div class="userStudyGroup">
+                                    <div class="userStudyGroupTitle flex-between">
+                                        <h3>공부하는 42조</h3>
+                                        <div class="slide-button-group">
+                                            <button class="slide-button" title="이전">
+                                                <i class="bi bi-caret-left-fill"></i>
+                                                <span class="hide">이전</span>
+                                            </button>
+                                            <button class="slide-button" title="다음">
+                                                <i class="bi bi-caret-right-fill"></i>
+                                                <span class="hide">다음</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="userStudyGroupMember">
+                                        <div class="memberItem">
+                                            <div class="studyMemberProfile">
+                                                <a class="profile" href="#">
+                                                    <div class="profile-img">
+                                                        <img src="../img/manggom.png" alt="내 프로필">
+                                                    </div>
+                                                    <div class="status"><span class="status">접속중</span></div>
+                                                </a>
+                                            </div>
+                                            <a href="#" class="memberName">Yejoon</a>
+                                        </div>
+                                        <div class="memberItem">
+                                            <div class="studyMemberProfile">
+                                                <a class="profile" href="#">
+                                                    <div class="profile-img">
+                                                        <img src="../img/manggom.png" alt="내 프로필">
+                                                    </div>
+                                                    <div class="status"><span class="status">접속중</span></div>
+                                                </a>
+                                            </div>
+                                            <a href="#" class="memberName">Jeayang</a>
+                                        </div>
+                                        <div class="memberItem">
+                                            <div class="studyMemberProfile">
+                                                <a class="profile" href="#">
+                                                    <div class="profile-img">
+                                                        <img src="../img/manggom.png" alt="내 프로필">
+                                                    </div>
+                                                    <div class="status"><span class="status">접속중</span></div>
+                                                </a>
+                                            </div>
+                                            <a href="#" class="memberName">Yujung</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sec:authorize>
                     <!--슬라이드 배너-->
                     <div class="study-promotion">
                         <h2>Study Group</h2>
@@ -99,7 +222,7 @@
                                 <dlv class="banner-item bgwhite" tabindex="0" onclick="">
                                     <div class="banner-item-top">
                                         <div class="banner-img">
-                                            <img src="../img/manggom.png" alt="스터디 그룹 로고"/>
+                                            <img src="../img/manggom.png" alt="스터디 그룹 로고" width="100%" height="100%"/>
                                         </div>
                                         <div class="banner-title">
                                             <p class="banner-main-title">강남인근 면접 스터디 모집</p>
@@ -142,37 +265,11 @@
                         </div>
                     </div>
                 </div>
+                <%--콘텐츠 끝--%>
             </main>
         </section>
-      <sec:authorize access="isAuthenticated()"> <%-- 로그인한 사용자에게만 정보 표시 --%>
-    <div>
-        <c:if test="${not empty userVo.profileImage}">
-            <img src="${root }/resources/images/${userVo.profileImage}" alt="프로필 이미지" class="profile-image">
-            <img src="${root}${userVo.profileImage}" alt="">
-        </c:if>
-        <p>환영합니다, ${userVo.name} 님!</p>
-        <p>아이디: ${userVo.username}</p>
-        <p>이메일: ${userVo.email}</p>
+    <!--푸터-->
+    <jsp:include page="include/footer.jsp" />
     </div>
-    <div>
-        <a href="${root}/Users/UsersUpdateForm">회원 정보 수정</a>
-        <a href="${root}/Users/UsersImageForm">프로필 이미지 변경</a>
-        <form method="POST" action="${root}/Users/logout">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            <button type="submit">로그아웃</button>
-        </form>
-    </div>
-</sec:authorize>
-
-<sec:authorize access="isAnonymous()"> <%-- 로그인하지 않은 사용자에게만 표시 --%>
-    <p>로그인 후 이용 가능합니다.</p>
-    <a href="${root}/Users/UsersLoginForm">로그인</a>
-    <a href="${root}/Users/Join">회원가입</a>
-</sec:authorize>
-      
-        <!--푸터-->
-        <jsp:include page="include/footer.jsp" />
-    </div>
-    <jsp:include page="include/timer.jsp" />
 </body>
 </html>

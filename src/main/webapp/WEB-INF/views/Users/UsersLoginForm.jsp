@@ -10,11 +10,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 > All's</title>
+    <title> 로그인 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body class="loginbg">
@@ -28,13 +28,15 @@
         </div>
         <form method="POST" action="${root}/Users/Login">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            <div class="inputbox">
-                <label for="username">아이디</label>
-                <input type="text" id="username" name="username" placeholder="아이디를 입력해주세요" required>
-            </div>
-            <div class="inputbox">
-                <label for="password">비밀번호</label>
-                <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required >
+            <div>
+                <div class="inputbox">
+                    <label for="username">아이디</label>
+                    <input type="text" id="username" name="username" placeholder="아이디를 입력해주세요" required>
+                </div>
+                <div class="inputbox">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required >
+                </div>
             </div>
             <div class="idpwsearch">
                 <a href="#">아이디/비밀번호 찾기</a>
@@ -53,28 +55,28 @@
         </form>
     </div>
 
-    <%--    로그인 처리 팝업--%>
-    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="errorModalLabel">오류</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="errorMessage">
-                    <%-- 오류 메시지가 여기에 표시됩니다. --%>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                </div>
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                <%-- 메시지 내용이 여기에 표시됩니다. --%>
+                <p id="errorMessage"></p>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
 
 
-<%-- 로그인 실패 메시지 표시 --%>
+
+    <%-- 로그인 실패 메시지 표시 --%>
 <c:if test="${param.error != null}">
     <p>
         <c:choose>
@@ -98,7 +100,9 @@
     $(document).ready(function() {
         <c:if test="${param.error != null || param.expired != null || param.invalid != null}">
         $("#errorMessage").text("${SPRING_SECURITY_LAST_EXCEPTION.message}"); // 오류 메시지 설정
-        $("#errorModal").modal("show"); // 모달 표시
+        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('unstaged');
+        $('#modal-close').focus();
         </c:if>
 
         <c:if test="${param.error != null}">

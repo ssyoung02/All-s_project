@@ -8,9 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>캘린더 > All's</title>
+    <title>나의 정보 > 내 정보 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <link rel="stylesheet" href="${root}/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
@@ -33,7 +33,7 @@
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
-                <h1>캘린더</h1>
+                <h1>나의 정보</h1>
 
 
 

@@ -26,7 +26,7 @@
             <ul class="main-menu">
                 <li class="menu-item">
                     <div class="menu-area menu-select">
-                        <a href="#" class="menu-top">대시보드</a>
+                        <a href="${root}/main" class="menu-top">대시보드</a>
                     </div>
                 </li>
                 <li class="menu-item">
@@ -40,17 +40,17 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">내 공부노트</a>
+                                <a href="${root}/studyNote/noteList">내 공부노트</a>
                             </div>
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">캘린더</a>
+                                <a href="${root}/calender/calender">캘린더</a>
                             </div>
                         </li>
                         <li class="submenu-item dropdown">
                             <div class="menu-area menu-icon flex-between">
-                                <a href="#" class="menu-text">스터디</a>
+                                <a href="${root}/studyGroup/studyGroupList" class="menu-text">스터디</a>
                                 <button class="tertiary-default">
                                     <i class="bi bi-dash-lg"></i>
                                     <span class="hide">메뉴 열기/닫기</span>
@@ -59,31 +59,31 @@
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item">
                                     <div class="menu-area">
-                                        <a href="#">내 스터디</a>
+                                        <a href="${root}/studyGroup/studyGroupList">내 스터디</a>
                                     </div>
                                 </li>
                                 <li class="dropdown-item">
                                     <div class="menu-area">
-                                        <a href="#">스터디 모집</a>
+                                        <a href="${root}/studyRecruit/recruitList">스터디 모집</a>
                                     </div>
                                 </li>
                             </ul>
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">공부 자료</a>
+                                <a href="${root}/studyReferences/referencesList">공부 자료</a>
                             </div>
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">관련 사이트</a>
+                                <a href="${root}/studyReferences/referencesSite">관련 사이트</a>
                             </div>
                         </li>
                     </ul>
                 </li>
                 <li class="menu-item">
                     <div class="menu-area menu-icon flex-between">
-                        <a href="#" class="menu-top menu-text">내 정보</a>
+                        <a href="${root}/Users/userInfo" class="menu-top menu-text">내 정보</a>
                         <button class="tertiary-default">
                             <i class="bi bi-chevron-up"></i>
                             <span class="hide">메뉴 열기/닫기</span>
@@ -92,17 +92,17 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">나의 정보</a>
+                                <a href="${root}/Users/userInfo">나의 정보</a>
                             </div>
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">정보 수정</a>
+                                <a href="${root}/Users/userEdit">정보 수정</a>
                             </div>
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="#">회원 탈퇴</a>
+                                <a href="${root}/Users/userDelete">회원 탈퇴</a>
                             </div>
                         </li>
                     </ul>
