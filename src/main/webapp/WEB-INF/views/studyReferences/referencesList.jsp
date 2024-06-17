@@ -2,10 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공부 자료 > 공부 > All's</title>
@@ -14,6 +17,70 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+<%--    <script>--%>
+<%--        $(document).ajaxSend(function(e, xhr, options) {--%>
+<%--            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));--%>
+<%--        });--%>
+<%--    </script>--%>
+    <script>
+        function toggleLike(element, idx) {
+            element.classList.toggle('liked');
+            if (element.classList.contains('liked')) {
+                element.className = 'bi bi-heart-fill';
+                $.ajax({
+                    method: 'POST',
+                    url: '/studyReferences/insertLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
+                    data: {referenceIdx: idx, userIdx: ${userIdx}}
+                })
+            } else {
+                element.className = 'bi bi-heart';
+                $.ajax({
+                    method: 'POST',
+                    url: '/studyReferences/deleteLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
+                    data: {referenceIdx: idx, userIdx: ${userIdx}}
+                })
+            }
+        }
+
+        function searchPosts() {
+            let searchKeyword = document.getElementById('searchInput').value;
+            let searchOption = document.getElementById('searchOption').value;
+
+            location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
+
+        }
+
+        function loadMore() {
+            let searchKeyword = document.getElementById('searchInput').value;
+            let searchOption = document.getElementById('searchOption').value;
+            let limits = Number(document.getElementById('limits').value) ;
+
+            let totalCount = '${studyReferencesEntity[0].TOTALCOUNT}'
+            if(limits >= Number(totalCount)){
+                alert('더이상 조회할 게시물이 없습니다.');
+
+            }else{
+                limits += 5;
+                location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    searchPosts();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
@@ -38,69 +105,56 @@
                 <!--본문 콘텐츠-->
                 <div class="maxcontent">
                     <div class="list-title flex-between">
-                        <h3>전체 글(5)</h3>
+                        <h3>전체 글(${studyReferencesEntity[0].TOTALCOUNT})</h3>
                         <fieldset class="search-box flex-row">
-                            <select name="searchCnd" title="검색 조건 선택">
-                                <option value="제목">제목</option>
-                                <option value="글내용">글내용</option>
+                            <select id="searchOption" name="searchCnd" title="검색 조건 선택">
+                                <option value="all-post">전체</option>
+                                <option value="title-post">제목</option>
+                                <option value="writer-post">작성자</option>
                             </select>
                             <p class="search-field">
-                                <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                                <button type="submit">
+                                <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
+                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
+                                <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
                                 </button>
                             </p>
-                            <button type="button" class="primary-default" onclick="location.href='${root}/studyNote/noteWrite'">글쓰기</button>
-                        </fieldset>                    </div>
+                            <button onclick="location.href='referencesWrite'">글작성</button>
+                        </fieldset>
+                    </div>
                     <div class="boardContent flex-colum">
-                        <div class="board-listline flex-columleft" onclick="location.href='${root}/studyNote/noteRead'">
-                            <div class="studygroup-item flex-between">
-                                <!--스터디 목록-->
-                                <div class="imgtitle flex-row">
-                                    <div class="board-item flex-columleft">
-                                        <a href="${root}/studyNote/noteWrite'" class="board-title">12. 클래스와 생성자 함수</a>
-                                        <p class="board-content">작성자: Jihyeon  |   작성일: 2024.06.09  |  조회수: 30</p>
+
+                        <c:forEach var="data" items="${studyReferencesEntity}">
+                            <button class="board-listline flex-columleft" onclick="location.href='referencesSite?referenceIdx=${data.referenceIdx}'">
+                                <button class="studygroup-item flex-between">
+                                    <!--스터디 목록-->
+                                    <div class="imgtitle flex-row">
+                                        <div class="board-item flex-columleft">
+                                            <a href="${root}/studyNote/noteWrite'" class="board-title">${data.title}</a>
+                                            <p class="board-content">작성자: ${data.name} | 작성일: ${data.createdAt} | 조회수: ${data.viewsCount}</p>
+                                        </div>
                                     </div>
+
+                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록-->
+                                    <c:if test="${data.isLike != 0}">
+                                        <button class="board-like" onclick="toggleLike(this, ${data.referenceIdx})">
+                                            <i class="bi bi-heart-fill"></i>
+                                            <p class="info-post">좋아요</p>
+                                        </button>
+                                    </c:if>
+                                    <c:if test="${data.isLike == 0}">
+                                        <button class="board-like" onclick="toggleLike(this, ${data.referenceIdx})">
+                                            <i class="bi bi-heart"></i>
+                                            <p class="info-post">좋아요</p>
+                                        </button>
+                                    </c:if>
                                 </div>
-                                <!--좋아요-->
-                                <div>
-                                    <button class="board-like">
-                                        <i class="bi bi-heart"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="studygroup-item flex-between">
-                                <a href="${root}/studyNote/noteWrite'">
-                                    1. Access Modifier의 특징 - 객체의 특정 내용(멤버변수, 멤버함수)에 대해서 외부의 객체가 접근할 수 없도록, 또는 접근하더라도 제한된 방식으로 접근하도록 할 수 있음 - 접근제어, 접근제한, 접근수정 등 다양하게 해석됨 - 적용대상: 클래스, 멤버변수, 멤버함수, 생성자 접근 제어 범위 private 외부 객체 접근 불가. 비공개...
-                                </a>
-                            </div>
-                        </div>
-                        <div class="board-listline flex-columleft">
-                            <div class="studygroup-item flex-between">
-                                <!--스터디 목록-->
-                                <div class="imgtitle flex-row">
-                                    <div class="board-item flex-columleft">
-                                        <h3 class="board-title">12. 클래스와 생성자 함수</h3>
-                                        <p class="board-content">작성자: Jihyeon  |   작성일: 2024.06.09  |  조회수: 30</p>
-                                    </div>
-                                </div>
-                                <!--좋아요-->
-                                <div>
-                                    <button class="board-like">
-                                        <i class="bi bi-heart"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </button>
+                                <div class="studygroup-item flex-between">
+                                    <p class="content-post">${data.content}</p>
                                 </div>
                             </div>
-                            <div class="studygroup-item flex-between">
-                                <p>
-                                    1. Access Modifier의 특징 - 객체의 특정 내용(멤버변수, 멤버함수)에 대해서 외부의 객체가 접근할 수 없도록, 또는 접근하더라도 제한된 방식으로 접근하도록 할 수 있음 - 접근제어, 접근제한, 접근수정 등 다양하게 해석됨 - 적용대상: 클래스, 멤버변수, 멤버함수, 생성자 접근 제어 범위 private 외부 객체 접근 불가. 비공개...
-                                </p>
-                                <img src="/resources/images/02. intellij.png">
-                            </div>
-                        </div>
+                        </c:forEach>
                     </div>
                     <div class="flex-row">
                         <button class="secondary-default">목록 더보기</button>

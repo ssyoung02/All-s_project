@@ -21,9 +21,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
 import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 
 @Configuration
@@ -54,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
-        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","webapp/resources/**","/webapp/resources/css/**");
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**");
     }
 
 
@@ -71,22 +78,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .authorizeRequests()
                 // 모든 사용자 접근 허용 경로
 
-                .antMatchers("/resources/**","/webapp/resources/css/**",
+//                    .antMatchers("/Users/userInfo").authenticated()
+                    .antMatchers("/resources/**","/webapp/resources/css/**",
                         "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
-                .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
-                        "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
-                        , "/Users/access-denied").permitAll()
-                // 임의로 추가함. commit할 때 지우기!
-                .antMatchers("/admin/**", "/studyNote/**", "/calender/calender","/studyGroup/**","/studyRecruit/**","/studyReferences/**","/studyReferences/**","/Users/**")
-                .permitAll()
-                // 그 외 모든 요청은 인증된 사용자만 접근 허용
-                .anyRequest().authenticated()
+                    .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
+                          "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
+                        , "/access-denied").permitAll()
+        // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/Users/userInfoProcess").authenticated()
+                    .antMatchers("/Users/userInfo").authenticated()
+                    .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/Users/UsersLoginForm")
-                .defaultSuccessUrl("/main")
-                .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
-                .permitAll()
+                    .loginPage("/Users/UsersLoginForm")
+                    .loginProcessingUrl("/Users/Login")
+                    .defaultSuccessUrl("/main")
+                   .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/Users/logout")
@@ -95,7 +103,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .permitAll()
                 .and()
                 .csrf()
-                .ignoringAntMatchers("/Users/checkDuplicate");//csrf 활성화
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
+                .ignoringAntMatchers("/Users/checkDuplicate")
+                .and()
+                .sessionManagement() // 세션 관리 설정 시작
+//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
+                .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
+                .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
+                .expiredUrl("/Users/UsersLoginForm?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)
+                // invalidSessionUrl 메서드 호출 위치 변경 및 and() 추가
+                .and()
+                .invalidSessionUrl("/Users/UsersLoginForm?invalid")
+                .and()
+                    .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
+
+        http.addFilterAfter(new CharacterEncodingFilter("UTF-8", true), SecurityContextPersistenceFilter.class);
+        //
 
 
                 /*
@@ -117,14 +140,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 현재 상태:
                 주석 처리된 부분을 제외하면 기존의 폼 로그인 방식으로 동작합니다. 추후 OAuth2 소셜 로그인 기능을 추가할 때 주석을 해제하고 필요한 클래스들을 구현하면 됩니다.
                  */
-        http.sessionManagement() // 세션 관리 설정 시작
-                .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
-                .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
-                .expiredUrl("/main?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)
-                // invalidSessionUrl 메서드 호출 위치 변경 및 and() 추가
+        http.sessionManagement()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .expiredUrl("/main?expired")
                 .and()
-                .invalidSessionUrl("/main?invalid") // 유효하지 않은 세션 접근 시 이동할 URL(유효하지 않은 세션 메시지 표시)
-        ;
+                .invalidSessionUrl("/main")
+                .sessionFixation().migrateSession(); // 세션 고정 공격 방지
         /*
             추가 설정 시 필요:
 
@@ -141,10 +163,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
             </form>
              */
 
+        // SecurityContextHolder 설정 (기존 코드 유지)
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+
     }
 
     // HTTP 요청에 대한 보안 설정 메서드입니다.
     // URL 패턴에 따라 접근 권한을 설정하고, 로그인/로그아웃 페이지 및 처리 방식을 지정합니다.
+
+    @Bean // HttpSessionEventPublisher 빈 등록
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

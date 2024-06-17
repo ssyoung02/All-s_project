@@ -1,17 +1,24 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/> --%>
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ajaxSend(function(e, xhr, options) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+        });
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -53,223 +60,160 @@
                                     <button class="secondary-default">공부 자료<i class="bi bi-arrow-right"></i></button>
                                     <button class="secondary-default">이력서 작성<i class="bi bi-arrow-right"></i></button>
                                 </div>
-                            </div>
-                            <div class="iogin-info flex-colum bg-green">
-                                <h3>지금부터<br> 함께 공부해봐요!</h3>
-                                <button class="primary-default" onclick="location.href='${root}/Users/UserLoginForm'">로그인</button>
-                                <button class="secondary-default" onclick="location.href='${root}/Users/Join'">회원가입</button>
-                            </div>
-                        </div>
-                    </sec:authorize>
-                    <%-- 로그인한 사용자에게만 표시 --%>
-                    <sec:authorize access="isAuthenticated()">
-                        <div class="loginMain">
-                            <div class="loginUserInfoLeft">
-                                <div class="sceduler-area">
-                                    <div class="sceduler">
-                                        달력 영역
-                                    </div>
-                                    <div class="todo">
-                                        <h3>6월 15일</h3>
-                                        <div class="achieve">
-                                            <div class="todoTitle">달성도</div>
-                                            <div class="gaugeBar">
-                                             `   <progress id="progress" value="60" max="100"></progress>
-                                            </div>
-                                            <p class="percent">60%</p>
-                                        </div>
-                                        <div class="todoList">
-                                            <div class="todoTitle">할 일</div>
-                                            <ul class="todolist">
-                                                <li>
-                                                    <input type="checkbox" id="todolist11" class="todo-checkbox">
-                                                    <label for="todolist11" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                        자바 공부
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox" id="todolist22" class="todo-checkbox">
-                                                    <label for="todolist22" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                        면접 준비
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox" id="todolist33" class="todo-checkbox">
-                                                    <label for="todolist33" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                        UI 설계
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox" id="todolist44" class="todo-checkbox">
-                                                    <label for="todolist44" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-check-square"></i></span>
-                                                        자소서 작성
-                                                    </label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="weekly">
-                                    <h2>주간 공부시간</h2>
-                                    <div class="weeklyGrape">
+<%--<script>--%>
+<%--    $(document).on("load", function () {--%>
+<%--        console.log("Error: ${error}");--%>
+<%--        <c:if test="${not empty error}">--%>
+<%--        $("#errorMessage").text("${error}"); // 오류 메시지 설정--%>
+<%--        $("#errorModal").modal("show"); // 모달 표시--%>
+<%--        </c:if>--%>
 
+<%--        console.log("메세지: ${msg}");--%>
+<%--        <c:if test="${not empty msg}">--%>
+<%--        $("#errorMessage").text("${msg}");--%>
+<%--        $("#errorModal").modal("show");--%>
+<%--        </c:if>--%>
+
+<%--    });--%>
+ <%--</script>--%>
+
+                        <div class="iogin-info flex-colum bg-green">
+                            <h3>지금부터<br> 함께 공부해봐요!</h3>
+                            <button class="primary-default" onclick="location.href='${root}/Users/UsersLoginForm'">로그인
+                            </button>
+                            <button class="secondary-default" onclick="location.href='${root}/Users/Join'">회원가입</button>
+                        </div>
+                    </div>
+                </sec:authorize>
+                <%-- 로그인한 사용자에게만 표시 --%>
+                <!--슬라이드 배너-->
+                <div class="study-promotion">
+                    <h2>Study Group</h2>
+                    <div class="slide-banner">
+                        <div class="slide-button-group">
+                            <button class="slide-button" aria-label="이전">
+                                <i class="bi bi-caret-left-fill"></i>
+                            </button>
+                            <button class="slide-button" aria-label="다음">
+                                <i class="bi bi-caret-right-fill"></i>
+                            </button>
+                        </div>
+                        <div class="banner-list flex-between">
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                                    </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                        <p class="banner-id">Jihyeon</p>
+                                    </div>
+                                    <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
+                                    <div class="menu-area">
+                                        <form method="POST" action="<c:url value='${root }/Users/userInfoProcess' />">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <button type="submit" class="link-button">나의 정보</button>
+                                        </form>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="loginUserInfoRight">
-                                <div class="studyTime">
-                                    <h2 class="">오늘의 공부 시간</h2>
+                                <p>강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
                                     <div>
-                                        <div class="todoTitle">Total</div>
-                                        <p id="totalstudytime">127시간</p>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
                                     </div>
-                                    <div>
-                                        <div class="todoTitle">Today</div>
-                                        <p id="todaystudytime">5시간</p>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/manggom.png" alt="스터디 그룹 로고"/>
+                                    </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                        <p class="banner-id">Jihyeon</p>
                                     </div>
                                 </div>
-                                <div class="userStudyGroup">
-                                    <div class="userStudyGroupTitle flex-between">
-                                        <h3>공부하는 42조</h3>
-                                        <div class="slide-button-group">
-                                            <button class="slide-button" title="이전">
-                                                <i class="bi bi-caret-left-fill"></i>
-                                                <span class="hide">이전</span>
-                                            </button>
-                                            <button class="slide-button" title="다음">
-                                                <i class="bi bi-caret-right-fill"></i>
-                                                <span class="hide">다음</span>
-                                            </button>
-                                        </div>
+                                <p>강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
                                     </div>
-                                    <div class="userStudyGroupMember">
-                                        <div class="memberItem">
-                                            <div class="studyMemberProfile">
-                                                <a class="profile" href="#">
-                                                    <div class="profile-img">
-                                                        <img src="../img/manggom.png" alt="내 프로필">
-                                                    </div>
-                                                    <div class="status"><span class="status">접속중</span></div>
-                                                </a>
-                                            </div>
-                                            <a href="#" class="memberName">Yejoon</a>
-                                        </div>
-                                        <div class="memberItem">
-                                            <div class="studyMemberProfile">
-                                                <a class="profile" href="#">
-                                                    <div class="profile-img">
-                                                        <img src="../img/manggom.png" alt="내 프로필">
-                                                    </div>
-                                                    <div class="status"><span class="status">접속중</span></div>
-                                                </a>
-                                            </div>
-                                            <a href="#" class="memberName">Jeayang</a>
-                                        </div>
-                                        <div class="memberItem">
-                                            <div class="studyMemberProfile">
-                                                <a class="profile" href="#">
-                                                    <div class="profile-img">
-                                                        <img src="../img/manggom.png" alt="내 프로필">
-                                                    </div>
-                                                    <div class="status"><span class="status">접속중</span></div>
-                                                </a>
-                                            </div>
-                                            <a href="#" class="memberName">Yujung</a>
-                                        </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                            <div class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/manggom.png" alt="스터디 그룹 로고"/>
                                     </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                        <p class="banner-id">Jihyeon</p>
+                                    </div>
+                                </div>
+                                <p>강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
+                                    </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </sec:authorize>
-                    <!--슬라이드 배너-->
-                    <div class="study-promotion">
-                        <h2>Study Group</h2>
-                        <div class="slide-banner">
-                            <div class="slide-button-group">
-                                <button class="slide-button" aria-label="이전">
-                                    <i class="bi bi-caret-left-fill"></i>
-                                </button>
-                                <button class="slide-button" aria-label="다음">
-                                    <i class="bi bi-caret-right-fill"></i>
-                                </button>
-                            </div>
-                            <div class="banner-list flex-between">
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="../img/manggom.png" alt="스터디 그룹 로고" width="100%" height="100%"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="../img/manggom.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                            </div>
                         </div>
                     </div>
                 </div>
                 <%--콘텐츠 끝--%>
             </main>
         </section>
-    <!--푸터-->
-    <jsp:include page="include/footer.jsp" />
+
+    <%-- 로그인 성공 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>알림</h4>
+                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div id="messageContent" class="modal-center">
+                <%-- 메시지 내용이 여기에 표시됩니다. --%>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+
     </div>
+
+    <jsp:include page="include/footer.jsp"/>
+</div>
+  <script>
+      $(document).ready(function () {
+          if ("${error}" !== "") {
+              $("#messageContent").text("${error}");
+              $('#modal-container').toggleClass('opaque'); //모달 활성화
+              $('#modal-container').toggleClass('unstaged');
+              $('#modal-close').focus();
+          }
+
+          if ("${msg}" !== "") {
+              $("#messageContent").text("${msg}");
+              $('#modal-container').toggleClass('opaque'); //모달 활성화
+              $('#modal-container').toggleClass('unstaged');
+              $('#modal-close').focus();
+          }
+      });
+  </script>
 </body>
 </html>
