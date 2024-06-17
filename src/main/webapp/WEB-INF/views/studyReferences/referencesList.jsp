@@ -2,10 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공부 자료 > 공부 > All's</title>
@@ -14,6 +17,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <script>
+        $(document).ajaxSend(function(e, xhr, options) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+        });
+    </script>
         <script>
         function toggleLike(element, idx) {
             element.classList.toggle('liked');
@@ -21,14 +29,20 @@
                 element.className = 'fa-solid fa-heart heart-icon liked';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/insertLike',
+                    url: '/studyReferences/insertLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
                 element.className = 'fa-regular fa-heart heart-icon';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteLike',
+                    url: '/studyReferences/deleteLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             }
@@ -38,7 +52,7 @@
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
 
-            location.href="/StudyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
+            location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
 
         }
 
@@ -53,7 +67,7 @@
 
             }else{
                 limits += 5;
-                location.href="/StudyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+                location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
             }
         }
 
@@ -80,75 +94,62 @@
         </nav>
         <!-- 본문 영역 -->
         <main>
+
+                <button onclick="location.href='referencesWrite'">글작성</button>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
                 <jsp:include page="../include/navbar.jsp" />
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
-                <h1>공부 자료</h1>
 
-                <!--본문 콘텐츠-->
-                <div class="maxcontent">
-                    <div class="list-title flex-between">
-                        <h3>전체 글(${studyReferencesEntity[0].TOTALCOUNT})</h3>
-                        <fieldset class="search-box flex-row">
-                            <select id="searchOption" name="searchCnd" title="검색 조건 선택">
-                              <option value="all-post">전체</option>
-                              <option value="title-post">제목</option>
-                              <option value="writer-post">작성자</option>
-                            </select>
-                            <p class="search-field">
-                                <input type="text" id="searchInput" name="searchWrd" class="search-bar" placeholder=" 검색어를 입력해주세요" value="${searchKeyword}">
-                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
-                                <button type="submit" onclick="searchPosts()">
-                                    <span class="hide">검색</span>
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </p>
-                            <button type="button" class="primary-default" onclick="location.href='referencesWrite'">글쓰기</button>
-                        </fieldset>
-                    </div>
-                    <div class="boardContent flex-colum">
-                      <!-- 글목록 -->
-                      <c:forEach var="data" items="${studyReferencesEntity}">
-                        <div class="board-listline flex-columleft" onclick="location.href='referencesSite?referenceIdx=${data.referenceIdx}'">
-                            <div class="studygroup-item flex-between">
-                                <!--스터디 목록-->
-                                <div class="imgtitle flex-row">
-                                    <div class="board-item flex-columleft">
-                                        <a href="/referencesSite?referenceIdx=${data.referenceIdx}" class="board-title">${data.title}</a>
-                                        <p class="board-content">작성자: ${data.name}  |   작성일: ${data.createdAt}  |  조회수: ${data.viewsCount}</p>
-                                    </div>
-                                </div>
-                                <!--페이지 새로고침되도 좋아요 뜨도록-->
-                               <c:if test="${data.isLike != 0}">
-                                    <div class="board-like">
-                                        <i class="bi bi-heart-fill" onclick="toggleLike(this, ${data.referenceIdx})"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </div>
-                                </c:if>
-                                <c:if test="${data.isLike == 0}">
-                                    <div class="board-like">
-                                        <i class="bi bi-heart"
-                                           onclick="toggleLike(this, ${data.referenceIdx})"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </div>
-                                  </c:if>
-                            </div>
-                            <div class="studygroup-item flex-between">
-                                <a href="/referencesSite?referenceIdx=${data.referenceIdx}">
-                                    ${data.content}
-                                </a>
-                            </div>
-                        </div>
-                    </c:forEach>
-                    </div>
-                    <div class="flex-row">
-                        <button class="secondary-default" onclick="loadMore()">목록 더보기</button>
-                    </div>
+            <h1>공부자료</h1>
+
+            <!-- 전체글(n) 검색창 -->
+            <div class="container">
+                <p class="total-post">전체글(${studyReferencesEntity[0].TOTALCOUNT})</p>
+                <div class="flex-grow"></div>
+                <select class="search-option" id="searchOption">
+                    <option value="all-post">전체</option>
+                    <option value="title-post">제목</option>
+                    <option value="writer-post">작성자</option>
+                </select>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-bar" placeholder=" 검색어를 입력해주세요" value="${searchKeyword}">
+                    <input type="hidden" id="limits" class="search-bar" value="${limits}">
+                    <button type="button" class="search-button" onclick="searchPosts()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </div>
-                <%--본문 콘텐츠--%>
+            </div>
+
+            <!-- 글 목록 -->
+            <c:forEach var="data" items="${studyReferencesEntity}">
+                <div class="post-container">
+                    <div class="post-header">
+                        <p class="title-post"
+                           onclick="location.href='referencesSite?referenceIdx=${data.referenceIdx}'">${data.title}</p>
+                        <!-- 페이지 새로고침해도 좋아요된것은 유지되도록-->
+                        <c:if test="${data.isLike != 0}">
+                            <div class="like-container">
+                                <i class="fa-solid fa-heart heart-icon liked"
+                                   onclick="toggleLike(this, ${data.referenceIdx})"></i>
+                                <p class="info-post ">좋아요</p>
+                            </div>
+                        </c:if>
+                        <c:if test="${data.isLike == 0}">
+                            <div class="like-container">
+                                <i class="fa-regular fa-heart heart-icon"
+                                   onclick="toggleLike(this, ${data.referenceIdx})"></i>
+                                <p class="info-post ">좋아요</p>
+                            </div>
+                        </c:if>
+                    </div>
+                    <p class="info-post">작성자: ${data.name} | 작성일: ${data.createdAt} | 조회수: ${data.viewsCount}</p>
+                    <p class="content-post">${data.content}</p>
+                    <hr class="green">
+                </div>
+            </c:forEach>
 
             </div>
             <%--콘텐츠 끝--%>

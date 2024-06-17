@@ -6,6 +6,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <title>Title</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스터디 생성 > 내 스터디 > 스터디 > 공부 > All's</title>

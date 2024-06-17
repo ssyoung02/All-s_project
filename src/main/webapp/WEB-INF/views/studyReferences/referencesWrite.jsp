@@ -8,10 +8,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
     <title>Title</title>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <style>
         h1 {
             font-weight: 600;
@@ -89,6 +91,9 @@
             console.log("Naver Smart Editor 초기화");
             nhn.husky.EZCreator.createInIFrame({
                 oAppRef: oEditors,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                },
                 elPlaceHolder: "editorTxt",
                 sSkinURI: "/resources/smarteditor/SmartEditor2Skin.html",
                 fCreator: "createSEditor2",
@@ -120,8 +125,11 @@
 
             // AJAX를 사용하여 폼 데이터를 서버로 전송
             $.ajax({
-                url: '/StudyReferences/referencesWrite',
+                url: '/studyReferences/referencesWrite',
                 type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                },
                 data: {
                     title: title,
                     content: content,
@@ -129,7 +137,7 @@
                 },
                 success: function(response) {
                     alert("글 작성이 완료되었습니다.");
-                    location.href ="/StudyReferences/referencesSite?referenceIdx="+response
+                    location.href ="/studyReferences/referencesSite?referenceIdx="+response
                 },
                 error: function() {
                     alert("글 작성에 실패하였습니다.");

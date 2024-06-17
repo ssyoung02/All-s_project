@@ -1,9 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
-<c:set var="root" value="${pageContext.request.contextPath }"/>
-<!DOCTYPE html>
+<%--
+  Created by IntelliJ IDEA.
+  User: ilove
+  Date: 2024-06-14
+  Time: 오전 11:11
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -14,6 +16,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <title>Title</title>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />

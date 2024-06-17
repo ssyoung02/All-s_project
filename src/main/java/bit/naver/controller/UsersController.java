@@ -222,8 +222,6 @@ public class UsersController {
 
 
 
-
-
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
