@@ -1,0 +1,49 @@
+@media (max-width: 1200px) {
+    /*메인메뉴 medium사이즈*/
+    nav{
+        display: none;
+    }
+    .m-menu-area{
+        display: none;
+        position: absolute;
+        right: 4%; 
+        top: 180px;
+        width: 300px;
+    }
+    .m-size-nav{
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .m-size-nav .menu-open{
+        margin: 0;
+        padding: 0.8em;
+    }
+    .logo{
+        margin-bottom: 0.5em;        
+    }
+    .timestart{
+        display: none;
+    }
+    #m-timestart{
+        display: inline-block;
+        width: 100%;
+        padding: 0.8em;
+        width: 20em;
+    }
+    .lnb-open{
+        display: inline-block;
+        background-color: white;
+        width: 150px;
+        border: 1px solid #a3b18a;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+    .lnb-open ul{
+        padding: 0;
+    }
+    .time-area{
+        font-size: 4em;
+    }
+}
+

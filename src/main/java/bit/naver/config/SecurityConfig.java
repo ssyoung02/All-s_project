@@ -18,10 +18,18 @@ import org.springframework.context.annotation.Bean; // Bean 등록 어노테이�
 import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
 import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 
 @Configuration
@@ -51,56 +59,92 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
 
     @Override
+    public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**");
+    }
+
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests() //권한등급에 따른 엑세스 제한 - 권한 설정 후 주석 제거
+//                .antMatchers("/admin/ ** ").hasRole("ROLE_ADMIN")
+//                                                                  /admin/ ** 패턴의 URL은 ROLE_ADMIN 권한을 소요한 사용자만 요청할 수 있다는 설정이다.
+//                                                                  로그인된 현재 사용자가 ROLE_ADMIN 권한을 소유하고 있지 않다면
+//                                                                  /admin/ ** 패턴의 URL 요청은 spring security 엔진에 의해서 거부된다.
+//                .antMatchers("/professor/ ** ").hasRole("ROLE_PROFESSOR")
+//                .antMatchers("/user/ ** ").authenticated() ;
         http
                 .authorizeRequests()
                 // 모든 사용자 접근 허용 경로
-                .antMatchers("/resources/**", "/", "/main", "/about").permitAll()
-                .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister", "/Users/Join", "/Users/Login", "/Users/UsersLoginForm", "/Users/access-denied").permitAll()
-                // 관리자만 접근 허용 경로
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                // 그 외 모든 요청은 인증된 사용자만 접근 허용
-                .anyRequest().authenticated()
+//                    .antMatchers("/Users/userInfo").authenticated()
+                    .antMatchers("/resources/**","/webapp/resources/css/**",
+                        "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
+                    .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
+                          "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
+                        , "/access-denied").permitAll()
+        // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/Users/userInfoProcess").authenticated()
+                    .antMatchers("/Users/userInfo").authenticated()
+                    .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/Users/UsersLoginForm")
-                .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
-                .permitAll()
+                    .loginPage("/Users/UsersLoginForm")
+                    .loginProcessingUrl("/Users/Login")
+                    .defaultSuccessUrl("/main")
+                   .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .permitAll()
                 .and()
                 .logout()
-                .permitAll()
-
-            /*
+                    .logoutUrl("/Users/logout")
+                    .logoutSuccessUrl("/main")
+                    .invalidateHttpSession(true)
+                    .permitAll()
                 .and()
-                .oauth2Login() // OAuth2 로그인 설정 (현재는 주석 처리)
-                    .loginPage("/login")  //(폼 로그인과 동일한 페이지 사용 가능)
-                    .userInfoEndpoint()
-                        .userService(customOAuth2UserService) // OAuth2 사용자 정보 처리 서비스 (구현 필요) (customOAuth2UserService는 직접 구현해야 함)->로그인성공 후 사용자정보 가져오는 서비스
-                .and()
-                    .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공시 핸들러 (구현 필요)
-                    .failureHandler(oAuth2LoginFailureHandler); // OAuth2 로그인 실패시 핸들러 (구현 필요)
-                */
-            /*
-            추가적으로 필요한 작업:
-
-            OAuth2 클라이언트 등록: Google, Naver, Kakao 등 소셜 로그인 제공 업체에 애플리케이션을 등록하고 클라이언트 ID, 클라이언트 시크릿 등 정보를 발급받아야 합니다.
-            CustomOAuth2UserService 구현: OAuth2 로그인 성공 후 사용자 정보를 가져와서 애플리케이션에 맞게 처리하는 로직을 구현해야 합니다. (예: 사용자 정보를 DB에 저장하거나 세션에 저장)
-            OAuth2LoginSuccessHandler, OAuth2LoginFailureHandler 구현: OAuth2 로그인 성공/실패 시 처리할 로직을 구현해야 합니다. (예: 로그인 성공 시 메인 페이지로 이동, 실패 시 에러 페이지로 이동)
-            현재 상태:
-            주석 처리된 부분을 제외하면 기존의 폼 로그인 방식으로 동작합니다. 추후 OAuth2 소셜 로그인 기능을 추가할 때 주석을 해제하고 필요한 클래스들을 구현하면 됩니다.
-             */
+                .csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
+                .ignoringAntMatchers("/Users/checkDuplicate")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
                 .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
                 .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
-                .expiredUrl("/login?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)
+                .expiredUrl("/Users/UsersLoginForm?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)
                 // invalidSessionUrl 메서드 호출 위치 변경 및 and() 추가
                 .and()
-                .invalidSessionUrl("/login?invalid") // 유효하지 않은 세션 접근 시 이동할 URL(유효하지 않은 세션 메시지 표시)
+                .invalidSessionUrl("/Users/UsersLoginForm?invalid")
                 .and()
-                .csrf() // CSRF 보호 활성화
-                .ignoringAntMatchers("/Users/checkDuplicate","/main") // 중복확인 csrf 예외처리
-        ;
+                    .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
+
+        http.addFilterAfter(new CharacterEncodingFilter("UTF-8", true), SecurityContextPersistenceFilter.class);
+        //
+
+
+
+                /*
+                    .and()
+                    .oauth2Login() // OAuth2 로그인 설정 (현재는 주석 처리)
+                        .loginPage("/login")  //(폼 로그인과 동일한 페이지 사용 가능)
+                        .userInfoEndpoint()
+                            .userService(customOAuth2UserService) // OAuth2 사용자 정보 처리 서비스 (구현 필요) (customOAuth2UserService는 직접 구현해야 함)->로그인성공 후 사용자정보 가져오는 서비스
+                    .and()
+                        .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공시 핸들러 (구현 필요)
+                        .failureHandler(oAuth2LoginFailureHandler); // OAuth2 로그인 실패시 핸들러 (구현 필요)
+                    */
+                /*
+                추가적으로 필요한 작업:
+
+                OAuth2 클라이언트 등록: Google, Naver, Kakao 등 소셜 로그인 제공 업체에 애플리케이션을 등록하고 클라이언트 ID, 클라이언트 시크릿 등 정보를 발급받아야 합니다.
+                CustomOAuth2UserService 구현: OAuth2 로그인 성공 후 사용자 정보를 가져와서 애플리케이션에 맞게 처리하는 로직을 구현해야 합니다. (예: 사용자 정보를 DB에 저장하거나 세션에 저장)
+                OAuth2LoginSuccessHandler, OAuth2LoginFailureHandler 구현: OAuth2 로그인 성공/실패 시 처리할 로직을 구현해야 합니다. (예: 로그인 성공 시 메인 페이지로 이동, 실패 시 에러 페이지로 이동)
+                현재 상태:
+                주석 처리된 부분을 제외하면 기존의 폼 로그인 방식으로 동작합니다. 추후 OAuth2 소셜 로그인 기능을 추가할 때 주석을 해제하고 필요한 클래스들을 구현하면 됩니다.
+                 */
+        http.sessionManagement()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .expiredUrl("/main?expired")
+                .and()
+                .invalidSessionUrl("/main")
+                .sessionFixation().migrateSession(); // 세션 고정 공격 방지
         /*
             추가 설정 시 필요:
 
@@ -117,10 +161,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
             </form>
              */
 
+        // SecurityContextHolder 설정 (기존 코드 유지)
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+
     }
 
     // HTTP 요청에 대한 보안 설정 메서드입니다.
     // URL 패턴에 따라 접근 권한을 설정하고, 로그인/로그아웃 페이지 및 처리 방식을 지정합니다.
+
+    @Bean // HttpSessionEventPublisher 빈 등록
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

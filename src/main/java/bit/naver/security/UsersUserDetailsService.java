@@ -22,10 +22,16 @@ package bit.naver.security;
 import bit.naver.entity.Users; // Users 엔티티 클래스 임포트
 import bit.naver.mapper.UsersMapper; // UsersMapper 인터페이스 임포트 (MyBatis)
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails; // UserDetails 인터페이스 임포트
 import org.springframework.security.core.userdetails.UserDetailsService; // UserDetailsService 인터페이스 임포트
 import org.springframework.security.core.userdetails.UsernameNotFoundException; // UsernameNotFoundException 예외 클래스 임포트
 import org.springframework.stereotype.Service; // Spring 서비스 컴포넌트 어노테이션
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 // 이 클래스를 Spring 빈(Bean)으로 등록합니다. @Component의 특수 형태로 서비스 계층 컴포넌트를 나타냅니다.
@@ -46,6 +52,8 @@ public class UsersUserDetailsService implements UserDetailsService {
             // 사용자를 찾지 못한 경우 UsernameNotFoundException 예외를 발생시킵니다.
             throw new UsernameNotFoundException("사용자ID를 찾을 수 없습니다.");
         }
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // 예시 권한
         return new UsersUser(user);
         // UsersUser 객체를 생성하여 반환합니다.
         // UsersUser는 UserDetails 인터페이스를 구현한 클래스로,
