@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.w3c.dom.ls.LSOutput;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
@@ -75,8 +74,8 @@ public class StudyReferencesController {
         return "/studyReferences/referencesList";
     }
 
-    @RequestMapping("/referencesSite")
-    public String getStudyReferencesSite(Model model, @RequestParam("referenceIdx") Long referenceIdx, HttpSession session) {
+    @RequestMapping("/referencesRead")
+    public String getStudyReferencesRead(Model model, @RequestParam("referenceIdx") Long referenceIdx, HttpSession session) {
         Users user = (Users) session.getAttribute("userVo");
         String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
         StudyReferencesEntity studyReferencesEntity = studyReferencesService.getStudyReferenceById(referenceIdx, userIdx);
@@ -87,7 +86,7 @@ public class StudyReferencesController {
         model.addAttribute("userIdx", userIdx); //나중에 59만 로그인한사람의 userIdx로 바꿔주기
 
 
-        return "/studyReferences/referencesSite";
+        return "/studyReferences/referencesRead";
     }
 
     @RequestMapping("/deleteComment")
@@ -163,6 +162,11 @@ public class StudyReferencesController {
     @ResponseBody
     public int updatePost(@ModelAttribute StudyReferencesEntity entity) {
         return studyReferencesService.updatePost(entity);
+    }
+
+    @GetMapping("/referencesSite")
+    public String referencesSite(@ModelAttribute StudyReferencesEntity entity) {
+        return "/studyReferences/referencesSite";
     }
 
 }

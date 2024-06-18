@@ -30,7 +30,6 @@ public class MainController {
             UsersUser usersUser = (UsersUser) authentication.getPrincipal();
             Users user = usersUser.getUsers();
             model.addAttribute("userVo", user); // Users 객체를 모델에 추가
-            session.setAttribute("userVo", user);
         }
         Users userVo = (Users) session.getAttribute("userVo");
         if (userVo != null) {
