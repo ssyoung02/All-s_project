@@ -1,7 +1,15 @@
+/*내정보*/
+.userdata{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+
+/*회원정보 수정*/
 .updateForm{
     margin: 0 auto;
     padding: 2em;
-    width: 50%;
 }
 .buttonBox{
     display: flex;
@@ -9,7 +17,49 @@
     align-items: center;
     justify-content: center;
     gap: 1em;
+    width: 100%;
 }
 .updatebutton{
     width: 10em;
+}
+#user{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    flex-direction: row;
+}
+.userinputbox{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+    width: 46%;
+}
+.userinputbox label, .userinputbox dt{
+    margin-bottom: 0.5em;
+    margin-right: 1em;
+    width: 10em;
+}
+.userinputbox input[type="text"], .userinputbox input[type="password"], .userinputbox input[type="email"]{
+    width: 100%;
+}
+.profile-chage{
+    margin-left: 0;
+}
+/*회원정보 수정 모바일*/
+@media (max-width: 1200px) {
+    #user{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1em;
+        flex-direction: column;
+    }
+    .userinputbox{
+        display: flex;
+        flex-direction: row;
+        margin: 10px 0;
+        width: 100%;
+    }
+    .profile-chage{
+        margin-left: -4em;
+    }
 }

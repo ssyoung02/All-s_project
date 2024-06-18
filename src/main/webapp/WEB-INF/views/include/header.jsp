@@ -6,11 +6,26 @@
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 
+<script>
+    // DOMContentLoaded 이벤트로 스크립트 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        const skipnavLink = document.querySelector('#navSkip');
+        skipnavLink.addEventListener('focus', function () {
+            const skipnav = document.querySelector('#skipnav');
+            skipnav.style.opacity = 1;
+        });
+
+        skipnavLink.addEventListener('blur', function () {
+            const skipnav = document.querySelector('#skipnav');
+            skipnav.style.opacity = 0;
+        });
+    });
+</script>
 <!-- 헤더 영역 -->
 <header>
     <!--스킵 내비게이션-->
     <div id="skipnav">
-        <a href="#content">본문 바로가기</a>
+        <a href="#content" id="navSkip">본문 바로가기</a>
     </div>
     <div class="logoarea">
         <!-- 로고 이미지 -->

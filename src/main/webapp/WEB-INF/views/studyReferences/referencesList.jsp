@@ -17,13 +17,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-<%--    <script>--%>
-<%--        $(document).ajaxSend(function(e, xhr, options) {--%>
-<%--            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));--%>
-<%--        });--%>
-<%--    </script>--%>
+
     <script>
+        //좋아요 버튼
         function toggleLike(element, idx) {
+            const icon = element.querySelector('i');
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {
                 element.className = 'bi bi-heart-fill';
@@ -36,7 +34,7 @@
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
-                element.className = 'bi bi-heart';
+                icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteLike',
@@ -48,6 +46,7 @@
             }
         }
 
+        //검색 버튼
         function searchPosts() {
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
@@ -56,6 +55,18 @@
 
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    searchPosts();
+                }
+            });
+        });
+
+
+        //더보기 버튼
         function loadMore() {
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
@@ -70,20 +81,9 @@
                 location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
             }
         }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            var searchInput = document.getElementById("searchInput");
-            searchInput.addEventListener("keypress", function (event) {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    searchPosts();
-                }
-            });
-        });
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -120,21 +120,21 @@
                                     <i class="bi bi-search"></i>
                                 </button>
                             </p>
-                            <button onclick="location.href='referencesWrite'">글작성</button>
+                            <button class="primary-default" onclick="location.href='referencesWrite'">글작성</button>
                         </fieldset>
                     </div>
-                    <div class="boardContent flex-colum">
 
+                    <div class="boardContent flex-colum">
                         <c:forEach var="data" items="${studyReferencesEntity}">
-                            <button class="board-listline flex-columleft" onclick="location.href='referencesSite?referenceIdx=${data.referenceIdx}'">
-                                <button class="studygroup-item flex-between">
-                                    <!--스터디 목록-->
-                                    <div class="imgtitle flex-row">
+                            <%--게시글 상세 item--%>
+                            <div class="board-listline flex-columleft">
+                                <div class="studygroup-item flex-between">
+                                    <button class="imgtitle link-button" onclick="location.href='referencesRead?referenceIdx=${data.referenceIdx}'">
                                         <div class="board-item flex-columleft">
-                                            <a href="${root}/studyNote/noteWrite'" class="board-title">${data.title}</a>
+                                            <h3 class="board-title">${data.title}</h3>
                                             <p class="board-content">작성자: ${data.name} | 작성일: ${data.createdAt} | 조회수: ${data.viewsCount}</p>
                                         </div>
-                                    </div>
+                                    </button>
 
                                     <!-- 페이지 새로고침해도 좋아요된것은 유지되도록-->
                                     <c:if test="${data.isLike != 0}">
@@ -150,9 +150,10 @@
                                         </button>
                                     </c:if>
                                 </div>
-                                <div class="studygroup-item flex-between">
-                                    <p class="content-post">${data.content}</p>
-                                </div>
+                                <button class="link-button flex-between" onclick="location.href='referencesRead?referenceIdx=${data.referenceIdx}'">
+                                    ${data.content}
+                                    <img/>
+                                </button>
                             </div>
                         </c:forEach>
                     </div>
@@ -162,14 +163,13 @@
                 </div>
                 <%--본문 콘텐츠--%>
 
-
-
             </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+    <jsp:include page="../include/timer.jsp" />
 </div>
 </body>
 </html>

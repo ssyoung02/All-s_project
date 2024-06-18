@@ -4,49 +4,68 @@
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
+<script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 상세 > 내 공부노트 > 공부 > All's</title>
+    <title>공부 사이트 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <script>
+
         const profilePicUrl = "/mnt/data/image.png"; // URL to the profile picture
+
         function toggleLike(element, idx) {
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {
-                element.className = 'bi bi-heart-fill';
+                const icon = element.querySelector('i');
+                element.classList.toggle('liked');
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/insertLike',
+                    url: '/studyReferences/insertLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
-                element.className = 'bi bi-heart';
+                icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteLike',
+                    url: '/studyReferences/deleteLike',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             }
         }
+
         function reportPost(idx) {
             if(confirm("게시글을 신고하시겠습니까?")) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/updateReport',
+                    url: '/studyReferences/updateReport',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx : idx}
                 })
                 alert("게시글 신고가 완료되었습니다.");
             }else {
                 alert("게시글 신고가 취소되었습니다.");
             }
+
         }
+
         function submitComment() {
             const commentInput = document.getElementById("input-comment");
             const referenceIdx = document.getElementById("referenceIdx");
@@ -56,33 +75,44 @@
             }
             $.ajax({
                 method: 'POST',
-                url: '/StudyReferences/insertComment',
+                url: '/studyReferences/insertComment',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                },
                 data: {
                     content: commentInput.value,
                     referenceIdx: referenceIdx.value
                 },  // 여기서 'content' 키를 사용합니다.
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (response) {
-                    location.href = "/StudyReferences/referencesSite?referenceIdx=" + referenceIdx.value
+                    location.href = "/studyReferences/referencesRead?referenceIdx=" + referenceIdx.value
                 },
                 error: function () {
                     alert("댓글 작성에 실패하였습니다.");
                 }
             });
         }
+
+
         function deleteComment(element, idx) {
             if (confirm('댓글을 삭제하시겠습니까?')) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteComment',
+                    url: '/studyReferences/deleteComment',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {commentIdx: idx}
                 }).done(function (result) {
                     /* alert(result) 삭제가 완료되었습니다 띄우는 작업 */
                 })
+
                 const commentItem = element.parentElement;
                 commentItem.remove();
+
             }
         }
+
         document.addEventListener("DOMContentLoaded", function () {
             const commentInput = document.getElementById("input-comment");
             commentInput.addEventListener("keypress", function (event) {
@@ -91,24 +121,29 @@
                 }
             });
         });
+
         function deletePost(idx) {
             if (confirm("게시글을 삭제하시겠습니까?")) {
                 $.ajax({
                     method: 'POST',
                     url: '/StudyReferences/deletePost',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    },
                     data: {referenceIdx: idx}
                 }).done(function (result) {
-                    location.href='/StudyReferences/referencesList'
+                    location.href='/studyReferences/referencesList'
                 })
             }
         }
+
         function modifyPost(idx){
-            location.href ="/StudyReferences/referencesModify?referenceIdx=" + idx;
+            location.href ="/studyReferences/referencesModify?referenceIdx=" + idx;
         }
+
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -181,10 +216,10 @@
                                             <div class="comment-profile">
                                                 <p class="comment-userId">
                                                         ${comment.name}
-                                                        <!-- 작성자의 USErIdx가 같을 때만 작성자 badge 보이게 하는 if문 -->
-                                                        <c:if test="${studyReferencesEntity.userIdx eq comment.userIdx}">
-                                                            <span class="writer-badge">작성자</span>
-                                                        </c:if>
+                                                    <!-- 작성자의 USErIdx가 같을 때만 작성자 badge 보이게 하는 if문 -->
+                                                    <c:if test="${studyReferencesEntity.userIdx eq comment.userIdx}">
+                                                        <span class="writer-badge">작성자</span>
+                                                    </c:if>
                                                 </p>
                                                 <p>${comment.createdAt}</p>
                                             </div>

@@ -67,15 +67,13 @@
                     <div class="webInfo-itemfull">
                         <dt>프로필</dt>
                         <dd class="profile-chage">
-                            <form action="" class="group-imgChange">
                                 <input type="file" id="imageChange">
                                 <label for="imageChange">
                                     <i class="bi bi-plus-lg"></i>
                                     <img src="${root}/resources/images/02.%20intellij.png" alt="스터디 그룹 프로필" width="100px" height="100px">
                                 </label>
-                            </form>
                             <div class="profile-change">
-                                <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
+                                <p>변경할 프로필을 등록해주세요.</p>
                                 <p>(300px X 300px / 500kb 미만)</p>
                             </div>
                         </dd>

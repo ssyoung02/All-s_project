@@ -45,6 +45,8 @@
             <div id="content">
                 <h1>${userVo.name} 님의 회원 정보</h1>
                 <%-- 로그인한 사용자에게만 정보 표시 --%>
+
+
                 <sec:authorize access="isAuthenticated()">
                     <c:if test="${not empty error}">
                         <p>${error}</p>
@@ -52,96 +54,119 @@
                     <c:if test="${not empty msg1}">
                         <p>${msg1}: ${msg2}</p>
                     </c:if>
-                    <div>
-                        <c:if test="${not empty userVo.profileImage}">
-                            <img src="${root}/resources/images/${userVo.profileImage}" alt="프로필 이미지"
-                                 class="profile-image">
-                        </c:if>
-                        <p>이름: ${userVo.name}</p>
-                        <p>아이디: ${userVo.username}</p>
-                        <p>이메일: ${userVo.email}</p>
-                        <p>생년월일: ${userVo.birthdate}</p>
-                        <p>성별: ${userVo.gender}</p>
-                        <p>위도: ${userVo.latitude}</p>
-                        <p>경도: ${userVo.longitude}</p>
-                        <p>등급: ${userVo.gradeIdx}</p>
-                        <p>SNS계정가입유무: ${userVo.socialLogin}</p>
-                        <p>계정생성: ${userVo.createdAt}</p>
-                        <p>계정수정: ${userVo.updatedAt}</p>
-                    </div>
-                </sec:authorize>
 
-                <!--각 페이지의 콘텐츠-->
-
-                <%-- 로그인하지 않은 사용자에게만 표시 --%>
-                <sec:authorize access="isAnonymous()">
-                    <div class="non-login-section">
-                        <div class="service-info bg-green">
-                            <div class="service-info-left">
-                                <h3>서비스</h3>
-                                <h2>혼자 공부하기 힘든 분들을 위한 스터디 서비스!</h2>
-                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을
-                                    제공합니다</p>
+                    <section class="userinfo">
+                        <div class="userprofile">
+                            <div class="profile-img">
+                                <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필">
                             </div>
-                            <div class="service-info-right flex-colum">
-                                <button class="secondary-default">공부노트<i class="bi bi-arrow-right"></i></button>
-                                <button class="secondary-default">캘린더<i class="bi bi-arrow-right"></i></button>
-                                <button class="secondary-default">스터디 그룹<i class="bi bi-arrow-right"></i></button>
-                                <button class="secondary-default">공부 자료<i class="bi bi-arrow-right"></i></button>
-                                <button class="secondary-default">이력서 작성<i class="bi bi-arrow-right"></i></button>
-                            </div>
+                            <h3>${userVo.username}</h3>
                         </div>
-                        <div class="iogin-info flex-colum bg-green">
-                            <h3>지금부터<br> 함께 공부해봐요!</h3>
-                            <button class="primary-default" onclick="location.href='${root}/Users/UserLoginForm'">로그인
+                        <div class="userdata bgwhite">
+                            <ul>
+                                <li><b>이름</b></li>
+                                <li>${userVo.name}</li>
+                            </ul>
+                            <ul>
+                                <li><b>성별</b></li>
+                                <li>${userVo.gender}</li>
+                            </ul>
+                            <ul>
+                                <li><b>이메일</b></li>
+                                <li>${userVo.email}</li>
+                            </ul>
+                            <ul>
+                                <li><b>생년월일</b></li>
+                                <li>${userVo.birthdate}</li>
+                            </ul>
+                            <ul>
+                                <li><b>위치정보</b></li>
+                                <li>${userVo.latitude}, ${userVo.longitude}</li>
+                            </ul>
+                            <ul>
+                                <li><b>등급</b></li>
+                                <li>${userVo.gradeIdx}</li>
+                            </ul>
+                            <ul>
+                                <li><b>SNS 연동</b></li>
+                                <li>${userVo.socialLogin}</li>
+                            </ul>
+                            <ul>
+                                <li><b>가입날짜</b></li>
+                                <li>${userVo.createdAt}</li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section class="statistics">
+                        <div class="graph-area" style="width: 200px; height: 50px;">
+                            그래프 영역
+                        </div>
+                        <div class="total-activity flex-colum">
+                            <button class="secondary-default flex-between">
+                                <p class="activity-title">총 공부시간</p>
+                                <p>150시간</p>
                             </button>
-                            <button class="secondary-default" onclick="location.href='${root}/Users/Join'">회원가입</button>
+                            <button class="secondary-default flex-between">
+                                <p class="activity-title">좋아요한 게시글</p>
+                                <p>15개</p>
+                            </button>
+                            <button class="secondary-default flex-between">
+                                <p class="activity-title">좋아요한 스터디</p>
+                                <p>5개</p>
+                            </button>
                         </div>
-                    </div>
+                    </section>
+                    <section class="resume">
+                        <div class="resume-title">
+                            <h3>이력서</h3>
+                            <a href="#">AI로 자소서 작성하기 →</a>
+                        </div>
+                        <div class="resume-file">
+                            <div class="file-item">
+                                <button class="file-delete">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <input type="file" id="resume1">
+                                <label for="resume1">
+                                    <p class="filename">이력서1.hwp</p>
+                                    <div class="fileUpload">업로드↑</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="resume-file non-file">
+                            <div class="file-item">
+                                <button class="file-delete">
+                                </button>
+                                <input type="file" id="resume1">
+                                <label for="resume1">
+                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
+                                    <div class="fileUpload">업로드↑</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="resume-file non-file">
+                            <div class="file-item">
+                                <button class="file-delete">
+                                </button>
+                                <input type="file" id="resume1">
+                                <label for="resume1">
+                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
+                                    <div class="fileUpload">업로드↑</div>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
                 </sec:authorize>
+
 
             </div>
         </main>
     </section>
 
-    <%-- 로그인 성공 모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
-        </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
-                <h4>알림</h4>
-                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div id="messageContent" class="modal-center">
-                <%-- 메시지 내용이 여기에 표시됩니다. --%>
-            </div>
-            <div class="modal-bottom">
-                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
 
-    </div>
 
     <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
+    <jsp:include page="../include/timer.jsp" />
 </div>
-<script>
-    $(document).ready(function () {
-        if ("${error}" !== "") {
-            $("#messageContent").text("${error}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
-
-        if ("${msg}" !== "") {
-            $("#messageContent").text("${msg}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
-    });
-</script>
-
 </body>
 </html>
