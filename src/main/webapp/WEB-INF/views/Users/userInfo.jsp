@@ -137,8 +137,8 @@
                             <div class="file-item">
                                 <button class="file-delete">
                                 </button>
-                                <input type="file" id="resume1">
-                                <label for="resume1">
+                                <input type="file" id="resume2">
+                                <label for="resume2">
                                     <p class="filename">이력서 파일을 업로드 해주세요</p>
                                     <div class="fileUpload">업로드↑</div>
                                 </label>
@@ -148,8 +148,8 @@
                             <div class="file-item">
                                 <button class="file-delete">
                                 </button>
-                                <input type="file" id="resume1">
-                                <label for="resume1">
+                                <input type="file" id="resume3">
+                                <label for="resume3">
                                     <p class="filename">이력서 파일을 업로드 해주세요</p>
                                     <div class="fileUpload">업로드↑</div>
                                 </label>
