@@ -23,7 +23,7 @@
 </head>
 <body>
 <h2>회원 정보 수정</h2>
-<form:form method="POST" action="${root}/Users/UsersUpdate" id="updateForm" modelAttribute="userVo">
+<form:form method="POST" action="${root}/Users/UsersUpdate" id="updateForm" sessionAttribute="userVo">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <div>
         <form:label path="username">아이디:</form:label>
