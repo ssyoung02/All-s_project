@@ -28,10 +28,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver; 
 import javax.sql.DataSource; // DataSource 인터페이스
 
 @Configuration
-// bit.naver 패키지 내의 컴포넌트들을 스캔하여 Spring 컨테이너에 빈으로 등록합니다.
+// 이 클래스가 Spring 설정 클래스임을 나타냅니다.
+@MapperScan("bit.naver.mapper")
 // bit.naver.mapper 패키지 내의 MyBatis Mapper 인터페이스를 스캔하여 자동으로 빈으로 등록합니다.
-@MapperScan("bit.naver.mapper")  // UsersMapper가 위치한 패키지 경로
-@ComponentScan(basePackages = {"bit.naver.mapper", "bit.naver.security", "bit.naver.service","bit.naver.listener"}) // bit.naver.security 패키지 추가, service 패키지 추가
+@ComponentScan(basePackages = {"bit.naver.mapper", "bit.naver.security", "bit.naver.service","bit.naver.listener"})
+// bit.naver 패키지 내의 컴포넌트(Controller, Service, Listener 등)를 스캔하여 Spring 컨테이너에 빈으로 등록합니다.
 @PropertySource({"classpath:db.properties"})
 // classpath 경로에 있는 db.properties 파일을 로드하여 프로퍼티 값을 사용할 수 있도록 설정합니다.
 public class RootAppContext {
@@ -41,35 +42,43 @@ public class RootAppContext {
     // Environment 빈을 주입받아 프로퍼티 파일에서 값을 읽어올 수 있도록 합니다.
 
     @Bean
-    public DataSource myDataSource() { // 데이터 소스 빈 등록 (HikariCP)
+    public DataSource myDataSource() {
+        // HikariCP를 사용하여 데이터베이스 연결 풀을 생성하고 설정하는 메서드입니다.
+        // @Bean 어노테이션을 통해 Spring 컨테이너에 DataSource 빈으로 등록합니다.
         HikariConfig hikari = new HikariConfig();
         // HikariCP 설정 객체 생성
         hikari.setDriverClassName(env.getProperty("jdbc.driver"));
         hikari.setJdbcUrl(env.getProperty("jdbc.url"));
         hikari.setUsername(env.getProperty("jdbc.user"));
         hikari.setPassword(env.getProperty("jdbc.password"));
-        // db.properties 파일에서 데이터베이스 연결 정보를 읽어와 HikariCP 설정에 적용합니다.
+        // db.properties 파일에서 데이터베이스 연결 정보(드라이버 클래스 이름, URL, 사용자 이름, 비밀번호)를 읽어와 HikariCP 설정에 적용합니다.
         HikariDataSource myDataSource = new HikariDataSource(hikari);
         return myDataSource;
         // HikariCP 데이터 소스 객체를 생성하여 반환합니다.
     }
 
     @Bean
-    public SqlSessionFactory sessionFactory() throws Exception { // SqlSessionFactory 빈 등록
+    public SqlSessionFactory sessionFactory() throws Exception {
+        // MyBatis의 SqlSessionFactory를 생성하고 설정하는 메서드입니다.
+        // @Bean 어노테이션을 통해 Spring 컨테이너에 SqlSessionFactory 빈으로 등록합니다
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        // SqlSessionFactoryBean 객체를 생성합니다.
         sessionFactory.setDataSource(myDataSource());
         // 앞서 생성한 HikariCP 데이터 소스를 MyBatis 설정에 주입합니다.
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver().getResources("classpath:*.xml")
         );
-        // mapper/xml 폴더에 있는 모든 XML Mapper 파일을 로드합니다.
+        // classpath 경로에서 모든 XML Mapper 파일을 찾아서 설정합니다.
+        // 여기서는 모든 XML Mapper 파일을 로드하도록 설정되어 있습니다.
 
         return sessionFactory.getObject();
         // SqlSessionFactoryBean 객체를 통해 SqlSessionFactory를 생성하고 반환합니다.
     }
 
     @Bean
-    public SqlSessionTemplate sqlSessionTemplate() throws Exception { // SqlSessionTemplate 빈 등록
+    public SqlSessionTemplate sqlSessionTemplate() throws Exception {
+        // MyBatis의 SqlSessionTemplate을 생성하는 메서드입니다.
+        // @Bean 어노테이션을 통해 Spring 컨테이너에 SqlSessionTemplate 빈으로 등록합니다.
         return new SqlSessionTemplate(sessionFactory());
         // 앞서 생성한 SqlSessionFactory를 사용하여 SqlSessionTemplate을 생성하고 반환합니다.
     }
