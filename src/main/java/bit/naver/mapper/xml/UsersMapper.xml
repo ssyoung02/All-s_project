@@ -44,8 +44,8 @@
 
     <update id="updateUser">
         UPDATE Users
-        SET username = #{username}, password = #{password}, email = #{email}, name = #{name}, birthdate = #{birthdate}, profile_image = #{profileImage}, enabled = #{enabled}, grade_idx = #{gradeIdx}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, created_at = #{createdAt}, updated_at = #{updatedAt}
-        WHERE user_idx = #{userIdx}
+        SET password = #{password}, email = #{email}, profile_image = #{profileImage}, enabled = #{enabled}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, updated_at = #{updatedAt}
+        WHERE username = #{username}
     </update>
 
     <delete id="deleteUser">

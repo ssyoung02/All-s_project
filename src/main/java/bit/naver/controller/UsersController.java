@@ -89,7 +89,7 @@ public class UsersController {
         }
 
         // 4. 이메일 중복 검사
-        if (!usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
+        if (usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
             rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
             return "redirect:/Users/Join";
         }
@@ -211,7 +211,7 @@ public class UsersController {
     //회원정보 (내정보) 조회 처리 --추후 캘린더 기능, 차트기능, 공부시간 기록에 대한 기능이 추가될 경우 추가 수정
 
     @RequestMapping("/userInfoProcess")
-    public String userInfoProcess(Model model, Principal principal, RedirectAttributes rttr) {
+    public String userInfoProcess(Model model, Principal principal, RedirectAttributes rttr, HttpSession session) {
         if (principal == null) { // principal 객체가 null인지 확인
             log.warn("회원정보 조회 실패: 로그인되지 않은 사용자입니다.");
             System.out.println("InfoProcess 실행실패 Principal: " + principal.getName());
@@ -220,13 +220,14 @@ public class UsersController {
         }
         String username = principal.getName();
         Users user = usersMapper.findByUsername(username);
+        session.setAttribute("userVo", user);
         log.info("내정보 조회 실패"); // 로그 추가
         if (user == null) {
             log.warn("회원정보 조회 실패: 사용자 정보를 찾을 수 없습니다. (username: {})"); // 로그 추가
             rttr.addFlashAttribute("error", "회원정보를 찾을 수 없습니다.");
             return "redirect:/main";
         }
-
+        session.setAttribute("userVo", user);
         model.addAttribute("userVo", user);
         return "Users/userInfo";
     }
@@ -273,44 +274,69 @@ public class UsersController {
 
     //------------------------------------------------------------------------------------------------------------------------
 
-    @RequestMapping("/UsersUpdateForm")
-    public String usersUpdateForm(Model model, Principal principal) { // Principal 추가
+    @RequestMapping("/userEdit")
+    public String usersUpdateForm(Model model, Principal principal,HttpSession session) { // Principal 추가
         String username = principal.getName(); // principal에서 사용자 이름 가져오기
         Users userVo = usersMapper.findByUsername(username); // 사용자 정보 조회
         model.addAttribute("userVo", userVo);
-        return "Users/UsersUpdateForm";
+        session.setAttribute("userVo", userVo);
+        return "Users/userEdit";
     }
 
     // 회원 정보 수정 처리
-    @RequestMapping(value = "/UsersUpdate", method = RequestMethod.POST)
-    public String usersUpdate(@ModelAttribute("user") Users user, BindingResult bindingResult, String password1, String password2, RedirectAttributes rttr, HttpSession session) {
-        // 입력 값 유효성 검사 (BindingResult 사용)
-        if (bindingResult.hasErrors()) {
-            rttr.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-            rttr.addFlashAttribute("user", user);
-            return "redirect:/Users/UsersUpdateForm";
+
+    @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
+    public String usersUpdate(@RequestParam("username") String username,
+                                @RequestParam("password") String password,
+                                @RequestParam("email") String email,
+                                RedirectAttributes rttr, HttpSession session, Principal principal) {
+
+        // 입력 값 유효성 검사 (직접 구현)
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty() ) {
+            rttr.addFlashAttribute("error", "모든 필드를 입력해주세요.");
+            return "redirect:/Users/userEdit";
+        }
+        try{
+        // 4. 이메일 중복 검사
+         if (usersMapper.findByEmail(email) && usersMapper.findByUsername(username).getEmail().equals(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
+            System.out.println("기존 이메일과 동일한 이메일주소입니다.");
+            rttr.addFlashAttribute("error", "회원님 이미 사용 중인 이메일로 변경되었습니다");
+        }
+         if(usersMapper.findByEmail(email) && !usersMapper.findByUsername(username).getEmail().equals(email)) {
+            rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
+            return "redirect:/Users/userEdit";
         }
 
-        // 비밀번호 일치 검사
-        if (!password1.equals(password2)) {
-            rttr.addFlashAttribute("msg1", "실패");
-            rttr.addFlashAttribute("msg2", "비밀번호가 일치하지 않습니다");
-            return "redirect:/Users/UsersUpdateForm";
+
+            // Users 객체 생성 및 데이터 설정
+            Users user = usersMapper.findByUsername(principal.getName());
+            user.setPassword(passwordEncoder.encode(password));
+            user.setEmail(email);
+            user.setEnabled(true);
+            user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
+            ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID-
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            LocalDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, zoneId).toLocalDateTime();
+            Timestamp updatedAt = Timestamp.valueOf(zonedDateTime);
+            user.setUpdatedAt(updatedAt.toLocalDateTime());
+            System.out.println("회원 수정시 서울 타임존 현재 시간: " + currentDateTime);
+
+
+
+
+            // 사용자 정보 저장
+            usersMapper.updateUser(user);
+            Users userAfterUpdate = usersMapper.findByUsername(username);
+            session.setAttribute("userVo", userAfterUpdate);
+
+            rttr.addFlashAttribute("alertModal", "회원수정에 성공했습니다.");
+
+            return "redirect:/main"; } catch (Exception e) { // 예외 발생 시 처리
+            log.error("회원수정 중 오류 발생:", e); // 오류 로깅
+
+            rttr.addFlashAttribute("alertModal", "회원가입 중 오류가 발생했습니다.");
+            return "redirect:/Users/Edit"; // 회원수정 페이지로 리다이렉트
         }
-
-        // 비밀번호 암호화 및 사용자 정보 업데이트
-        user.setPassword(passwordEncoder.encode(password1));
-        usersMapper.updateUser(user);
-
-        // 인증 정보 업데이트
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = usersUserDetailsService.loadUserByUsername(user.getUsername());
-        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(userDetails, authentication.getCredentials(), userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-        rttr.addFlashAttribute("msg1", "성공");
-        rttr.addFlashAttribute("msg2", "회원정보 수정에 성공했습니다");
-        return "redirect:/";
     }
 
 

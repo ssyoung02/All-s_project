@@ -4,8 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 
 <!DOCTYPE html>
 <html>
@@ -18,10 +17,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-
 </head>
 <body>
+<script>
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+    });
+</script>
 <script>
     $(document).ready(function() {
         // 회원가입 결과 메시지 처리 (모달 표시)
@@ -75,15 +77,16 @@
             <div id="content">
                 <h1>대시보드</h1>
                 <div class="updateForm bgwhite">
-                    <form method="POST" action="${root }/Users/userEdit" id="userEditForm">
+                    <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
+                    <form method="POST" action="${root }/Users/userUpdate" id="user">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <div class="inputbox">
                             <label for="name">이름<span class="essential">*</span></label>
-                            <input type="text" id="name" name="name" value="지현" disabled required>
+                            <input type="text" id="name" name="name" value="${userVo.name}" readonly required>
                         </div>
                         <div class="inputbox">
                             <label for="username">아이디<span class="essential">*</span></label>
-                            <input type="text" id="username" name="username" value="Jihyeon" disabled required>
+                            <input type="text" id="username" name="username" value="${userVo.username}" readonly required>
                             <span id="usernameCheckResult"></span>
                         </div>
                         <div class="inputbox">
@@ -97,15 +100,15 @@
                         </div>
                         <div class="inputbox">
                             <label for="birthdate">생년월일<span class="essential">*</span></label>
-                            <input type="text" id="birthdate" name="birthdate" value="1995.08.18" disabled required>
+                            <input type="text" id="birthdate" name="birthdate" value="${userVo.birthdate}" readonly required>
                         </div>
                         <div class="inputbox">
                             <label for="tel">전화번호<span class="essential">*</span></label>
-                            <input type="text" id="tel" name="tel" value="010-0000-0000" disabled required>
+                            <input type="text" id="tel" name="tel" value="Users테이블에전화번호열필요" disabled required>
                         </div>
                         <div class="inputbox">
                             <label for="gender">성별<span class="essential">*</span></label>
-                            <input type="text" id="gender" name="gender" value="여성" disabled required>
+                            <input type="text" id="gender" name="gender" value="${userVo.gender}" disabled required>
                         </div>
                         <div class="inputbox">
                             <label for="email">이메일<span class="essential">*</span></label>

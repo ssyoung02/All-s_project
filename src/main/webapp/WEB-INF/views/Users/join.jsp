@@ -10,11 +10,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>

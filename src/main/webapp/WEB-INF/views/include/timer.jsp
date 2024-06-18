@@ -3,13 +3,9 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
+<c:set var="userVo" value="${sessionScope.userVo}"/>
 
-<head>
-    <meta charset="UTF-8">
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-</head>
+
 <!-- 타이머 영역 -->
 <div id="timer">
     <div class="time-area flex-row">

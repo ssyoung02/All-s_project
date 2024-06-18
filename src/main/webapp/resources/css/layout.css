@@ -62,6 +62,5 @@ header{
 }
 header, section{
     max-width: 1440px;
-    position: relative;
     margin: 0 auto;
 }
