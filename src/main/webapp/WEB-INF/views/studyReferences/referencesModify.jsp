@@ -118,10 +118,10 @@
       $.ajax({
         url: '/studyReferences/updatePost',
         type: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
-        },
         data: {referenceIdx: idx, title: title, content: content},
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+        },
         success: function(response) {
           alert("글 수정이 완료되었습니다.");
           location.href ="/studyReferences/referencesRead?referenceIdx="+idx

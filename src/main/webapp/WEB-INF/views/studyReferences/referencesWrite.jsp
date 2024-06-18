@@ -63,13 +63,13 @@
             $.ajax({
                 url: '/studyReferences/referencesWrite',
                 type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
-                },
                 data: {
                     title: title,
                     content: content,
                     isPrivate: privatePost
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                 },
                 success: function(response) {
                     alert("글 작성이 완료되었습니다.");
