@@ -46,29 +46,29 @@ public class StudyController {
     }
 
 
-//    //내 공부노트
-//    @RequestMapping("/studyNote/noteList")
-//    public String NoteList() {
-//        return "studyNote/noteList";
-//    }
-//
-//    //공부노트 - 글쓰기
-//    @RequestMapping("/studyNote/noteWrite")
-//    public String NoteWrite() {
-//        return "studyNote/noteWrite";
-//    }
-//
-//    //공부노트 - 상세
-//    @RequestMapping("/studyNote/noteRead")
-//    public String NoteRead() {
-//        return "studyNote/noteRead";
-//    }
-//
-//    //공부노트 - 수정
-//    @RequestMapping("/studyNote/noteModify")
-//    public String NoteModify() {
-//        return "studyNote/noteModify";
-//    }
+    //내 공부노트
+    @RequestMapping("/studyNote/noteList")
+    public String NoteList() {
+        return "studyNote/noteList";
+    }
+
+    //공부노트 - 글쓰기
+    @RequestMapping("/studyNote/noteWrite")
+    public String NoteWrite() {
+        return "studyNote/noteWrite";
+    }
+
+    //공부노트 - 상세
+    @RequestMapping("/studyNote/noteRead")
+    public String NoteRead() {
+        return "studyNote/noteRead";
+    }
+
+    //공부노트 - 수정
+    @RequestMapping("/studyNote/noteModify")
+    public String NoteModify() {
+        return "studyNote/noteModify";
+    }
 
 
     //캘린더
