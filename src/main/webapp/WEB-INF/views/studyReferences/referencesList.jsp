@@ -55,18 +55,6 @@
 
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            var searchInput = document.getElementById("searchInput");
-            searchInput.addEventListener("keypress", function (event) {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    searchPosts();
-                }
-            });
-        });
-
-
-        //더보기 버튼
         function loadMore() {
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
@@ -81,9 +69,20 @@
                 location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    searchPosts();
+                }
+            });
+        });
     </script>
 </head>
 <body>
+<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -164,13 +163,11 @@
                 <%--본문 콘텐츠--%>
 
             </div>
-            <button type="button" class="load-more-button" onclick="loadMore()">목록 더보기</button>
             <%--콘텐츠 끝--%>
         </main>
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
-    <jsp:include page="../include/timer.jsp" />
 </div>
 </body>
 </html>
