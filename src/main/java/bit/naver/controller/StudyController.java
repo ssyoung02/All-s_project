@@ -78,17 +78,17 @@ public class StudyController {
     }
 
 
-    //내 스터디
-    @RequestMapping("/studyGroup/studyGroupList")
-    public String StudyGroupList() {
-        return "studyGroup/studyGroupList";
-    }
+//    //내 스터디
+//    @RequestMapping("/studyGroup/studyGroupList")
+//    public String StudyGroupList() {
+//        return "studyGroup/studyGroupList";
+//    }
 
-    //내 스터디 - 글쓰기
-    @RequestMapping("/studyGroup/studyGroupCreate")
-    public String StudyGroupCreate() {
-        return "studyGroup/studyGroupCreate";
-    }
+//    //내 스터디 - 글쓰기
+//    @RequestMapping("/studyGroup/studyGroupCreate")
+//    public String StudyGroupCreate() {
+//        return "studyGroup/studyGroupCreate";
+//    }
 
     //내 스터디 - 그룹 상세
     @RequestMapping("/studyGroup/studyGroupMain")

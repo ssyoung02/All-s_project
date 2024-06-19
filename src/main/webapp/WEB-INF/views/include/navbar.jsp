@@ -60,7 +60,10 @@
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item">
                                     <div class="menu-area">
-                                        <a href="${root}/studyGroup/studyGroupList">내 스터디</a>
+                                        <form method="POST" action="<c:url value='${root}/studyGroup/studyGroupList' />">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <button type="submit" class="link-button">내 공부자료</button>
+                                        </form>
                                     </div>
                                 </li>
                                 <li class="dropdown-item">
