@@ -30,10 +30,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx, userIdx: ${userIdx}},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
                 element.className = 'fa-regular fa-heart heart-icon';
@@ -152,6 +152,7 @@
             </c:forEach>
 
             </div>
+            <button type="button" class="load-more-button" onclick="loadMore()">목록 더보기</button>
             <%--콘텐츠 끝--%>
         </main>
     </section>

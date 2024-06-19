@@ -2,33 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="bit.naver.mapper.StudyReferencesMapper">
+<mapper namespace="bit.naver.mapper.StudyNoteMapper">
 
-    <!-- 공부자료 List를 조회하는 SQL 쿼리 -->
-    <select id="getAllStudyReferences" resultType="bit.naver.entity.StudyReferencesEntity">
+    <!-- 내 공부자료 List를 조회하는 SQL 쿼리 -->
+    <select id="getAllStudyNote" resultType="bit.naver.entity.StudyReferencesEntity">
         SELECT study.reference_idx                             AS referenceIdx,
-               study.user_idx                                  AS userIdx,
-               name,
-               title,
-               isPrivate,
-               content,
-               category,
-               file_attachments,
-               #{limits}                                       AS limits,
-               likes_count                                     AS likesCount,
-               report_count                                    AS reportCount,
-               comments_count                                  AS commentsCount,
-               views_count                                     AS viewsCount,
-               DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i') AS createdAt,
-               study.updated_at                                AS updatedAt,
-               IFNULL(lr.reference_idx, 0)                     AS isLike,
-               COUNT(*) OVER ()                                AS TOTALCOUNT
+        study.user_idx                                  AS userIdx,
+        name,
+        title,
+        isPrivate,
+        content,
+        category,
+        file_attachments,
+        #{limits}                                       AS limits,
+        likes_count                                     AS likesCount,
+        report_count                                    AS reportCount,
+        comments_count                                  AS commentsCount,
+        views_count                                     AS viewsCount,
+        DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i') AS createdAt,
+        study.updated_at                                AS updatedAt,
+        IFNULL(lr.reference_idx, 0)                     AS isLike,
+        COUNT(*) OVER ()                                AS TOTALCOUNT
         FROM StudyReferences study
-                 LEFT JOIN Users user
-                           ON user.user_idx = study.user_idx
-                 LEFT JOIN LikeReferences lr
-                           ON study.reference_idx = lr.reference_idx
-                               AND lr.user_idx = #{userIdx}
+        LEFT JOIN Users user
+        ON user.user_idx = study.user_idx
+        LEFT JOIN LikeReferences lr
+        ON study.reference_idx = lr.reference_idx
+        AND lr.user_idx = #{userIdx}
         <where>
             <if test="searchOption != null and searchOption == 'all-post'">
                 title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%' , #{searchKeyword} , '%')
@@ -39,6 +39,7 @@
             <if test="searchOption != null and searchOption == 'writer-post'">
                 name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
+            AND study.user_idx = #{userIdx}
         </where>
         ORDER BY study.created_at DESC
         LIMIT 0, ${limits}
@@ -46,7 +47,7 @@
     </select>
 
     <!-- 공부자료 한개의 글 조회하는 SQl 쿼리 -->
-    <select id="getStudyReferenceById" resultType="bit.naver.entity.StudyReferencesEntity">
+    <select id="getStudyNoteById" resultType="bit.naver.entity.StudyReferencesEntity">
         SELECT study.reference_idx         AS referenceIdx,
                study.user_idx              AS userIdx,
                name,
@@ -112,7 +113,7 @@
     <delete id="deleteLike">
         DELETE FROM LikeReferences
         WHERE reference_idx = #{referenceIdx}
-        AND user_idx = #{userIdx}
+          AND user_idx = #{userIdx}
     </delete>
 
     <insert id="updateReport">

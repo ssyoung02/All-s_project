@@ -30,10 +30,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx, userIdx: ${userIdx}},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
                 })
             } else {
                 element.className = 'fa-regular fa-heart heart-icon';
@@ -53,10 +53,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/updateReport',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx : idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx : idx}
                 })
                 alert("게시글 신고가 완료되었습니다.");
             }else {
@@ -75,13 +75,13 @@
             $.ajax({
                 method: 'POST',
                 url: '/studyReferences/insertComment',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
-                },
                 data: {
                     content: commentInput.value,
                     referenceIdx: referenceIdx.value
                 },  // 여기서 'content' 키를 사용합니다.
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                },
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (response) {
                     location.href = "/studyReferences/referencesSite?referenceIdx=" + referenceIdx.value
@@ -98,10 +98,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteComment',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {commentIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {commentIdx: idx}
                 }).done(function (result) {
                     /* alert(result) 삭제가 완료되었습니다 띄우는 작업 */
                 })
@@ -126,10 +126,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/StudyReferences/deletePost',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx}
                 }).done(function (result) {
                     location.href='/studyReferences/referencesList'
                 })
