@@ -45,6 +45,11 @@
             smartEditor();
         });
 
+        function isContentEmpty(content) {
+            // 실제 텍스트가 비어있는지 검사
+            return $('<div>').html(content).text().trim() === '';
+        }
+
         function submitPost(event) {
             event.preventDefault(); // 폼 제출을 막음
             oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
@@ -53,7 +58,13 @@
             let title = document.querySelector('.title-post').value;
             let privatePost = document.querySelector('.private-post').checked;
 
-            if (content === '') {
+            if (title === '') {
+                alert("제목을 입력해주세요");
+                document.querySelector('.title-post').focus();
+                return false;
+            }
+
+            if (isContentEmpty(content)) {
                 alert("내용을 입력해주세요");
                 oEditors.getById["editorTxt"].exec("FOCUS");
                 return false;
@@ -99,7 +110,7 @@
                 <jsp:include page="../include/navbar.jsp" />
             </div>
             <!--각 페이지의 콘텐츠-->
-            <h1>내 공부노트</h1>
+            <h1>공부자료</h1>
 
             <!--본문 콘텐츠-->
             <h4 class="s-header">글쓰기</h4>

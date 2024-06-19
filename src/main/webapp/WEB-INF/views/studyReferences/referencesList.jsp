@@ -22,23 +22,26 @@
         //좋아요 버튼
         function toggleLike(element, idx) {
             const icon = element.querySelector('i');
-            element.classList.toggle('liked');
-            if (element.classList.contains('liked')) {
+            const isLiked = !element.classList.contains('liked');
+
+            if (isLiked) {
+                element.classList.add('liked');
                 icon.className = 'bi bi-heart-fill';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
-                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    data: { referenceIdx: idx, userIdx: ${userVo.userIdx} },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
                 });
             } else {
+                element.classList.remove('liked');
                 icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteLike',
-                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    data: { referenceIdx: idx, userIdx: ${userVo.userIdx} },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
@@ -92,8 +95,6 @@
         </nav>
         <!-- 본문 영역 -->
         <main>
-
-                <button onclick="location.href='referencesWrite'">글작성</button>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
                 <jsp:include page="../include/navbar.jsp" />
@@ -110,6 +111,7 @@
                             <select id="searchOption" name="searchCnd" title="검색 조건 선택">
                                 <option value="all-post">전체</option>
                                 <option value="title-post">제목</option>
+                                <option value="title-content">제목+내용</option>
                                 <option value="writer-post">작성자</option>
                             </select>
                             <p class="search-field">
@@ -137,18 +139,21 @@
                                     </button>
 
                                     <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
-                                    <c:if test="${data.isLike != 0}">
-                                        <button class="board-like" onclick="toggleLike(this, ${data.referenceIdx})">
-                                            <i class="bi bi-heart-fill"></i>
-                                            <p class="info-post">좋아요</p>
-                                        </button>
-                                    </c:if>
-                                    <c:if test="${data.isLike == 0}">
-                                        <button class="board-like" onclick="toggleLike(this, ${data.referenceIdx})">
-                                            <i class="bi bi-heart"></i>
-                                            <p class="info-post">좋아요</p>
-                                        </button>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${data.isLike != 0}">
+                                            <button class="flex-row liked" onclick="toggleLike(this, ${data.referenceIdx})">
+                                                <i class="bi bi-heart-fill"></i>
+                                                <p class="info-post">좋아요</p>
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button class="flex-row" onclick="toggleLike(this, ${data.referenceIdx})">
+                                                <i class="bi bi-heart"></i>
+                                                <p class="info-post">좋아요</p>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+
                                 </div>
                                 <button class="link-button flex-between" onclick="location.href='referencesRead?referenceIdx=${data.referenceIdx}'">
                                     ${data.content}
@@ -158,13 +163,12 @@
                         </c:forEach>
                     </div>
                     <div class="flex-row">
-                        <button class="secondary-default">목록 더보기</button>
+                        <button class="secondary-default" onclick="loadMore()">목록 더보기</button>
                     </div>
                 </div>
                 <%--본문 콘텐츠--%>
 
             </div>
-            <button type="button" class="load-more-button" onclick="loadMore()">목록 더보기</button>
             <%--콘텐츠 끝--%>
         </main>
     </section>

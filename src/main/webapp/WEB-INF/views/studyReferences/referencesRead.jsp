@@ -26,29 +26,33 @@
         //좋아요 버튼
         function toggleLike(element, idx) {
             const icon = element.querySelector('i');
-            element.classList.toggle('liked');
-            if (element.classList.contains('liked')) {
+            const isLiked = !element.classList.contains('liked');
+
+            if (isLiked) {
+                element.classList.add('liked');
                 icon.className = 'bi bi-heart-fill';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
-                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    data: { referenceIdx: idx, userIdx: ${userVo.userIdx} },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
                 });
             } else {
+                element.classList.remove('liked');
                 icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteLike',
-                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    data: { referenceIdx: idx, userIdx: ${userVo.userIdx} },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
                 });
             }
         }
+
 
         function reportPost(idx) {
             if(confirm("게시글을 신고하시겠습니까?")) {
@@ -110,6 +114,7 @@
                             commentItem.remove();
                         }
                         alert("댓글이 삭제되었습니다.");
+                        location.reload();  // 페이지 새로고침(=댓글(전체댓글수) 새로고침하기 위해서)
                     },
                     error: function() {
                         alert("댓글 삭제에 실패하였습니다.");
@@ -131,7 +136,7 @@
             if (confirm("게시글을 삭제하시겠습니까?")) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deletePost',
+                    url: '/studyReferences/deletePost',
                     data: {referenceIdx: idx},
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
@@ -181,22 +186,23 @@
                                     <p>작성자: ${studyReferencesEntity.name}  |   작성일: ${studyReferencesEntity.createdAt}  |  조회수:  ${studyReferencesEntity.viewsCount}</p>
                                 </div>
                             </div>
-                            <!--좋아요-->
+                            <!-- 좋아요 -->
                             <div class="board-button">
-                                <c:if test="${studyReferencesEntity.isLike !=0}">
-                                    <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
-                                        <i class="bi bi-heart-fill"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </button>
-                                </c:if>
-                                <c:if test="${studyReferencesEntity.isLike == 0}">
-                                    <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
-                                        <i class="bi bi-heart"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </button>
-                                </c:if>
-                                |
-                                <button class="report">신고</button>
+                                <c:choose>
+                                    <c:when test="${studyReferencesEntity.isLike != 0}">
+                                        <button class="flex-row liked" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
+                                            <i class="bi bi-heart-fill"></i>
+                                            <p class="info-post">좋아요</p>
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
+                                            <i class="bi bi-heart"></i>
+                                            <p class="info-post">좋아요</p>
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                                <button class="report" onclick="reportPost(${studyReferencesEntity.referenceIdx})">신고</button>
                             </div>
                         </div>
                         <div class="post-content">

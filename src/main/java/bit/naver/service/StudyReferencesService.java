@@ -51,12 +51,21 @@ public class StudyReferencesService {
     }
 
     public int insertLike(LikeReferencesEntity entity) {
-        return studyReferencesMapper.insertLike(entity);
+        int result = studyReferencesMapper.insertLike(entity);
+        if (result > 0) {
+            studyReferencesMapper.plusLike(entity);
+        }
+        return result;
     }
 
     public int deleteLike(LikeReferencesEntity entity) {
-        return studyReferencesMapper.deleteLike(entity);
+        int result = studyReferencesMapper.deleteLike(entity);
+        if (result > 0) {
+            studyReferencesMapper.minusLike(entity);
+        }
+        return result;
     }
+
 
     public int updateReport(StudyReferencesEntity entity){
         return  studyReferencesMapper.updateReport(entity);
