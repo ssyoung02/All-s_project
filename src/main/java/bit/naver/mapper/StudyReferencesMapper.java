@@ -12,7 +12,7 @@ import java.util.List;
 public interface StudyReferencesMapper {
 
     List<StudyReferencesEntity> getAllStudyReferences(@Param("userIdx") String userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption,@Param("limits")String limits);
-    List<StudyReferencesEntity> getAllStudyMyReferences(@Param("userIdx") String userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption,@Param("limits")String limits);
+//    List<StudyReferencesEntity> getAllStudyMyReferences(@Param("userIdx") String userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption,@Param("limits")String limits);
 
     // Mapper에서 매개변수가 두개이상일 경우 Mapper.xml에서 어디에 어떤값이 들어갈지 모르니까 @Param으로 지정해야함 !
     StudyReferencesEntity getStudyReferenceById(@Param("referenceIdx") Long referenceIdx, @Param("userIdx") String userIdx);
