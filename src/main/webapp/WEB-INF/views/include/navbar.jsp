@@ -37,7 +37,7 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <form method="POST" action="<c:url value='${root }studyReferences/referencesMyList' />">
+                                <form method="POST" action="<c:url value='${root }/studyNote/noteList' />">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                     <button type="submit" class="link-button">내 공부자료</button>
                                 </form>

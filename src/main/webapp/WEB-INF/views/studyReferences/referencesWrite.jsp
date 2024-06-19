@@ -14,74 +14,10 @@
 <head>
     <title>Title</title>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <style>
-        h1 {
-            font-weight: 600;
-            font-size: 36px;
-            color: #263238;
-        }
-
-        h3 {
-            font-weight: 600;
-            font-size: 24px;
-            color: #212121;
-        }
-
-        .container {
-            border: 1px solid #a2b18a;
-            width: 980px;
-            height: auto;
-            border-radius: 10px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .title-post {
-            font-size: 32px;
-            margin-top: 20px;
-            margin-left: 20px;
-            border: 1px solid white;
-            border-bottom: 2px solid #d9d9d9;
-            display: block;
-            width: calc(100% - 40px);
-        }
-
-        .private-post-container {
-            margin: 20px 0 20px 20px;
-            font-size: 16px;
-            color: #212121;
-        }
-
-        .private-post {
-            margin-right: 10px;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .cancel-button, .write-button {
-            border: 1px solid #a2b18a;
-            border-radius: 4px;
-            color: #a2b18a;
-            width: 94px;
-            height: 48px;
-            font-size: 16px;
-            font-weight: 400;
-            margin-left: 15px;
-        }
-
-        .cancel-button:hover, .write-button:hover {
-            background-color: #a2b18a;
-            color: white;
-        }
-
-        #smarteditor {
-            margin-left: 20px; /* 오른쪽으로 살짝 이동 */
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
     <script>
@@ -109,6 +45,11 @@
             smartEditor();
         });
 
+        function isContentEmpty(content) {
+            // 실제 텍스트가 비어있는지 검사
+            return $('<div>').html(content).text().trim() === '';
+        }
+
         function submitPost(event) {
             event.preventDefault(); // 폼 제출을 막음
             oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
@@ -117,7 +58,13 @@
             let title = document.querySelector('.title-post').value;
             let privatePost = document.querySelector('.private-post').checked;
 
-            if (content === '') {
+            if (title === '') {
+                alert("제목을 입력해주세요");
+                document.querySelector('.title-post').focus();
+                return false;
+            }
+
+            if (isContentEmpty(content)) {
                 alert("내용을 입력해주세요");
                 oEditors.getById["editorTxt"].exec("FOCUS");
                 return false;
@@ -127,17 +74,17 @@
             $.ajax({
                 url: '/studyReferences/referencesWrite',
                 type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
-                },
                 data: {
                     title: title,
                     content: content,
                     isPrivate: privatePost
                 },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                },
                 success: function(response) {
                     alert("글 작성이 완료되었습니다.");
-                    location.href ="/studyReferences/referencesSite?referenceIdx="+response
+                    location.href ="/studyReferences/referencesRead?referenceIdx="+response
                 },
                 error: function() {
                     alert("글 작성에 실패하였습니다.");
@@ -158,25 +105,39 @@
         </nav>
         <!-- 본문영역 -->
         <main>
+            <!--모바일 메뉴 영역-->
+            <div class="m-menu-area" style="display: none;">
+                <jsp:include page="../include/navbar.jsp" />
+            </div>
+            <!--각 페이지의 콘텐츠-->
             <h1>공부자료</h1>
 
-            <h3>글쓰기</h3>
+            <!--본문 콘텐츠-->
+            <h4 class="s-header">글쓰기</h4>
 
             <form id="writeForm" onsubmit="submitPost(event);">
-                <div class="container">
+                <div class="post-area">
                     <input type="text" class="title-post" name="title" placeholder="제목을 입력해주세요" required>
-                    <div class="private-post-container">
-                        <input type="checkbox" class="private-post" name="privatePost">게시글 비공개
-                    </div>
+
+                    <ul class="todolist">
+                        <!-- 태그 항목 -->
+                        <li>
+                            <input type="checkbox" id="public" class="private-post" name="privatePost">
+                            <label for="public" class="todo-label">
+                                <span class="checkmark"><i class="bi bi-square"></i></span>
+                                게시물 비공개
+                            </label>
+                        </li>
+                    </ul>
 
                     <!-- naver smart editor api -->
                     <div id="smarteditor">
-                        <textarea name="editorTxt" id="editorTxt" rows="20" cols="110"
+                        <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;"
                                   placeholder="내용을 입력해주세요"></textarea>
                     </div>
-                    <div class="button-container">
-                        <button type="reset" class="cancel-button" onclick="location.href='referencesList'">취소</button>
-                        <button type="submit" class="write-button">작성</button>
+                    <div class="buttonBox">
+                        <button type="reset" class="updatebutton secondary-default" onclick="location.href='referencesList'">취소</button>
+                        <button type="submit" class="updatebutton primary-default">작성</button>
                     </div>
                 </div>
             </form>

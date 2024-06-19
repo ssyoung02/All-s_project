@@ -3,6 +3,7 @@ package bit.naver.service;
 import bit.naver.entity.CommentsEntity;
 import bit.naver.entity.LikeReferencesEntity;
 import bit.naver.entity.StudyReferencesEntity;
+import bit.naver.mapper.StudyNoteMapper;
 import bit.naver.mapper.StudyReferencesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,26 +12,26 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class StudyReferencesService {
+public class StudyNoteService {
 
     @Autowired
-    private StudyReferencesMapper studyReferencesMapper;
+    private StudyNoteMapper studyNoteMapper;
 
-    public List<StudyReferencesEntity> getStudyReferencesList(String userIdx,String searchKeyword,String searchOption,String limits) {
-        return studyReferencesMapper.getAllStudyReferences(userIdx,searchKeyword,searchOption,limits);
+    public List<StudyReferencesEntity> getStudyNoteList(String userIdx,String searchKeyword,String searchOption,String limits) {
+        return studyNoteMapper.getAllStudyNote(userIdx,searchKeyword,searchOption,limits);
     }
 
-    public StudyReferencesEntity getStudyReferenceById(Long referenceIdx, String userIdx) {
-        studyReferencesMapper.updateViewsCount(referenceIdx);
-        return studyReferencesMapper.getStudyReferenceById(referenceIdx,userIdx);
+    public StudyReferencesEntity getStudyNoteById(Long referenceIdx, String userIdx) {
+        studyNoteMapper.updateViewsCount(referenceIdx);
+        return studyNoteMapper.getStudyNoteById(referenceIdx,userIdx);
     }
 
     public List<CommentsEntity> getCommentsByReferenceIdx(Long referenceIdx) {
-        return studyReferencesMapper.getCommentsByReferenceIdx(referenceIdx);
+        return studyNoteMapper.getCommentsByReferenceIdx(referenceIdx);
     }
 
     public String deleteComment(String commentIdx) {
-        int result = studyReferencesMapper.deleteComment(commentIdx);
+        int result = studyNoteMapper.deleteComment(commentIdx);
         if (result == 1) {
             return "삭제에 성공하였습니다.";
         }else{
@@ -39,7 +40,7 @@ public class StudyReferencesService {
     }
 
     public String insertComment(CommentsEntity content) {
-        int result = studyReferencesMapper.insertComment(content);  // insertComment로 수정합니다.
+        int result = studyNoteMapper.insertComment(content);  // insertComment로 수정합니다.
         if (result == 1) {
             return "댓글 작성 완료";
         } else {
@@ -48,28 +49,27 @@ public class StudyReferencesService {
     }
 
     public int insertLike(LikeReferencesEntity entity) {
-        int result = studyReferencesMapper.insertLike(entity);
+        int result = studyNoteMapper.insertLike(entity);
         if (result > 0) {
-            studyReferencesMapper.plusLike(entity);
+            studyNoteMapper.plusLike(entity);
         }
         return result;
     }
 
     public int deleteLike(LikeReferencesEntity entity) {
-        int result = studyReferencesMapper.deleteLike(entity);
+        int result = studyNoteMapper.deleteLike(entity);
         if (result > 0) {
-            studyReferencesMapper.minusLike(entity);
+            studyNoteMapper.minusLike(entity);
         }
         return result;
     }
 
-
     public int updateReport(StudyReferencesEntity entity){
-        return  studyReferencesMapper.updateReport(entity);
+        return  studyNoteMapper.updateReport(entity);
     }
 
     public Long writePost(StudyReferencesEntity entity){
-        int result = studyReferencesMapper.writePost(entity);
+        int result = studyNoteMapper.writePost(entity);
 
         System.out.println(entity.toString());
 
@@ -78,12 +78,12 @@ public class StudyReferencesService {
 
     @Transactional //3가지 모두 에러가 나지 않고 실행 되었을때만, 데이터베이스 변경이 반영이 되는것
     public int deletePost(int referenceIdx){
-        studyReferencesMapper.deleteLikeRef(referenceIdx);
-        studyReferencesMapper.deleteCommentRef(referenceIdx);
-        return studyReferencesMapper.deletePost(referenceIdx);
+        studyNoteMapper.deleteLikeRef(referenceIdx);
+        studyNoteMapper.deleteCommentRef(referenceIdx);
+        return studyNoteMapper.deletePost(referenceIdx);
     }
 
     public int updatePost(StudyReferencesEntity entity){
-        return studyReferencesMapper.updatePost(entity);
+        return studyNoteMapper.updatePost(entity);
     }
 }
