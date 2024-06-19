@@ -19,7 +19,7 @@
                report_count                                    AS reportCount,
                comments_count                                  AS commentsCount,
                views_count                                     AS viewsCount,
-               DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i') AS createdAt,
+               DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i') AS createdAt,
                study.updated_at                                AS updatedAt,
                IFNULL(lr.reference_idx, 0)                     AS isLike,
                COUNT(*) OVER ()                                AS TOTALCOUNT
@@ -35,6 +35,9 @@
             </if>
             <if test="searchOption != null and searchOption == 'title-post'">
                 title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchOption == 'title-content'">
+                title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%')
             </if>
             <if test="searchOption != null and searchOption == 'writer-post'">
                 name LIKE CONCAT('%', #{searchKeyword}, '%')
@@ -59,7 +62,7 @@
                report_count                AS reportCount,
                comments_count              AS commentsCount,
                views_count                 AS viewsCount,
-               DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i')            AS createdAt,
+               DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i')            AS createdAt,
                study.updated_at            AS updatedAt,
                IFNULL(lr.reference_idx, 0) AS isLike,
                COUNT(*) OVER ()            AS TOTALCOUNT
@@ -77,7 +80,7 @@
                comment.user_idx                                  AS userIdx,
                comment.reference_idx                             AS referenceIdx,
                comment.content                                   AS content,
-               DATE_FORMAT(comment.created_at, '%Y-%m-%d %h:%i') AS createdAt,
+               DATE_FORMAT(comment.created_at, '%Y-%m-%d %H:%i') AS createdAt,
                name,
                COUNT(*) OVER ()                                  AS TOTALCOUNT
         FROM Comments comment
@@ -109,11 +112,23 @@
                )
     </insert>
 
+    <update id="plusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count + 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
+
     <delete id="deleteLike">
         DELETE FROM LikeReferences
         WHERE reference_idx = #{referenceIdx}
         AND user_idx = #{userIdx}
     </delete>
+
+    <update id="minusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count - 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
 
     <insert id="updateReport">
         UPDATE StudyReferences

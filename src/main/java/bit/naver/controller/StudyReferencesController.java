@@ -109,13 +109,14 @@ public class StudyReferencesController {
     @RequestMapping("/insertLike")
     @ResponseBody
     public int insertLike(@ModelAttribute LikeReferencesEntity entity) {
-        //System.out.println("ENTITY >>>" + entity.toString());
+        System.out.println("ENTITY >>>" + entity.toString());
         return studyReferencesService.insertLike(entity);
     }
 
     @RequestMapping("/deleteLike")
     @ResponseBody
     public int deleteLike(@ModelAttribute LikeReferencesEntity entity) {
+        System.out.println("ENTITY >>>" + entity.toString());
         return studyReferencesService.deleteLike(entity);
     }
 
