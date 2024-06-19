@@ -6,35 +6,35 @@
 
     <!-- 내 공부자료 List를 조회하는 SQL 쿼리 -->
     <select id="getAllStudyNote" resultType="bit.naver.entity.StudyReferencesEntity">
-        SELECT study.reference_idx                             AS referenceIdx,
-        study.user_idx                                  AS userIdx,
+        SELECT study.reference_idx AS referenceIdx,
+        study.user_idx AS userIdx,
         name,
         title,
         isPrivate,
         content,
         category,
         file_attachments,
-        #{limits}                                       AS limits,
-        likes_count                                     AS likesCount,
-        report_count                                    AS reportCount,
-        comments_count                                  AS commentsCount,
-        views_count                                     AS viewsCount,
-        DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i') AS createdAt,
-        study.updated_at                                AS updatedAt,
-        IFNULL(lr.reference_idx, 0)                     AS isLike,
-        COUNT(*) OVER ()                                AS TOTALCOUNT
+        #{limits} AS limits,
+        likes_count AS likesCount,
+        report_count AS reportCount,
+        comments_count AS commentsCount,
+        views_count AS viewsCount,
+        DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i') AS createdAt,
+        DATE_FORMAT(study.updated_at, '%Y-%m-%d %H:%i') AS updatedAt,
+        IFNULL(lr.reference_idx, 0) AS isLike,
+        COUNT(*) OVER () AS TOTALCOUNT
         FROM StudyReferences study
-        LEFT JOIN Users user
-        ON user.user_idx = study.user_idx
-        LEFT JOIN LikeReferences lr
-        ON study.reference_idx = lr.reference_idx
-        AND lr.user_idx = #{userIdx}
+        LEFT JOIN Users user ON user.user_idx = study.user_idx
+        LEFT JOIN LikeReferences lr ON study.reference_idx = lr.reference_idx AND lr.user_idx = #{userIdx}
         <where>
             <if test="searchOption != null and searchOption == 'all-post'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%' , #{searchKeyword} , '%')
+                title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
             <if test="searchOption != null and searchOption == 'title-post'">
                 title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchOption == 'title-content'">
+                title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%')
             </if>
             <if test="searchOption != null and searchOption == 'writer-post'">
                 name LIKE CONCAT('%', #{searchKeyword}, '%')
@@ -48,39 +48,36 @@
 
     <!-- 공부자료 한개의 글 조회하는 SQl 쿼리 -->
     <select id="getStudyNoteById" resultType="bit.naver.entity.StudyReferencesEntity">
-        SELECT study.reference_idx         AS referenceIdx,
-               study.user_idx              AS userIdx,
+        SELECT study.reference_idx AS referenceIdx,
+               study.user_idx AS userIdx,
                name,
                title,
                isPrivate,
                study.content,
                category,
                file_attachments,
-               likes_count                 AS likesCount,
-               report_count                AS reportCount,
-               comments_count              AS commentsCount,
-               views_count                 AS viewsCount,
-               DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i')            AS createdAt,
-               study.updated_at            AS updatedAt,
+               likes_count AS likesCount,
+               report_count AS reportCount,
+               comments_count AS commentsCount,
+               views_count AS viewsCount,
+               DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i') AS createdAt,
+               DATE_FORMAT(study.updated_at, '%Y-%m-%d %H:%i') AS updatedAt,
                IFNULL(lr.reference_idx, 0) AS isLike,
-               COUNT(*) OVER ()            AS TOTALCOUNT
+               COUNT(*) OVER () AS TOTALCOUNT
         FROM StudyReferences study
-                 LEFT JOIN Users user
-                           ON user.user_idx = study.user_idx
-                 LEFT JOIN LikeReferences lr
-                           ON study.reference_idx = lr.reference_idx
-                               AND lr.user_idx = #{userIdx}
+                 LEFT JOIN Users user ON user.user_idx = study.user_idx
+                 LEFT JOIN LikeReferences lr ON study.reference_idx = lr.reference_idx AND lr.user_idx = #{userIdx}
         WHERE study.reference_idx = #{referenceIdx}
     </select>
 
-    <select id="getCommentsByReferenceIdx"  resultType="bit.naver.entity.CommentsEntity">
-        SELECT comment.comment_idx                               AS commentIdx,
-               comment.user_idx                                  AS userIdx,
-               comment.reference_idx                             AS referenceIdx,
-               comment.content                                   AS content,
-               DATE_FORMAT(comment.created_at, '%Y-%m-%d %h:%i') AS createdAt,
+    <select id="getCommentsByReferenceIdx" resultType="bit.naver.entity.CommentsEntity">
+        SELECT comment.comment_idx AS commentIdx,
+               comment.user_idx AS userIdx,
+               comment.reference_idx AS referenceIdx,
+               comment.content AS content,
+               DATE_FORMAT(comment.created_at, '%Y-%m-%d %H:%i') AS createdAt,
                name,
-               COUNT(*) OVER ()                                  AS TOTALCOUNT
+               COUNT(*) OVER () AS TOTALCOUNT
         FROM Comments comment
                  LEFT JOIN Users user ON user.user_idx = comment.user_idx
         WHERE comment.reference_idx = #{referenceIdx}
@@ -93,8 +90,8 @@
     </delete>
 
     <insert id="insertComment">
-        INSERT INTO Comments ( user_idx, reference_idx, content, created_at)
-        VALUES ( #{userIdx}, #{referenceIdx}, #{content}, now())
+        INSERT INTO Comments (user_idx, reference_idx, content, created_at)
+        VALUES (#{userIdx}, #{referenceIdx}, #{content}, now())
     </insert>
 
     <update id="updateViewsCount">
@@ -110,11 +107,23 @@
                )
     </insert>
 
+    <update id="plusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count + 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
+
     <delete id="deleteLike">
         DELETE FROM LikeReferences
         WHERE reference_idx = #{referenceIdx}
           AND user_idx = #{userIdx}
     </delete>
+
+    <update id="minusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count - 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
 
     <insert id="updateReport">
         UPDATE StudyReferences

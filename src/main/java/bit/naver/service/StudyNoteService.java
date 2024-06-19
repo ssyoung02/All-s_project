@@ -49,11 +49,19 @@ public class StudyNoteService {
     }
 
     public int insertLike(LikeReferencesEntity entity) {
-        return studyNoteMapper.insertLike(entity);
+        int result = studyNoteMapper.insertLike(entity);
+        if (result > 0) {
+            studyNoteMapper.plusLike(entity);
+        }
+        return result;
     }
 
     public int deleteLike(LikeReferencesEntity entity) {
-        return studyNoteMapper.deleteLike(entity);
+        int result = studyNoteMapper.deleteLike(entity);
+        if (result > 0) {
+            studyNoteMapper.minusLike(entity);
+        }
+        return result;
     }
 
     public int updateReport(StudyReferencesEntity entity){

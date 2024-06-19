@@ -19,9 +19,6 @@ public class StudyReferencesService {
     public List<StudyReferencesEntity> getStudyReferencesList(String userIdx,String searchKeyword,String searchOption,String limits) {
         return studyReferencesMapper.getAllStudyReferences(userIdx,searchKeyword,searchOption,limits);
     }
-    public List<StudyReferencesEntity> getStudyReferencesMyList(String userIdx,String searchKeyword,String searchOption,String limits) {
-        return studyReferencesMapper.getAllStudyMyReferences(userIdx,searchKeyword,searchOption,limits);
-    }
 
     public StudyReferencesEntity getStudyReferenceById(Long referenceIdx, String userIdx) {
         studyReferencesMapper.updateViewsCount(referenceIdx);
@@ -51,12 +48,21 @@ public class StudyReferencesService {
     }
 
     public int insertLike(LikeReferencesEntity entity) {
-        return studyReferencesMapper.insertLike(entity);
+        int result = studyReferencesMapper.insertLike(entity);
+        if (result > 0) {
+            studyReferencesMapper.plusLike(entity);
+        }
+        return result;
     }
 
     public int deleteLike(LikeReferencesEntity entity) {
-        return studyReferencesMapper.deleteLike(entity);
+        int result = studyReferencesMapper.deleteLike(entity);
+        if (result > 0) {
+            studyReferencesMapper.minusLike(entity);
+        }
+        return result;
     }
+
 
     public int updateReport(StudyReferencesEntity entity){
         return  studyReferencesMapper.updateReport(entity);
