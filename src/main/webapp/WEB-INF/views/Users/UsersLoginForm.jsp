@@ -72,7 +72,7 @@
             <div class="snsloginarea">
                 <a href="#"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
                 <a href="#"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
-                <a href="#"><img src="${root}/resources/images/sns-google.png" alt="구글 로그인"></a>
+                <a href="${root}/login/google"><img src="${root}/resources/images/sns-google.png" alt="구글 로그인"></a>
             </div>
         </form>
     </div>
@@ -87,9 +87,10 @@
                 <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
-                <c:if test="${not empty error}"> <%-- error 메시지 확인 --%>
-                    <p>${error}</p>
-                </c:if>
+                <p id="errorMessage"></p> <c:if test="${not empty error}">
+                <%-- error 메시지 확인 --%>
+                <script> $("#errorMessage").text("${error}"); </script>
+            </c:if>
             </div>
             <div class="modal-bottom">
                 <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
@@ -118,7 +119,7 @@
         </c:choose>
     </p>
 </c:if>
-
+ 
 
 </body>
 </html>

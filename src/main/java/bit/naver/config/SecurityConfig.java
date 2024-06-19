@@ -84,6 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                           "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
+                    .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
         // 그 외 모든 요청은 인증된 사용자만 접근 허용
                     .antMatchers("/Users/userInfoProcess").authenticated()
                     .antMatchers("/Users/userInfo").authenticated()
@@ -122,17 +123,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
 
                 /*
-                    .and()
-                    .oauth2Login() // OAuth2 로그인 설정 (현재는 주석 처리)
-                        .loginPage("/login")  //(폼 로그인과 동일한 페이지 사용 가능)
-                        .userInfoEndpoint()
-                            .userService(customOAuth2UserService) // OAuth2 사용자 정보 처리 서비스 (구현 필요) (customOAuth2UserService는 직접 구현해야 함)->로그인성공 후 사용자정보 가져오는 서비스
-                    .and()
-                        .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공시 핸들러 (구현 필요)
-                        .failureHandler(oAuth2LoginFailureHandler); // OAuth2 로그인 실패시 핸들러 (구현 필요)
-                    */
-                /*
-                추가적으로 필요한 작업:
+                .and()
+                .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
+
+        http
+                .oauth2Login()
+                .loginPage("/Users/UsersLoginForm")
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(authorizationRequestRepository())
+                .and()
+                .tokenEndpoint()
+                .accessTokenResponseClient(new DefaultAuthorizationCodeTokenResponseClient())
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2LoginSuccessHandler())
+                .failureHandler(oAuth2LoginFailureHandler());
+        http .addFilterBefore(oAuth2LoginAuthenticationFilter(authenticationManager(), authorizedClientService()),
+                UsernamePasswordAuthenticationFilter.class);
 
                 OAuth2 클라이언트 등록: Google, Naver, Kakao 등 소셜 로그인 제공 업체에 애플리케이션을 등록하고 클라이언트 ID, 클라이언트 시크릿 등 정보를 발급받아야 합니다.
                 CustomOAuth2UserService 구현: OAuth2 로그인 성공 후 사용자 정보를 가져와서 애플리케이션에 맞게 처리하는 로직을 구현해야 합니다. (예: 사용자 정보를 DB에 저장하거나 세션에 저장)

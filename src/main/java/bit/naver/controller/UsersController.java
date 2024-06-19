@@ -4,6 +4,8 @@ import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
 import bit.naver.security.UsersUserDetailsService;
+import bit.naver.service.GoogleLoginService;
+import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
@@ -45,8 +47,14 @@ import java.util.List;
 @RequestMapping("/Users")
 @RequiredArgsConstructor
 public class UsersController {
+    //private static final Logger log = Logger.getLogger(UsersController.class); // Logger 객체 선언 및 초기화
+
+    @Autowired
+    private GoogleLoginService loginService;
     @Autowired
     private UsersMapper usersMapper;
+    @Autowired
+    private Environment env;
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -153,7 +161,10 @@ public class UsersController {
 
 
         System.out.println("로그인 버튼 누른 후 작업");
-
+        if (principal != null && principal instanceof UsernamePasswordAuthenticationToken) {
+            // 사용자가 이미 인증된 경우 (구글 로그인 등)
+            return "forward:/main";
+        }
         // 입력 값 유효성 검사
         if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
             System.out.println("로그인 입력 비었음");

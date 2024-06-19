@@ -20,8 +20,25 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body class="loginbg">
-<script>
-    $(document).ready(function() {
+  <script>
+      $(document).ready(function() {
+          // 회원가입 폼 유효성 검사
+          $("#registerForm").submit(function(event) {
+              const password = $("#password").val();
+              const password2 = $("#password2").val();
+
+              if (password !== password2) {
+                  $("#passwordCheckResult").text("비밀번호가 일치하지 않습니다.");
+                  $("#passwordCheckResult").removeClass("success").addClass("error");
+                  event.preventDefault(); // 폼 제출 방지
+              } else {
+                  // 비밀번호가 일치하면 password2 필드 제거 후 제출
+                  $("#password2").remove();
+                  $("#passwordCheckResult").remove(); // 오류 메시지 제거
+                  this.submit(); // 폼 제출
+              }
+          });
+
         // 회원가입 결과 메시지 처리 (모달 표시)
         <c:if test="${not empty error}">
             $("#messageContent").text("${error}");
@@ -67,12 +84,26 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <div class="inputbox">
                 <label for="name">이름<span class="essential">*</span></label>
-                <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+                <c:choose>
+                    <c:when test="${not empty googleUserInfo.name}">
+                        <input type="text" id="name" name="name" value="${googleUserInfo.name}" readonly>
+                    </c:when>
+                    <c:otherwise>
+                        <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div class="inputbox">
                 <label for="username">아이디<span class="essential">*</span></label>
                 <div class="input-row flex-between">
-                    <input type="text" id="username" name="username" placeholder="이름을 입력해주세요" required>
+                    <c:choose>
+                        <c:when test="${not empty googleUserInfo.email}">
+                            <input type="text" id="username" name="username" value="${googleUserInfo.email}" readonly>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="text" id="username" name="username" placeholder="아이디를 입력해주세요" required>
+                        </c:otherwise>
+                    </c:choose>
                     <button class="double-check primary-default" type="button" onclick="checkDuplicate()">중복확인</button>
                 </div>
                 <span id="usernameCheckResult"></span>
@@ -103,7 +134,14 @@
             </div>
             <div class="inputbox">
                 <label for="email">이메일<span class="essential">*</span></label>
-                <input type="email" id="email" name="email" placeholder="이메일을 입력해주세요">
+                <c:choose>
+                    <c:when test="${not empty googleUserInfo.email}">
+                        <input type="text" id="email" name="email" value="${googleUserInfo.email}" readonly>
+                    </c:when>
+                    <c:otherwise>
+                        <input type="text" id="email" name="email" placeholder="이메일을 입력해주세요" required>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <button class="loginbutton primary-default" type="submit">회원가입</button>
         </form>
