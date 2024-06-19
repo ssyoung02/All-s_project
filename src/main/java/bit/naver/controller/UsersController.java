@@ -90,30 +90,30 @@ public class UsersController {
 
         // 4. 이메일 중복 검사
         if (usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
-            rttr.addFlashAttribute("alertModal", "이미 사용 중인 이메일입니다.");
+            rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
             return "redirect:/Users/Join";
         }
         try {
-            // 생년월일 변환
-            LocalDate birthdate;
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                birthdate = LocalDate.parse(birthdateStr, formatter);
-            } catch (DateTimeParseException e) {
-                rttr.addFlashAttribute("alertModal", "올바른 생년월일 형식이 아닙니다.");
-                return "redirect:/Users/Join";
-            }
+        // 생년월일 변환
+        LocalDate birthdate;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            birthdate = LocalDate.parse(birthdateStr, formatter);
+        } catch (DateTimeParseException e) {
+            rttr.addFlashAttribute("error", "올바른 생년월일 형식이 아닙니다.");
+            return "redirect:/Users/Join";
+        }
 
-            // Users 객체 생성 및 데이터 설정
-            Users user = new Users();
-            user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setEmail(email);
-            user.setName(name);
-            user.setBirthdate(birthdate);
-            user.setGender(gender);
-            user.setEnabled(true);
-            user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
+        // Users 객체 생성 및 데이터 설정
+        Users user = new Users();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setEmail(email);
+        user.setName(name);
+        user.setBirthdate(birthdate);
+        user.setGender(gender);
+        user.setEnabled(true);
+        user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
             ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID-
             LocalDateTime currentDateTime = LocalDateTime.now();
             LocalDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, zoneId).toLocalDateTime();
@@ -135,7 +135,7 @@ public class UsersController {
             return "redirect:/main"; } catch (Exception e) { // 예외 발생 시 처리
             log.error("회원가입 중 오류 발생:", e); // 오류 로깅
 
-            rttr.addFlashAttribute("alertModal", "회원가입 중 오류가 발생했습니다.");
+            rttr.addFlashAttribute("error", "회원가입 중 오류가 발생했습니다.");
             return "redirect:/Users/Join"; // 회원가입 페이지로 리다이렉트
         }
     }

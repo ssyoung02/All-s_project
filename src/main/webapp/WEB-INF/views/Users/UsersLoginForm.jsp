@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-<c:set var="userVo"
-       value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
-<c:set var="auth"
-       value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />
 <%--SPRING_SECURITY_CONTEXT.authentication.principal은 Spring Security에서 인증된 사용자 정보를 담고 있는 객체입니다.
 하지만, 이 객체의 타입은 UserDetails 인터페이스를 구현한 객체입니다.--%>
 <%--UserDetails 인터페이스는 사용자 이름, 비밀번호, 권한 등의 정보를 제공하지만, 직접적으로 name, email 등의 추가적인 사용자 정보를 제공하지는 않습니다.--%>
@@ -13,7 +9,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> 로그인 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -101,6 +96,29 @@
             </div>
         </div>
     </div>
+
+
+
+    <%-- 로그인 실패 메시지 표시 --%>
+<c:if test="${param.error != null}">
+    <p>
+        <c:choose>
+            <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message == 'Bad credentials'}">
+                아이디 또는 비밀번호가 맞지 않습니다.
+            </c:when>
+            <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message == 'User is disabled'}">
+                계정이 비활성화되었습니다.
+            </c:when>
+            <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message == 'User account is locked'}">
+                계정이 잠겼습니다.
+            </c:when>
+            <c:otherwise>
+                로그인에 실패했습니다.
+            </c:otherwise>
+        </c:choose>
+    </p>
+</c:if>
+
 
 </body>
 </html>

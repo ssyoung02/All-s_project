@@ -17,14 +17,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-
+<%--    <script>--%>
+<%--        $(document).ajaxSend(function(e, xhr, options) {--%>
+<%--            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));--%>
+<%--        });--%>
+<%--    </script>--%>
     <script>
-        //좋아요 버튼
         function toggleLike(element, idx) {
-            const icon = element.querySelector('i');
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {
                 icon.className = 'bi bi-heart-fill';
+
+
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
@@ -34,7 +38,7 @@
                     },
                 });
             } else {
-                icon.className = 'bi bi-heart';
+                element.className = 'fa-regular fa-heart heart-icon';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteLike',
@@ -46,7 +50,6 @@
             }
         }
 
-        //검색 버튼
         function searchPosts() {
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
@@ -93,36 +96,18 @@
         </nav>
         <!-- 본문 영역 -->
         <main>
+
+                <button onclick="location.href='referencesWrite'">글작성</button>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
                 <jsp:include page="../include/navbar.jsp" />
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
-                <h1>공부 자료</h1>
 
-                <!--본문 콘텐츠-->
-                <div class="maxcontent">
-                    <div class="list-title flex-between">
-                        <h3>전체 글(${studyReferencesEntity[0].TOTALCOUNT})</h3>
-                        <fieldset class="search-box flex-row">
-                            <select id="searchOption" name="searchCnd" title="검색 조건 선택">
-                                <option value="all-post">전체</option>
-                                <option value="title-post">제목</option>
-                                <option value="writer-post">작성자</option>
-                            </select>
-                            <p class="search-field">
-                                <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
-                                <button onclick="searchPosts()">
-                                    <span class="hide">검색</span>
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </p>
-                            <button class="primary-default" onclick="location.href='referencesWrite'">글작성</button>
-                        </fieldset>
-                    </div>
+            <h1>공부자료</h1>
 
+<<<<<<< HEAD
                     <div class="boardContent flex-colum">
                         <c:forEach var="data" items="${studyReferencesEntity}">
                             <%--게시글 상세 item--%>
@@ -159,8 +144,53 @@
                     <div class="flex-row">
                         <button class="secondary-default">목록 더보기</button>
                     </div>
+=======
+            <!-- 전체글(n) 검색창 -->
+            <div class="container">
+                <p class="total-post">전체글(${studyReferencesEntity[0].TOTALCOUNT})</p>
+                <div class="flex-grow"></div>
+                <select class="search-option" id="searchOption">
+                    <option value="all-post">전체</option>
+                    <option value="title-post">제목</option>
+                    <option value="writer-post">작성자</option>
+                </select>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-bar" placeholder=" 검색어를 입력해주세요" value="${searchKeyword}">
+                    <input type="hidden" id="limits" class="search-bar" value="${limits}">
+                    <button type="button" class="search-button" onclick="searchPosts()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+>>>>>>> parent of 67781d9 (Merge pull request #14 from Naver-spring/SJH)
                 </div>
-                <%--본문 콘텐츠--%>
+            </div>
+
+            <!-- 글 목록 -->
+            <c:forEach var="data" items="${studyReferencesEntity}">
+                <div class="post-container">
+                    <div class="post-header">
+                        <p class="title-post"
+                           onclick="location.href='referencesSite?referenceIdx=${data.referenceIdx}'">${data.title}</p>
+                        <!-- 페이지 새로고침해도 좋아요된것은 유지되도록-->
+                        <c:if test="${data.isLike != 0}">
+                            <div class="like-container">
+                                <i class="fa-solid fa-heart heart-icon liked"
+                                   onclick="toggleLike(this, ${data.referenceIdx})"></i>
+                                <p class="info-post ">좋아요</p>
+                            </div>
+                        </c:if>
+                        <c:if test="${data.isLike == 0}">
+                            <div class="like-container">
+                                <i class="fa-regular fa-heart heart-icon"
+                                   onclick="toggleLike(this, ${data.referenceIdx})"></i>
+                                <p class="info-post ">좋아요</p>
+                            </div>
+                        </c:if>
+                    </div>
+                    <p class="info-post">작성자: ${data.name} | 작성일: ${data.createdAt} | 조회수: ${data.viewsCount}</p>
+                    <p class="content-post">${data.content}</p>
+                    <hr class="green">
+                </div>
+            </c:forEach>
 
             </div>
             <%--콘텐츠 끝--%>
@@ -171,3 +201,4 @@
 </div>
 </body>
 </html>
+

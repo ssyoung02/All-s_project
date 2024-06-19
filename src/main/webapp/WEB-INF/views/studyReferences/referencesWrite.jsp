@@ -14,10 +14,74 @@
 <head>
     <title>Title</title>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="${root}/resources/css/common.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <style>
+        h1 {
+            font-weight: 600;
+            font-size: 36px;
+            color: #263238;
+        }
+
+        h3 {
+            font-weight: 600;
+            font-size: 24px;
+            color: #212121;
+        }
+
+        .container {
+            border: 1px solid #a2b18a;
+            width: 980px;
+            height: auto;
+            border-radius: 10px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .title-post {
+            font-size: 32px;
+            margin-top: 20px;
+            margin-left: 20px;
+            border: 1px solid white;
+            border-bottom: 2px solid #d9d9d9;
+            display: block;
+            width: calc(100% - 40px);
+        }
+
+        .private-post-container {
+            margin: 20px 0 20px 20px;
+            font-size: 16px;
+            color: #212121;
+        }
+
+        .private-post {
+            margin-right: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cancel-button, .write-button {
+            border: 1px solid #a2b18a;
+            border-radius: 4px;
+            color: #a2b18a;
+            width: 94px;
+            height: 48px;
+            font-size: 16px;
+            font-weight: 400;
+            margin-left: 15px;
+        }
+
+        .cancel-button:hover, .write-button:hover {
+            background-color: #a2b18a;
+            color: white;
+        }
+
+        #smarteditor {
+            margin-left: 20px; /* 오른쪽으로 살짝 이동 */
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
     <script>
@@ -73,7 +137,7 @@
                 },
                 success: function(response) {
                     alert("글 작성이 완료되었습니다.");
-                    location.href ="/studyReferences/referencesRead?referenceIdx="+response
+                    location.href ="/studyReferences/referencesSite?referenceIdx="+response
                 },
                 error: function() {
                     alert("글 작성에 실패하였습니다.");
@@ -94,39 +158,25 @@
         </nav>
         <!-- 본문영역 -->
         <main>
-            <!--모바일 메뉴 영역-->
-            <div class="m-menu-area" style="display: none;">
-                <jsp:include page="../include/navbar.jsp" />
-            </div>
-            <!--각 페이지의 콘텐츠-->
-            <h1>내 공부노트</h1>
+            <h1>공부자료</h1>
 
-            <!--본문 콘텐츠-->
-            <h4 class="s-header">글쓰기</h4>
+            <h3>글쓰기</h3>
 
             <form id="writeForm" onsubmit="submitPost(event);">
-                <div class="post-area">
+                <div class="container">
                     <input type="text" class="title-post" name="title" placeholder="제목을 입력해주세요" required>
-
-                    <ul class="todolist">
-                        <!-- 태그 항목 -->
-                        <li>
-                            <input type="checkbox" id="public" class="private-post" name="privatePost">
-                            <label for="public" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                                게시물 비공개
-                            </label>
-                        </li>
-                    </ul>
+                    <div class="private-post-container">
+                        <input type="checkbox" class="private-post" name="privatePost">게시글 비공개
+                    </div>
 
                     <!-- naver smart editor api -->
                     <div id="smarteditor">
-                        <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;"
+                        <textarea name="editorTxt" id="editorTxt" rows="20" cols="110"
                                   placeholder="내용을 입력해주세요"></textarea>
                     </div>
-                    <div class="buttonBox">
-                        <button type="reset" class="updatebutton secondary-default" onclick="location.href='referencesList'">취소</button>
-                        <button type="submit" class="updatebutton primary-default">작성</button>
+                    <div class="button-container">
+                        <button type="reset" class="cancel-button" onclick="location.href='referencesList'">취소</button>
+                        <button type="submit" class="write-button">작성</button>
                     </div>
                 </div>
             </form>

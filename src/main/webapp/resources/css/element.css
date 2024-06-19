@@ -17,12 +17,6 @@ button{
     background-color: white;
     cursor: pointer;
 }
-.link-button{
-    padding: 0;
-    font-size: 1em;
-    color: #263238;
-}
-
 input, select{
     border: 1px solid #bbbbbb;
     border-radius: 5px;
@@ -96,7 +90,8 @@ h1, h2, h3, h4, p {
     color: #588159;
 }
 .tertiary-default:hover {
-    border: #3b593f;
+    background-color: #3b593f;
+    color: white;
 }
 .tertiary-focus{
     background-color: #E8F5E9;

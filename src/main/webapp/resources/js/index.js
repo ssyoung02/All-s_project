@@ -1,3 +1,14 @@
+const skipnavLink = document.querySelector('#skipnav a');
+skipnavLink.addEventListener('focus', function () {
+    const skipnav = document.querySelector('#skipnav');
+    skipnav.style.opacity = 1;
+});
+
+skipnavLink.addEventListener('blur', function () {
+    const skipnav = document.querySelector('#skipnav');
+    skipnav.style.opacity = 0;
+});
+
 //화면 위치에 따라 TOP 버튼 보이게
 window.addEventListener("scroll", function () {
     if (window.scrollY > 500) {
@@ -79,14 +90,12 @@ document.querySelectorAll('.menu-area .menu-text').forEach(function (menuText) {
 //타이머 키고 끄기
 function timerOpen() {
     document.querySelector('#timer').style.display = "block";
-    document.querySelector('header').style.display = "none";
     document.querySelector('#container').style.display = "none";
     document.querySelector('footer').style.display = "none";
 }
 
 function timeStop() {
     document.querySelector('#timer').style.display = "none";
-    document.querySelector('header').style.display = "";
     document.querySelector('#container').style.display = "";
     document.querySelector('footer').style.display = "";
 }
@@ -127,7 +136,7 @@ document.querySelectorAll('.board-like').forEach(function (button) {
 });
 
 //커스텀 체크박스 이벤트
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const checkboxes = document.querySelectorAll('.todo-checkbox');
 
 checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', function () {

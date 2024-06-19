@@ -143,7 +143,7 @@
 
         success: function(response) {
           alert("글 수정이 완료되었습니다.");
-          location.href ="/studyReferences/referencesRead?referenceIdx="+idx
+          location.href ="/studyReferences/referencesSite?referenceIdx="+idx
         },
         error: function() {
           alert("글 수정에 실패하였습니다.");
@@ -181,7 +181,7 @@
                                   >${studyReferencesEntity.content}</textarea>
           </div>
           <div class="button-container">
-            <button type="reset" class="cancel-button" onclick="location.href='/StudyReferences/referencesRead?referenceIdx=' + ${studyReferencesEntity.referenceIdx}">취소</button>
+            <button type="reset" class="cancel-button" onclick="location.href='/StudyReferences/referencesSite?referenceIdx=' + ${studyReferencesEntity.referenceIdx}">취소</button>
             <button type="button" class="write-button" onclick="updatePost(${studyReferencesEntity.referenceIdx})">수정</button>
           </div>
         </div>

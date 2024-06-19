@@ -39,11 +39,11 @@
                 <h4 class="s-header">글쓰기</h4>
                 <div class="maxcontent">
                     <div class="post-area">
-                        <input type="text" class="title-post" name="title" title="제목" placeholder="제목을 입력해주세요">
+                        <input type="text" id="writeTitle" title="제목" placeholder="제목을 입력해주세요">
                         <ul class="todolist">
                             <!-- 태그 항목 -->
                             <li>
-                                <input type="checkbox" id="public" class="todo-checkbox" name="privatePost">
+                                <input type="checkbox" id="public" class="todo-checkbox">
                                 <label for="public" class="todo-label">
                                     <span class="checkmark"><i class="bi bi-square"></i></span>
                                     게시물 비공개
