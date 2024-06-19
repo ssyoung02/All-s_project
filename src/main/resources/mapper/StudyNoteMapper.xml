@@ -33,6 +33,9 @@
             <if test="searchOption != null and searchOption == 'title-post'">
                 title LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
+            <if test="searchOption != null and searchOption == 'title-content'">
+                title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%')
+            </if>
             <if test="searchOption != null and searchOption == 'writer-post'">
                 name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
@@ -97,15 +100,29 @@
     </update>
 
     <insert id="insertLike">
-        INSERT INTO LikeReferences (user_idx, reference_idx, created_at)
-        VALUES (#{userIdx}, #{referenceIdx}, now())
+        INSERT INTO LikeReferences( user_idx, reference_idx, created_at)
+        VALUES (
+                   #{userIdx},#{referenceIdx},now()
+               )
     </insert>
+
+    <update id="plusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count + 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
 
     <delete id="deleteLike">
         DELETE FROM LikeReferences
         WHERE reference_idx = #{referenceIdx}
           AND user_idx = #{userIdx}
     </delete>
+
+    <update id="minusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count - 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
 
     <insert id="updateReport">
         UPDATE StudyReferences
