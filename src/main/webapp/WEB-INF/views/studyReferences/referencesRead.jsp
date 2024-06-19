@@ -23,29 +23,30 @@
 
         const profilePicUrl = "/mnt/data/image.png"; // URL to the profile picture
 
+        //좋아요 버튼
         function toggleLike(element, idx) {
+            const icon = element.querySelector('i');
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {
-                const icon = element.querySelector('i');
-                element.classList.toggle('liked');
+                icon.className = 'bi bi-heart-fill';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
-                })
+                });
             } else {
                 icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteLike',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
-                })
+                });
             }
         }
 
@@ -54,10 +55,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/updateReport',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx : idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx : idx}
                 })
                 alert("게시글 신고가 완료되었습니다.");
             }else {
@@ -76,13 +77,13 @@
             $.ajax({
                 method: 'POST',
                 url: '/studyReferences/insertComment',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
-                },
                 data: {
                     content: commentInput.value,
                     referenceIdx: referenceIdx.value
                 },  // 여기서 'content' 키를 사용합니다.
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                },
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (response) {
                     location.href = "/studyReferences/referencesRead?referenceIdx=" + referenceIdx.value
@@ -93,23 +94,27 @@
             });
         }
 
-
         function deleteComment(element, idx) {
             if (confirm('댓글을 삭제하시겠습니까?')) {
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteComment',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {commentIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {commentIdx: idx}
-                }).done(function (result) {
-                    /* alert(result) 삭제가 완료되었습니다 띄우는 작업 */
-                })
 
-                const commentItem = element.parentElement;
-                commentItem.remove();
-
+                    success: function(result) {
+                        const commentItem = element.closest('.comment-item');
+                        if (commentItem) {
+                            commentItem.remove();
+                        }
+                        alert("댓글이 삭제되었습니다.");
+                    },
+                    error: function() {
+                        alert("댓글 삭제에 실패하였습니다.");
+                    }
+                });
             }
         }
 
@@ -127,10 +132,10 @@
                 $.ajax({
                     method: 'POST',
                     url: '/StudyReferences/deletePost',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx}
                 }).done(function (result) {
                     location.href='/studyReferences/referencesList'
                 })
@@ -180,13 +185,13 @@
                             <div class="board-button">
                                 <c:if test="${studyReferencesEntity.isLike !=0}">
                                     <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
-                                        <i class="bi bi-heart"></i>
+                                        <i class="bi bi-heart-fill"></i>
                                         <p class="info-post ">좋아요</p>
                                     </button>
                                 </c:if>
                                 <c:if test="${studyReferencesEntity.isLike == 0}">
                                     <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
-                                        <i class="bi bi-heart-fill"></i>
+                                        <i class="bi bi-heart"></i>
                                         <p class="info-post ">좋아요</p>
                                     </button>
                                 </c:if>

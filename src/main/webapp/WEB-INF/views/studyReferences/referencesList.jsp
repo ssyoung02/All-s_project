@@ -24,25 +24,25 @@
             const icon = element.querySelector('i');
             element.classList.toggle('liked');
             if (element.classList.contains('liked')) {
-                element.className = 'bi bi-heart-fill';
+                icon.className = 'bi bi-heart-fill';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/insertLike',
-                    data: {referenceIdx: idx, userIdx: ${userIdx}},
+                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                })
+                });
             } else {
                 icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
                     url: '/studyReferences/deleteLike',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // CSRF 토큰 헤더 설정
+                    data: {referenceIdx: idx, userIdx: ${userVo.userIdx}},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
-                })
+                });
             }
         }
 
@@ -136,7 +136,7 @@
                                         </div>
                                     </button>
 
-                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록-->
+                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
                                     <c:if test="${data.isLike != 0}">
                                         <button class="board-like" onclick="toggleLike(this, ${data.referenceIdx})">
                                             <i class="bi bi-heart-fill"></i>

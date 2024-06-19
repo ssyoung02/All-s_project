@@ -109,12 +109,30 @@
       smartEditor();
     });
 
+    function isContentEmpty(content) {
+      // 실제 텍스트가 비어있는지 검사
+      return $('<div>').html(content).text().trim() === '';
+    }
+
     function updatePost(idx) {
       event.preventDefault(); // 폼 제출을 막음
       oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
 
       let title = document.getElementById('title-post').value;
       let content = document.getElementById('editorTxt').value;
+
+      if (title.trim() === '') {
+        alert("제목을 입력해주세요");
+        document.getElementById('title-post').focus();
+        return false;
+      }
+
+      if (isContentEmpty(content)) {
+        alert("내용을 입력해주세요");
+        oEditors.getById["editorTxt"].exec("FOCUS");
+        return false;
+      }
+
       $.ajax({
         url: '/studyReferences/updatePost',
         type: 'POST',
@@ -122,6 +140,7 @@
         beforeSend: function(xhr) {
           xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
         },
+
         success: function(response) {
           alert("글 수정이 완료되었습니다.");
           location.href ="/studyReferences/referencesRead?referenceIdx="+idx

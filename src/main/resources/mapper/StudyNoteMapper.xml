@@ -6,23 +6,23 @@
 
     <!-- 내 공부자료 List를 조회하는 SQL 쿼리 -->
     <select id="getAllStudyNote" resultType="bit.naver.entity.StudyReferencesEntity">
-        SELECT study.reference_idx                             AS referenceIdx,
-        study.user_idx                                  AS userIdx,
+        SELECT study.reference_idx AS referenceIdx,
+        study.user_idx AS userIdx,
         name,
         title,
         isPrivate,
         content,
         category,
         file_attachments,
-        #{limits}                                       AS limits,
-        likes_count                                     AS likesCount,
-        report_count                                    AS reportCount,
-        comments_count                                  AS commentsCount,
-        views_count                                     AS viewsCount,
+        #{limits} AS limits,
+        likes_count AS likesCount,
+        report_count AS reportCount,
+        comments_count AS commentsCount,
+        views_count AS viewsCount,
         DATE_FORMAT(study.created_at, '%Y-%m-%d %h:%i') AS createdAt,
-        study.updated_at                                AS updatedAt,
-        IFNULL(lr.reference_idx, 0)                     AS isLike,
-        COUNT(*) OVER ()                                AS TOTALCOUNT
+        study.updated_at AS updatedAt,
+        IFNULL(lr.reference_idx, 0) AS isLike,
+        COUNT(*) OVER () AS TOTALCOUNT
         FROM StudyReferences study
         LEFT JOIN Users user
         ON user.user_idx = study.user_idx

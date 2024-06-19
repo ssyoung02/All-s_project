@@ -19,9 +19,9 @@ public class StudyReferencesService {
     public List<StudyReferencesEntity> getStudyReferencesList(String userIdx,String searchKeyword,String searchOption,String limits) {
         return studyReferencesMapper.getAllStudyReferences(userIdx,searchKeyword,searchOption,limits);
     }
-    public List<StudyReferencesEntity> getStudyReferencesMyList(String userIdx,String searchKeyword,String searchOption,String limits) {
-        return studyReferencesMapper.getAllStudyMyReferences(userIdx,searchKeyword,searchOption,limits);
-    }
+//    public List<StudyReferencesEntity> getStudyReferencesMyList(String userIdx,String searchKeyword,String searchOption,String limits) {
+//        return studyReferencesMapper.getAllStudyMyReferences(userIdx,searchKeyword,searchOption,limits);
+//    }
 
     public StudyReferencesEntity getStudyReferenceById(Long referenceIdx, String userIdx) {
         studyReferencesMapper.updateViewsCount(referenceIdx);
