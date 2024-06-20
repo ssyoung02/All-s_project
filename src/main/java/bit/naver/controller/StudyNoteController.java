@@ -43,7 +43,7 @@ public class StudyNoteController {
         String userIdx = String.valueOf(user != null ? user.getUserIdx() : 59); // 사용자 ID 가져오기
         List<StudyReferencesEntity> studyReferencesEntity = studyNoteService.getStudyNoteList(userIdx, searchKeyword, searchOption, limits);
         model.addAttribute("studyReferencesEntity", studyReferencesEntity);
-        model.addAttribute("userIdx", userIdx); //나중에 59만 로그인한사람의 userIdx로 바꿔주기
+        model.addAttribute("userIdx", userIdx);
         model.addAttribute("limits", limits);
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("searchOption", searchOption);
@@ -65,7 +65,7 @@ public class StudyNoteController {
         model.addAttribute("userIdx", userIdx); //나중에 59만 로그인한사람의 userIdx로 바꿔주기
 
 
-        return "/studyNote/NoteRead";
+        return "/studyNote/noteRead";
     }
 
     @RequestMapping("/deleteComment")
@@ -87,7 +87,7 @@ public class StudyNoteController {
     @RequestMapping("/insertLike")
     @ResponseBody
     public int insertLike(@ModelAttribute LikeReferencesEntity entity) {
-        //System.out.println("ENTITY >>>" + entity.toString());
+        System.out.println("ENTITY >>>" + entity.toString());
         return studyNoteService.insertLike(entity);
     }
 
@@ -132,7 +132,6 @@ public class StudyNoteController {
         String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
         StudyReferencesEntity studyReferencesEntity = studyNoteService.getStudyNoteById(entity.getReferenceIdx(), userIdx);
         model.addAttribute("studyReferencesEntity", studyReferencesEntity);
-        System.out.println(studyReferencesEntity.toString());
 
         return "/studyNote/noteModify";
     }
