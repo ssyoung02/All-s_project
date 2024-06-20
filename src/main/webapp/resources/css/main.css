@@ -145,7 +145,7 @@
     width: 80px;
     height: 80px;
     border-radius: 10px;
-    background-color: aqua;
+    border: 1px solid #898989;
 }
 .group-title h2{
     margin-bottom: 10px;
@@ -162,10 +162,13 @@
 }
 
 .group-main{
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2em;
 }
 .group-content{
-    flex: 4;
+    grid-column: 1 / 1;
+    grid-row: 1;
 }
 .group-content h3{
     margin-bottom: 1em;
@@ -174,13 +177,14 @@
 .group-lank{
     display: flex;
     margin-bottom: 1em;
+    gap: 1em;
 }
 .lank-phase{
     display: flex;
     flex-direction: row;
     gap: 5px;
     height: 200px;
-    margin: 0 2em;
+    margin: 0 1em;
 }
 
 .lank-floor{
@@ -259,6 +263,8 @@
 
 /*맴버리스트*/
 .group-member{
+    grid-column: 2 / 2;
+    grid-row: 1;
     height: 500px;
     padding: 1em;
     border: 1px solid;

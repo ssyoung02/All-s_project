@@ -1,7 +1,19 @@
+@media (max-width: 1500px) {
+    .mainContaner{
+        margin: 0 3em;
+    }
+}
 @media (max-width: 1200px) {
     /*메인메뉴 medium사이즈*/
     nav{
         display: none;
+    }
+    main {
+        grid-column: 1 / 5;
+        grid-row: 1;
+    }
+    .mainContaner{
+        margin: 0 3em;
     }
     .m-menu-area{
         display: none;
@@ -9,6 +21,7 @@
         right: 8%;
         top: 11em;
         width: 300px;
+        z-index: 1;
     }
     .m-size-nav{
         display: flex;
@@ -45,5 +58,41 @@
     .time-area{
         font-size: 4em;
     }
+
+    /*회원정보 수정 모바일*/
+    .userinfo{
+        flex-direction: column;
+    }
+
+    #user{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1em;
+        flex-direction: column;
+    }
+    .userinputbox{
+        display: flex;
+        flex-direction: row;
+        margin: 10px 0;
+        width: 100%;
+    }
+    .profile-chage{
+        margin-left: -4em;
+    }
+
 }
 
+@media (max-width: 850px) {
+    /*메인*/
+    .loginMain{
+        flex-direction: column;
+    }
+    /*회원정보 수정*/
+    .resume-file{
+        flex-direction: column;
+        gap: 1em;
+    }
+    .file-item{
+        width: 100%;
+    }
+}

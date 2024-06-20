@@ -16,6 +16,7 @@
 .lnb > ul{
     padding: 0;
 }
+
 .menu-top{
     font-weight: bold;
     margin-top: 3px;
@@ -33,6 +34,7 @@
 .dropdown-menu{
     padding-left: 1em;
 }
+
 .menu-area{
     padding: 0.7em 1em;
     border-radius: 5px;
@@ -282,6 +284,7 @@ footer p{
 
 .modal-contents{
     display:flex;
+    min-width: 300px;
     flex-direction : column;
     align-items : center;
     position: relative;
@@ -293,6 +296,7 @@ footer p{
 
 .modal-text{
     gap: 7em;
+    width: 100%;
 }
 
 .modal-bottom .modal-close{
@@ -306,4 +310,11 @@ footer p{
 }
 .modal-center{
     margin: 3em 0;
+}
+
+#modal-container button{
+    padding: 1em 2em;
+}
+#modal-container .modal-close-x{
+    padding: 1em 0 1em 1em;
 }

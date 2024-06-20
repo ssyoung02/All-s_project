@@ -21,7 +21,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -35,60 +35,77 @@
             <!--각 페이지의 콘텐츠-->
             <div id="content">
                 <h1>내 공부노트</h1>
-                <div class="maxcontent">
-                    <div class="post-area">
-                        <ul class="taglist flex-row">
-                            <li class="tagitem ing">모집중</li>
-                            <li class="tagitem studyField">면접</li>
-                            <li class="tagitem">지역</li>
-                            <li class="tagitem">20대</li>
-                            <li class="tagitem">성별무관</li>
-                            <li class="tagitem">오프라인</li>
-                        </ul>
-                        <div class="studygroup-item flex-between">
-                            <!--스터디 목록-->
-                            <div class="imgtitle flex-row">
-                                <div class="board-item flex-columleft">
-                                    <h3 class="board-title">백앤드 개발자 코딩 면접 같이 준비하실 분</h3>
-                                    <p>작성자: Jihyeon  |   작성일: 2024.06.09  |  조회수: 30</p>
-                                </div>
-                            </div>
-                            <!--좋아요-->
-                            <div class="board-button">
-                                <button class="flex-row">
-                                    <i class="bi bi-heart"></i>
-                                    <p class="info-post ">좋아요</p>
-                                </button>
-                                |
-                                <button class="report">신고</button>
+
+                <div class="post-area">
+                    <p class="study-tag">
+                        <span class="recruit-status closed">모집완료</span>
+                        <span class="department">면접</span>
+                        <span class="study-tagItem">#위치</span>
+                        <span class="study-tagItem">#성별</span>
+                        <span class="study-tagItem">#연령대</span>
+                        <span class="study-tagItem">#성별</span>
+                        <span class="study-tagItem">#온라인</span>
+                    </p>
+                    <div class="studygroup-item flex-between">
+                        <!--스터디 목록-->
+                        <div class="imgtitle flex-row">
+                            <div class="board-item flex-columleft">
+                                <h3 class="board-title">제목</h3>
+                                <p>작성자: 유저네임  |   작성일: 2024.06.19  |  조회수:  30</p>
                             </div>
                         </div>
-                        <div class="post-content">
-                            <textarea class="board-detail">
-1. 전달값(argument)과 매개변수(parameter)
-- Method: 일정한 기능을 가짐
-- funtion, 함수라고도 함
-- 함수를 작성하고, 그 함수를 호출함으로써 실행
-- void: 리턴값이 없다
-                            </textarea>
-                        </div>
-                        <div class="buttonBox">
-                            <button class="updatebutton primary-default">가입신청</button>
+                        <!--좋아요-->
+                        <div class="board-button">
+                            <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
+                                <i class="bi bi-heart-fill"></i>
+                                <p class="info-post ">좋아요</p>
+                            </button>|
+                            <button class="report">신고</button>
                         </div>
                     </div>
-                    <div class="board-bottom">
-                        <button class="secondary-default">삭제</button>
-                        <button class="secondary-default">수정</button>
-                        <button class="primary-default">목록</button>
+                    <div class="post-content">내용</div>
+                    <div class="buttonBox">
+                        <button class="primary-default" onclick="modalOpen()">가입 신청</button>
                     </div>
                 </div>
-
+                <div class="board-bottom">
+                    <button class="secondary-default" onclick="">삭제</button>
+                    <button class="secondary-default" onclick="">수정</button>
+                    <button class="primary-default" onclick="">목록</button>
+                </div>
             </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h3>백엔드 개발자 코등 면접 같이 준비하실 분</h3>
+                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                <textarea class="board-textarea">
+신청서를 작성해주세요
+예)
+거주지(또는 직장):
+성별:
+나이:
+신청이유:
+                </textarea>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="secondary-default" data-dismiss="modal">취소</button>
+                <button type="button" class="primary-default" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

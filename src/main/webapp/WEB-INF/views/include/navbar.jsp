@@ -41,7 +41,6 @@
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                     <button type="submit" class="link-button">내 공부자료</button>
                                 </form>
-                                <a href="${root}/studyNote/noteList">내 공부노트</a>
                             </div>
                         </li>
                         <li class="submenu-item">
@@ -78,7 +77,6 @@
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="${root}/studyReferences/referencesList">공부 자료</a>
                                 <form method="POST" action="<c:url value='${root }/studyReferences/referencesList' />">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                     <button type="submit" class="link-button">공부 자료</button>
@@ -111,7 +109,6 @@
                         </li>
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <a href="${root}/Users/userEdit">정보 수정</a>
                                 <form method="POST" action="<c:url value='${root }/Users/userEdit' />">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                     <button type="submit" class="link-button">정보 수정</button>
