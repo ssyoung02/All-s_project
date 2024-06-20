@@ -57,5 +57,5 @@
             </ul>
         </div>
     </div>
-    <p>© 2021 All Rights Reserved</div>
+    <div>© 2021 All Rights Reserved</div>
 </footer>
