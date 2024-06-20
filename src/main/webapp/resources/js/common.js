@@ -14,8 +14,14 @@ function loadScript(url, callback)
   // Fire the loading
       head.appendChild(script);
   }
-
+// Promise.all (필요에 따라 사용)
 Promise.all([
     loadScript('/resources/js/index.js'),
     loadScript('/resources/js/joinValidChecker.js')
-])
+]).then(() => {
+    // skipnavLink 변수 선언
+    let skipNavLink = document.getElementById("skipnav");
+
+    // ... (나머지 코드)
+});
+

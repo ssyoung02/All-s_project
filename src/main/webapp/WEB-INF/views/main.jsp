@@ -71,241 +71,241 @@
                         </div>
                     </div>
                 </sec:authorize>
-                    <%-- 로그인한 사용자에게만 표시 --%>
-                    <sec:authorize access="isAuthenticated()">
-                        <div class="loginMain">
-                            <div class="loginUserInfoLeft">
-                                <div class="sceduler-area">
-                                    <div class="sceduler">
-                                        달력 영역
-                                    </div>
-                                    <div class="todo">
-                                        <h3>6월 15일</h3>
-                                        <div class="achieve">
-                                            <div class="todoTitle">달성도</div>
-                                            <div class="gaugeBar">
-                                                <progress id="progress" value="60" max="100"></progress>
-                                            </div>
-                                            <p class="percent">60%</p>
+                <%-- 로그인한 사용자에게만 표시 --%>
+                <sec:authorize access="isAuthenticated()">
+                    <div class="loginMain">
+                        <div class="loginUserInfoLeft">
+                            <div class="sceduler-area">
+                                <div class="sceduler">
+                                    달력 영역
+                                </div>
+                                <div class="todo">
+                                    <h3>6월 15일</h3>
+                                    <div class="achieve">
+                                        <div class="todoTitle">달성도</div>
+                                        <div class="gaugeBar">
+                                            <progress id="progress" value="60" max="100"></progress>
                                         </div>
-                                        <div class="todoList">
-                                            <div class="todoTitle">할 일</div>
-                                            <ul class="todolist">
-                                                <li>
-                                                    <input type="checkbox" id="todolist11" class="todo-checkbox">
-                                                    <label for="todolist11" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                        자바 공부
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox" id="todolist22" class="todo-checkbox">
-                                                    <label for="todolist22" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                        면접 준비
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox" id="todolist33" class="todo-checkbox">
-                                                    <label for="todolist33" class="todo-label">
-                                                        <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                        UI 설계
-                                                    </label>
-                                                </li>
-                                                <li>
-                                                    <input type="checkbox" id="todolist44" class="todo-checkbox">
-                                                    <label for="todolist44" class="todo-label">
+                                        <p class="percent">60%</p>
+                                    </div>
+                                    <div class="todoList">
+                                        <div class="todoTitle">할 일</div>
+                                        <ul class="todolist">
+                                            <li>
+                                                <input type="checkbox" id="todolist11" class="todo-checkbox">
+                                                <label for="todolist11" class="todo-label">
+                                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                                    자바 공부
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="todolist22" class="todo-checkbox">
+                                                <label for="todolist22" class="todo-label">
+                                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                                    면접 준비
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="todolist33" class="todo-checkbox">
+                                                <label for="todolist33" class="todo-label">
+                                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                                    UI 설계
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" id="todolist44" class="todo-checkbox">
+                                                <label for="todolist44" class="todo-label">
                                                         <span class="checkmark"><i
                                                                 class="bi bi-check-square"></i></span>
-                                                        자소서 작성
-                                                    </label>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="weekly">
-                                    <h2>주간 공부시간</h2>
-                                    <div class="weeklyGrape">
-
+                                                    자소서 작성
+                                                </label>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
-                            <div class="loginUserInfoRight">
-                                <div class="studyTime">
-                                    <h2 class="">오늘의 공부 시간</h2>
-                                    <div>
-                                        <div class="todoTitle">Total</div>
-                                        <p id="totalstudytime">127시간</p>
-                                    </div>
-                                    <div>
-                                        <div class="todoTitle">Today</div>
-                                        <p id="todaystudytime">5시간</p>
+                            <div class="weekly">
+                                <h2>주간 공부시간</h2>
+                                <div class="weeklyGrape">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="loginUserInfoRight">
+                            <div class="studyTime">
+                                <h2 class="">오늘의 공부 시간</h2>
+                                <div>
+                                    <div class="todoTitle">Total</div>
+                                    <p id="totalstudytime">127시간</p>
+                                </div>
+                                <div>
+                                    <div class="todoTitle">Today</div>
+                                    <p id="todaystudytime">5시간</p>
+                                </div>
+                            </div>
+                            <div class="userStudyGroup">
+                                <div class="userStudyGroupTitle flex-between">
+                                    <h3>공부하는 42조</h3>
+                                    <div class="slide-button-group">
+                                        <button class="slide-button" title="이전">
+                                            <i class="bi bi-caret-left-fill"></i>
+                                            <span class="hide">이전</span>
+                                        </button>
+                                        <button class="slide-button" title="다음">
+                                            <i class="bi bi-caret-right-fill"></i>
+                                            <span class="hide">다음</span>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="userStudyGroup">
-                                    <div class="userStudyGroupTitle flex-between">
-                                        <h3>공부하는 42조</h3>
-                                        <div class="slide-button-group">
-                                            <button class="slide-button" title="이전">
-                                                <i class="bi bi-caret-left-fill"></i>
-                                                <span class="hide">이전</span>
-                                            </button>
-                                            <button class="slide-button" title="다음">
-                                                <i class="bi bi-caret-right-fill"></i>
-                                                <span class="hide">다음</span>
-                                            </button>
+                                <div class="userStudyGroupMember">
+                                    <div class="memberItem">
+                                        <div class="studyMemberProfile">
+                                            <a class="profile" href="#">
+                                                <div class="profile-img">
+                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                                </div>
+                                                <div class="status"><span class="status">접속중</span></div>
+                                            </a>
                                         </div>
+                                        <a href="#" class="memberName">Yejoon</a>
                                     </div>
-                                    <div class="userStudyGroupMember">
-                                        <div class="memberItem">
-                                            <div class="studyMemberProfile">
-                                                <a class="profile" href="#">
-                                                    <div class="profile-img">
-                                                        <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                                    </div>
-                                                    <div class="status"><span class="status">접속중</span></div>
-                                                </a>
-                                            </div>
-                                            <a href="#" class="memberName">Yejoon</a>
+                                    <div class="memberItem">
+                                        <div class="studyMemberProfile">
+                                            <a class="profile" href="#">
+                                                <div class="profile-img">
+                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                                </div>
+                                                <div class="status"><span class="status">접속중</span></div>
+                                            </a>
                                         </div>
-                                        <div class="memberItem">
-                                            <div class="studyMemberProfile">
-                                                <a class="profile" href="#">
-                                                    <div class="profile-img">
-                                                        <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                                    </div>
-                                                    <div class="status"><span class="status">접속중</span></div>
-                                                </a>
-                                            </div>
-                                            <a href="#" class="memberName">Jeayang</a>
+                                        <a href="#" class="memberName">Jeayang</a>
+                                    </div>
+                                    <div class="memberItem">
+                                        <div class="studyMemberProfile">
+                                            <a class="profile" href="#">
+                                                <div class="profile-img">
+                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                                </div>
+                                                <div class="status"><span class="status">접속중</span></div>
+                                            </a>
                                         </div>
-                                        <div class="memberItem">
-                                            <div class="studyMemberProfile">
-                                                <a class="profile" href="#">
-                                                    <div class="profile-img">
-                                                        <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                                    </div>
-                                                    <div class="status"><span class="status">접속중</span></div>
-                                                </a>
-                                            </div>
-                                            <a href="#" class="memberName">Yujung</a>
-                                        </div>
+                                        <a href="#" class="memberName">Yujung</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </sec:authorize>
-                    <!--슬라이드 배너-->
-                    <div class="swiper-container">
-                        <div class="swiper-wrapper">
-                            <!--슬라이드 아이템들-->
-                            <div class="swiper-slide">
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집1</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                            </div>
-                            <div class="swiper-slide">
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집2</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                            </div>
-                            <div class="swiper-slide">
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집3</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                            </div>
-                            <div class="swiper-slide">
-                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집4</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <div class="banner-bottom flex-between">
-                                        <div>
-                                            <span class="banner-tag">면접</span>
-                                            <span class="banner-tag">강남</span>
-                                        </div>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                </dlv>
-                            </div>
-                            <!-- 다른 슬라이드들 추가 가능 -->
-                        </div>
-                        <!-- 페이지 네이션 -->
-                        <div class="swiper-pagination"></div>
-
-                        <!-- 이전, 다음 버튼 -->
-                        <div class="swiper-button-prev"></div>
-                        <button class="control-button"><i class="bi bi-pause"></i></button>
-                        <div class="swiper-button-next"></div>
                     </div>
-                    <%--슬라이더 끝--%>
+                </sec:authorize>
+                <!--슬라이드 배너-->
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <!--슬라이드 아이템들-->
+                        <div class="swiper-slide">
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                                    </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집1</p>
+                                        <p class="banner-id">Jihyeon</p>
+                                    </div>
+                                </div>
+                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
+                                    </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                        </div>
+                        <div class="swiper-slide">
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                                    </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집2</p>
+                                        <p class="banner-id">Jihyeon</p>
+                                    </div>
+                                </div>
+                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
+                                    </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                        </div>
+                        <div class="swiper-slide">
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                                    </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집3</p>
+                                        <p class="banner-id">Jihyeon</p>
+                                    </div>
+                                </div>
+                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
+                                    </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                        </div>
+                        <div class="swiper-slide">
+                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                <div class="banner-item-top">
+                                    <div class="banner-img">
+                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                                    </div>
+                                    <div class="banner-title">
+                                        <p class="banner-main-title">강남인근 면접 스터디 모집4</p>
+                                        <p class="banner-id">Jihyeon</p>
+                                    </div>
+                                </div>
+                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
+                                <div class="banner-bottom flex-between">
+                                    <div>
+                                        <span class="banner-tag">면접</span>
+                                        <span class="banner-tag">강남</span>
+                                    </div>
+                                    <button class="banner-like" aria-label="좋아요">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </div>
+                            </dlv>
+                        </div>
+                        <!-- 다른 슬라이드들 추가 가능 -->
+                    </div>
+                    <!-- 페이지 네이션 -->
+                    <div class="swiper-pagination"></div>
 
+                    <!-- 이전, 다음 버튼 -->
+                    <div class="swiper-button-prev"></div>
+                    <button class="control-button"><i class="bi bi-pause"></i></button>
+                    <div class="swiper-button-next"></div>
                 </div>
-                <%--콘텐츠 끝--%>
+                <%--슬라이더 끝--%>
+
+            </div>
+            <%--콘텐츠 끝--%>
         </main>
     </section>
 

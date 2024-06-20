@@ -45,7 +45,7 @@ public class StudyController {
         return "admin/studyManagement";
     }
 
-
+/*
     //내 공부노트
     @RequestMapping("/studyNote/noteList")
     public String NoteList() {
@@ -69,12 +69,12 @@ public class StudyController {
     public String NoteModify() {
         return "studyNote/noteModify";
     }
-
+*/
 
     //캘린더
     @RequestMapping("/calender/calender")
     public String Calender() {
-        return "calender/calender";
+        return "calendarMain";
     }
 
 

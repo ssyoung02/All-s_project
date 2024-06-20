@@ -1,6 +1,6 @@
 package bit.naver.controller;
 
-import bit.naver.dto.GoogleUsersInfo;
+import bit.naver.entity.GoogleUsersInfo;
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;

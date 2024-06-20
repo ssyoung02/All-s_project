@@ -1,6 +1,6 @@
 package bit.naver.service;
 
-import bit.naver.dto.GoogleUsersInfo;
+import bit.naver.entity.GoogleUsersInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;

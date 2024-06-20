@@ -1,4 +1,4 @@
-package bit.naver.dto;
+package bit.naver.entity;
 
 import lombok.Data;
 
