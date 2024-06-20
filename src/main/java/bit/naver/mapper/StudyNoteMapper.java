@@ -26,7 +26,11 @@ public interface StudyNoteMapper {
 
     int insertLike(LikeReferencesEntity entity);
 
+    int plusLike(LikeReferencesEntity entity);
+
     int deleteLike(LikeReferencesEntity entity);
+
+    int minusLike(LikeReferencesEntity entity);
 
     int updateReport(StudyReferencesEntity entity);
 

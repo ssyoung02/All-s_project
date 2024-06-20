@@ -66,7 +66,6 @@ public class StudyReferencesService {
         return result;
     }
 
-
     public int updateReport(StudyReferencesEntity entity){
         return  studyReferencesMapper.updateReport(entity);
     }

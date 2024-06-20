@@ -2,51 +2,75 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
+<script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시글 상세 > 내 공부노트 > 공부 > All's</title>
+    <title>내 공부노트 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+
     <script>
+
         const profilePicUrl = "/mnt/data/image.png"; // URL to the profile picture
+
+        //좋아요 버튼
         function toggleLike(element, idx) {
-            element.classList.toggle('liked');
-            if (element.classList.contains('liked')) {
-                element.className = 'bi bi-heart-fill';
+            const icon = element.querySelector('i');
+            const isLiked = !element.classList.contains('liked');
+
+            if (isLiked) {
+                element.classList.add('liked');
+                icon.className = 'bi bi-heart-fill';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/insertLike',
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
-                })
+                    url: '/studyNote/insertLike',
+                    data: { referenceIdx: idx, userIdx: ${userVo.userIdx} },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    },
+                });
             } else {
-                element.className = 'bi bi-heart';
+                element.classList.remove('liked');
+                icon.className = 'bi bi-heart';
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteLike',
-                    data: {referenceIdx: idx, userIdx: ${userIdx}}
-                })
+                    url: '/studyNote/deleteLike',
+                    data: { referenceIdx: idx, userIdx: ${userVo.userIdx} },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    },
+                });
             }
         }
+
         function reportPost(idx) {
             if(confirm("게시글을 신고하시겠습니까?")) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/updateReport',
-                    data: {referenceIdx : idx}
+                    url: '/studyNote/updateReport',
+                    data: {referenceIdx : idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    },
                 })
                 alert("게시글 신고가 완료되었습니다.");
             }else {
                 alert("게시글 신고가 취소되었습니다.");
             }
+
         }
+
         function submitComment() {
             const commentInput = document.getElementById("input-comment");
             const referenceIdx = document.getElementById("referenceIdx");
@@ -56,33 +80,49 @@
             }
             $.ajax({
                 method: 'POST',
-                url: '/StudyReferences/insertComment',
+                url: '/studyNote/insertComment',
                 data: {
                     content: commentInput.value,
                     referenceIdx: referenceIdx.value
                 },  // 여기서 'content' 키를 사용합니다.
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                },
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (response) {
-                    location.href = "/StudyReferences/referencesSite?referenceIdx=" + referenceIdx.value
+                    location.href = "${root}/studyNote/noteRead?referenceIdx=" + referenceIdx.value
                 },
                 error: function () {
                     alert("댓글 작성에 실패하였습니다.");
                 }
             });
         }
+
         function deleteComment(element, idx) {
             if (confirm('댓글을 삭제하시겠습니까?')) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deleteComment',
-                    data: {commentIdx: idx}
-                }).done(function (result) {
-                    /* alert(result) 삭제가 완료되었습니다 띄우는 작업 */
-                })
-                const commentItem = element.parentElement;
-                commentItem.remove();
+                    url: '/studyNote/deleteComment',
+                    data: {commentIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    },
+
+                    success: function(result) {
+                        const commentItem = element.closest('.comment-item');
+                        if (commentItem) {
+                            commentItem.remove();
+                        }
+                        alert("댓글이 삭제되었습니다.");
+                        location.reload();  // 페이지 새로고침(=댓글(전체댓글수) 새로고침하기 위해서)
+                    },
+                    error: function() {
+                        alert("댓글 삭제에 실패하였습니다.");
+                    }
+                });
             }
         }
+
         document.addEventListener("DOMContentLoaded", function () {
             const commentInput = document.getElementById("input-comment");
             commentInput.addEventListener("keypress", function (event) {
@@ -91,20 +131,27 @@
                 }
             });
         });
+
         function deletePost(idx) {
             if (confirm("게시글을 삭제하시겠습니까?")) {
                 $.ajax({
                     method: 'POST',
-                    url: '/StudyReferences/deletePost',
-                    data: {referenceIdx: idx}
+                    url: '/studyNote/deletePost',
+                    data: {referenceIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    },
                 }).done(function (result) {
-                    location.href='/StudyReferences/referencesList'
+                    //alert("게시물이 삭제되었습니다.");
+                    location.href='${root}/studyNote/noteList'
                 })
             }
         }
+
         function modifyPost(idx){
-            location.href ="/StudyReferences/referencesModify?referenceIdx=" + idx;
+            location.href ="${root}/studyNote/noteModify?referenceIdx=" + idx;
         }
+
     </script>
 </head>
 <body>
@@ -143,20 +190,21 @@
                             </div>
                             <!--좋아요-->
                             <div class="board-button">
-                                <c:if test="${studyReferencesEntity.isLike !=0}">
-                                    <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
-                                        <i class="bi bi-heart"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </button>
-                                </c:if>
-                                <c:if test="${studyReferencesEntity.isLike == 0}">
-                                    <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
-                                        <i class="bi bi-heart-fill"></i>
-                                        <p class="info-post ">좋아요</p>
-                                    </button>
-                                </c:if>
-                                |
-                                <button class="report">신고</button>
+                                <c:choose>
+                                    <c:when test="${studyReferencesEntity.isLike != 0}">
+                                        <button class="flex-row liked" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
+                                            <i class="bi bi-heart-fill"></i>
+                                            <p class="info-post">좋아요</p>
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button class="flex-row" onclick="toggleLike(this, ${studyReferencesEntity.referenceIdx})">
+                                            <i class="bi bi-heart"></i>
+                                            <p class="info-post">좋아요</p>
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                                <button class="report" onclick="reportPost(${studyReferencesEntity.referenceIdx})">신고</button>
                             </div>
                         </div>
                         <div class="post-content">
@@ -208,7 +256,7 @@
                             <button class="secondary-default" onclick="deletePost(${studyReferencesEntity.referenceIdx})">삭제</button>
                             <button class="secondary-default" onclick="modifyPost(${studyReferencesEntity.referenceIdx})">수정</button>
                         </c:if>
-                        <button class="primary-default" onclick="location.href='referencesList'">목록</button>
+                        <button class="primary-default" onclick="location.href='${root}/studyNote/noteList'">목록</button>
                     </div>
                 </div>
 

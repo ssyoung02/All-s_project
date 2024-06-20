@@ -52,28 +52,6 @@ public class StudyReferencesController {
         return "/studyReferences/referencesList";
     }
 
-
-//    @RequestMapping("/referencesMyList")
-//    public String getStudyReferencesMyList(Model model, @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-//                                         @RequestParam(value = "searchOption", required = false) String searchOption,
-//                                         @RequestParam(value = "limits", required = false, defaultValue = "5") String limits,
-//                                           HttpSession session, Principal principal) {
-//
-//        String username = principal.getName();
-//        Users user = usersMapper.findByUsername(username);
-//        String userIdx = String.valueOf(user != null ? user.getUserIdx() : 59); // 사용자 ID 가져오기
-//        List<StudyReferencesEntity> studyReferencesEntity = studyReferencesService.getStudyReferencesMyList(userIdx, searchKeyword, searchOption, limits);
-//        model.addAttribute("studyReferencesEntity", studyReferencesEntity);
-//        model.addAttribute("userIdx", userIdx); //나중에 59만 로그인한사람의 userIdx로 바꿔주기
-//        model.addAttribute("limits", limits);
-//        model.addAttribute("searchKeyword", searchKeyword);
-//        model.addAttribute("searchOption", searchOption);
-//        model.addAttribute("user", user);
-//        session.setAttribute("userVo", user);
-//
-//        return "/studyReferences/referencesList";
-//    }
-
     @RequestMapping("/referencesRead")
     public String getStudyReferencesRead(Model model, @RequestParam("referenceIdx") Long referenceIdx, HttpSession session) {
         Users user = (Users) session.getAttribute("userVo");
@@ -84,7 +62,6 @@ public class StudyReferencesController {
         model.addAttribute("studyReferencesEntity", studyReferencesEntity);
         model.addAttribute("studyRefencesComment", studyRefencesComment);
         model.addAttribute("userIdx", userIdx); //나중에 59만 로그인한사람의 userIdx로 바꿔주기
-
 
         return "/studyReferences/referencesRead";
     }
@@ -108,14 +85,14 @@ public class StudyReferencesController {
     @RequestMapping("/insertLike")
     @ResponseBody
     public int insertLike(@ModelAttribute LikeReferencesEntity entity) {
-        System.out.println("ENTITY >>>" + entity.toString());
+        //System.out.println("ENTITY >>>" + entity.toString());
         return studyReferencesService.insertLike(entity);
     }
 
     @RequestMapping("/deleteLike")
     @ResponseBody
     public int deleteLike(@ModelAttribute LikeReferencesEntity entity) {
-        System.out.println("ENTITY >>>" + entity.toString());
+        //System.out.println("ENTITY >>>" + entity.toString());
         return studyReferencesService.deleteLike(entity);
     }
 
@@ -154,7 +131,6 @@ public class StudyReferencesController {
         String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
         StudyReferencesEntity studyReferencesEntity = studyReferencesService.getStudyReferenceById(entity.getReferenceIdx(), userIdx);
         model.addAttribute("studyReferencesEntity", studyReferencesEntity);
-        System.out.println(studyReferencesEntity.toString());
 
         return "/studyReferences/referencesModify";
     }

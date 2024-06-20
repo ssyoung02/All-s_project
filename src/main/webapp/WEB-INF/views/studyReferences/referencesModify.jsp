@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>공부 자료 > 공부 > All's</title>
+  <title>글 수정 > 공부 자료 > 공부 > All's</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="${root}/resources/css/common.css?after">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -78,7 +78,7 @@
 
         success: function(response) {
           alert("글 수정이 완료되었습니다.");
-          location.href ="/studyReferences/referencesRead?referenceIdx="+idx
+          location.href ="${root}/studyReferences/referencesRead?referenceIdx="+idx
         },
         error: function() {
           alert("글 수정에 실패하였습니다.");
@@ -89,6 +89,7 @@
   </script>
 </head>
 <body>
+<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -113,7 +114,6 @@
       <div class="post-area">
         <input type="text" id="title-post" class="title-post" name="title" value="${studyReferencesEntity.title}">
 
-
         <ul class="todolist">
             <!-- 태그 항목 -->
             <li>
@@ -131,16 +131,15 @@
                         >${studyReferencesEntity.content}</textarea>
           </div>
           <div class="buttonBox">
-            <button type="reset" class="updatebutton secondary-default" onclick="location.href='referencesList'">취소</button>
+            <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyReferences/referencesList'">취소</button>
             <button type="submit" class="updatebutton primary-default" onclick="updatePost(${studyReferencesEntity.referenceIdx})">수정</button>
           </div>
         </div>
-      <!-- </form> -->
+      </form>
     </main>
   </section>
   <!--푸터-->
   <jsp:include page="../include/footer.jsp"/>
 </div>
-<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>
