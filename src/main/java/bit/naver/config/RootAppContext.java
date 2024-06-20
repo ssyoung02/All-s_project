@@ -66,7 +66,7 @@ public class RootAppContext {
         sessionFactory.setDataSource(myDataSource());
         // 앞서 생성한 HikariCP 데이터 소스를 MyBatis 설정에 주입합니다.
         sessionFactory.setMapperLocations(
-                new PathMatchingResourcePatternResolver().getResources("classpath:*.xml")
+                new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml")
         );
         // classpath 경로에서 모든 XML Mapper 파일을 찾아서 설정합니다.
         // 여기서는 모든 XML Mapper 파일을 로드하도록 설정되어 있습니다.
