@@ -9,7 +9,9 @@
 <!-- 타이머 영역 -->
 <div id="timer">
     <div class="time-area flex-row">
-        <p id="timeHour">00</p>:<p id="timeMin">00</p>:<p id="timeSec">00</p>
+        <p id="timeHour">00</p>:
+        <p id="timeMin">00</p>:
+        <p id="timeSec">00</p>
         <div class="time-button flex-row">
             <!-- 타이머 컨트롤 버튼 -->
             <button id="time-stop" class="primary-default" onclick="timeStop()">그만하기</button>

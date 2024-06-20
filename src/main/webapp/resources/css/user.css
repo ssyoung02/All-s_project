@@ -1,11 +1,102 @@
-/*내정보*/
+/*내정보 - 프로필*/
+.userprofile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.userinfo{
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+.userinfo .profile-img{
+    width: 6em;
+    height: 6em;
+}
 .userdata{
     display: flex;
     flex-wrap: wrap;
+    gap: 1em;
+    padding: 1.5em;
+}
+.userItem{
+    width: 10em;
 }
 
-
-
+.longUserItem{
+    width: 18em;
+}
+/*내정보 - 그래프 영역*/
+.statistics{
+    margin-bottom: 1em;
+}
+.total-activity{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+}
+.activity-title{
+    width: 9em;
+    text-align: left;
+}
+.activity-title + p {
+    width: 4em;
+    text-align: right;
+}
+/*내정보 - 이력서*/
+.resume{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.resume-title{
+    width: 100%;
+    margin-bottom: 1em;
+}
+.resume-file{
+    width: 100%;
+}
+.customfile{
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+.file-item{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 30%;
+    height: 10em;
+    border: 1px solid #3b593f;
+    border-radius: 5px;
+}
+.fileUpload{
+    padding: 10px 0;
+    width: 10em;
+    border-radius: 5px;
+    background: #3b593f;
+    color: white;
+    margin-top: 1em;
+}
+.customfile-lable{
+    cursor: pointer;
+}
+.file-delete{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.non-file{
+    background: #f0f0f0;
+    border: 1px dashed #C6C6C6;
+}
 /*회원정보 수정*/
 .updateForm{
     margin: 0 auto;
@@ -47,6 +138,10 @@
 }
 /*회원정보 수정 모바일*/
 @media (max-width: 1200px) {
+    .userinfo{
+        flex-direction: column;
+    }
+
     #user{
         display: flex;
         flex-wrap: wrap;
@@ -61,5 +156,14 @@
     }
     .profile-chage{
         margin-left: -4em;
+    }
+}
+@media (max-width: 850px) {
+    .resume-file{
+        flex-direction: column;
+        gap: 1em;
+    }
+    .file-item{
+        width: 100%;
     }
 }

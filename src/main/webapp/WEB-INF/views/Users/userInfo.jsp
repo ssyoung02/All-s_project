@@ -31,7 +31,7 @@
 <jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
@@ -55,7 +55,7 @@
                         <p>${msg1}: ${msg2}</p>
                     </c:if>
 
-                    <section class="userinfo">
+                    <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">
                                 <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필">
@@ -63,41 +63,41 @@
                             <h3>${userVo.username}</h3>
                         </div>
                         <div class="userdata bgwhite">
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>이름</b></li>
                                 <li>${userVo.name}</li>
                             </ul>
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>성별</b></li>
                                 <li>${userVo.gender}</li>
                             </ul>
-                            <ul>
+                            <ul class="longUserItem">
                                 <li><b>이메일</b></li>
                                 <li>${userVo.email}</li>
                             </ul>
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>생년월일</b></li>
                                 <li>${userVo.birthdate}</li>
                             </ul>
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>위치정보</b></li>
                                 <li>${userVo.latitude}, ${userVo.longitude}</li>
                             </ul>
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>등급</b></li>
                                 <li>${userVo.gradeIdx}</li>
                             </ul>
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>SNS 연동</b></li>
                                 <li>${userVo.socialLogin}</li>
                             </ul>
-                            <ul>
+                            <ul class="userItem">
                                 <li><b>가입날짜</b></li>
                                 <li>${userVo.createdAt}</li>
                             </ul>
                         </div>
-                    </section>
-                    <section class="statistics">
+                    </div>
+                    <div class="statistics flex-between">
                         <div class="graph-area" style="width: 200px; height: 50px;">
                             그래프 영역
                         </div>
@@ -115,49 +115,40 @@
                                 <p>5개</p>
                             </button>
                         </div>
-                    </section>
-                    <section class="resume">
-                        <div class="resume-title">
+                    </div>
+                    <div class="resume">
+                        <div class="resume-title flex-between">
                             <h3>이력서</h3>
-                            <a href="#">AI로 자소서 작성하기 →</a>
+                            <a href="https://chatgpt.com/">AI로 자소서 작성하기 →</a>
                         </div>
-                        <div class="resume-file">
+                        <div class= "resume-file flex-between">
                             <div class="file-item">
                                 <button class="file-delete">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
-                                <input type="file" id="resume1">
-                                <label for="resume1">
+                                <input type="file" id="resume1" class="customfile">
+                                <label for="resume1" class="customfile-lable flex-colum">
                                     <p class="filename">이력서1.hwp</p>
                                     <div class="fileUpload">업로드↑</div>
                                 </label>
                             </div>
-                        </div>
-                        <div class="resume-file non-file">
-                            <div class="file-item">
-                                <button class="file-delete">
-                                </button>
-                                <input type="file" id="resume2">
-                                <label for="resume2">
+                            <div class="file-item non-file">
+                                <input type="file" id="resume2" class="customfile">
+                                <label for="resume2" class="customfile-lable flex-colum">
+                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
+                                    <div class="fileUpload">업로드↑</div>
+                                </label>
+                            </div>
+                             <div class="file-item non-file">
+                                <input type="file" id="resume3" class="customfile">
+                                <label for="resume3" class="customfile-lable flex-colum">
                                     <p class="filename">이력서 파일을 업로드 해주세요</p>
                                     <div class="fileUpload">업로드↑</div>
                                 </label>
                             </div>
                         </div>
-                        <div class="resume-file non-file">
-                            <div class="file-item">
-                                <button class="file-delete">
-                                </button>
-                                <input type="file" id="resume3">
-                                <label for="resume3">
-                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
-                                    <div class="fileUpload">업로드↑</div>
-                                </label>
-                            </div>
-                        </div>
-                    </section>
+                    </div>
                 </sec:authorize>
-
 
             </div>
         </main>

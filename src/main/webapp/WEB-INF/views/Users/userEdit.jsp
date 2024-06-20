@@ -61,7 +61,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -116,12 +116,12 @@
                             <dt>프로필</dt>
                             <dd class="profile-chage">
                                 <input type="file" id="imageChange">
-                                <label for="imageChange">
+                                <label for="imageChange" class="imgbox">
                                     <i class="bi bi-plus-lg"></i>
                                     <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필" width="100px" height="100px">
                                 </label>
                                 <div class="profile-change">
-                                    <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
+                                    <p>변경할 프로필을 등록해주세요.</p>
                                     <p>(300px X 300px / 500kb 미만)</p>
                                 </div>
                             </dd>

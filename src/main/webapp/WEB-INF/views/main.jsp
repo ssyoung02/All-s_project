@@ -9,7 +9,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -21,6 +20,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="${root}/resources/css/slider.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
@@ -29,7 +32,7 @@
 <!-- 중앙 컨테이너 -->
 <jsp:include page="include/header.jsp"/>
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="include/navbar.jsp"/>
@@ -194,29 +197,21 @@
                         </div>
                     </sec:authorize>
                     <!--슬라이드 배너-->
-                    <div class="study-promotion">
-                        <h2>Study Group</h2>
-                        <div class="slide-banner">
-                            <div class="slide-button-group">
-                                <button class="slide-button" aria-label="이전">
-                                    <i class="bi bi-caret-left-fill"></i>
-                                </button>
-                                <button class="slide-button" aria-label="다음">
-                                    <i class="bi bi-caret-right-fill"></i>
-                                </button>
-                            </div>
-                            <div class="banner-list flex-between">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <!--슬라이드 아이템들-->
+                            <div class="swiper-slide">
                                 <dlv class="banner-item bgwhite" tabindex="0" onclick="">
                                     <div class="banner-item-top">
                                         <div class="banner-img">
                                             <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
                                         </div>
                                         <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                            <p class="banner-main-title">강남인근 면접 스터디 모집1</p>
                                             <p class="banner-id">Jihyeon</p>
                                         </div>
                                     </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
+                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
                                     <div class="banner-bottom flex-between">
                                         <div>
                                             <span class="banner-tag">면접</span>
@@ -227,17 +222,19 @@
                                         </button>
                                     </div>
                                 </dlv>
+                            </div>
+                            <div class="swiper-slide">
                                 <dlv class="banner-item bgwhite" tabindex="0" onclick="">
                                     <div class="banner-item-top">
                                         <div class="banner-img">
-                                            <img src="${root}/resources/images/manggom.png" alt="스터디 그룹 로고"/>
+                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
                                         </div>
                                         <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                            <p class="banner-main-title">강남인근 면접 스터디 모집2</p>
                                             <p class="banner-id">Jihyeon</p>
                                         </div>
                                     </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
+                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
                                     <div class="banner-bottom flex-between">
                                         <div>
                                             <span class="banner-tag">면접</span>
@@ -248,17 +245,19 @@
                                         </button>
                                     </div>
                                 </dlv>
-                                <div class="banner-item bgwhite" tabindex="0" onclick="">
+                            </div>
+                            <div class="swiper-slide">
+                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
                                     <div class="banner-item-top">
                                         <div class="banner-img">
-                                            <img src="${root}/resources/images/manggom.png" alt="스터디 그룹 로고"/>
+                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
                                         </div>
                                         <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집</p>
+                                            <p class="banner-main-title">강남인근 면접 스터디 모집3</p>
                                             <p class="banner-id">Jihyeon</p>
                                         </div>
                                     </div>
-                                    <p>강남역 근처에서 스터디 모집해요~</p>
+                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
                                     <div class="banner-bottom flex-between">
                                         <div>
                                             <span class="banner-tag">면접</span>
@@ -268,10 +267,43 @@
                                             <i class="bi bi-heart"></i>
                                         </button>
                                     </div>
-                                </div>
+                                </dlv>
                             </div>
+                            <div class="swiper-slide">
+                                <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                                    <div class="banner-item-top">
+                                        <div class="banner-img">
+                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                                        </div>
+                                        <div class="banner-title">
+                                            <p class="banner-main-title">강남인근 면접 스터디 모집4</p>
+                                            <p class="banner-id">Jihyeon</p>
+                                        </div>
+                                    </div>
+                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
+                                    <div class="banner-bottom flex-between">
+                                        <div>
+                                            <span class="banner-tag">면접</span>
+                                            <span class="banner-tag">강남</span>
+                                        </div>
+                                        <button class="banner-like" aria-label="좋아요">
+                                            <i class="bi bi-heart"></i>
+                                        </button>
+                                    </div>
+                                </dlv>
+                            </div>
+                            <!-- 다른 슬라이드들 추가 가능 -->
                         </div>
+                        <!-- 페이지 네이션 -->
+                        <div class="swiper-pagination"></div>
+
+                        <!-- 이전, 다음 버튼 -->
+                        <div class="swiper-button-prev"></div>
+                        <button class="control-button"><i class="bi bi-pause"></i></button>
+                        <div class="swiper-button-next"></div>
                     </div>
+                    <%--슬라이더 끝--%>
+
                 </div>
                 <%--콘텐츠 끝--%>
         </main>
@@ -316,5 +348,7 @@
         }
     });
 </script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="${root}/resources/js/slider.js"></script>
 </body>
 </html>

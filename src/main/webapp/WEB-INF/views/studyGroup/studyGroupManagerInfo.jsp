@@ -22,7 +22,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -56,7 +56,7 @@
                 <div class="tabInfo">
                     <div class="webInfo-itemfull">
                         <dt>스터디명</dt>
-                        <dd><input class="manager-studyName" value="자바 공부할 사람 모여라" title="스터디명" style="width: 30em" disabled></dd>
+                        <dd><input class="manager-studyName" value="자바 공부할 사람 모여라" title="스터디명" disabled></dd>
                     </div>
                     <div class="webInfo-itemfull">
                         <dt>설 명</dt>
@@ -68,12 +68,12 @@
                         <dt>프로필</dt>
                         <dd class="profile-chage">
                                 <input type="file" id="imageChange">
-                                <label for="imageChange">
+                                <label for="imageChange" class="imgbox">
                                     <i class="bi bi-plus-lg"></i>
                                     <img src="${root}/resources/images/02.%20intellij.png" alt="스터디 그룹 프로필" width="100px" height="100px">
                                 </label>
                             <div class="profile-change">
-                                <p>변경할 프로필을 등록해주세요.</p>
+                                <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
                                 <p>(300px X 300px / 500kb 미만)</p>
                             </div>
                         </dd>
@@ -153,7 +153,7 @@
                 </div>
                 <div class="board-bottom">
                     <button class="secondary-default">취소</button>
-                    <button class="primary-default">수정</button>
+                    <button class="primary-default" onclick="modalOpen()">수정</button>
                 </div>
             </div>
             <%--콘텐츠 끝--%>
@@ -161,6 +161,24 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                스터디 정보를 변경하겠습니까?
+            </div>
+            <div class="modal-bottom">
+                <button class="secondary-default" onclick="madalClose()">취소</button>
+                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

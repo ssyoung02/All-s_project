@@ -104,7 +104,7 @@
                         <td>2024.06.13</td>
                         <td>154시간</td>
                         <td>
-                            <button class="secondary-default">강제 탈퇴</button>
+                            <button class="secondary-default" onclick="modalOpen()">강제 탈퇴</button>
                         </td>
                     </tr>
                     </tbody>
@@ -116,6 +116,26 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                선택한 회원을 강제탈퇴 시키겠습니까?
+            </div>
+            <div class="modal-bottom">
+                <button class="secondary-default" onclick="madalClose()">취소</button>
+                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>
