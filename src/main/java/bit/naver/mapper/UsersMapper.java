@@ -58,4 +58,6 @@ public interface UsersMapper {
     void deleteUser(Long userIdx);
 
     boolean findByEmail(String email);
+
+    Users findUserByEmail(String email);
 }

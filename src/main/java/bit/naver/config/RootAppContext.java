@@ -70,6 +70,8 @@ public class RootAppContext {
         );
         // classpath 경로에서 모든 XML Mapper 파일을 찾아서 설정합니다.
         // 여기서는 모든 XML Mapper 파일을 로드하도록 설정되어 있습니다.
+        // mapper/xml 폴더에 있는 모든 XML Mapper 파일을 로드합니다.
+        sessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml"));
 
         return sessionFactory.getObject();
         // SqlSessionFactoryBean 객체를 통해 SqlSessionFactory를 생성하고 반환합니다.

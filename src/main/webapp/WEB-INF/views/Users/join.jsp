@@ -29,51 +29,92 @@
             <a href="${root}/Users/UserLoginForm">이미 회원이신가요? <span class="underline">로그인</span></a>
         </div>
 
-        <form method="POST" action="${root }/Users/UsersRegister" id="registerForm">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            <div class="inputbox">
-                <label for="name">이름<span class="essential">*</span></label>
-                <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+    <form method="POST" action="${root }/Users/UsersRegister" id="registerForm">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+        <!-- 소셜 로그인 방식을 hidden input에 추가 -->
+        <c:choose>
+            <c:when test="${not empty googleUserInfo}">
+                <input type="hidden" id="socialLogin" name="socialLogin" value="GOOGLE">
+            </c:when>
+            <c:when test="${not empty KakaoUserInfo}">
+                <input type="hidden" id="socialLogin" name="socialLogin" value="KAKAO">
+            </c:when>
+        </c:choose>
+
+        <div class="inputbox">
+            <label for="name">이름<span class="essential">*</span></label>
+            <c:choose>
+                <c:when test="${not empty googleUserInfo.name}">
+                    <input type="text" id="name" name="name" value="${googleUserInfo.name}" readonly>
+                </c:when>
+                <c:when test="${not empty KakaoUserInfo.name}">
+                    <input type="text" id="name" name="name" value="${KakaoUserInfo.name}" readonly>
+                </c:when>
+                <c:otherwise>
+                    <input type="text" id="name" name="name" placeholder="이름을 입력해주세요" required>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <div class="inputbox">
+            <label for="username">아이디<span class="essential">*</span></label>
+            <div class="input-row flex-between">
+                <c:choose>
+                    <c:when test="${not empty googleUserInfo.email}">
+                        <input type="text" id="username" name="username" value="${googleUserInfo.email}" readonly>
+                    </c:when>
+                    <c:when test="${not empty KakaoUserInfo.email}">
+                        <input type="text" id="username" name="username" value="${KakaoUserInfo.email}" readonly>
+                    </c:when>
+                    <c:otherwise>
+                        <input type="text" id="username" name="username" placeholder="아이디를 입력해주세요" required>
+                    </c:otherwise>
+                </c:choose>
+                <button class="double-check primary-default" type="button" onclick="checkDuplicate()">중복확인</button>
             </div>
-            <div class="inputbox">
-                <label for="username">아이디<span class="essential">*</span></label>
-                <div class="input-row flex-between">
-                    <input type="text" id="username" name="username" placeholder="이름을 입력해주세요" required>
-                    <button class="double-check primary-default" type="button" onclick="checkDuplicate()">중복확인</button>
-                </div>
-                <span id="usernameCheckResult"></span>
+            <span id="usernameCheckResult"></span>
+        </div>
+        <div class="inputbox">
+            <label for="password">비밀번호<span class="essential">*</span></label>
+            <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
+        </div>
+        <div class="inputbox">
+            <label for="password2">비밀번호 확인<span class="essential">*</span></label>
+            <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
+            <span id="passwordCheckResult"></span>
+        </div>
+        <div class="inputbox">
+            <label for="birthdate">생년월일<span class="essential">*</span></label>
+            <input type="date" id="birthdate" name="birthdate" required>
+        </div>
+        <div class="inputbox">
+            <label>성별<span class="essential">*</span></label>
+            <div class="">
+                <input id="male" class="gender" name="gender" type="radio" value="M" required>
+                <label for="male">남자</label>
+                <input id="female" class="gender" name="gender" type="radio" value="F">
+                <label for="female">여자</label>
+                <input id="other" class="gender" name="gender" type="radio" value="OTHER">
+                <label for="other">기타</label>
             </div>
-            <div class="inputbox">
-                <label for="password">비밀번호<span class="essential">*</span></label>
-                <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required>
-            </div>
-            <div class="inputbox">
-                <label for="password2">비밀번호 확인<span class="essential">*</span></label>
-                <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
-                <span id="passwordCheckResult"></span>
-            </div>
-            <div class="inputbox">
-                <label for="birthdate">생년월일<span class="essential">*</span></label>
-                <input type="date" id="birthdate" name="birthdate" required>
-            </div>
-            <div class="inputbox">
-                <label>성별<span class="essential">*</span></label>
-                <div class="">
-                    <input id="male" class="gender" name="gender" type="radio" value="M" required>
-                    <label for="male">남자</label>
-                    <input id="female" class="gender" name="gender" type="radio" value="F">
-                    <label for="female">여자</label>
-                    <input id="other" class="gender" name="gender" type="radio" value="OTHER">
-                    <label for="other">기타</label>
-                </div>
-            </div>
-            <div class="inputbox">
-                <label for="email">이메일<span class="essential">*</span></label>
-                <input type="email" id="email" name="email" placeholder="이메일을 입력해주세요">
-            </div>
-            <button class="loginbutton primary-default" type="submit">회원가입</button>
-        </form>
-    </div>
+        </div>
+        <div class="inputbox">
+            <label for="email">이메일<span class="essential">*</span></label>
+            <c:choose>
+                <c:when test="${not empty googleUserInfo.email}">
+                    <input type="text" id="email" name="email" value="${googleUserInfo.email}" readonly>
+                </c:when>
+                <c:when test="${not empty KakaoUserInfo.email}">
+                    <input type="text" id="email" name="email" value="${KakaoUserInfo.email}" readonly>
+                </c:when>
+                <c:otherwise>
+                    <input type="text" id="email" name="email" placeholder="이메일을 입력해주세요" required>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <button class="loginbutton primary-default" type="submit">회원가입</button>
+    </form>
+</div>
 
     <%-- 오류 메세지 모달 --%>
     <div id="modal-container" class="modal unstaged">

@@ -6,7 +6,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> 로그인 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -51,7 +50,7 @@
                 <hr>
             </div>
             <div class="snsloginarea">
-                <a href="#"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id=b7723b667ea1da66ffa9f66476a3294b&redirect_uri=http://localhost:8080/kakao/login&response_type=code"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
                 <a href="#"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
                 <a href="#"><img src="${root}/resources/images/sns-google.png" alt="구글 로그인"></a>
             </div>

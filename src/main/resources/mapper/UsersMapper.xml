@@ -60,4 +60,8 @@
         )
     </select>
 
+    <select id="findUserByEmail" parameterType="String" resultMap="UsersResultMap">
+        SELECT * FROM Users WHERE email = #{email}
+    </select>
+
 </mapper>
