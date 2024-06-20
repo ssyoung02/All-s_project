@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
@@ -39,10 +36,6 @@ public class StudyGroupController {
         // DB에서 해당 사용자가 참여 중인 스터디 목록 조회
         List<StudyList> myStudies = studyGroupMapper.getMyStudies(userIdx);
 
-        for (StudyList study : myStudies) {
-            System.out.println(study.toString());
-        }
-
         model.addAttribute("myStudies", myStudies);
 
 
@@ -57,6 +50,15 @@ public class StudyGroupController {
         return "studyGroup/studyGroupCreate";
     }
 
+    @RequestMapping("/studyGroupMain")
+    public String getStudyGroupMain(@RequestParam("studyIdx") Long studyIdx, Model model) {
+        StudyGroup study = studyGroupMapper.getStudyById(studyIdx);
+        List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+        model.addAttribute("study", study);
+        model.addAttribute("members", members);
+        return "studyGroup/studyGroupMain"; // 스터디 상세 정보를 보여줄 JSP 페이지
+    }
+
     // 스터디 생성을 위한 POST 요청 처리
     @PostMapping("/studyGroupCreate")
     public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study, BindingResult result, HttpSession session, Principal principal) {
@@ -65,7 +67,7 @@ public class StudyGroupController {
         }
 
         Users user = (Users) session.getAttribute("userVo");
-        Long userIdx = Long.valueOf(user.getUserIdx());
+        Long userIdx = user.getUserIdx();
 
         // 여기서 studyLeaderIdx를 user의 username에서 가져오는 로직
         // 예시로 구현하면 아래와 같이 userRepository.findByUsername(user.getUsername()).getUserIdx()를 호출
@@ -83,7 +85,6 @@ public class StudyGroupController {
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
 
-        System.out.println("StudyGroup 정보: " + study.toString());
 
         studyGroupMapper.insertStudy(study);
 
@@ -95,7 +96,6 @@ public class StudyGroupController {
         studyMember.setStatus("ACCEPTED");
         studyMember.setCreatedAt(LocalDateTime.now());
         studyMember.setUpdatedAt(LocalDateTime.now());
-        System.out.println(studyMember.toString());
 
         studyGroupMapper.insertStudyMember(studyMember);
 

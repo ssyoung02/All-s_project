@@ -21,4 +21,7 @@ public class StudyMembers {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    // DB에 없는 부분
+    private String name;
 }

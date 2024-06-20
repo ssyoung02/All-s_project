@@ -41,8 +41,8 @@
                         <div class="profile-header">
                             <img src="" alt="">
                             <div class="group-title">
-                                <h2>자바 공부할 사람 모여라</h2>
-                                <p>전공자, 비전공자 상관없이 자바에 올인할 사람들을 위한 모임</p>
+                                <h2>${study.studyTitle}</h2>
+                                <p>${study.description}</p>
                             </div>
                         </div>
                         <div class="profile-link">
@@ -147,48 +147,30 @@
                                         <p class="lank-time">7h</p>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="group-calender">
                                 <h3>그룹 일정</h3>
-                            <%--캘린더--%>
+                                <%--캘린더--%>
                             </div>
                         </div>
                         <div class="group-member">
                             <h3>그룹 멤버</h3>
                             <div class="group-memberList">
-                                <div class="group-memberItem">
-                                    <div class="profile-imgGroup">
-                                        <div class="profile-img">
-                                            <img src="${root}/resources/images/09.%20carrot.png" alt="내 프로필">
+                                <c:forEach var="member" items="${members}">
+                                    <div class="group-memberItem">
+                                        <div class="profile-imgGroup">
+                                            <div class="profile-img">
+                                                <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                            </div>
+                                            <div class="status"><span class="status">접속중</span></div>
                                         </div>
-                                        <div class="status"><span class="status">접속중</span></div>
+                                        <p class="memberId">${member.name}</p>
                                     </div>
-                                    <p class="memberId">Yeajoon</p>
-                                </div>
-                                <div class="group-memberItem">
-                                    <div class="profile-imgGroup">
-                                        <div class="profile-img">
-                                            <img src="${root}/resources/images/09.%20carrot.png" alt="내 프로필">
-                                        </div>
-                                        <div class="status"><span class="status">접속중</span></div>
-                                    </div>
-                                    <p class="memberId">Yeajoon</p>
-                                </div>
-                                <div class="group-memberItem">
-                                    <div class="profile-imgGroup">
-                                        <div class="profile-img">
-                                            <img src="${root}/resources/images/09.%20carrot.png" alt="내 프로필">
-                                        </div>
-                                        <div class="status"><span class="status">접속중</span></div>
-                                    </div>
-                                    <p class="memberId">seojoon</p>
-                                </div>
+                                </c:forEach>
                             </div>
                         </div>
                     </section>
                 </div>
-
             </div>
             <%--콘텐츠 끝--%>
         </main>

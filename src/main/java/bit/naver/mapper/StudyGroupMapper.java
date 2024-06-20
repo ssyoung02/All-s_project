@@ -19,10 +19,14 @@ public interface StudyGroupMapper {
     // studyIdx 최근에 생성된 것 찾기
     Long findStudyIdx(Long userIdx);
 
-    // 모집 게시글
-    List<StudyGroup> getAllRecruitedStudies();
 
     // 내 스터디 리스트
     List<StudyList> getMyStudies(Long userIdx);
+
+    // 스터디 메인 타이틀
+    StudyGroup getStudyById(Long studyIdx);
+
+    //  스터디 메인 페이지 유저
+    List<StudyMembers> getStudyMembers(Long studyIdx);
 
 }

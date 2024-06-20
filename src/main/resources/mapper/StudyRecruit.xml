@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bit.naver.mapper.StudyRecruitMapper">
+    <select id="getAllStudies" resultType="bit.naver.entity.StudyGroup">
+        SELECT study_idx AS studyIdx, study_title AS studyTitle, description
+         FROM Studies
+        WHERE status = 'RECRUITING'
+    </select>
+
+    <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers">
+        INSERT INTO StudyMembers (study_idx, user_idx, role, status, created_at, updated_at)
+        VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{createdAt}, #{updatedAt})
+    </insert>
+</mapper>
+

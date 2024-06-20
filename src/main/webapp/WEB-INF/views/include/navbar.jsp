@@ -68,7 +68,10 @@
                                 </li>
                                 <li class="dropdown-item">
                                     <div class="menu-area">
-                                        <a href="${root}/studyRecruit/recruitList">스터디 모집</a>
+                                        <form method="POST" action="<c:url value='${root}studyRecruit/recruitList' />">
+                                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                            <button type="submit" class="link-button">스터디 모집</button>
+                                        </form>
                                     </div>
                                 </li>
                             </ul>

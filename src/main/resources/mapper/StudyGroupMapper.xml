@@ -48,17 +48,26 @@
         VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
     </insert>
 
-<!--모집 게시글-->
-    <select id="getAllRecruitedStudies" resultMap="studyResultMap">
-        select * from Studies
-    </select>
 
 <!--내 스터디 리스트-->
     <select id="getMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
-        SELECT sm.role, s.study_title, s.description
+        SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
         WHERE sm.user_idx = #{userIdx}
+    </select>
+
+    <select id="getStudyById" parameterType="Long" resultType="bit.naver.entity.StudyGroup">
+        SELECT study_idx AS studyIdx, study_title AS studyTitle, description
+        FROM Studies
+        WHERE study_idx = #{studyIdx}
+    </select>
+
+    <select id="getStudyMembers" parameterType="Long" resultType="bit.naver.entity.StudyMembers">
+        SELECT m.user_idx, m.name
+        FROM StudyMembers sm
+                 INNER JOIN Users m ON sm.user_idx = m.user_idx
+        WHERE sm.study_idx = #{studyIdx}
     </select>
 
 </mapper>

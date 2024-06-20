@@ -90,11 +90,11 @@ public class StudyController {
 //        return "studyGroup/studyGroupCreate";
 //    }
 
-    //내 스터디 - 그룹 상세
-    @RequestMapping("/studyGroup/studyGroupMain")
-    public String StudyGroupMain() {
-        return "studyGroup/studyGroupMain";
-    }
+//    //내 스터디 - 그룹 상세
+//    @RequestMapping("/studyGroup/studyGroupMain")
+//    public String StudyGroupMain() {
+//        return "studyGroup/studyGroupMain";
+//    }
 
     //내 스터디 - 그룹 관리 - 스터디 정보
     @RequestMapping("/studyGroup/studyGroupManagerInfo")
@@ -121,11 +121,11 @@ public class StudyController {
     }
 
 
-    //스터디 모집
-    @RequestMapping("/studyRecruit/recruitList")
-    public String RecruitList() {
-        return "studyRecruit/recruitList";
-    }
+//    //스터디 모집
+//    @RequestMapping("/studyRecruit/recruitList")
+//    public String RecruitList() {
+//        return "studyRecruit/recruitList";
+//    }
 
     //스터디 모집 - 상세
     @RequestMapping("/studyRecruit/recruitReadForm")

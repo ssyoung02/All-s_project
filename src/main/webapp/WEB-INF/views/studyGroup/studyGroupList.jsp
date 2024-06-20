@@ -39,7 +39,7 @@
                 <!--본문 콘텐츠-->
                 <div class="maxcontent">
                     <div class="list-title flex-between">
-                        <h3>가입 스터디(5)</h3>
+                        <h3>가입 스터디(<c:out value="${myStudies.size()}" />)</h3>
                         <fieldset class="search-box flex-row">
                             <select name="searchCnd" title="검색 조건 선택">
                                 <option value="제목">제목</option>
@@ -56,7 +56,7 @@
                     </div>
                     <div class="boardContent flex-colum">
                         <c:forEach items="${myStudies}" var="study">
-                            <div class="board-listBoarder flex-columleft">
+                            <div class="board-listBoarder flex-columleft" onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}'">
                                 <div class="studygroup-item flex-between">
                                     <!-- 스터디 목록 -->
                                     <div class="imgtitle flex-row">
