@@ -8,7 +8,6 @@
 <html>
 <head>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공부 자료 > 공부 > All's</title>
@@ -58,8 +57,7 @@
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
 
-            location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
-
+            location.href="${root}/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
         }
 
         function loadMore() {
@@ -73,7 +71,7 @@
 
             }else{
                 limits += 5;
-                location.href="/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+                location.href="${root}/studyReferences/referencesList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
             }
         }
 
@@ -93,7 +91,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -127,7 +125,7 @@
                                     <i class="bi bi-search"></i>
                                 </button>
                             </p>
-                            <button class="primary-default" onclick="location.href='referencesWrite'">글작성</button>
+                            <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesWrite'">글쓰기</button>
                         </fieldset>
                     </div>
 
@@ -136,12 +134,13 @@
                             <%--게시글 상세 item--%>
                             <div class="board-listline flex-columleft">
                                 <div class="studygroup-item flex-between">
-                                    <button class="imgtitle link-button" onclick="location.href='referencesRead?referenceIdx=${data.referenceIdx}'">
+                                    <!--스터디 목록-->
+                                    <div class="imgtitle link-button" onclick="location.href='${root}/studyReferences/referencesRead?referenceIdx=${data.referenceIdx}'">
                                         <div class="board-item flex-columleft">
                                             <h3 class="board-title">${data.title}</h3>
                                             <p class="board-content">작성자: ${data.name} | 작성일: ${data.createdAt} | 조회수: ${data.viewsCount}</p>
                                         </div>
-                                    </button>
+                                    </div>
 
                                     <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
                                     <c:choose>
@@ -158,9 +157,8 @@
                                             </button>
                                         </c:otherwise>
                                     </c:choose>
-
                                 </div>
-                                <button class="link-button flex-between" onclick="location.href='referencesRead?referenceIdx=${data.referenceIdx}'">
+                                <button class="link-button flex-between" onclick="location.href='${root}/studyReferences/referencesRead?referenceIdx=${data.referenceIdx}'">
                                     ${data.content}
                                     <img/>
                                 </button>
@@ -172,7 +170,6 @@
                     </div>
                 </div>
                 <%--본문 콘텐츠--%>
-
             </div>
             <%--콘텐츠 끝--%>
         </main>

@@ -48,16 +48,22 @@
 /*탭 메뉴 상세 - 1열 소개*/
 .webInfo-itemfull{
     width: 100%;
-    display: flex;
-    flex-direction: row;
     align-items: center;
     margin-bottom: 1em;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .webInfo-itemfull dt{
+    grid-column: 1 / 1;
+    grid-row: 1;
     font-weight: bold;
-    width: 95px;
+    width: 120px;
     text-align: justify;
+}
+.webInfo-itemfull dd{
+    grid-column: 2 / 6;
+    grid-row: 1;
 }
 .webInfo-itemfull input[type=radio], .webInfo-itemfull a {
     margin: 1em 0;
@@ -69,6 +75,7 @@
 .webInfo-itemfull ul{
     display: flex;
     margin: 0;
+    gap: 1em;
 }
 
 .webInfo-itemfull textarea{
@@ -101,6 +108,7 @@
     justify-content: center;
     border: 1px solid #bbbbbb;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .group-imgChange i{

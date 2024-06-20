@@ -22,7 +22,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -82,7 +82,7 @@
                 </div>
                 <div class="board-bottom">
                     <button class="secondary-default">취소</button>
-                    <button class="primary-default">확인</button>
+                    <button class="primary-default" onclick="modalOpen()">확인</button>
                 </div>
             </div>
 
@@ -91,6 +91,24 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                스터디 관리 정보를 변경하겠습니까?
+            </div>
+            <div class="modal-bottom">
+                <button class="secondary-default" onclick="madalClose()">취소</button>
+                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

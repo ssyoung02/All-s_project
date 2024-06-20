@@ -19,23 +19,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body class="loginbg">
-<script>
-    $(document).ready(function() {
-        console.log("Error: ${error}");
-        <c:if test="${not empty error}">
-        $("#errorMessage").text("${error}"); // 오류 메시지 설정
-        $('#modal-container').toggleClass('opaque'); //모달 활성화
-        $('#modal-container').toggleClass('unstaged');
-        $('#modal-close').focus();
-        </c:if>
-
-        <c:if test="${not empty username}">
-        console.log("Error:${error}");
-        $("#username").val("${username}"); // 로그인 실패 시 아이디 값 유지
-        </c:if>
-    });       
-        
-</script>
     <div class="logo">
         <a href="${root}/main"><img class="logo" src="${root}/resources/images/logo.png" style="width:15%" alt="all's 로고"/></a>
     </div>
@@ -70,7 +53,7 @@
                 <hr>
             </div>
             <div class="snsloginarea">
-                <a href="#"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id=b7723b667ea1da66ffa9f66476a3294b&redirect_uri=http://localhost:8080/kakao/login&response_type=code"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
                 <a href="#"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
                 <a href="${root}/login/google"><img src="${root}/resources/images/sns-google.png" alt="구글 로그인"></a>
             </div>
@@ -84,13 +67,14 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
-            <div class="modal-center">
-                <p id="errorMessage"></p> <c:if test="${not empty error}">
-                <%-- error 메시지 확인 --%>
-                <script> $("#errorMessage").text("${error}"); </script>
-            </c:if>
+            <div id="errorMessage" class="modal-center">
+                <c:if test="${not empty param.error}">
+                    ${sessionScope.error}
+                </c:if>
             </div>
             <div class="modal-bottom">
                 <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
@@ -98,28 +82,25 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            <c:if test="${not empty param.error}">
+            console.log("Error: " + ${param.error});
+            $("#errorMessage").text("아이디 또는 비밀번호가 맞지 않습니다"); // 오류 메시지 설정
+            $('#modal-container').toggleClass('opaque');
+            $('#modal-container').toggleClass('unstaged');
+            $('.modal-close-x').focus();
+            </c:if>
 
+/*
+            <c:if test="${not empty sessionScope.username}">
+            console.log("Username: " + ${sessionScope.username});
+            $("#username").val(${sessionScope.username}); // 로그인 실패 시 아이디 값 유지
+            </c:if>
+*/
+        });
+    </script>
 
-    <%-- 로그인 실패 메시지 표시 --%>
-<c:if test="${param.error != null}">
-    <p>
-        <c:choose>
-            <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message == 'Bad credentials'}">
-                아이디 또는 비밀번호가 맞지 않습니다.
-            </c:when>
-            <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message == 'User is disabled'}">
-                계정이 비활성화되었습니다.
-            </c:when>
-            <c:when test="${SPRING_SECURITY_LAST_EXCEPTION.message == 'User account is locked'}">
-                계정이 잠겼습니다.
-            </c:when>
-            <c:otherwise>
-                로그인에 실패했습니다.
-            </c:otherwise>
-        </c:choose>
-    </p>
-</c:if>
- 
 
 </body>
 </html>

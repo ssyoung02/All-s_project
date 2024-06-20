@@ -20,26 +20,26 @@
         comments_count AS commentsCount,
         views_count AS viewsCount,
         DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i') AS createdAt,
-        DATE_FORMAT(study.updated_at, '%Y-%m-%d %H:%i') AS updatedAt,
+        study.updated_at AS updatedAt,
         IFNULL(lr.reference_idx, 0) AS isLike,
         COUNT(*) OVER () AS TOTALCOUNT
         FROM StudyReferences study
         LEFT JOIN Users user ON user.user_idx = study.user_idx
         LEFT JOIN LikeReferences lr ON study.reference_idx = lr.reference_idx AND lr.user_idx = #{userIdx}
         <where>
-            <if test="searchOption != null and searchOption == 'all-post'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%')
+            study.user_idx = #{userIdx}
+            <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
+                AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
-            <if test="searchOption != null and searchOption == 'title-post'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%')
+            <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
+                AND title LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
-            <if test="searchOption != null and searchOption == 'title-content'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%')
+            <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
+                AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
-            <if test="searchOption != null and searchOption == 'writer-post'">
-                name LIKE CONCAT('%', #{searchKeyword}, '%')
+            <if test="searchOption != null and searchOption == 'writer-post' and searchKeyword != null and searchKeyword != ''">
+                AND name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
-            AND study.user_idx = #{userIdx}
         </where>
         ORDER BY study.created_at DESC
         LIMIT 0, ${limits}
@@ -61,7 +61,7 @@
                comments_count AS commentsCount,
                views_count AS viewsCount,
                DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i') AS createdAt,
-               DATE_FORMAT(study.updated_at, '%Y-%m-%d %H:%i') AS updatedAt,
+               study.updated_at AS updatedAt,
                IFNULL(lr.reference_idx, 0) AS isLike,
                COUNT(*) OVER () AS TOTALCOUNT
         FROM StudyReferences study
@@ -101,10 +101,8 @@
     </update>
 
     <insert id="insertLike">
-        INSERT INTO LikeReferences( user_idx, reference_idx, created_at)
-        VALUES (
-                   #{userIdx},#{referenceIdx},now()
-               )
+        INSERT INTO LikeReferences (user_idx, reference_idx, created_at)
+        VALUES (#{userIdx}, #{referenceIdx}, now())
     </insert>
 
     <update id="plusLike">

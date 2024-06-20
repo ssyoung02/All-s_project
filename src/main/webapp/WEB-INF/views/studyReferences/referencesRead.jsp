@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
-<c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
@@ -13,12 +13,13 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>공부 사이트 > 공부 > All's</title>
+    <title>공부 자료 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+
     <script>
 
         const profilePicUrl = "/mnt/data/image.png"; // URL to the profile picture
@@ -53,7 +54,6 @@
             }
         }
 
-
         function reportPost(idx) {
             if(confirm("게시글을 신고하시겠습니까?")) {
                 $.ajax({
@@ -68,7 +68,6 @@
             }else {
                 alert("게시글 신고가 취소되었습니다.");
             }
-
         }
 
         function submitComment() {
@@ -90,7 +89,7 @@
                 },
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (response) {
-                    location.href = "/studyReferences/referencesRead?referenceIdx=" + referenceIdx.value
+                    location.href = "${root}/studyReferences/referencesRead?referenceIdx=" + referenceIdx.value
                 },
                 error: function () {
                     alert("댓글 작성에 실패하였습니다.");
@@ -142,22 +141,24 @@
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
                 }).done(function (result) {
-                    location.href='/studyReferences/referencesList'
+                    //alert("게시물이 삭제되었습니다.");
+                    location.href='${root}/studyReferences/referencesList'
                 })
             }
         }
 
         function modifyPost(idx){
-            location.href ="/studyReferences/referencesModify?referenceIdx=" + idx;
+            location.href ="${root}/studyReferences/referencesModify?referenceIdx=" + idx;
         }
 
     </script>
 </head>
 <body>
+<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -170,7 +171,7 @@
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
-                <h1>내 공부노트</h1>
+                <h1>공부자료</h1>
                 <div class="maxcontent">
                     <div class="post-area">
 
@@ -211,7 +212,7 @@
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
-                        <div class="flex-between">
+                        <div class="comment-area">
                             <input id="input-comment" type="text" title="댓글입력" placeholder="댓글을 입력해주세요">
                             <button class="primary-default" onclick="submitComment()">댓글 입력</button>
                         </div>
@@ -254,7 +255,7 @@
                             <button class="secondary-default" onclick="deletePost(${studyReferencesEntity.referenceIdx})">삭제</button>
                             <button class="secondary-default" onclick="modifyPost(${studyReferencesEntity.referenceIdx})">수정</button>
                         </c:if>
-                        <button class="primary-default" onclick="location.href='referencesList'">목록</button>
+                        <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesList'">목록</button>
                     </div>
                 </div>
 
