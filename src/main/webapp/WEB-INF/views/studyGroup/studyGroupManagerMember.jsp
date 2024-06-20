@@ -21,7 +21,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -92,7 +92,7 @@
                         <td>2024.06.10</td>
                         <td>120시간</td>
                         <td>
-                            <button class="secondary-default">강제 탈퇴</button>
+                            <button class="secondary-default" onclick="modalOpen()">강제 탈퇴</button>
                         </td>
                     </tr>
                     <tr class="tableList">
@@ -113,6 +113,24 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                선택한 회원을 강제탈퇴 시키겠습니까?
+            </div>
+            <div class="modal-bottom">
+                <button class="secondary-default" onclick="madalClose()">취소</button>
+                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

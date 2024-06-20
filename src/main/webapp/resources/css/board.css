@@ -48,14 +48,31 @@
     margin: 10px 0;
 }
 .imgtitle{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
     gap: 1em;
 }
 .studygroup-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     gap: 1em;
+    margin-bottom: 1em;
 }
+.studygroup-item + button{
+    width: 100%;
+}
+
 .studygroup-item img{
     width: 100px;
+}
+.studygroup-item p{
+    text-align: left;
 }
 .studygroup-profile-s{
     width: 50px;
@@ -68,7 +85,7 @@
     width: 100%;
 }
 .board-item{
-    gap: 3px;
+    gap: 5px;
 }
 .board-title{
     font-weight: bold;
@@ -97,34 +114,59 @@
 
 /*글쓰기*/
 .post-area{
-    max-width: 1000px;
-    width: 100%;
     padding: 3em 2em;
     border: 1px solid #588159;
     border-radius: 5px;
 }
 
-#writeTitle{
+.title-post{
     width: 100%;
     border-radius: 0;
     border: 0;
     border-bottom: 1px solid #588159;
     padding: 1em 0;
 }
-#writeTitle::placeholder{
+.title-post::placeholder{
     font-size: 1.5em;
 }
 
-#write-textarea{
+#smarteditor{
+    margin-bottom: 1em;
+}
+.board-textarea{
     width: 100%;
-    height: 40em;
-    padding: 10px;
+    height: 200px;
     border: 1px solid #bbbbbb;
     border-radius: 5px;
     resize: none;
-    margin: 1.5em 0;
 }
 
+.upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 50%;
+    color: #999999;
+    background: #eeeeee;
+}
+
+.upload-name + label {
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #588159;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+}
 
 /*관련 사이트 목록*/
 .siteTitle{
@@ -134,7 +176,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: 2em;
-    justify-content: flex-start;
     padding: 1em;
     margin-bottom: 1em;
 }
@@ -188,7 +229,10 @@
 }
 .board-content{
     width: 100%;
+    text-align: left;
     border:none;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .comment-list{
     margin: 1em 0;
@@ -203,8 +247,15 @@
     min-height: 200px;
     border:none;
 }
-#comment-input{
-    width: 85%;
+.comment-area{
+    display: flex;
+    gap: 1em;
+}
+#input-comment{
+    flex: 9;
+}
+.comment-area button{
+    flex: 1;
 }
 .comment-profile{
     display: flex;
@@ -219,11 +270,69 @@
 .comment-detail{
     margin: 1em 0;
 }
+.post-content{
+    margin-top: 1em;
+}
 
-/*태그 목록*/
+/*스터디모집 글쓰기*/
+.studyTag{
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+.studyTagLine{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+}
+.studyTag input[type="text"]{
+    width: 300px;
+    height: 5px;
+}
+#locationTag{
+    background: #eeeeee;
+}
+.studyTag-title{
+    width: 7em;
+    font-size: 1.2em;
+    font-weight: bold;
+}
 .taglist{
     gap: 5px;
 }
+.taglist li{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 1em;
+}
+.tag-title{
+    width: 7em;
+}
+.todo-label{
+    padding: 0;
+}
+.studyTagLocation{
+    color: #A2B18A;
+    background: white;
+    border: 1px solid #A2B18A;
+    border-radius: 5px;
+    padding: 5px 8px;
+    cursor: pointer;
+}
+.tag-details{
+    width: 7em;
+}
+.duplicate-study {
+    padding: 0.5em;
+    background-color: #3b593f;
+    color: #f5f5f5;
+}
+
+
+/*스터디그룹 태그 목록*/
 .tagitem{
     border-radius: 5px;
     border: 1px solid #588159;
@@ -240,12 +349,57 @@
     border: none;
 }
 
-/*스터디 모집*/
-#studyLocation{
+.studyLocation{
     color: #A2B18A;
     background: white;
     border: 1px solid #A2B18A;
     border-radius: 5px;
     padding: 1px 2px;
+    margin-left: 10px;
     cursor: pointer;
+}
+/* 스터디 모집 목록 */
+.bi-map{
+    margin: 0;
+}
+.recruitList{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.recruitItem{
+    padding: 1em;
+    border: 1px solid #898989;
+    border-radius: 5px;
+}
+.study-tag{
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+.recruit-status{
+    padding: 3px;
+    border-radius: 5px;
+    background: #0094FF;
+    color: #ffffff;
+    border: none;
+    white-space: nowrap;
+}
+.closed{
+    background: #717171;
+    color: #ffffff;
+}
+.department{
+    padding: 3px;
+    border-radius: 5px;
+    background: #EFF5FF;
+    color: #1D56BC;
+    white-space: nowrap;
+}
+.study-tagItem{
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid #898989;
+    white-space: nowrap;
 }

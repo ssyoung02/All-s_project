@@ -20,40 +20,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body class="loginbg">
-<script>
-    $(document).ready(function() {
-        // 회원가입 결과 메시지 처리 (모달 표시)
-        <c:if test="${not empty error}">
-            $("#messageContent").text("${error}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        </c:if>
-    });
-
-    function checkDuplicate() {
-        const username = $("#username").val();
-        $.ajax({
-            url: "/Users/checkDuplicate",
-            type: "POST",
-            data: { username: username },
-            success: function(response) {
-                if (response === 0) {
-                    $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
-                    $("#usernameCheckResult").removeClass("error").addClass("success");
-                } else {
-                    $("#usernameCheckResult").text("이미 사용 중인 아이디입니다.");
-                    $("#usernameCheckResult").removeClass("success").addClass("error");
-                }
-
-            },
-            error: function() { // AJAX 요청 실패 시
-                $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
-                $("#usernameCheckResult").removeClass("success").addClass("error");
-            }
-        });
-    }
-</script>
     <div class="logo">
         <a href="${root}/main"><img class="logo" src="${root}/resources/images/logo.png" style="width:15%" alt="all's 로고"/></a>
     </div>
@@ -116,12 +82,13 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
-            </div>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+                    <i class="bi bi-x-lg"></i>
+                </button>            </div>
             <div class="modal-center">
                 <%-- 메시지 내용이 여기에 표시됩니다. --%>
-                    <c:if test="${not empty error}">
-                        <p>${error}</p>
+                    <c:if test="${not empty alertModal}">
+                        <p>${alertModal}</p>
                     </c:if>
             </div>
             <div class="modal-bottom">
@@ -130,4 +97,38 @@
         </div>
     </div>
 </body>
+<script>
+    $(document).ready(function() {
+        // 회원가입 결과 메시지 처리 (모달 표시)
+        <c:if test="${not empty alertModal}">
+        $("#messageContent").text("${alertModal}");
+        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('unstaged');
+        $('.modal-close-x').focus();
+        </c:if>
+    });
+
+    function checkDuplicate() {
+        const username = $("#username").val();
+        $.ajax({
+            url: "/Users/checkDuplicate",
+            type: "POST",
+            data: { username: username },
+            success: function(response) {
+                if (response === 0) {
+                    $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
+                    $("#usernameCheckResult").removeClass("error").addClass("success");
+                } else {
+                    $("#usernameCheckResult").text("이미 사용 중인 아이디입니다.");
+                    $("#usernameCheckResult").removeClass("success").addClass("error");
+                }
+
+            },
+            error: function() { // AJAX 요청 실패 시
+                $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
+                $("#usernameCheckResult").removeClass("success").addClass("error");
+            }
+        });
+    }
+</script>
 </html>

@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원정보 수정 > 내 정보 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="${root}/css/common.css">
+    <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
@@ -62,7 +62,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -75,44 +75,57 @@
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
-                <h1>대시보드</h1>
+                <h1>나의 정보</h1>
                 <div class="updateForm bgwhite">
-                    <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
                     <form method="POST" action="${root }/Users/userUpdate" id="user">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="name">이름<span class="essential">*</span></label>
                             <input type="text" id="name" name="name" value="${userVo.name}" readonly required>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="username">아이디<span class="essential">*</span></label>
                             <input type="text" id="username" name="username" value="${userVo.username}" readonly required>
                             <span id="usernameCheckResult"></span>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="password">비밀번호<span class="essential">*</span></label>
                             <input type="password" id="password" name="password" placeholder="변경하려는 비밀번호를 입력해주세요" required>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="password2">비밀번호 확인<span class="essential">*</span></label>
                             <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
                             <span id="passwordCheckResult"></span>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="birthdate">생년월일<span class="essential">*</span></label>
                             <input type="text" id="birthdate" name="birthdate" value="${userVo.birthdate}" readonly required>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="tel">전화번호<span class="essential">*</span></label>
                             <input type="text" id="tel" name="tel" value="Users테이블에전화번호열필요" disabled required>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="gender">성별<span class="essential">*</span></label>
                             <input type="text" id="gender" name="gender" value="${userVo.gender}" disabled required>
                         </div>
-                        <div class="inputbox">
+                        <div class="userinputbox">
                             <label for="email">이메일<span class="essential">*</span></label>
                             <input type="email" id="email" name="email" placeholder="변경하려는 이메일을 입력해주세요">
+                        </div>
+                        <div class="userinputbox">
+                            <dt>프로필</dt>
+                            <dd class="profile-chage">
+                                <input type="file" id="imageChange">
+                                <label for="imageChange" class="imgbox">
+                                    <i class="bi bi-plus-lg"></i>
+                                    <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필" width="100px" height="100px">
+                                </label>
+                                <div class="profile-change">
+                                    <p>변경할 프로필을 등록해주세요.</p>
+                                    <p>(300px X 300px / 500kb 미만)</p>
+                                </div>
+                            </dd>
                         </div>
                         <div class="buttonBox">
                             <button class="updatebutton secondary-default" type="button">취소</button>
@@ -146,6 +159,7 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+    <jsp:include page="../include/timer.jsp" />
 </div>
 </body>
 </html>
