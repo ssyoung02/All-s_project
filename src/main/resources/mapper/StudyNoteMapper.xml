@@ -43,9 +43,10 @@
         </where>
         ORDER BY study.created_at DESC
         LIMIT 0, ${limits}
+
     </select>
 
-    <!-- 공부자료 한개의 글 조회하는 SQL 쿼리 -->
+    <!-- 공부자료 한개의 글 조회하는 SQl 쿼리 -->
     <select id="getStudyNoteById" resultType="bit.naver.entity.StudyReferencesEntity">
         SELECT study.reference_idx AS referenceIdx,
                study.user_idx AS userIdx,
