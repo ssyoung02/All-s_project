@@ -15,20 +15,20 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
-<jsp:include page="../include/header.jsp" />
+<jsp:include page="../include/timer.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="../include/navbar.jsp" />
+            <jsp:include page="../include/navbar.jsp"/>
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="../include/navbar.jsp" />
+                <jsp:include page="../include/navbar.jsp"/>
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
@@ -55,13 +55,14 @@
                             <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
                                 <i class="bi bi-heart-fill"></i>
                                 <p class="info-post ">좋아요</p>
-                            </button>|
+                            </button>
+                            |
                             <button class="report">신고</button>
                         </div>
                     </div>
                     <div class="post-content">${study.description}</div>
                     <div class="buttonBox">
-                        <button class="primary-default" onclick="modalOpen()">가입 신청</button>
+                        <button class="primary-default" onclick='modalOpen()'>가입 신청</button>
                     </div>
                 </div>
                 <div class="board-bottom">
@@ -74,7 +75,7 @@
         </main>
     </section>
     <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
+    <jsp:include page="../include/footer.jsp"/>
 
     <%-- 오류 메세지 모달 --%>
     <div id="modal-container" class="modal unstaged">
@@ -82,11 +83,12 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h3>${study.studyTitle}</h3>
-                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="closeModal()"><i class="bi bi-x-lg"></i></button>
+                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="closeModal()"><i
+                        class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/recruitReadForm">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요
 예)
 거주지(또는 직장):
@@ -98,7 +100,7 @@
                 </form>
             </div>
             <div class="modal-bottom">
-                <button type="button" class="secondary-default" onclick="closeModal()">취소</button>
+                <button type="button" class="secondary-default" onclick="madalClose()">취소</button>
                 <button type="button" class="primary-default" onclick="submitApplication()">신청</button>
             </div>
         </div>
@@ -107,13 +109,6 @@
 </div>
 
 <script>
-    function modalOpen() {
-        document.getElementById('modal-container').classList.add('active');
-    }
-
-    function closeModal() {
-        document.getElementById('modal-container').classList.remove('active');
-    }
 
     function submitApplication() {
         document.getElementById('joinForm').submit();
