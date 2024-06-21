@@ -92,7 +92,7 @@
                     <ul class="submenu">
                         <li class="submenu-item">
                             <div class="menu-area">
-                                <form method="POST" action="<c:url value='${root }/Users/userInfoProcess' />">
+                                <form method="POST" action="<c:url value='${root }/myPage/myPageInfo' />">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <button type="submit" class="link-button">나의 정보</button>
                             </form>

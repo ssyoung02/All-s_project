@@ -27,8 +27,10 @@ public class StudyReferencesController {
     private UsersMapper usersMapper;
 
     private final UsersUserDetailsService usersUserDetailsService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private StudyReferencesService studyReferencesService;
 

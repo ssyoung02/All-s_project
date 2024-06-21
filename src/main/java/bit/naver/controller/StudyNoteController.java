@@ -128,7 +128,6 @@ public class StudyNoteController {
 
     @RequestMapping("/noteModify")
     public String modifyPost(Model model, @ModelAttribute StudyReferencesEntity entity, HttpSession session) {
-        System.out.println("entity: " + entity);
         Users user = (Users) session.getAttribute("userVo");
         String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
         StudyReferencesEntity studyReferencesEntity = studyNoteService.getStudyNoteById(entity.getReferenceIdx(), userIdx);

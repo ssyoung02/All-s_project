@@ -127,17 +127,20 @@ document.querySelectorAll('.board-like').forEach(function (button) {
 });
 
 //커스텀 체크박스 이벤트
-const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const checkboxes = document.querySelectorAll('.todo-checkbox');
 
 checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', function () {
         const label = this.nextElementSibling;
         const icon = label.querySelector('.checkmark > i');
+        const privateIcon = label.querySelector('.private-mark > i');
 
         if (this.checked) {
             icon.className = 'bi bi-check-square';
+            privateIcon.className='bi bi-lock-fill';
         } else {
             icon.className = 'bi bi-square';
+            privateIcon.className='';
         }
     });
 

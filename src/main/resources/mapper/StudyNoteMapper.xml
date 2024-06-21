@@ -150,7 +150,7 @@
 
     <update id="updatePost">
         UPDATE StudyReferences
-        SET title = #{title}, content = #{content}
+        SET title = #{title}, content = #{content}, isPrivate = #{isPrivate}
         WHERE reference_idx = #{referenceIdx}
     </update>
 </mapper>
