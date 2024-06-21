@@ -31,7 +31,7 @@
 <jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
