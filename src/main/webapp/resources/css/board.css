@@ -132,6 +132,7 @@
 
 #smarteditor{
     margin-bottom: 1em;
+    margin-top: 1em;
 }
 .board-textarea{
     width: 100%;
@@ -261,6 +262,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.editor-content{
+    display: flex;
+    flex-direction: column;
+}
+
 .comment-list{
     margin: 1em 0;
 }

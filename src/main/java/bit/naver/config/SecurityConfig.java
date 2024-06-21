@@ -120,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                           "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
-                    .antMatchers("/kakao/login", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/kakao/login", "/login/kakao", "/Users/Join", "/include/**").permitAll()
 
 
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
