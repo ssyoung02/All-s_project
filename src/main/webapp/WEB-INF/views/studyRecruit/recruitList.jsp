@@ -66,132 +66,43 @@
                     <!--슬라이드 배너-->
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
-                            <!--슬라이드 아이템들-->
-                            <div class="swiper-slide">
-                                <div class="study-banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-bottom flex-between">
+                            <!-- 동적으로 생성된 슬라이드 아이템들 -->
+                            <c:forEach var="study" items="${studies}">
+                                <div class="swiper-slide">
+                                    <div class="study-banner-item bgwhite" tabindex="0"
+                                         onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
+                                        <div class="banner-bottom flex-between">
+                                            <p class="study-tag">
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                                <span class="department">${study.category}</span>
+                                            </p>
+                                            <button class="banner-like" aria-label="좋아요">
+                                                <i class="bi bi-heart"></i>
+                                            </button>
+                                        </div>
+                                        <div class="banner-item-top">
+                                            <div class="banner-img">
+                                                <img src="${root}/resources/images/${study.image}" alt="스터디 그룹 로고"/>
+                                            </div>
+                                            <div class="banner-title">
+                                                <p class="banner-main-title">${study.studyTitle}</p>
+                                                <p class="banner-id">${study.leaderName}</p>
+                                            </div>
+                                        </div>
+                                        <p class="banner-content">${study.description}</p>
                                         <p class="study-tag">
-                                            <span class="recruit-status">모집중</span>
-                                            <span class="department">면접</span>
+                                            <span class="study-tagItem">#${study.gender}</span>
+                                            <span class="study-tagItem">#${study.age}</span>
+                                            <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
                                         </p>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
                                     </div>
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집1</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <p class="study-tag">
-                                        <span class="study-tagItem">#위치</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#연령대</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#온라인</span>
-                                    </p>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="study-banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-bottom flex-between">
-                                        <p class="study-tag">
-                                            <span class="recruit-status">모집중</span>
-                                            <span class="department">면접</span>
-                                        </p>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집2</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <p class="study-tag">
-                                        <span class="study-tagItem">#위치</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#연령대</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#온라인</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="study-banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-bottom flex-between">
-                                        <p class="study-tag">
-                                            <span class="recruit-status">모집중</span>
-                                            <span class="department">면접</span>
-                                        </p>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집3</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <p class="study-tag">
-                                        <span class="study-tagItem">#위치</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#연령대</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#온라인</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="swiper-slide">
-                                <div class="study-banner-item bgwhite" tabindex="0" onclick="">
-                                    <div class="banner-bottom flex-between">
-                                        <p class="study-tag">
-                                            <span class="recruit-status">모집중</span>
-                                            <span class="department">면접</span>
-                                        </p>
-                                        <button class="banner-like" aria-label="좋아요">
-                                            <i class="bi bi-heart"></i>
-                                        </button>
-                                    </div>
-                                    <div class="banner-item-top">
-                                        <div class="banner-img">
-                                            <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                        </div>
-                                        <div class="banner-title">
-                                            <p class="banner-main-title">강남인근 면접 스터디 모집4</p>
-                                            <p class="banner-id">Jihyeon</p>
-                                        </div>
-                                    </div>
-                                    <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                    <p class="study-tag">
-                                        <span class="study-tagItem">#위치</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#연령대</span>
-                                        <span class="study-tagItem">#성별</span>
-                                        <span class="study-tagItem">#온라인</span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- 다른 슬라이드들 추가 가능 -->
+                            </c:forEach>
                         </div>
+
+
+                        <!-- 다른 슬라이드들 추가 가능 -->
+
                         <!-- 페이지 네이션 -->
                         <div class="swiper-pagination"></div>
 
@@ -203,50 +114,25 @@
                     <%--슬라이더 끝--%>
 
                     <div class="list-title flex-between">
-                        <h3>전체 글(15)</h3>
+                        <h3>전체 글(${studies.size()})</h3>
                     </div>
 
                     <div class="recruitList">
-                        <%--게시판 글--%>
-                        <div class="recruitItem">
-                            <div class="studygroup-item flex-between">
-                                <button class="imgtitle link-button" onclick="">
-                                    <div class="board-item flex-columleft">
-                                        <p class="study-tag">
-                                            <span class="recruit-status">모집중</span>
-                                            <span class="department">면접</span>
-                                            <span class="study-tagItem">#위치</span>
-                                            <span class="study-tagItem">#성별</span>
-                                            <span class="study-tagItem">#연령대</span>
-                                            <span class="study-tagItem">#성별</span>
-                                            <span class="study-tagItem">#온라인</span>
-                                        </p>
-                                        <h3 class="board-title">백앤드 개발자 코딩 면접 같이 준비하실 분</h3>
-                                    </div>
-                                </button>
-                                <button class="board-like" onclick="">
-                                    <i class="bi bi-heart"></i>
-                                    <p class="info-post">좋아요</p>
-                                </button>
-                            </div>
-                            <button class="board-content link-button" onclick="location.href='recruitReadForm.jsp'">
-                                강남 근처에서 백앤드 개발자 코딩 면접을 같이 준비하실 분 모집합니다. 주 1회 카페에서 대면으로 만나서 준비할 예정이니 근처 사시는 분만 지원해주세요. 지원하실 때 사는곳이나 직장이 근처인지 꼭 적어주세요!(안적으면 죄송하지만 가입 신청 거절합니다!!
-                            </button>
-                        </div>
+                        <%-- 동적으로 생성된 게시판 글 --%>
+                        <c:forEach var="study" items="${studies}">
                             <div class="recruitItem">
                                 <div class="studygroup-item flex-between">
-                                    <button class="imgtitle link-button" onclick="">
+                                    <button class="imgtitle link-button"
+                                            onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="board-item flex-columleft">
                                             <p class="study-tag">
-                                                <span class="recruit-status closed">모집완료</span>
-                                                <span class="department">면접</span>
-                                                <span class="study-tagItem">#위치</span>
-                                                <span class="study-tagItem">#성별</span>
-                                                <span class="study-tagItem">#연령대</span>
-                                                <span class="study-tagItem">#성별</span>
-                                                <span class="study-tagItem">#온라인</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                                <span class="department">${study.category}</span>
+                                                <span class="study-tagItem">#${study.gender}</span>
+                                                <span class="study-tagItem">#${study.age}</span>
+                                                <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
                                             </p>
-                                            <h3 class="board-title">백앤드 개발자 코딩 면접 같이 준비하실 분</h3>
+                                            <h3 class="board-title">${study.studyTitle}</h3>
                                         </div>
                                     </button>
                                     <button class="board-like" onclick="">
@@ -254,14 +140,12 @@
                                         <p class="info-post">좋아요</p>
                                     </button>
                                 </div>
-                                <button class="board-content link-button" onclick="">
-                                    강남 근처에서 백앤드 개발자 코딩 면접을 같이 준비하실 분 모집합니다. 주 1회 카페에서 대면으로 만나서 준비할 예정이니 근처 사시는 분만 지원해주세요. 지원하실 때 사는곳이나 직장이 근처인지 꼭 적어주세요!(안적으면 죄송하지만 가입 신청 거절합니다!!
+                                <button class="board-content link-button" onclick="location.href='recruitReadForm.jsp'">
+                                        ${study.description}
                                 </button>
                             </div>
-
-
+                        </c:forEach>
                     </div>
-
                 </div>
                 <%--본문 콘텐츠 끝--%>
             </div>
@@ -275,3 +159,26 @@
 <script src="${root}/resources/js/slider.js"></script>
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const statusElements = document.querySelectorAll('.recruit-status');
+
+        statusElements.forEach(element => {
+            const status = element.innerText;
+
+            if (status === 'RECRUITING') {
+                element.innerText = '모집중';
+            } else if (status === 'CLOSED') {
+                element.innerText = '마감';
+            }
+        });
+    });
+</script>
+<script>
+    function redirectToStudyDetail(studyIdx) {
+        // studyIdx를 이용하여 URL을 생성
+        var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
+        // 페이지 이동
+        window.location.href = url;
+    }
+</script>

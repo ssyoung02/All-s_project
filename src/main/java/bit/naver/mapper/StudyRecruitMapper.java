@@ -12,6 +12,9 @@ public interface StudyRecruitMapper {
     // 스터디 모집 리스트
     List<StudyGroup> getAllStudies();
 
+    // 가입 폼
+    StudyGroup getStudyById(Long studyIdx);
+
     // 스터디 등록
     void insertStudyMember(StudyMembers studyMember);
 }

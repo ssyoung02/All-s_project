@@ -38,7 +38,7 @@ public class StudyGroup {
 
     private Double longitude;
 
-    private int age;
+    private String age;
 
     private int capacity;
 
@@ -53,6 +53,9 @@ public class StudyGroup {
     private StudyStatus status;
 
     private Date createdAt;
+
+    // DB에 없는 엔티티
+    private String leaderName;
 
 
 }

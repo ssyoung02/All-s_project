@@ -61,13 +61,13 @@
                                     <div class="menu-area">
                                         <form method="POST" action="<c:url value='${root}/studyGroup/studyGroupList' />">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                            <button type="submit" class="link-button">내 공부자료</button>
+                                            <button type="submit" class="link-button">내 스터디</button>
                                         </form>
                                     </div>
                                 </li>
                                 <li class="dropdown-item">
                                     <div class="menu-area">
-                                        <form method="POST" action="<c:url value='${root}studyRecruit/recruitList' />">
+                                        <form method="POST" action="<c:url value='${root}/studyRecruit/recruitList' />">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                             <button type="submit" class="link-button">스터디 모집</button>
                                         </form>

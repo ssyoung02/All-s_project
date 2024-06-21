@@ -127,11 +127,11 @@ public class StudyController {
 //        return "studyRecruit/recruitList";
 //    }
 
-    //스터디 모집 - 상세
-    @RequestMapping("/studyRecruit/recruitReadForm")
-    public String RecruitReadForm() {
-        return "studyRecruit/recruitReadForm";
-    }
+//    //스터디 모집 - 상세
+//    @RequestMapping("/studyRecruit/recruitReadForm")
+//    public String RecruitReadForm() {
+//        return "studyRecruit/recruitReadForm";
+//    }
 
 
     //공부 자료

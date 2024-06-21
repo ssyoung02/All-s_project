@@ -74,14 +74,8 @@ public class StudyGroupController {
 
 
         study.setStudyLeaderIdx(userIdx);
-        study.setDescriptionTitle("몰라");
-        study.setStudyOnline(false);
-        study.setAge(23);
-        study.setCapacity(5);
-        study.setGender("남자");
         study.setStartDate(new Date());
         study.setEndDate(new Date());
-
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
 
@@ -99,7 +93,7 @@ public class StudyGroupController {
 
         studyGroupMapper.insertStudyMember(studyMember);
 
-        return "redirect:/studyGroup/studyGroupList";
+        return "/studyGroup/studyGroupList";
     }
 
 

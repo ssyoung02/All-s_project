@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,14 +29,25 @@ public class StudyRecruitController {
     @RequestMapping("/recruitList")
     public String getAllStudies(Model model) {
         List<StudyGroup> studies = studyMapper.getAllStudies();
-        System.out.println(studies.toString());
         model.addAttribute("studies", studies);
-        return "redirect:studyRecruit/recruitList"; // recruitList.jsp로 이동
+
+        return "studyRecruit/recruitList"; // recruitList.jsp로 이동
     }
 
-    @RequestMapping("/register")
+    // 신청가입리스트?
+    @GetMapping("/recruitReadForm")
+    public String getStudyDetail(@RequestParam("studyIdx") Long studyIdx, Model model) {
+        // 스터디 상세 정보 조회
+        StudyGroup study = studyMapper.getStudyById(studyIdx);
+        model.addAttribute("study", study);
+
+        System.out.println(study.toString());
+        return "studyRecruit/recruitReadForm";
+    }
+
     // 스터디 등록 insert
-    public String registerStudyMember(@RequestParam("studyIdx") Long studyIdx, HttpSession session, Principal principal) {
+    @RequestMapping("/recruitReadForm")
+    public String registerStudyMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("joinReason") String joinReason, HttpSession session, Principal principal) {
 
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
@@ -45,13 +57,13 @@ public class StudyRecruitController {
         studyMember.setUserIdx(userIdx);
         studyMember.setRole("MEMBER");
         studyMember.setStatus("ACCEPTED");
+        studyMember.setJoinReason(joinReason);
         studyMember.setCreatedAt(LocalDateTime.now());
         studyMember.setUpdatedAt(LocalDateTime.now());
 
-        System.out.println(studyMember.toString());
 
         studyMapper.insertStudyMember(studyMember);
 
-        return "redirect:studyGroup/studyGroupList";
+        return "/main";
     }
 }
