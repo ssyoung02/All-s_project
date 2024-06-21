@@ -30,13 +30,17 @@
                 <sec:authorize access="isAuthenticated()">
                     <!-- 프로필 링크 -->
                     <a class="profile" href="#">
-                        <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
+                        <div class="profile-img">
+                            <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
+                        </div>
                         <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
                     </a>
                     <!-- 알림 영역 -->
                     <div class="alarm flex-colum hidden">
                         <div>
-                            <div class="profile-img"><img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필"></div>
+                            <div class="profile-img">
+                                <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
+                            </div>
                             <p class="profile-username">${userVo.name}</p>
                         </div>
                         <div class="alarmList">

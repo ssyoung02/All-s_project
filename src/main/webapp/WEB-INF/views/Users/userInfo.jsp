@@ -56,7 +56,7 @@
                     <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">
-                                <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필">
+                                <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
                             </div>
                             <h3>${userVo.username}</h3>
                         </div>

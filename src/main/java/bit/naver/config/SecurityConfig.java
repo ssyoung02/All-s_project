@@ -12,6 +12,7 @@
 //          BCryptPasswordEncoder를 사용하여 비밀번호를 안전하게 암호화합니다.
 package bit.naver.config;
 
+import bit.naver.security.CustomLogoutSuccessHandler;
 import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean; // Bean 등록 어노테이션
@@ -75,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 //    }
 //
 
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -120,9 +122,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                           "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
-                    .antMatchers("/kakao/login", "/login/kakao", "/Users/Join").permitAll()
-
-
+                    .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/login/naver", "/login/oauth2/code/naver").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
                     .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
         // 그 외 모든 요청은 인증된 사용자만 접근 허용
@@ -142,6 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .logout()
                 .logoutUrl("/Users/logout")
                 .logoutSuccessUrl("/main")
+                .logoutSuccessHandler(customLogoutSuccessHandler)
                 .invalidateHttpSession(true)
                 .permitAll()
                 .and()
