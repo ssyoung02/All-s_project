@@ -12,6 +12,7 @@ public class Users {
 
     private Long userIdx;
 
+
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     @Size(min = 4, max = 12, message = "아이디는 4~12자 사이여야 합니다.")
     private String username;
@@ -42,6 +43,8 @@ public class Users {
     private String gender; // String 타입 유지
 
     private Boolean socialLogin = false;
+//    private String socialLogin; // 소셜 로그인 방식 ("KAKAO" 또는 "GOOGLE" 등)
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

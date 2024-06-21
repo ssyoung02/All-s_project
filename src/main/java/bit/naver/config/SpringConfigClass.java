@@ -11,6 +11,8 @@
 package bit.naver.config;
 
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CharacterEncodingFilter; // 문자 인코딩 필터 임포트
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer; // Spring MVC 초기화 클래스 임포트
 

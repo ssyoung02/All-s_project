@@ -8,7 +8,6 @@
 <html>
 <head>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>내 공부노트 > 공부 > All's</title>
@@ -89,7 +88,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -129,38 +128,47 @@
 
                     <div class="boardContent flex-colum">
                         <c:forEach var="data" items="${studyReferencesEntity}">
-                        <%--게시글 상세 item--%>
-                        <div class="board-listline flex-columleft">
-                            <div class="studygroup-item flex-between">
-                                <!--스터디 목록-->
-                                <div class="imgtitle flex-row" onclick="location.href='${root}/studyNote/noteRead?referenceIdx=${data.referenceIdx}'" tabindex="0">
-                                    <div class="board-item flex-columleft">
-                                        <h3 class="board-title">${data.title}</h3>
-                                        <p class="board-content">작성자: ${data.name}  |   작성일: ${data.createdAt}  |  조회수: ${data.viewsCount}</p>
-                                    </div>
-                                </div>
 
-                            <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
-                            <c:choose>
-                                <c:when test="${data.isLike != 0}">
-                                    <button class="flex-row liked" onclick="toggleLike(this, ${data.referenceIdx})">
-                                        <i class="bi bi-heart-fill"></i>
-                                        <p class="info-post">좋아요</p>
-                                    </button>
-                                </c:when>
-                                <c:otherwise>
-                                    <button class="flex-row" onclick="toggleLike(this, ${data.referenceIdx})">
-                                        <i class="bi bi-heart"></i>
-                                        <p class="info-post">좋아요</p>
-                                    </button>
-                                </c:otherwise>
-                            </c:choose>
+
+                            <%--게시글 상세 item--%>
+                            <div class="board-listline flex-columleft">
+                                <div class="studygroup-item flex-between">
+                                    <!--스터디 목록-->
+                                    <div class="imgtitle flex-row" onclick="location.href='${root}/studyNote/noteRead?referenceIdx=${data.referenceIdx}'" tabindex="0">
+                                        <div class="board-item flex-columleft">
+                                            <h3 class="board-title">${data.title}
+                                                <c:if test="${data.isPrivate == 'true'}">
+                                                    <i class="bi bi-lock-fill"></i>
+                                                </c:if>
+                                                <c:if test="${data.isPrivate == 'false'}">
+                                                    <i class="bi bi-lock-fill" style="display: none"></i>
+                                                </c:if>
+                                            </h3>
+                                            <p class="board-content">작성자: ${data.name}  |   작성일: ${data.createdAt}  |  조회수: ${data.viewsCount}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
+                                    <c:choose>
+                                        <c:when test="${data.isLike != 0}">
+                                            <button class="flex-row liked" onclick="toggleLike(this, ${data.referenceIdx})">
+                                                <i class="bi bi-heart-fill"></i>
+                                                <p class="info-post">좋아요</p>
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button class="flex-row" onclick="toggleLike(this, ${data.referenceIdx})">
+                                                <i class="bi bi-heart"></i>
+                                                <p class="info-post">좋아요</p>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                                <button class="link-button flex-between" onclick="location.href='${root}/studyNote/noteRead?referenceIdx=${data.referenceIdx}'">
+                                        ${data.content}
+                                    <img/>
+                                </button>
                             </div>
-                            <button class="link-button flex-between" onclick="location.href='${root}/studyNote/noteRead?referenceIdx=${data.referenceIdx}'">
-                                    ${data.content}
-                                <img/>
-                            </button>
-                        </div>
                         </c:forEach>
                     </div>
                     <div class="flex-row">

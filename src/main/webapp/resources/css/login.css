@@ -45,7 +45,7 @@
     margin: 1em 0;
 }
 .orline p{
-    margin: 0 20px;
+    margin: 2em;
 }
 .orline hr{
     border: 1px solid #A2B18A;
@@ -54,7 +54,7 @@
 .snsloginarea{
     display: flex;
     justify-content: center;
-    gap: 2em;
+    gap: 4em;
 }
 
 /*회원가입*/

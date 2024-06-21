@@ -4,6 +4,8 @@ import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
 import bit.naver.security.UsersUserDetailsService;
+import bit.naver.service.GoogleLoginService;
+import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
@@ -45,8 +47,14 @@ import java.util.List;
 @RequestMapping("/Users")
 @RequiredArgsConstructor
 public class UsersController {
+    //private static final Logger log = Logger.getLogger(UsersController.class); // Logger 객체 선언 및 초기화
+
+    @Autowired
+    private GoogleLoginService loginService;
     @Autowired
     private UsersMapper usersMapper;
+    @Autowired
+    private Environment env;
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -81,6 +89,12 @@ public class UsersController {
                                 @RequestParam("birthdate") String birthdateStr,
                                 @RequestParam("gender") String gender,
                                 RedirectAttributes rttr) {
+
+        // 입력 값 유효성 검사 (직접 구현)
+        if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty()) {
+            rttr.addFlashAttribute("error", "모든 필드를 입력해주세요.");
+            return "redirect:/Users/Join";
+        }
 
         // 4. 이메일 중복 검사
         if (usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
@@ -117,6 +131,9 @@ public class UsersController {
             user.setUpdatedAt(updatedAt.toLocalDateTime());
             System.out.println("서울 타임존 현재 시간: " + currentDateTime);
 
+
+
+
             // 사용자 정보 저장
             usersMapper.insertUser(user);
 
@@ -142,7 +159,20 @@ public class UsersController {
     @RequestMapping("/Login")
     public String usersLogin(Users user, RedirectAttributes rttr, HttpSession session, Principal principal) {
 
+
         System.out.println("로그인 버튼 누른 후 작업");
+        if (principal != null && principal instanceof UsernamePasswordAuthenticationToken) {
+            // 사용자가 이미 인증된 경우 (구글 로그인 등)
+            return "forward:/main";
+        }
+        // 입력 값 유효성 검사
+        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
+            System.out.println("로그인 입력 비었음");
+            log.warn("로그인 실패: 아이디 또는 비밀번호가 비어있습니다."); // 로그 추가
+
+            rttr.addFlashAttribute("error", "아이디와 비밀번호를 입력하세요");
+            return "redirect:/Users/UsersLoginForm";
+        }
 
         // 사용자 정보 조회 및 비밀번호 검증
         Users userVo = usersMapper.findByUsername(user.getUsername());
@@ -168,15 +198,14 @@ public class UsersController {
             log.warn("로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다."); // 로그 추가
             // 오류 메시지 설정 (기존 msg1, msg2 대신 error 사용)
             if (userVo == null) {
-                rttr.addFlashAttribute("errorMsg", "존재하지 않는 아이디입니다.");
+                rttr.addFlashAttribute("error", "존재하지 않는 아이디입니다.");
             } else {
-                rttr.addFlashAttribute("errorMsg", "비밀번호가 일치하지 않습니다.");
+                rttr.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
             }
-            rttr.addFlashAttribute("username", user.getUsername());
+            rttr.addFlashAttribute("username", user.getUsername()); // 아이디 값 유지
             return "redirect:/Users/UsersLoginForm";
         }
     }
-
 
 
 

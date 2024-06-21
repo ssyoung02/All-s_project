@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bit.naver.mapper.MyPageMapper">
+
+    <select id="getStudyReferencesList" resultType="bit.naver.entity.StudyReferencesEntity">
+        SELECT
+            st.reference_idx AS referenceIdx,
+            st.user_idx AS userIdx,
+            u.name AS name,
+            st.title AS title,
+            st.isPrivate AS isPrivate,
+            st.content AS content,
+            st.category AS category,
+            st.file_attachments AS fileAttachments,
+            st.likes_count AS likesCount,
+            st.report_count AS reportCount,
+            st.comments_count AS commentsCount,
+            st.views_count AS viewsCount,
+            DATE_FORMAT(st.created_at, '%Y-%m-%d %H:%i') AS createdAt,
+            st.updated_at AS updatedAt,
+            COUNT(*) OVER () AS TOTALCOUNT
+        FROM
+            StudyReferences st
+                LEFT JOIN Users u ON u.user_idx = st.user_idx
+        WHERE
+            st.reference_idx IN (
+                SELECT lr.reference_idx
+                FROM LikeReferences lr
+                WHERE lr.user_idx = #{userIdx}
+            )
+        ORDER BY
+            st.created_at DESC;
+
+    </select>
+
+    <select id="getLikePostList" resultType="bit.naver.entity.StudyReferencesEntity">
+        SELECT study.reference_idx AS referenceIdx,
+        study.user_idx AS userIdx,
+        name,
+        title,
+        isPrivate,
+        content,
+        category,
+        file_attachments,
+        likes_count AS likesCount,
+        report_count AS reportCount,
+        comments_count AS commentsCount,
+        views_count AS viewsCount,
+        DATE_FORMAT(study.created_at, '%Y-%m-%d %H:%i') AS createdAt,
+        study.updated_at AS updatedAt,
+        IFNULL(lr.reference_idx, 0) AS isLike,
+        COUNT(*) OVER () AS TOTALCOUNT
+        FROM StudyReferences study
+        LEFT JOIN Users user ON user.user_idx = study.user_idx
+        LEFT JOIN LikeReferences lr ON study.reference_idx = lr.reference_idx AND lr.user_idx = #{userIdx}
+        <where>
+            lr.user_idx = #{userIdx}
+                <if test="searchOption != null and searchOption == 'all-post'">
+                    AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%' , #{searchKeyword} , '%'))
+                </if>
+                <if test="searchOption != null and searchOption == 'title-post'">
+                    AND title LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+                <if test="searchOption != null and searchOption == 'title-content'">
+                    AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%'))
+                </if>
+                <if test="searchOption != null and searchOption == 'writer-post'">
+                    AND name LIKE CONCAT('%', #{searchKeyword}, '%')
+                </if>
+        </where>
+        ORDER BY study.created_at DESC
+
+    </select>
+
+    <insert id="insertLike">
+        INSERT INTO LikeReferences( user_idx, reference_idx, created_at)
+        VALUES (
+                   #{userIdx},#{referenceIdx},now()
+               )
+    </insert>
+
+    <update id="plusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count + 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
+
+    <delete id="deleteLike">
+        DELETE FROM LikeReferences
+        WHERE reference_idx = #{referenceIdx}
+          AND user_idx = #{userIdx}
+    </delete>
+
+    <update id="minusLike">
+        UPDATE StudyReferences
+        SET likes_count = likes_count - 1
+        WHERE reference_idx = #{referenceIdx}
+    </update>
+
+</mapper>

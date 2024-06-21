@@ -51,7 +51,7 @@
             oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
             let content = document.getElementById("editorTxt").value;
             let title = document.querySelector('.title-post').value;
-            let privatePost = document.querySelector('.private-post').checked;
+            let isPrivate = document.getElementsByName("isPrivate")[0].checked;
 
             if (title.trim() === '') {
                 alert("제목을 입력해주세요");
@@ -71,7 +71,7 @@
                 data: {
                     title: title,
                     content: content,
-                    isPrivate: privatePost
+                    isPrivate: isPrivate
                 },
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
@@ -92,7 +92,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -116,18 +116,31 @@
                         <ul class="todolist">
                             <!-- 태그 항목 -->
                             <li>
-                                <input type="checkbox" id="public" class="private-post" name="privatePost">
+                                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
                                 <label for="public" class="todo-label">
                                     <span class="checkmark"><i class="bi bi-square"></i></span>
-                                    게시물 비공개
+                                    비밀글
+                                    <span class="private-mark"><i class=""></i></span>
                                 </label>
                             </li>
                         </ul>
+
                         <!-- naver smart editor api -->
                         <div id="smarteditor">
                         <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;"
                                   placeholder="내용을 입력해주세요"></textarea>
                         </div>
+
+                        <ul class="taglist">
+                            <!-- 태그 항목 -->
+                            <li>
+                                <p class="tag-title">첨부파일</p>
+                                <input class="upload-name" value="첨부파일" placeholder="첨부파일" readonly>
+                                <label for="file">파일찾기</label>
+                                <input type="file" id="file">
+                            </li>
+                        </ul>
+
                         <div class="buttonBox">
                             <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyNote/noteList'">취소</button>
                             <button type="submit" class="updatebutton primary-default">작성</button>

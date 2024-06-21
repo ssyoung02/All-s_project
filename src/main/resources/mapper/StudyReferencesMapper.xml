@@ -30,17 +30,18 @@
                            ON study.reference_idx = lr.reference_idx
                                AND lr.user_idx = #{userIdx}
         <where>
+            isPrivate = false
             <if test="searchOption != null and searchOption == 'all-post'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%' , #{searchKeyword} , '%')
+                AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%' , #{searchKeyword} , '%'))
             </if>
             <if test="searchOption != null and searchOption == 'title-post'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%')
+                AND title LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
             <if test="searchOption != null and searchOption == 'title-content'">
-                title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%')
+                AND (title LIKE CONCAT('%', #{searchKeyword}, '%') OR content LIKE CONCAT ('%' , #{searchKeyword}, '%'))
             </if>
             <if test="searchOption != null and searchOption == 'writer-post'">
-                name LIKE CONCAT('%', #{searchKeyword}, '%')
+                AND name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
         </where>
         ORDER BY study.created_at DESC
@@ -158,7 +159,7 @@
 
     <update id="updatePost">
         UPDATE StudyReferences
-        SET title = #{title}, content = #{content}
+        SET title = #{title}, content = #{content}, isPrivate = #{isPrivate}
         WHERE reference_idx = #{referenceIdx}
     </update>
 </mapper>

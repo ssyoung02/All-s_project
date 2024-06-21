@@ -16,6 +16,7 @@ import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean; // Bean 등록 어노테이션
 import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -25,6 +26,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
 import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -39,6 +42,39 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 // Spring Security를 활성화하고 웹 보안 설정을 구성합니다.
 @RequiredArgsConstructor // Lombok 어노테이션: final 필드에 대한 생성자 자동 생성
 public class SecurityConfig extends WebSecurityConfigurerAdapter  {
+
+//    private final CustomOAuth2UserService oAuth2UserService;
+//
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        // CSRF 보호 비활성화
+//        http.csrf(csrf -> csrf.disable());
+//
+//        // 폼 로그인 비활성화
+//        http.formLogin(login -> login.disable());
+//
+//        // HTTP Basic 인증 비활성화
+//        http.httpBasic(basic -> basic.disable());
+//
+//        // OAuth2 로그인 설정
+//        http.oauth2Login(oauth2 -> oauth2
+//                .loginPage("/login")
+//
+//                // 커스텀한 서비스 클래스를 설정
+//                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+//                        .userService(oAuth2UserService)));
+//
+//        http.authorizeHttpRequests(auth -> auth
+//                .requestMatchers("/", "/oauth2/**", "/login").permitAll()
+//                .anyRequest().authenticated()
+//
+//        );
+//
+//        return http.build();
+//    }
+//
+
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -84,10 +120,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                           "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
+                    .antMatchers("/kakao/login", "/login/kakao", "/Users/Join", "/include/**").permitAll()
+
+
+                // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
         // 그 외 모든 요청은 인증된 사용자만 접근 허용
                     .antMatchers("/Users/userInfoProcess").authenticated()
                     .antMatchers("/Users/userInfo").authenticated()
-                    .anyRequest().authenticated()
+                    .antMatchers("/calendar/*").authenticated()
+                    .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/Users/UsersLoginForm")
@@ -116,9 +159,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .invalidSessionUrl("/Users/UsersLoginForm?invalid")
                 .and()
                     .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
-
-        http.addFilterAfter(new CharacterEncodingFilter("UTF-8", true), SecurityContextPersistenceFilter.class);
-        //
 
 
                 /*
