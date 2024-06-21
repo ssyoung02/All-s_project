@@ -14,7 +14,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <script>
+        function openChatWindow() {
+            window.open('${root}/studyGroup/chat', 'ChatWindow', 'width=400,height=500');
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
@@ -47,7 +51,7 @@
                         </div>
                         <div class="profile-link">
                             <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo"><i class="bi bi-gear"></i>관리</a>
-                            <button class="primary-default">채팅</button>
+                            <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅</button>
                         </div>
                     </section>
                     <section class="group-main">
