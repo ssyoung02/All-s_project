@@ -86,11 +86,6 @@
     border-radius: 5px;
     resize: none;
 }
-
-.group-imgChange{
-    width: 100px;
-    height: 100px;
-}
 .profile-chage{
     display: flex;
     gap: 1em;
@@ -101,22 +96,21 @@
     opacity: 0;
 }
 
-.group-imgChange label{
+.profile-chage label{
     background: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #bbbbbb;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.group-imgChange i{
+.profile-chage i{
     position: absolute;
     font-size: 2em;
     color: black;
 }
-.group-imgChange img{
+.profile-chage img{
     opacity: 0.3;
 }
 

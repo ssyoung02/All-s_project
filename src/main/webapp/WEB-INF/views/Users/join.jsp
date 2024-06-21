@@ -87,8 +87,8 @@
                 </button>            </div>
             <div class="modal-center">
                 <%-- 메시지 내용이 여기에 표시됩니다. --%>
-                    <c:if test="${not empty alertModal}">
-                        <p>${alertModal}</p>
+                    <c:if test="${not empty error}">
+                        <p>${error}</p>
                     </c:if>
             </div>
             <div class="modal-bottom">
@@ -100,8 +100,8 @@
 <script>
     $(document).ready(function() {
         // 회원가입 결과 메시지 처리 (모달 표시)
-        <c:if test="${not empty alertModal}">
-        $("#messageContent").text("${alertModal}");
+        <c:if test="${not empty error}">
+        $("#messageContent").text("${error}");
         $('#modal-container').toggleClass('opaque'); //모달 활성화
         $('#modal-container').toggleClass('unstaged');
         $('.modal-close-x').focus();

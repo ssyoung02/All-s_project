@@ -92,7 +92,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -116,10 +116,11 @@
                         <ul class="todolist">
                             <!-- 태그 항목 -->
                             <li>
-                                <input type="checkbox" id="public" class="private-post" name="privatePost">
+                                <input type="checkbox" id="public" class="todo-checkbox">
                                 <label for="public" class="todo-label">
                                     <span class="checkmark"><i class="bi bi-square"></i></span>
-                                    게시물 비공개
+                                    비밀글
+                                    <span class="private-mark"><i class=""></i></span>
                                 </label>
                             </li>
                         </ul>

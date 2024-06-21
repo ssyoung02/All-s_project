@@ -22,7 +22,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -91,28 +91,28 @@
                                 <li>
                                     <p class="tag-title">연령대</p>
                                     <div class="tag-details">
-                                        <input type="checkbox" id="twenty" class="private-post" name="age">
+                                        <input type="checkbox" id="twenty" class="todo-checkbox" name="age">
                                         <label for="twenty" class="todo-label">
                                             <span class="checkmark"><i class="bi bi-square"></i></span>
                                             20대
                                         </label>
                                     </div>
                                     <div class="tag-details">
-                                        <input type="checkbox" id="thirty" class="private-post" name="age">
+                                        <input type="checkbox" id="thirty" class="todo-checkbox" name="age">
                                         <label for="thirty" class="todo-label">
                                             <span class="checkmark"><i class="bi bi-square"></i></span>
                                             30대
                                         </label>
                                     </div>
                                     <div class="tag-details">
-                                        <input type="checkbox" id="forty" class="private-post" name="age">
+                                        <input type="checkbox" id="forty" class="todo-checkbox" name="age">
                                         <label for="forty" class="todo-label">
                                             <span class="checkmark"><i class="bi bi-square"></i></span>
                                             40대
                                         </label>
                                     </div>
                                     <div class="tag-details">
-                                        <input type="checkbox" id="allAge" class="private-post" name="age">
+                                        <input type="checkbox" id="allAge" class="todo-checkbox" name="age">
                                         <label for="allAge" class="todo-label">
                                             <span class="checkmark"><i class="bi bi-square"></i></span>
                                             연령무관

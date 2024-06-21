@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bit.naver.mapper.TimerMapper">
+    <insert id="insertStartTime" useGeneratedKeys="true" keyColumn="record_idx" keyProperty="record_idx">
+        INSERT INTO StudyRecords (user_idx, date, start_time)
+        VALUES (#{userIdx}, now(), now())
+    </insert>
+
+<!-- select order by = idx값 기준 최신 recodeidx-->
+
+    <update id="updateEndTime">
+        UPDATE StudyRecords
+        SET end_time = now(), study_time = #{studyTime}
+        WHERE user_idx = #{userIdx} and record_idx = #{record_idx}
+    </update>
+
+    <update id="updateEndTimeAndStudyTime">
+        UPDATE StudyRecords
+        SET end_time = now(), study_time = #{studyTime}
+        WHERE user_idx = #{userIdx} and record_idx = #{record_idx}
+    </update>
+
+    <update id="updateMemo">
+        UPDATE StudyRecords
+        SET memo = #{memo}
+        WHERE user_idx = #{userIdx} and record_idx = #{record_idx}
+    </update>
+</mapper>
