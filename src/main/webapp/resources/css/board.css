@@ -145,6 +145,33 @@
     margin-bottom: 1em;
 }
 
+.upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 50%;
+    color: #999999;
+    background: #eeeeee;
+}
+
+.upload-name + label {
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #588159;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+}
+
 .siteItem {
     width: 100px;
     box-sizing: border-box;

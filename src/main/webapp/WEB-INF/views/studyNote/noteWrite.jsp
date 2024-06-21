@@ -92,7 +92,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -130,6 +130,17 @@
                         <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;"
                                   placeholder="내용을 입력해주세요"></textarea>
                         </div>
+
+                        <ul class="taglist">
+                            <!-- 태그 항목 -->
+                            <li>
+                                <p class="tag-title">첨부파일</p>
+                                <input class="upload-name" value="첨부파일" placeholder="첨부파일" readonly>
+                                <label for="file">파일찾기</label>
+                                <input type="file" id="file">
+                            </li>
+                        </ul>
+
                         <div class="buttonBox">
                             <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyNote/noteList'">취소</button>
                             <button type="submit" class="updatebutton primary-default">작성</button>
