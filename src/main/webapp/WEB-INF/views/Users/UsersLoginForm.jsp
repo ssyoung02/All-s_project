@@ -29,6 +29,7 @@
         </div>
         <form method="POST" action="${root}/Users/Login">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+            <input type="hidden" name="loginState" value="${loginState}" />
             <div>
                 <div class="inputbox">
                     <label for="username">아이디</label>
@@ -53,8 +54,8 @@
                 <hr>
             </div>
             <div class="snsloginarea">
-                <a href="https://kauth.kakao.com/oauth/authorize?client_id=b7723b667ea1da66ffa9f66476a3294b&redirect_uri=http://localhost:8080/kakao/login&response_type=code"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
-                <a href="#"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id=5c4145fbf492994409e12f3277ead754&redirect_uri=http://localhost:8080/kakao/login/alls&response_type=code"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
+                <a href="${root}/login/naver"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
                 <a href="${root}/login/google"><img src="${root}/resources/images/sns-google.png" alt="구글 로그인"></a>
             </div>
         </form>
@@ -90,14 +91,16 @@
             $('#modal-container').toggleClass('opaque');
             $('#modal-container').toggleClass('unstaged');
             $('.modal-close-x').focus();
-            </c:if>
 
-/*
-            <c:if test="${not empty sessionScope.username}">
-            console.log("Username: " + ${sessionScope.username});
-            $("#username").val(${sessionScope.username}); // 로그인 실패 시 아이디 값 유지
+
+            <c:if test="${not empty sessionScope.loginusername}">
+
+            var loginusername = "${sessionScope.loginusername}"; // 세션에서 값 가져오기
+            console.log("Username: " + loginusername);
+            $("#username").val(loginusername);
+
             </c:if>
-*/
+            </c:if>
         });
     </script>
 

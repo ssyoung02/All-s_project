@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.security.Principal;
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -88,41 +90,62 @@ public class UsersController {
                                 @RequestParam("email") String email,
                                 @RequestParam("birthdate") String birthdateStr,
                                 @RequestParam("gender") String gender,
-                                RedirectAttributes rttr) {
+                                @RequestParam(value = "socialLogin", required = false, defaultValue = "false") Boolean socialLogin,
+                                @RequestParam(value = "provider", required = false) String provider,
+                                @RequestParam(value = "profileImage", required = false) String profileImage,
+                                @RequestParam(value = "mobile", required = false) String mobile,
+                                HttpSession session) {
 
         // 입력 값 유효성 검사 (직접 구현)
-        if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty()) {
-            rttr.addFlashAttribute("error", "모든 필드를 입력해주세요.");
+        if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty() || mobile.isEmpty()) {
+            session.setAttribute("error", "모든 필드를 입력해주세요.");
             return "redirect:/Users/Join";
         }
 
-        // 4. 이메일 중복 검사
+        // 이메일 중복 검사
         if (usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
-            rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
-            return "redirect:/Users/Join";
-        }
-        try {
-        // 생년월일 변환
-        LocalDate birthdate;
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            birthdate = LocalDate.parse(birthdateStr, formatter);
-        } catch (DateTimeParseException e) {
-            rttr.addFlashAttribute("error", "올바른 생년월일 형식이 아닙니다.");
+            session.setAttribute("error", "이미 사용 중인 이메일입니다.");
             return "redirect:/Users/Join";
         }
 
-        // Users 객체 생성 및 데이터 설정
-        Users user = new Users();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setEmail(email);
-        user.setName(name);
-        user.setBirthdate(birthdate);
-        user.setGender(gender);
-        user.setEnabled(true);
-        user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
-            ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID-
+        try {
+            // 생년월일 변환
+            LocalDate birthdate;
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                birthdate = LocalDate.parse(birthdateStr, formatter);
+            } catch (DateTimeParseException e) {
+                session.setAttribute("error", "올바른 생년월일 형식이 아닙니다.");
+                return "redirect:/Users/Join";
+            }
+
+            // Users 객체 생성 및 데이터 설정
+            Users user = new Users();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setEmail(email);
+            user.setName(name);
+            user.setBirthdate(birthdate);
+            user.setGender(gender);
+            user.setEnabled(true);
+            user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
+            user.setMobile(mobile);
+            // 소셜 로그인 여부 및 제공자 설정
+            user.setSocialLogin(socialLogin);
+            user.setProvider(socialLogin ? provider : null);
+
+            // 프로필 이미지 설정 (소셜 로그인인 경우에만)
+            if (socialLogin && (provider.equals("naver") || provider.equals("kakao") || provider.equals("google"))) {
+                if (provider.equals("google")) {
+                    user.setProfileImage("https://www.google.com/url?sa=i&url=https%3A%2F%2Ficonscout.com%2Ficons%2Fgoogle&psig=AOvVaw0dbE76jSgtZP20FKYyxeEW&ust=1719040155908000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJi8yOCR7IYDFQAAAAAdAAAAABAI");
+                } else {
+                    user.setProfileImage(profileImage);
+                }
+            } else {
+                user.setProfileImage("기본이미지.gif"); // 기본 이미지 설정
+            }
+
+            ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID
             LocalDateTime currentDateTime = LocalDateTime.now();
             LocalDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, zoneId).toLocalDateTime();
             Timestamp createdAt = Timestamp.valueOf(zonedDateTime);
@@ -131,36 +154,53 @@ public class UsersController {
             user.setUpdatedAt(updatedAt.toLocalDateTime());
             System.out.println("서울 타임존 현재 시간: " + currentDateTime);
 
-
-
-
             // 사용자 정보 저장
             usersMapper.insertUser(user);
 
-            rttr.addFlashAttribute("msg1", "성공");
-            rttr.addFlashAttribute("msg2", "회원가입에 성공했습니다.");
+            session.setAttribute("error", "회원가입에 성공했습니다.");
 
-            return "redirect:/main"; } catch (Exception e) { // 예외 발생 시 처리
+            return "redirect:/main";
+        } catch (Exception e) { // 예외 발생 시 처리
             log.error("회원가입 중 오류 발생:", e); // 오류 로깅
 
-            rttr.addFlashAttribute("error", "회원가입 중 오류가 발생했습니다.");
+            session.setAttribute("error", "회원가입 중 오류가 발생했습니다.");
             return "redirect:/Users/Join"; // 회원가입 페이지로 리다이렉트
         }
     }
+
     //-----------------------------------------------------------------------------------------------------------------
 
     // 로그인 페이지
     @RequestMapping("/UsersLoginForm")
-    public String usersLoginForm() {
+    public String usersLoginForm(Model model, HttpSession session) {
+        // 랜덤 상태 파라미터 생성
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] stateBytes = new byte[16];
+        secureRandom.nextBytes(stateBytes);
+        String loginState = Base64.getUrlEncoder().encodeToString(stateBytes);
+
+        // 세션에 상태 파라미터 저장
+        session.setAttribute("loginState", loginState);
+
+        // 모델에 상태 파라미터 추가
+        model.addAttribute("loginState", loginState);
+
         return "Users/UsersLoginForm";
     }
 
     // 로그인 처리
     @RequestMapping("/Login")
-    public String usersLogin(Users user, RedirectAttributes rttr, HttpSession session, Principal principal) {
+    public String usersLogin(Users user, @RequestParam("loginState") String loginState, RedirectAttributes rttr, HttpSession session, Principal principal) {
 
 
         System.out.println("로그인 버튼 누른 후 작업");
+
+        String sessionLoginState = (String) session.getAttribute("loginState");
+        if (sessionLoginState == null || !sessionLoginState.equals(loginState)) {
+            log.warn("로그인 실패: 잘못된 요청입니다.");
+            rttr.addFlashAttribute("error", "잘못된 요청입니다.");
+            return "redirect:/Users/UsersLoginForm";
+        }
         if (principal != null && principal instanceof UsernamePasswordAuthenticationToken) {
             // 사용자가 이미 인증된 경우 (구글 로그인 등)
             return "forward:/main";
@@ -190,7 +230,7 @@ public class UsersController {
             log.info("로그인 성공 (username: {})", userVo.getUsername()); // 로그 추가
 
             session.setAttribute("userVo", userVo);
-            session.setAttribute("msg", "로그인에 성공했습니다");
+            session.setAttribute("error", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
             return "forward:/main";
         } else {
@@ -202,11 +242,10 @@ public class UsersController {
             } else {
                 rttr.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
             }
-            rttr.addFlashAttribute("username", user.getUsername()); // 아이디 값 유지
+            session.setAttribute("loginusername", user.getUsername()); // 아이디 값 유지
             return "redirect:/Users/UsersLoginForm";
         }
     }
-
 
 
     @RequestMapping("/logout")
@@ -263,7 +302,6 @@ public class UsersController {
 //    }
 
 
-
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST) // GET 방식으로 변경
     public String userInfo(Model model, Principal principal) {
         System.out.println("userInfo 메서드 실행");
@@ -280,13 +318,10 @@ public class UsersController {
     }
 
 
-
-
-
     //------------------------------------------------------------------------------------------------------------------------
 
     @RequestMapping("/userEdit")
-    public String usersUpdateForm(Model model, Principal principal,HttpSession session) { // Principal 추가
+    public String usersUpdateForm(Model model, Principal principal, HttpSession session) { // Principal 추가
         String username = principal.getName(); // principal에서 사용자 이름 가져오기
         Users userVo = usersMapper.findByUsername(username); // 사용자 정보 조회
         model.addAttribute("userVo", userVo);
@@ -298,25 +333,25 @@ public class UsersController {
 
     @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
     public String usersUpdate(@RequestParam("username") String username,
-                                @RequestParam("password") String password,
-                                @RequestParam("email") String email,
-                                RedirectAttributes rttr, HttpSession session, Principal principal) {
+                              @RequestParam("password") String password,
+                              @RequestParam("email") String email,
+                              RedirectAttributes rttr, HttpSession session, Principal principal) {
 
         // 입력 값 유효성 검사 (직접 구현)
-        if (username.isEmpty() || password.isEmpty() || email.isEmpty() ) {
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
             rttr.addFlashAttribute("error", "모든 필드를 입력해주세요.");
             return "redirect:/Users/userEdit";
         }
-        try{
-        // 4. 이메일 중복 검사
-         if (usersMapper.findByEmail(email) && usersMapper.findByUsername(username).getEmail().equals(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
-            System.out.println("기존 이메일과 동일한 이메일주소입니다.");
-            rttr.addFlashAttribute("error", "회원님 이미 사용 중인 이메일로 변경되었습니다");
-        }
-         if(usersMapper.findByEmail(email) && !usersMapper.findByUsername(username).getEmail().equals(email)) {
-            rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
-            return "redirect:/Users/userEdit";
-        }
+        try {
+            // 4. 이메일 중복 검사
+            if (usersMapper.findByEmail(email) && usersMapper.findByUsername(username).getEmail().equals(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
+                System.out.println("기존 이메일과 동일한 이메일주소입니다.");
+                rttr.addFlashAttribute("error", "회원님 이미 사용 중인 이메일로 변경되었습니다");
+            }
+            if (usersMapper.findByEmail(email) && !usersMapper.findByUsername(username).getEmail().equals(email)) {
+                rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
+                return "redirect:/Users/userEdit";
+            }
 
 
             // Users 객체 생성 및 데이터 설정
@@ -333,8 +368,6 @@ public class UsersController {
             System.out.println("회원 수정시 서울 타임존 현재 시간: " + currentDateTime);
 
 
-
-
             // 사용자 정보 저장
             usersMapper.updateUser(user);
             Users userAfterUpdate = usersMapper.findByUsername(username);
@@ -342,7 +375,8 @@ public class UsersController {
 
             rttr.addFlashAttribute("alertModal", "회원수정에 성공했습니다.");
 
-            return "redirect:/main"; } catch (Exception e) { // 예외 발생 시 처리
+            return "redirect:/main";
+        } catch (Exception e) { // 예외 발생 시 처리
             log.error("회원수정 중 오류 발생:", e); // 오류 로깅
 
             rttr.addFlashAttribute("alertModal", "회원가입 중 오류가 발생했습니다.");
@@ -419,7 +453,8 @@ public class UsersController {
         rttr.addFlashAttribute("msg2", "프로필 이미지가 업데이트되었습니다.");
         return "redirect:/";
     }
-//------------------------------------------------------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------------------------------------------------------
     // 접근 거부 페이지
     @GetMapping("/access-denied")
     public String accessDenied() {
