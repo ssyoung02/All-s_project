@@ -5,11 +5,9 @@
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
-<script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -183,7 +181,14 @@
                             <!--스터디 목록-->
                             <div class="imgtitle flex-row">
                                 <div class="board-item flex-columleft">
-                                    <h3 class="board-title">${studyReferencesEntity.title}</h3>
+                                    <h3 class="board-title">${studyReferencesEntity.title}
+                                        <c:if test="${studyReferencesEntity.isPrivate == 'true'}">
+                                            <i class="bi bi-lock-fill"></i>
+                                        </c:if>
+                                        <c:if test="${studyReferencesEntity.isPrivate == 'false'}">
+                                            <i class="bi bi-lock-fill" style="display: none"></i>
+                                        </c:if>
+                                    </h3>
                                     <p>작성자: ${studyReferencesEntity.name}  |   작성일: ${studyReferencesEntity.createdAt}  |  조회수:  ${studyReferencesEntity.viewsCount}</p>
                                 </div>
                             </div>
