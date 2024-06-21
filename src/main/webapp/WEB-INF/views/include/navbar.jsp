@@ -5,17 +5,6 @@
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 
-
-<head>
-    <meta charset="UTF-8">
-    <title>All's</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="${root}/resources/css/common.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-</head>
 <body>
     <div class="menu">
         <button class="primary-default timestart" onclick="timerOpen()">공부 시작</button>
