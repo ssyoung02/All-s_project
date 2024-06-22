@@ -2,8 +2,8 @@ package bit.naver.controller;
 
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
-import bit.naver.security.UsersUser;
 import bit.naver.security.UsersUserDetailsService;
+import bit.naver.service.CustomAccountDeletionService;
 import bit.naver.service.GoogleLoginService;
 import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
@@ -12,21 +12,18 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.w3c.dom.ls.LSOutput;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,11 +54,12 @@ public class UsersController {
     private UsersMapper usersMapper;
     @Autowired
     private Environment env;
-
+    private final CustomAccountDeletionService accountDeletionService;
     private final UsersUserDetailsService usersUserDetailsService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomAccountDeletionService customAccountDeletionService;
 
     @ModelAttribute("genderOptions") // 성별 옵션을 모델에 추가
     public Users.Gender[] getGenderOptions() {
@@ -282,24 +280,6 @@ public class UsersController {
         return "Users/userInfo";
     }
 
-//    @RequestMapping("/userInfoProcess")
-//    public String userInfoProcess(Model model, @AuthenticationPrincipal UsersUser usersUser, RedirectAttributes rttr) {
-//        if (usersUser == null) {
-//            // 로그인하지 않은 경우 에러 처리
-//            log.warn("회원정보 조회 실패: 로그인되지 않은 사용자입니다.");
-//            rttr.addFlashAttribute("error", "로그인 후 이용 가능합니다.");
-//            return "redirect:/Users/UsersLoginForm";
-//        }
-//        Users user = usersMapper.findByUsername(usersUser.getUsername()); // 사용자 정보 조회
-//        if (user == null) {
-//            // 사용자 정보를 찾을 수 없는 경우 에러 처리
-//            log.warn("회원정보 조회 실패: 사용자 정보를 찾을 수 없습니다. (username: {})", usersUser.getUsername());
-//            rttr.addFlashAttribute("error", "회원정보를 찾을 수 없습니다.");
-//            return "redirect:/main";
-//        }
-//        model.addAttribute("userVo", user); // 조회한 사용자 정보를 모델에 추가
-//        return "Users/userInfo"; // userInfo.jsp 뷰 이름 반환
-//    }
 
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST) // GET 방식으로 변경
@@ -453,6 +433,40 @@ public class UsersController {
         rttr.addFlashAttribute("msg2", "프로필 이미지가 업데이트되었습니다.");
         return "redirect:/";
     }
+    //----------------------------------------------------------------------------------------------------------------------------------------
+    //회원탈퇴기능
+    @RequestMapping("/userdelete")
+    public String userDelete(){
+
+        return "Users/userDelete";
+    }
+
+
+
+    @PostMapping("/delete")
+    public String deleteAccount(RedirectAttributes rttr) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();
+            String provider = null;
+            String accessToken = null;
+
+            if (authentication.getPrincipal() instanceof OAuth2User) {
+                OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+                provider = (String) oauth2User.getAttributes().get("registration_id");
+                accessToken = (String) oauth2User.getAttributes().get("access_token");
+            };
+            System.out.println("username :" + username + "registration_id"+provider + "access_token"+accessToken);
+            customAccountDeletionService.deleteUserAccount(username, provider, accessToken);
+            SecurityContextHolder.clearContext();
+            rttr.addFlashAttribute("msg", "회원 탈퇴가 성공적으로 처리되었습니다.");
+        }
+        return "redirect:/login?accountDeleted";
+    }
+
+
+
+
 
     //------------------------------------------------------------------------------------------------------------------------
     // 접근 거부 페이지

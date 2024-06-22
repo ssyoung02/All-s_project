@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
+<c:set var="error" value="${sessionScope.error}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -30,9 +31,10 @@
 </head>
 <body>
 <!-- 중앙 컨테이너 -->
+<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="include/navbar.jsp"/>
@@ -325,7 +327,6 @@
                 <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
             </div>
         </div>
-
     </div>
 
     <jsp:include page="include/footer.jsp"/>
@@ -333,14 +334,14 @@
 </div>
 <script>
     $(document).ready(function () {
-        if ("${error}" !== "") {
+        if ("${sessionScope.error}" !== "") {
             $("#messageContent").text("${error}");
             $('#modal-container').toggleClass('opaque'); //모달 활성화
             $('#modal-container').toggleClass('unstaged');
             $('#modal-close').focus();
         }
 
-        if ("${msg}" !== "") {
+        if ("${sessionScope.msg}" !== "") {
             $("#messageContent").text("${msg}");
             $('#modal-container').toggleClass('opaque'); //모달 활성화
             $('#modal-container').toggleClass('unstaged');

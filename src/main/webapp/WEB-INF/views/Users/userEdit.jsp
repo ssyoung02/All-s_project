@@ -88,22 +88,29 @@
                             <input type="text" id="username" name="username" value="${userVo.username}" readonly required>
                             <span id="usernameCheckResult"></span>
                         </div>
-                        <div class="userinputbox">
-                            <label for="password">비밀번호<span class="essential">*</span></label>
-                            <input type="password" id="password" name="password" placeholder="변경하려는 비밀번호를 입력해주세요" required>
-                        </div>
-                        <div class="userinputbox">
-                            <label for="password2">비밀번호 확인<span class="essential">*</span></label>
-                            <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
-                            <span id="passwordCheckResult"></span>
-                        </div>
+                        <c:choose>
+                            <c:when test="${not empty userVo.provider}">
+                                <!-- provider가 있을 때, 비밀번호 입력란 숨김 -->
+                            </c:when>
+                            <c:otherwise>
+                                <div class="userinputbox">
+                                    <label for="password">비밀번호<span class="essential">*</span></label>
+                                    <input type="password" id="password" name="password" placeholder="변경하려는 비밀번호를 입력해주세요" required>
+                                </div>
+                                <div class="userinputbox">
+                                    <label for="password2">비밀번호 확인<span class="essential">*</span></label>
+                                    <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
+                                    <span id="passwordCheckResult"></span>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                         <div class="userinputbox">
                             <label for="birthdate">생년월일<span class="essential">*</span></label>
                             <input type="text" id="birthdate" name="birthdate" value="${userVo.birthdate}" readonly required>
                         </div>
                         <div class="userinputbox">
                             <label for="tel">전화번호<span class="essential">*</span></label>
-                            <input type="text" id="tel" name="tel" value="Users테이블에전화번호열필요" disabled required>
+                            <input type="text" id="tel" name="tel" value="${userVo.mobile}" readonly required>
                         </div>
                         <div class="userinputbox">
                             <label for="gender">성별<span class="essential">*</span></label>
@@ -119,7 +126,7 @@
                                 <input type="file" id="imageChange">
                                 <label for="imageChange" class="imgbox">
                                     <i class="bi bi-plus-lg"></i>
-                                    <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필" width="100px" height="100px">
+                                    <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
                                 </label>
                                 <div class="profile-change">
                                     <p>변경할 프로필을 등록해주세요.</p>
@@ -128,7 +135,7 @@
                             </dd>
                         </div>
                         <div class="buttonBox">
-                            <button class="updatebutton secondary-default" type="button">취소</button>
+                            <button class="updatebutton secondary-default" type="button" onclick="window.location.href='${root}/main';">취소</button>
                             <button class="updatebutton primary-default" type="submit">정보 수정</button>
                         </div>
                     </form>

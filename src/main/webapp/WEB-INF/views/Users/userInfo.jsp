@@ -46,13 +46,6 @@
                 <h1>${userVo.name} 님의 회원 정보</h1>
                 <%-- 로그인한 사용자에게만 정보 표시 --%>
                 <sec:authorize access="isAuthenticated()">
-                    <c:if test="${not empty error}">
-                        <p>${error}</p>
-                    </c:if>
-                    <c:if test="${not empty msg1}">
-                        <p>${msg1}: ${msg2}</p>
-                    </c:if>
-
                     <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">

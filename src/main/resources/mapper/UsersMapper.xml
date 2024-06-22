@@ -48,8 +48,8 @@
         WHERE username = #{username}
     </update>
 
-    <delete id="deleteUser">
-        DELETE FROM Users WHERE user_idx = #{userIdx}
+    <delete id="deleteUserByUsername">
+        DELETE FROM Users WHERE username = #{username}
     </delete>
 
     <select id="findByEmail" parameterType="String" resultType="boolean">
@@ -63,4 +63,71 @@
     <select id="findUserByEmail" parameterType="String" resultMap="UsersResultMap">
         SELECT * FROM Users WHERE email = #{email}
     </select>
+
+
+    <select id="findUserIdByUsername" parameterType="String" resultType="Long">
+        SELECT user_idx
+        FROM Users
+        WHERE username = #{username}
+    </select>
+
+    <delete id="deleteUserAuthorities" parameterType="String">
+        DELETE FROM Authorities WHERE username = #{username}
+    </delete>
+
+    <delete id="deleteUserCalendars" parameterType="Long">
+        DELETE FROM Calendars WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserOAuth2Logins" parameterType="Long">
+        DELETE FROM OAuth2Logins WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserPersonalStatements" parameterType="Long">
+        DELETE FROM PersonalStatement WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserResumes" parameterType="Long">
+        DELETE FROM Resumes WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserStudyMembers" parameterType="Long">
+        DELETE FROM StudyMembers WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserChats" parameterType="Long">
+        DELETE FROM Chats WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserLikeStudies" parameterType="Long">
+        DELETE FROM LikeStudy WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserNotifications" parameterType="Long">
+        DELETE FROM Notifications WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserStudyRecords" parameterType="Long">
+        DELETE FROM StudyRecords WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserStudyReferences" parameterType="Long">
+        DELETE FROM StudyReferences WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserComments" parameterType="Long">
+        DELETE FROM Comments WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserLikeReferences" parameterType="Long">
+        DELETE FROM LikeReferences WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserTodos" parameterType="Long">
+        DELETE FROM Todo WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUser" parameterType="Long">
+        DELETE FROM Users WHERE user_idx = #{userId}
+    </delete>
 </mapper>
