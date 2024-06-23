@@ -64,15 +64,26 @@
                 return false;
             }
 
+            // var formData = new FormData();
+            // var inputFile = $("#uploadFile")[0];
+            // var files = inputFile[0].files[0];
+            // formData.append("uploadFile", files);
+            // formData.append("title", title);
+            // formData.append("content", content);
+            // formData.append("isPrivate", isPrivate);
+
+            var formData = new FormData($('#writeForm')[0]);
+            formData.append("isPrivate", isPrivate);
+
+
             // AJAX를 사용하여 폼 데이터를 서버로 전송
             $.ajax({
                 url: '/studyReferences/referencesWrite',
                 type: 'POST',
-                data: {
-                    title: title,
-                    content: content,
-                    isPrivate: isPrivate
-                },
+                data: formData,
+                processData : false,
+                contentType : false,
+                enctype: 'multipart/form-data',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                 },
@@ -115,7 +126,7 @@
                     <ul class="todolist">
                         <!-- 태그 항목 -->
                         <li>
-                            <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
+                            <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" value="true">
                             <label for="public" class="todo-label">
                                 <span class="checkmark"><i class="bi bi-square"></i></span>
                                 비밀글
@@ -134,7 +145,7 @@
                         <!-- 태그 항목 -->
                         <li>
                             <p class="tag-title">첨부파일</p>
-                            <input class="upload-name" value="첨부파일" placeholder="첨부파일" readonly>
+                            <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
                             <label for="file">파일찾기</label>
                             <input type="file" id="file">
                         </li>

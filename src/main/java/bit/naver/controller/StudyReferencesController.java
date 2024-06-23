@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.ls.LSOutput;
 
 import javax.servlet.http.HttpSession;
@@ -111,12 +112,12 @@ public class StudyReferencesController {
 
     @PostMapping("/referencesWrite")
     @ResponseBody
-    public Long submitPost(@ModelAttribute StudyReferencesEntity entity, HttpSession session) {
+    public Long submitPost(@ModelAttribute StudyReferencesEntity entity, @RequestPart(value = "uploadFile", required = false) MultipartFile[] uploadFile, HttpSession session) {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
         entity.setUserIdx(userIdx);
 
-        return studyReferencesService.writePost(entity);
+        return studyReferencesService.writePost(entity,uploadFile);
     }
 
     @RequestMapping("/deletePost")

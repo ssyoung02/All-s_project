@@ -7,7 +7,9 @@ import bit.naver.mapper.StudyReferencesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -67,10 +69,28 @@ public class StudyReferencesService {
         return  studyReferencesMapper.updateReport(entity);
     }
 
-    public Long writePost(StudyReferencesEntity entity){
+    public Long writePost(StudyReferencesEntity entity, MultipartFile[] uploadFile){
         int result = studyReferencesMapper.writePost(entity);
 
-        System.out.println(entity.toString());
+        if(uploadFile.length != 0){
+            String uploadFolder = "/Users/yujung/file";
+            String uploadFileName = uploadFile[0].getOriginalFilename();
+
+            // IE has file Path
+            uploadFileName = uploadFileName.substring(uploadFileName
+                    .lastIndexOf("\\") + 1);
+
+            File saveFile = new File(uploadFolder,uploadFileName);
+
+
+            try {
+
+                uploadFile[0].transferTo(saveFile);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return entity.getReferenceIdx();
     }
