@@ -1,8 +1,8 @@
 package bit.naver.entity;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+
+import lombok.Data;
 
 @Data
 public class StudyReferencesEntity {
@@ -12,7 +12,8 @@ public class StudyReferencesEntity {
     private String title;
     private Boolean isPrivate;
     private String content;
-    private String fileAttachments;
+    private byte[] fileAttachments;
+    private String fileName;
     private Integer likesCount;
     private Integer commentsCount;
     private Integer viewsCount;
