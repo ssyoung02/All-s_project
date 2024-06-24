@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
@@ -14,23 +14,22 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
-<jsp:include page="../include/header.jsp" />
+<jsp:include page="../include/timer.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="../include/navbar.jsp" />
+            <jsp:include page="../include/navbar.jsp"/>
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="../include/navbar.jsp" />
+                <jsp:include page="../include/navbar.jsp"/>
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
@@ -39,7 +38,7 @@
                 <!--본문 콘텐츠-->
                 <div class="maxcontent">
                     <div class="list-title flex-between">
-                        <h3>가입 스터디(5)</h3>
+                        <h3>가입 스터디(<c:out value="${myStudies.size()}" />)</h3>
                         <fieldset class="search-box flex-row">
                             <select name="searchCnd" title="검색 조건 선택">
                                 <option value="제목">제목</option>
@@ -55,55 +54,44 @@
                         </fieldset>
                     </div>
                     <div class="boardContent flex-colum">
-                        <div class="board-listBoarder flex-columleft" onclick="location.href='${root}/studyGroup/studyGroupMain'">
-                            <div class="studygroup-item flex-between">
-                                <!--스터디 목록-->
-                                <div class="imgtitle flex-row">
-                                    <div class="studygroup-profile-s">
-                                        <img src="../img/logo.png">
+                        <c:forEach items="${myStudies}" var="study">
+                            <div class="board-listBoarder flex-columleft" onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}'">
+                                <div class="studygroup-item flex-between">
+                                    <!-- 스터디 목록 -->
+                                    <div class="imgtitle flex-row">
+                                        <div class="studygroup-profile-s">
+                                            <img src="${root}/img/logo.png">
+                                        </div>
+                                        <div class="board-item flex-columleft">
+                                            <p class="board-title">${study.studyTitle}</p>
+                                            <p class="board-content">${study.description}</p>
+                                        </div>
                                     </div>
-                                    <div class="board-item flex-columleft">
-                                        <p class="board-title">자바 공부할 사람 모여라</p>
-                                        <p class="board-content">전공자, 비전공자 상관없이 자바에 올인할 사람들을 위한 모임</p>
-                                    </div>
-                                </div>
-                                <!--운영중인 스터디일 경우-->
-                                <div>
-                                    <p class="operate secondary-default">운영</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="board-listBoarder flex-columleft">
-                            <div class="studygroup-item flex-between">
-                                <!--스터디 목록-->
-                                <div class="imgtitle flex-row">
-                                    <div class="studygroup-profile-s">
-                                        <img src="../img/logo.png">
-                                    </div>
-                                    <div class="board-item flex-columleft">
-                                        <p class="board-title">자바 공부할 사람 모여라</p>
-                                        <p class="board-content">전공자, 비전공자 상관없이 자바에 올인할 사람들을 위한 모임</p>
-                                    </div>
-                                </div>
-                                <!--운영중인 스터디일 경우-->
-                                <div>
-                                    <p></p>
+                                    <!-- 운영중인 스터디일 경우 -->
+                                    <c:if test="${study.role == 'LEADER'}">
+                                        <div>
+                                            <p class="operate secondary-default">운영</p>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="board-bottom">
-                        <button class="primary-default" onclick="location.href='${root}/studyGroup/studyGroupCreate'">스터디 만들기</button>
+                        </c:forEach>
                     </div>
                 </div>
-                <%--본문 콘텐츠--%>
-
+                <div class="board-bottom">
+                    <button class="primary-default" onclick="location.href='${root}/studyGroup/studyGroupCreate'">스터디
+                        만들기
+                    </button>
+                </div>
             </div>
-            <%--콘텐츠 끝--%>
-        </main>
-    </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
+            <%--본문 콘텐츠--%>
+
+</div>
+<%--콘텐츠 끝--%>
+</main>
+</section>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
 </div>
 </body>
 </html>

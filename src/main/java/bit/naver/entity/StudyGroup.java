@@ -48,13 +48,14 @@ public class StudyGroup {
 
     private Date endDate;
 
-    private Date createdAt;
-
     private String image;
 
     private StudyStatus status;
 
+    private Date createdAt;
 
+    // DB에 없는 엔티티
+    private String leaderName;
 
 
 }

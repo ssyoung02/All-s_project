@@ -28,7 +28,7 @@ import org.springframework.web.servlet.config.annotation.*;
 // 해당 클래스를 Spring 설정 클래스로 지정하여 빈(Bean) 등록 및 설정을 처리합니다.
 @EnableWebMvc
 // Spring MVC를 활성화하고 기본적인 웹 MVC 설정을 자동으로 구성합니다.
-@ComponentScan(basePackages = {"bit.naver.controller","bit.naver.entity"})
+@ComponentScan(basePackages = {"bit.naver.controller", "bit.naver.service", "bit.naver.entity"})
 // bit.naver.controller 패키지 내의 컴포넌트들을 스캔하여 Spring 컨테이너에 빈으로 등록합니다. 주로 @Controller 어노테이션이 붙은 클래스들이 컨트롤러로 등록됩니다.
 
 public class ServletAppContext implements WebMvcConfigurer {

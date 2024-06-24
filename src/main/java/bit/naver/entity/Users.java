@@ -32,7 +32,7 @@ public class Users {
     @PastOrPresent(message = "생년월일은 오늘 이전의 날짜여야 합니다.")
     private LocalDate birthdate;
 
-    private String profileImage = "기본이미지.gif";
+    private String profileImage ;
     private Boolean enabled;
     private Long gradeIdx;
     private String provider;
@@ -42,7 +42,8 @@ public class Users {
     @NotBlank(message = "성별은 필수 입력 값입니다.")
     private String gender; // String 타입 유지
 
-    private Boolean socialLogin = false;
+    private String mobile; //휴대전화번호
+    private Boolean socialLogin;
 //    private String socialLogin; // 소셜 로그인 방식 ("KAKAO" 또는 "GOOGLE" 등)
 
     private LocalDateTime createdAt;

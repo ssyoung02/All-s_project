@@ -33,18 +33,11 @@ public class StudyGroupController {
         return "studyGroup/studyGroupManagerInfo";
     }
 
+    // 스터디 리스트 조회 페이지로 이동
     @RequestMapping("/studyGroupList")
-    public String getMyStudies(Model model, Principal principal) {
-        // principal 객체를 사용하여 현재 로그인된 사용자의 username 가져오기
-        String username = principal.getName();
-
-        // DB에서 사용자 이름으로 사용자 정보 가져오기
-        Users user = usersMapper.findByUsername(username);
-        if (user == null) {
-            // 사용자 정보가 없을 경우 예외 처리
-            throw new RuntimeException("사용자 정보를 찾을 수 없습니다.");
-        }
-
+    public String getMyStudies(Model model, HttpSession session) {
+        // 세션에서 현재 사용자 정보 가져오기 (예: 로그인한 사용자 정보)
+        Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
         // DB에서 해당 사용자가 참여 중인 스터디 목록 조회
@@ -55,7 +48,6 @@ public class StudyGroupController {
 
         return "studyGroup/studyGroupList";
     }
-
 
     // 스터디 생성 폼을 위한 GET 요청 처리
     @GetMapping("/studyGroupCreate")
@@ -76,7 +68,7 @@ public class StudyGroupController {
 
     // 스터디 생성을 위한 POST 요청 처리
     @PostMapping("/studyGroupCreate")
-    public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study, BindingResult result, HttpSession session, Principal principal, @RequestParam("age") String[] ages, @RequestParam("category") String category, @RequestParam("gender") String gender, @RequestParam("study_online") boolean studyOnline) {
+    public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study, BindingResult result, HttpSession session, Principal principal) {
         if (result.hasErrors()) {
             return "studyGroup/studyGroupCreate";
         }
@@ -94,15 +86,6 @@ public class StudyGroupController {
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
 
-        // 설정된 값들을 StudyGroup 객체에 저장
-        study.setCategory(category);
-        study.setGender(gender);
-        study.setStudyOnline(studyOnline);
-
-        // 여러 연령대 선택 처리 (콤마로 연결된 문자열)
-        if (ages != null) {
-            study.setAge(String.join(",", ages));
-        }
 
         studyGroupMapper.insertStudy(study);
 
@@ -117,7 +100,16 @@ public class StudyGroupController {
 
         studyGroupMapper.insertStudyMember(studyMember);
 
-        return "redirect:/studyGroup/studyGroupList";
+        return "/studyGroup/studyGroupList";
+    }
+
+    // 채팅
+    @RequestMapping("/chat")
+    public String chat(HttpSession session, Principal principal) {
+
+        Users user = (Users) session.getAttribute("userVo");
+        System.out.println(user.toString());
+        return "studyGroup/chat";
     }
 
     // 스터디 멤버 관리 페이지로 이동

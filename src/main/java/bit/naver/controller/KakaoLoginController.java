@@ -2,7 +2,6 @@
 
 package bit.naver.controller;
 
-import bit.naver.dto.KakaoUsersInfo;
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
@@ -34,7 +33,7 @@ public class KakaoLoginController {
     private IKakaoLoginService iKakaoS;
 
     // 카카오 로그인 리다이렉트 및 사용자 인증 처리
-    @RequestMapping(value = "/kakao/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/kakao/login/alls", method = RequestMethod.GET)
     public ModelAndView kakaoLogin(@RequestParam(value = "code", required = false) String code) throws Throwable {
         System.out.println("Code: " + code);
 
@@ -70,7 +69,7 @@ public class KakaoLoginController {
         } else {
             // 사용자가 존재하지 않는 경우, 회원가입 페이지로 이동
             ModelAndView modelAndView = new ModelAndView("Users/join");
-            modelAndView.addObject("KakaoUserInfo", userInfo);
+            modelAndView.addObject("kakaoUserInfo", userInfo);
             return modelAndView;
         }
     }

@@ -91,7 +91,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -131,13 +131,22 @@
 
                     <div class="boardContent flex-colum">
                         <c:forEach var="data" items="${studyReferencesEntity}">
+                            <c:if test="${data.isPrivate == false}">
+
                             <%--게시글 상세 item--%>
                             <div class="board-listline flex-columleft">
                                 <div class="studygroup-item flex-between">
                                     <!--스터디 목록-->
                                     <div class="imgtitle link-button" onclick="location.href='${root}/studyReferences/referencesRead?referenceIdx=${data.referenceIdx}'">
                                         <div class="board-item flex-columleft">
-                                            <h3 class="board-title">${data.title}</h3>
+                                            <h3 class="board-title">${data.title}
+                                                <c:if test="${data.isPrivate == 'true'}">
+                                                    <i class="bi bi-lock-fill"></i>
+                                                </c:if>
+                                                <c:if test="${data.isPrivate == 'false'}">
+                                                    <i class="bi bi-lock-fill" style="display: none"></i>
+                                                </c:if>
+                                            </h3>
                                             <p class="board-content">작성자: ${data.name} | 작성일: ${data.createdAt} | 조회수: ${data.viewsCount}</p>
                                         </div>
                                     </div>
@@ -158,11 +167,12 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                <button class="link-button flex-between" onclick="location.href='${root}/studyReferences/referencesRead?referenceIdx=${data.referenceIdx}'">
+                                <button class="editor-content link-button" onclick="location.href='${root}/studyReferences/referencesRead?referenceIdx=${data.referenceIdx}'">
                                     ${data.content}
                                     <img/>
                                 </button>
                             </div>
+                        </c:if>
                         </c:forEach>
                     </div>
                     <div class="flex-row">

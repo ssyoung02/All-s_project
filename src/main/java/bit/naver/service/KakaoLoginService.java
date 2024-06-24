@@ -1,9 +1,6 @@
 package bit.naver.service;
 
-import bit.naver.dto.KakaoUsersInfo;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -11,12 +8,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,21 +79,6 @@ import java.util.Map;
 //
 //}
 
-
-import bit.naver.dto.KakaoUsersInfo;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.http.*;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -190,6 +168,7 @@ public class KakaoLoginService implements IKakaoLoginService {
                 // 프로필 이미지 URL 추가
                 String profileImage = responseBody.path("properties").path("profile_image").asText();
                 userInfo.put("profileImage", profileImage);
+                userInfo.put("provider", "kakao");
 
 
                 return userInfo;
@@ -200,6 +179,10 @@ public class KakaoLoginService implements IKakaoLoginService {
             e.printStackTrace();
             throw new RuntimeException("Failed to get user info", e);
         }
+    }
+
+    public String getAccessTokenFromAttributes(Map<String, Object> attributes) {
+        return (String) attributes.get("access_token");
     }
 }
 

@@ -59,5 +59,5 @@ public interface UsersMapper {
 
     boolean findByEmail(String email);
 
-    Users findUserByEmail(String email);
+    Users findUserByEmail(String email); // 이메일로 사용자 정보 가져오기
 }

@@ -12,10 +12,12 @@
 //          BCryptPasswordEncoder를 사용하여 비밀번호를 안전하게 암호화합니다.
 package bit.naver.config;
 
+import bit.naver.security.CustomLogoutSuccessHandler;
 import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean; // Bean 등록 어노테이션
 import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
 import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -74,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 //    }
 //
 
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -96,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
-        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**","/bit.naver/entity/KakaoEntity", "/bit.naver/oauth2/**");
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**");
     }
 
 
@@ -119,13 +122,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                           "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
-                    .antMatchers("/kakao/login", "/login/kakao", "/Users/Join").permitAll()
-
-
+                    .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
+        // 그 외 모든 요청은 인증된 사용자만 접근 허용
                     .antMatchers("/Users/userInfoProcess").authenticated()
                     .antMatchers("/Users/userInfo").authenticated()
-                    .anyRequest().authenticated()
+                    .antMatchers("/calendar/*").authenticated()
+                    .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/Users/UsersLoginForm")
@@ -137,6 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .logout()
                 .logoutUrl("/Users/logout")
                 .logoutSuccessUrl("/main")
+                .logoutSuccessHandler(customLogoutSuccessHandler)
                 .invalidateHttpSession(true)
                 .permitAll()
                 .and()
@@ -154,9 +161,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .invalidSessionUrl("/Users/UsersLoginForm?invalid")
                 .and()
                     .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
-
-        http.addFilterAfter(new CharacterEncodingFilter("UTF-8", true), SecurityContextPersistenceFilter.class);
-        //
 
 
                 /*

@@ -31,9 +31,9 @@ import javax.sql.DataSource; // DataSource 인터페이스
 // 이 클래스가 Spring 설정 클래스임을 나타냅니다.
 @MapperScan("bit.naver.mapper")
 // bit.naver.mapper 패키지 내의 MyBatis Mapper 인터페이스를 스캔하여 자동으로 빈으로 등록합니다.
-@ComponentScan(basePackages = {"bit.naver.mapper", "bit.naver.security", "bit.naver.service","bit.naver.listener"})
+@ComponentScan(basePackages = {"bit.naver.mapper", "bit.naver.security", "bit.naver.service","bit.naver.listener", "bit.naver.entity"})
 // bit.naver 패키지 내의 컴포넌트(Controller, Service, Listener 등)를 스캔하여 Spring 컨테이너에 빈으로 등록합니다.
-@PropertySource({"classpath:db.properties"})
+@PropertySource({"classpath:db.properties","classpath:application.properties"})
 // classpath 경로에 있는 db.properties 파일을 로드하여 프로퍼티 값을 사용할 수 있도록 설정합니다.
 public class RootAppContext {
 
@@ -66,12 +66,11 @@ public class RootAppContext {
         sessionFactory.setDataSource(myDataSource());
         // 앞서 생성한 HikariCP 데이터 소스를 MyBatis 설정에 주입합니다.
         sessionFactory.setMapperLocations(
-                new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml")
+                new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/*.xml")
         );
+        sessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml"));
         // classpath 경로에서 모든 XML Mapper 파일을 찾아서 설정합니다.
         // 여기서는 모든 XML Mapper 파일을 로드하도록 설정되어 있습니다.
-        // mapper/xml 폴더에 있는 모든 XML Mapper 파일을 로드합니다.
-        sessionFactory.setConfigLocation(new PathMatchingResourcePatternResolver().getResource("classpath:mybatis-config.xml"));
 
         return sessionFactory.getObject();
         // SqlSessionFactoryBean 객체를 통해 SqlSessionFactory를 생성하고 반환합니다.

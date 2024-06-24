@@ -2,42 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bit.naver.mapper.StudyGroupMapper">
+
+
     <resultMap id="studyResultMap" type="bit.naver.entity.StudyGroup">
-        <id property="studyIdx" column="study_idx"/>
-        <result property="studyLeaderIdx" column="study_leader_idx"/>
-        <result property="studyTitle" column="study_title"/>
-        <result property="description" column="description"/>
-        <result property="category" column="category"/>
-        <result property="studyOnline" column="study_online"/>
-        <result property="meetingTime" column="meeting_time"/>
-        <result property="latitude" column="latitude"/>
-        <result property="longitude" column="longitude"/>
-        <result property="age" column="age"/>
-        <result property="capacity" column="capacity"/>
-        <result property="gender" column="gender"/>
-        <result property="startDate" column="start_date"/>
-        <result property="endDate" column="end_date"/>
-        <result property="status" column="status"/>
-        <result property="createdAt" column="created_at"/>
+        <id property="studyIdx" column="study_idx" />
+        <result property="studyLeaderIdx" column="study_leader_idx" />
+        <result property="studyTitle" column="study_title" />
+        <result property="description" column="description" />
+        <result property="category" column="category" />
+        <result property="studyOnline" column="study_online" />
+        <result property="meetingTime" column="meeting_time" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="age" column="age" />
+        <result property="capacity" column="capacity" />
+        <result property="gender" column="gender" />
+        <result property="startDate" column="start_date" />
+        <result property="endDate" column="end_date" />
+        <result property="status" column="status" />
+        <result property="createdAt" column="created_at" />
     </resultMap>
-    <!-- 스터디 모집 테이블 데이터 삽입 -->
-    <insert id="insertStudy" parameterType="bit.naver.entity.StudyGroup"> INSERT INTO Studies (study_leader_idx, study_title, description_title, description, category, study_online, meeting_time, latitude, longitude, age, capacity, gender, start_date, end_date, status, created_at) VALUES (#{studyLeaderIdx}, #{studyTitle},#{descriptionTitle}, #{description}, #{category}, #{studyOnline}, #{meetingTime}, #{latitude}, #{longitude}, #{age}, #{capacity}, #{gender}, #{startDate}, #{endDate}, #{status}, #{createdAt}) </insert>
-    <!-- Memebers 테이블에 데이터 삽입 -->
+
+<!--스터디 모집 테이블 데이터 삽입-->
+    <insert id="insertStudy" parameterType="bit.naver.entity.StudyGroup">
+        INSERT INTO Studies (study_leader_idx, study_title, description_title, description, category, study_online,
+                             meeting_time, latitude, longitude, age, capacity, gender,
+                             start_date, end_date, status, created_at)
+        VALUES (#{studyLeaderIdx}, #{studyTitle},#{descriptionTitle}, #{description}, #{category}, #{studyOnline},
+                #{meetingTime}, #{latitude}, #{longitude}, #{age}, #{capacity}, #{gender},
+                #{startDate}, #{endDate}, #{status}, #{createdAt})
+    </insert>
+
+<!--Memebers 테이블에 데이터 삽입-->
     <select id="findStudyIdx" parameterType="Long" resultType="Long">
-        SELECT study_idx FROM Studies WHERE study_leader_idx = #{userIdx} ORDER BY created_at DESC
-        <!--  최신 스터디부터 가져오기 위해 생성일 기준으로 정렬  -->
+        SELECT study_idx
+        FROM Studies
+        WHERE study_leader_idx = #{userIdx}
+        ORDER BY created_at DESC  <!-- 최신 스터디부터 가져오기 위해 생성일 기준으로 정렬 -->
         LIMIT 1
+    </select>
+
+<!--studyIdx 최근에 생성된 것 찾기-->
+    <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers">
+        INSERT INTO StudyMembers (study_idx, user_idx, role, status, join_reason, created_at, updated_at)
+        VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
+    </insert>
+
+
+<!--내 스터디 리스트-->
+    <select id="getMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
+        SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description
+        FROM StudyMembers sm
+                 JOIN Studies s ON sm.study_idx = s.study_idx
+        WHERE sm.user_idx = #{userIdx}
+    </select>
+
+    <select id="getStudyById" parameterType="Long" resultType="bit.naver.entity.StudyGroup">
+        SELECT study_idx AS studyIdx, study_title AS studyTitle, description
+        FROM Studies
+        WHERE study_idx = #{studyIdx}
+    </select>
+
+    <select id="getStudyMembers" parameterType="Long" resultType="bit.naver.entity.StudyMembers">
+        SELECT m.user_idx, m.name
+        FROM StudyMembers sm
+                 INNER JOIN Users m ON sm.user_idx = m.user_idx
+        WHERE sm.study_idx = #{studyIdx}
     </select>
 
     <!-- 스터디 삭제 SQL -->
     <delete id="deleteStudy" parameterType="Long">
         DELETE FROM Studies WHERE study_idx = #{studyIdx}
     </delete>
-
-    <!-- studyIdx 최근에 생성된 것 찾기 -->
-    <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers"> INSERT INTO StudyMembers (study_idx, user_idx, role, status, join_reason, created_at, updated_at) VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt}) </insert>
-    <!-- 내 스터디 리스트 -->
-    <select id="getMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList"> SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description FROM StudyMembers sm JOIN Studies s ON sm.study_idx = s.study_idx WHERE sm.user_idx = #{userIdx} </select>
-    <select id="getStudyById" parameterType="Long" resultType="bit.naver.entity.StudyGroup"> SELECT study_idx AS studyIdx, study_title AS studyTitle, description FROM Studies WHERE study_idx = #{studyIdx} </select>
-    <select id="getStudyMembers" parameterType="Long" resultType="bit.naver.entity.StudyMembers"> SELECT m.user_idx, m.name FROM StudyMembers sm INNER JOIN Users m ON sm.user_idx = m.user_idx WHERE sm.study_idx = #{studyIdx} </select>
 </mapper>

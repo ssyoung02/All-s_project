@@ -14,14 +14,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <script>
+        function openChatWindow() {
+            window.open('${root}/studyGroup/chat', 'ChatWindow', 'width=400,height=500');
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -41,13 +45,13 @@
                         <div class="profile-header">
                             <img src="" alt="">
                             <div class="group-title">
-                                <h2>자바 공부할 사람 모여라</h2>
-                                <p>전공자, 비전공자 상관없이 자바에 올인할 사람들을 위한 모임</p>
+                                <h2>${study.studyTitle}</h2>
+                                <p>${study.description}</p>
                             </div>
                         </div>
                         <div class="profile-link">
                             <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo"><i class="bi bi-gear"></i>관리</a>
-                            <button class="primary-default">채팅</button>
+                            <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅</button>
                         </div>
                     </section>
                     <section class="group-main">
@@ -147,48 +151,30 @@
                                         <p class="lank-time">7h</p>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="group-calender">
                                 <h3>그룹 일정</h3>
-                            <%--캘린더--%>
+                                <%--캘린더--%>
                             </div>
                         </div>
                         <div class="group-member">
                             <h3>그룹 멤버</h3>
                             <div class="group-memberList">
-                                <div class="group-memberItem">
-                                    <div class="profile-imgGroup">
-                                        <div class="profile-img">
-                                            <img src="${root}/resources/images/09.%20carrot.png" alt="내 프로필">
+                                <c:forEach var="member" items="${members}">
+                                    <div class="group-memberItem">
+                                        <div class="profile-imgGroup">
+                                            <div class="profile-img">
+                                                <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                            </div>
+                                            <div class="status"><span class="status">접속중</span></div>
                                         </div>
-                                        <div class="status"><span class="status">접속중</span></div>
+                                        <p class="memberId">${member.name}</p>
                                     </div>
-                                    <p class="memberId">Yeajoon</p>
-                                </div>
-                                <div class="group-memberItem">
-                                    <div class="profile-imgGroup">
-                                        <div class="profile-img">
-                                            <img src="${root}/resources/images/09.%20carrot.png" alt="내 프로필">
-                                        </div>
-                                        <div class="status"><span class="status">접속중</span></div>
-                                    </div>
-                                    <p class="memberId">Yeajoon</p>
-                                </div>
-                                <div class="group-memberItem">
-                                    <div class="profile-imgGroup">
-                                        <div class="profile-img">
-                                            <img src="${root}/resources/images/09.%20carrot.png" alt="내 프로필">
-                                        </div>
-                                        <div class="status"><span class="status">접속중</span></div>
-                                    </div>
-                                    <p class="memberId">seojoon</p>
-                                </div>
+                                </c:forEach>
                             </div>
                         </div>
                     </section>
                 </div>
-
             </div>
             <%--콘텐츠 끝--%>
         </main>

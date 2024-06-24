@@ -36,10 +36,10 @@
     </select>
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userIdx">
-        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at)
+        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at, mobile)
         VALUES (#{username}, #{password}, #{email}, #{name}, #{birthdate}, #{profileImage},
                 #{enabled}, #{gradeIdx}, #{provider}, #{latitude}, #{longitude}, #{gender},
-                #{socialLogin}, #{createdAt}, #{updatedAt})
+                #{socialLogin}, #{createdAt}, #{updatedAt}, #{mobile})
     </insert>
 
     <update id="updateUser">
@@ -63,5 +63,4 @@
     <select id="findUserByEmail" parameterType="String" resultMap="UsersResultMap">
         SELECT * FROM Users WHERE email = #{email}
     </select>
-
 </mapper>

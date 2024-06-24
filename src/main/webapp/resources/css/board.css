@@ -132,6 +132,7 @@
 
 #smarteditor{
     margin-bottom: 1em;
+    margin-top: 1em;
 }
 .board-textarea{
     width: 100%;
@@ -178,6 +179,33 @@
     gap: 2em;
     padding: 1em;
     margin-bottom: 1em;
+}
+
+.upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 50%;
+    color: #999999;
+    background: #eeeeee;
+}
+
+.upload-name + label {
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #588159;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
 }
 
 .siteItem {
@@ -234,6 +262,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.editor-content{
+    display: flex;
+    flex-direction: column;
+}
+
 .comment-list{
     margin: 1em 0;
 }

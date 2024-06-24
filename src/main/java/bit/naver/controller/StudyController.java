@@ -45,56 +45,56 @@ public class StudyController {
         return "admin/studyManagement";
     }
 
+/*
+    //내 공부노트
+    @RequestMapping("/studyNote/noteList")
+    public String NoteList() {
+        return "studyNote/noteList";
+    }
 
-//    //내 공부노트
-//    @RequestMapping("/studyNote/noteList")
-//    public String NoteList() {
-//        return "studyNote/noteList";
-//    }
-//
-//    //공부노트 - 글쓰기
-//    @RequestMapping("/studyNote/noteWrite")
-//    public String NoteWrite() {
-//        return "studyNote/noteWrite";
-//    }
-//
-//    //공부노트 - 상세
-//    @RequestMapping("/studyNote/noteRead")
-//    public String NoteRead() {
-//        return "studyNote/noteRead";
-//    }
-//
-//    //공부노트 - 수정
-//    @RequestMapping("/studyNote/noteModify")
-//    public String NoteModify() {
-//        return "studyNote/noteModify";
-//    }
+    //공부노트 - 글쓰기
+    @RequestMapping("/studyNote/noteWrite")
+    public String NoteWrite() {
+        return "studyNote/noteWrite";
+    }
 
+    //공부노트 - 상세
+    @RequestMapping("/studyNote/noteRead")
+    public String NoteRead() {
+        return "studyNote/noteRead";
+    }
+
+    //공부노트 - 수정
+    @RequestMapping("/studyNote/noteModify")
+    public String NoteModify() {
+        return "studyNote/noteModify";
+    }
+*/
 
     //캘린더
     @RequestMapping("/calender/calender")
     public String Calender() {
-        return "calender/calender";
+        return "calendarMain";
     }
 
 
-    //내 스터디
-    @RequestMapping("/studyGroup/studyGroupList")
-    public String StudyGroupList() {
-        return "studyGroup/studyGroupList";
-    }
+//    //내 스터디
+//    @RequestMapping("/studyGroup/studyGroupList")
+//    public String StudyGroupList() {
+//        return "studyGroup/studyGroupList";
+//    }
 
-    //내 스터디 - 글쓰기
-    @RequestMapping("/studyGroup/studyGroupCreate")
-    public String StudyGroupCreate() {
-        return "studyGroup/studyGroupCreate";
-    }
+//    //내 스터디 - 글쓰기
+//    @RequestMapping("/studyGroup/studyGroupCreate")
+//    public String StudyGroupCreate() {
+//        return "studyGroup/studyGroupCreate";
+//    }
 
-    //내 스터디 - 그룹 상세
-    @RequestMapping("/studyGroup/studyGroupMain")
-    public String StudyGroupMain() {
-        return "studyGroup/studyGroupMain";
-    }
+//    //내 스터디 - 그룹 상세
+//    @RequestMapping("/studyGroup/studyGroupMain")
+//    public String StudyGroupMain() {
+//        return "studyGroup/studyGroupMain";
+//    }
 
     //내 스터디 - 그룹 관리 - 스터디 정보
     @RequestMapping("/studyGroup/studyGroupManagerInfo")
@@ -121,17 +121,17 @@ public class StudyController {
     }
 
 
-    //스터디 모집
-    @RequestMapping("/studyRecruit/recruitList")
-    public String RecruitList() {
-        return "studyRecruit/recruitList";
-    }
+//    //스터디 모집
+//    @RequestMapping("/studyRecruit/recruitList")
+//    public String RecruitList() {
+//        return "studyRecruit/recruitList";
+//    }
 
-    //스터디 모집 - 상세
-    @RequestMapping("/studyRecruit/recruitReadForm")
-    public String RecruitReadForm() {
-        return "studyRecruit/recruitReadForm";
-    }
+//    //스터디 모집 - 상세
+//    @RequestMapping("/studyRecruit/recruitReadForm")
+//    public String RecruitReadForm() {
+//        return "studyRecruit/recruitReadForm";
+//    }
 
 
     //공부 자료
