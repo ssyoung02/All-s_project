@@ -9,4 +9,7 @@ import java.util.List;
 public interface CalendarMapper {
     void insertCalendar(Calendar calendar);
     List<Calendar> selectAllCalendarsByUserIdx(Long userIdx);
+    Calendar selectCalendarByIdx(Long scheduleIdx);
+    void updateCalendar(Calendar calendar);
+    void deleteCalendar(Long scheduleIdx);
 }

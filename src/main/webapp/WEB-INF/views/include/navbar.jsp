@@ -43,7 +43,7 @@
                     </li>
                     <li class="submenu-item">
                         <div class="menu-area">
-                            <form method="POST" action="<c:url value='${root }/calendar/calendarMain' />">
+                            <form method="POST" action="<c:url value='${root}/calendar' />">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <button type="submit" class="link-button">캘린더</button>
                             </form>
