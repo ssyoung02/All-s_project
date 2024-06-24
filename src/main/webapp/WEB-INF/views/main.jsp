@@ -202,7 +202,7 @@
                     <div class="swiper-wrapper">
                         <!--슬라이드 아이템들-->
                         <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                            <div class="banner-item bgwhite" tabindex="0" onclick="">
                                 <div class="banner-item-top">
                                     <div class="banner-img">
                                         <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
@@ -222,10 +222,10 @@
                                         <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
-                            </dlv>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                            <div class="banner-item bgwhite" tabindex="0" onclick="">
                                 <div class="banner-item-top">
                                     <div class="banner-img">
                                         <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
@@ -245,10 +245,10 @@
                                         <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
-                            </dlv>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                            <div class="banner-item bgwhite" tabindex="0" onclick="">
                                 <div class="banner-item-top">
                                     <div class="banner-img">
                                         <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
@@ -268,10 +268,10 @@
                                         <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
-                            </dlv>
+                            </div>
                         </div>
                         <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
+                            <div class="banner-item bgwhite" tabindex="0" onclick="">
                                 <div class="banner-item-top">
                                     <div class="banner-img">
                                         <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
@@ -291,7 +291,7 @@
                                         <i class="bi bi-heart"></i>
                                     </button>
                                 </div>
-                            </dlv>
+                            </div>
                         </div>
                         <!-- 다른 슬라이드들 추가 가능 -->
                     </div>
