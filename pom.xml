@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>kr.bit</groupId>
@@ -13,7 +14,8 @@
     <org.aspectj-version>1.9.7</org.aspectj-version>
     <org.slf4j-version>1.7.36</org.slf4j-version>
     <org.springsecurity-version>5.8.3</org.springsecurity-version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- 인코딩 설정 추가 -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!--
+		인코딩 설정 추가 -->
   </properties>
   <dependencies>
     <!-- Spring -->
@@ -35,6 +37,20 @@
       <version>${org.springframework-version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.bgee.log4jdbc-log4j2</groupId>
+      <artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+      <version>1.16</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.4</version>
+    </dependency>
+
+
     <!-- AspectJ -->
     <dependency>
       <groupId>org.aspectj</groupId>
@@ -42,30 +58,60 @@
       <version>${org.aspectj-version}</version>
     </dependency>
 
-    <!-- Logging -->
+    <!-- logback 로깅 관련 -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${org.slf4j-version}</version>
     </dependency>
-
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.17.1</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${org.slf4j-version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>2.17.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
-      <version>2.17.1</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${org.slf4j-version}</version>
       <scope>runtime</scope>
     </dependency>
+    <!--<dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.17</version>
+        <exclusions>
+            <exclusion>
+                <groupId>javax.mail</groupId>
+                <artifactId>mail</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>javax.jms</groupId>
+                <artifactId>jms</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>com.sun.jdmk</groupId>
+                <artifactId>jmxtools</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>com.sun.jmx</groupId>
+                <artifactId>jmxri</artifactId>
+            </exclusion>
+        </exclusions>
+        <scope>runtime</scope>
+    </dependency>-->
 
     <!-- @Inject -->
     <dependency>
@@ -209,7 +255,8 @@
       <artifactId>jquery</artifactId>
       <version>3.6.4</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client -->
+    <!--
+    https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client -->
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-oauth2-client</artifactId>

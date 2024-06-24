@@ -58,7 +58,8 @@
                isPrivate,
                study.content,
                category,
-               file_attachments,
+               file_attachments AS fileAttachments,
+               file_name				AS fileName,
                likes_count                 AS likesCount,
                report_count                AS reportCount,
                comments_count              AS commentsCount,
@@ -138,8 +139,30 @@
     </insert>
 
     <insert id="writePost" keyColumn="reference_idx" keyProperty="referenceIdx" useGeneratedKeys="true">
-        INSERT INTO StudyReferences (user_idx, title, isPrivate, content, created_at, updated_at)
-        VALUES (#{userIdx}, #{title}, #{isPrivate}, #{content}, now(), now())
+        INSERT INTO StudyReferences (
+  	      user_idx, 
+  	      title, 
+  	      isPrivate,
+  	      <if test="fileAttachments != null">
+  	      file_attachments,
+  	      file_name,
+  	      </if> 
+  	      content, 
+  	      created_at, 
+  	      updated_at
+  	      )
+        VALUES (
+        	#{userIdx}, 
+        	#{title}, 
+        	#{isPrivate}, 
+  	      <if test="fileAttachments != null">
+        	#{fileAttachments},
+  	      	#{fileName},
+  	      </if> 
+        	#{content}, 
+        	now(), 
+        	now()
+        	)
     </insert>
 
     <delete id="deleteLikeRef">
