@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller
 @RequestMapping("/include")
@@ -28,27 +27,25 @@ public class TimerController {
     private final UsersUserDetailsService usersUserDetailsService;
 
     @PostMapping("/start")
-    public Long startTimer(@RequestParam("userIdx") Long user_idx) {
-        System.out.println("userIdx");
-        return timerService.startTimer(user_idx);
+    public ResponseEntity<Long> startTimer(@RequestBody Map<String, Long> request) {
+        Long user_idx = request.get("user_idx");
+        System.out.println("user_idx: " + user_idx);
+        Long recordIdx = timerService.startTimer(user_idx);
+        return ResponseEntity.ok(recordIdx);
     }
 
     @PostMapping("/pause")
-    public String pauseTimer(@RequestParam("userIdx") Long user_idx, @RequestParam("studyTime") int study_time) {
+    public ResponseEntity<String> pauseTimer(@RequestParam("userIdx") Long user_idx, @RequestParam("study_time") int study_time) {
         System.out.println(user_idx+": "+study_time);
-        return timerService.pauseTimer(user_idx, study_time);
-    }
-
-    @PostMapping("/end")
-    public String endTimer(@RequestParam("user_idx") Long user_idx, @RequestParam("studyTime") int study_time) {
-        System.out.println(user_idx+": "+study_time);
-        return timerService.endTimer(user_idx, study_time);
+        timerService.pauseTimer(user_idx, study_time);
+        return ResponseEntity.ok("처리 완료");
     }
 
     @PostMapping("/updateMemo")
-    public String updateMemo(@RequestParam("user_idx") Long user_idx, @RequestParam("memo") String memo) {
+    public ResponseEntity<String> updateMemo(@RequestParam("user_idx") Long user_idx, @RequestParam("memo") String memo) {
         System.out.println(user_idx+": "+memo);
-        return timerService.updateMemo(user_idx, memo);
+        timerService.updateMemo(user_idx, memo);
+        return ResponseEntity.ok("처리 완료");
     }
 
 }

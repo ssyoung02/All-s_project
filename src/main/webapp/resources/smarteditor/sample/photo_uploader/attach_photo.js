@@ -334,8 +334,9 @@
     	var tempFile,
     		sUploadURL;
     	
-    	sUploadURL= 'file_uploader_html5.php'; 	//upload URL
-    	
+    	// sUploadURL= 'file_uploader_html5.php'; 	//upload URL
+    	sUploadURL = '/smarteditorMultiImageUpload';
+
     	//파일을 하나씩 보내고, 결과를 받음.
     	for(var j=0, k=0; j < nImageInfoCnt; j++) {
     		tempFile = htImageInfo['img'+j];
@@ -373,6 +374,7 @@
 		oAjax.header("file-name",encodeURIComponent(tempFile.name));
 		oAjax.header("file-size",tempFile.size);
 		oAjax.header("file-Type",tempFile.type);
+		oAjax.header("file-X-CSRF-TOKEN",$("meta[name='_csrf']").attr("content"));
 		oAjax.request(tempFile);
     }
     
@@ -458,7 +460,7 @@
 	 * @return
 	 */
 	function onAjaxError (){
-		alert("[가이드]사진 업로더할 서버URL셋팅이 필요합니다.-onAjaxError");
+		alert("[가이드]사진 업로더할 서버URL셋팅이 필요합니다.-yujung");
 	}
 
  	/**

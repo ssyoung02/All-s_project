@@ -119,33 +119,3 @@ $("#file").on('change',function(){
     $(".upload-name").val(fileName);
 });
 
-let h = 0;
-let m = 0;
-let s = 0;
-let time;
-
-$('#time-start').click(function (){
-    time=setInterval(function (){
-        s++;
-        s = s>9 ? s : '0'+s;
-        $('#timSec').text(s);
-        if(s>59){
-            m++;
-            m = m>9 ? m : '0'+m;
-            $('#timeMin').text(m);
-            s=0;
-            $('#timeSec').text('00');
-        }
-        if(m>59){
-            h++;
-            h = h>9 ? h : '0'+h;
-            $('#timeHour').text(h);
-            h=0;
-            $('#timeMin').text('00');
-        }
-    },1000);
-})
-
-$('#time-stop').click(function (){
-    clearInterval(time);
-})

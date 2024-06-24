@@ -148,6 +148,32 @@
         function modifyPost(idx){
             location.href ="${root}/studyReferences/referencesModify?referenceIdx=" + idx;
         }
+        
+      //다운로드
+        function download(referenceIdx){
+         /*    $.ajax({
+                method: 'GET',
+                url: '/studyReferences/download',
+                data: {referenceIdx: referenceIdx},
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                },
+            }).done(function(data) {
+                var blob = new Blob([data], { type: 'application/octet-stream' });
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'Hi.PNG'; // 다운로드 받을 파일 이름과 확장자 지정
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('파일 다운로드 실패:', textStatus, errorThrown);
+            }); */
+
+            window.location.href = '/studyReferences/download?referenceIdx=' + referenceIdx;
+        }
 
     </script>
 </head>
@@ -214,6 +240,22 @@
                         <div class="post-content">
                             ${studyReferencesEntity.content}
                         </div>
+
+						<ul class="taglist">
+							<!-- 태그 항목 -->
+							<li>
+								<p class="tag-title">첨부파일</p> 
+								<c:choose>
+									<c:when test="${studyReferencesEntity.fileName ne null and studyReferencesEntity.fileName ne ''}">
+										<a href="javascript:download('${studyReferencesEntity.referenceIdx}')">${studyReferencesEntity.fileName}</a>
+									</c:when>
+									<c:otherwise>
+										없음
+									</c:otherwise>
+								</c:choose>
+							</li>
+						</ul>
+
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
@@ -261,6 +303,7 @@
                             <button class="secondary-default" onclick="modifyPost(${studyReferencesEntity.referenceIdx})">수정</button>
                         </c:if>
                         <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesList'">목록</button>
+<%--                        <button class="primary-default" onclick="history.back();">목록</button>--%>
                     </div>
                 </div>
 

@@ -5,8 +5,6 @@ import bit.naver.mapper.TimerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class TimerService {
     @Autowired
@@ -25,21 +23,10 @@ public class TimerService {
         timerEntity.setUser_idx(user_idx);
         timerEntity.setStudy_time(study_time);
         int result = timerMapper.updateEndTime(timerEntity);
-        if(result == 1){
-            return "종료 시간이 업데이트되었습니다";
-        }else {
-            return "시간 기록에 실패했습니다";
-        }
-    }
-
-    public String endTimer(Long user_idx, int study_time) {
-        timerEntity.setUser_idx(user_idx);
-        timerEntity.setStudy_time(study_time);
-        int result =timerMapper.updateEndTimeAndStudyTime(timerEntity);
-        if(result == 1){
-            return "종료 시간이 기록되었습니다";
-        }else {
-            return "시간 기록에 실패했습니다";
+        if (result == 1) {
+            return "삭제에 성공하였습니다.";
+        }else{
+            return "삭제에 실패하였습니다.";
         }
     }
 
@@ -53,5 +40,6 @@ public class TimerService {
             return "메모 기록에 실패했습니다";
         }
     }
+
 
 }

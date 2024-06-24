@@ -71,11 +71,11 @@ public class StudyController {
     }
 */
 
-    //캘린더
-    @RequestMapping("/calender/calender")
-    public String Calender() {
-        return "calendarMain";
-    }
+//    //캘린더
+//    @RequestMapping("/calender/calender")
+//    public String Calender() {
+//        return "calendarMain";
+//    }
 
 
 //    //내 스터디
@@ -97,28 +97,28 @@ public class StudyController {
 //    }
 
     //내 스터디 - 그룹 관리 - 스터디 정보
-    @RequestMapping("/studyGroup/studyGroupManagerInfo")
-    public String StudyGroupManagerInfo() {
-        return "studyGroup/studyGroupManagerInfo";
-    }
-
-    //내 스터디 - 그룹 관리 - 멤버 관리
-    @RequestMapping("/studyGroup/studyGroupManagerMember")
-    public String StudyGroupManagerMember() {
-        return "studyGroup/studyGroupManagerMember";
-    }
-
-    //내 스터디 - 그룹 관리 - 스케쥴 관리
-    @RequestMapping("/studyGroup/studyGroupManagerSchedule")
-    public String StudyGroupManagerSchedule() {
-        return "studyGroup/studyGroupManagerSchedule";
-    }
-
-    //내 스터디 - 그룹 관리 - 스터디 관리
-    @RequestMapping("/studyGroup/studyGroupManagerManagement")
-    public String StudyGroupManagerManagement() {
-        return "studyGroup/studyGroupManagerManagement";
-    }
+//    @RequestMapping("/studyGroup/studyGroupManagerInfo")
+//    public String StudyGroupManagerInfo() {
+//        return "studyGroup/studyGroupManagerInfo";
+//    }
+//
+//    //내 스터디 - 그룹 관리 - 멤버 관리
+//    @RequestMapping("/studyGroup/studyGroupManagerMember")
+//    public String StudyGroupManagerMember() {
+//        return "studyGroup/studyGroupManagerMember";
+//    }
+//
+//    //내 스터디 - 그룹 관리 - 스케쥴 관리
+//    @RequestMapping("/studyGroup/studyGroupManagerSchedule")
+//    public String StudyGroupManagerSchedule() {
+//        return "studyGroup/studyGroupManagerSchedule";
+//    }
+//
+//    //내 스터디 - 그룹 관리 - 스터디 관리
+//    @RequestMapping("/studyGroup/studyGroupManagerManagement")
+//    public String StudyGroupManagerManagement() {
+//        return "studyGroup/studyGroupManagerManagement";
+//    }
 
 
 //    //스터디 모집

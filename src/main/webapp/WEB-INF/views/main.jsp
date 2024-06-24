@@ -13,11 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ajaxSend(function(e, xhr, options) {
-            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-        });
-    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
@@ -33,7 +28,7 @@
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="include/navbar.jsp"/>
@@ -125,23 +120,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="weekly">
-                                <h2>주간 공부시간</h2>
-                                <div class="weeklyGrape">
-
-                                </div>
-                            </div>
                         </div>
                         <div class="loginUserInfoRight">
                             <div class="studyTime">
                                 <h2 class="">오늘의 공부 시간</h2>
                                 <div>
                                     <div class="todoTitle">Total</div>
-                                    <p id="totalstudytime">127시간</p>
+                                    <p id="totalstudytime">${userVo.total_study_time}</p>
                                 </div>
                                 <div>
                                     <div class="todoTitle">Today</div>
-                                    <p id="todaystudytime">5시간</p>
+                                    <p id="todaystudytime">${userVo.today_study_time}</p>
                                 </div>
                             </div>
                             <div class="userStudyGroup">

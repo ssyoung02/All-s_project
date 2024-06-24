@@ -104,6 +104,7 @@
     </div>
 
 </div>
+<jsp:include page="../include/timer.jsp" />
 
 <script>
 

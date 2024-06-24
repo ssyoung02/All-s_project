@@ -26,10 +26,13 @@ function timerAllClose(){
     }
 }
 
-function timeReStart(){
-    let time;
+//시간 설정
+let h = 0;
+let m = 0;
+let s = 0;
+let time;
 
-    clearInterval(time); // 기존 타이머가 있을 경우 중지
+function timeReStart(){
     time = setInterval(function () {
         s++;
         s = s > 9 ? s : '0' + s;
@@ -49,4 +52,135 @@ function timeReStart(){
             $('#timeMin').text('00');
         }
     }, 1000);
+}
+
+
+//ajax 영역
+const hiddentext = $('#hiddent').val();
+
+//csrf토큰 변수 저장
+const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+const csrfToken = $("meta[name='_csrf']").attr("content");
+
+function startTimer(){
+    console.log('userIdx: '+hiddentext);
+    console.log('metaname: '+$('meta[name="_csrf"]'))
+    clearInterval(time); // 기존 타이머가 있을 경우 중지
+    h=0;
+    m=0;
+    s=0;
+    $('#timeSec').text('00');
+    $('#timeMin').text('00');
+    $('#timeHour').text('00');
+
+    timeReStart()
+
+    $('#time-start').hide();
+    $('#time-reStart').show();
+
+    $.ajax({
+        method: 'POST',
+        url: '/include/start',
+        contentType: "application/json",
+        data: JSON.stringify({
+            user_idx: hiddentext
+        }),
+        beforeSend: function(xhr) {
+            if (csrfHeader && csrfToken) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+                console.log("토큰은 전송됨")
+            }
+        },
+        success: function(response) {
+            console.log('타이머 시작 성공:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('타이머 시작 실패:', error);
+            console.error('응답 텍스트:', xhr.responseText);
+        }
+    })
+}
+
+function pauseTimer() {
+    clearInterval(time);
+    let study_time = calculateStudyTime();
+
+    $.ajax({
+        method: 'POST',
+        url: '/include/pause',
+        data: {
+            userIdx: hiddentext,
+            study_time: study_time
+        },
+        beforeSend: function(xhr) {
+            if (csrfHeader && csrfToken) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+                console.log("토큰은 전송됨")
+            }
+        },
+        success: function(response) {
+            console.log('타이머 일시정지 성공:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('타이머 일시정지 실패:', error);
+            console.error('응답 텍스트:', xhr.responseText);
+        }
+    })
+}
+
+function endTimer() {
+    pauseTimer();
+    clearInterval(time);
+    $('.timer-recode').val("");
+    modalOpen();
+    h=0;
+    m=0;
+    s=0;
+    $('#timeSec').text('00');
+    $('#timeMin').text('00');
+    $('#timeHour').text('00');
+
+    $('#time-start').show();
+    $('#time-reStart').hide();
+
+    return;
+}
+
+function calculateStudyTime() {
+    const timeHour = parseInt($('#timeHour').text()); // 시간
+    const timeMin = parseInt($('#timeMin').text());   // 분
+    const timeSec = parseInt($('#timeSec').text());   // 초
+
+    console.log((timeHour * 3600) + (timeMin * 60) + timeSec);
+    // 시간, 분, 초를 초 단위로 변환하여 합산
+    return (timeHour * 3600) + (timeMin * 60) + timeSec;
+}
+
+function updateMemo() {
+    const memo = $('.timer-recode').val();
+
+    $.ajax({
+        method: 'POST',
+        url: '/include/updateMemo',
+        data: {
+            user_idx: hiddentext,
+            memo: memo
+        },
+        beforeSend: function(xhr) {
+            if (csrfHeader && csrfToken) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+                console.log("토큰은 전송됨")
+            }
+        },
+        success: function(response) {
+            console.log('메모 저장 성공:', response);
+            alert('메모가 작성되었습니다.');
+            madalClose();
+            timeStop();
+        },
+        error: function(xhr, status, error) {
+            console.error('메모 저장 실패:', error);
+            console.error('응답 텍스트:', xhr.responseText);
+        }
+    })
 }
