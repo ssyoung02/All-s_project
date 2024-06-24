@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
@@ -24,15 +25,15 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
+
 <body>
 <!-- 중앙 컨테이너 -->
+<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="include/navbar.jsp"/>
@@ -325,11 +326,9 @@
                 <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
             </div>
         </div>
-
     </div>
 
     <jsp:include page="include/footer.jsp"/>
-    <jsp:include page="include/timer.jsp"/>
 </div>
 <script>
     $(document).ready(function () {

@@ -5,7 +5,7 @@ body {
     height: 100vh;
     margin: 0;
 }
-.mainContaner{
+.mainContainer{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 2em;

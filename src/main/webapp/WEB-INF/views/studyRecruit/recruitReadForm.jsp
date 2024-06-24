@@ -15,11 +15,10 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -82,7 +81,7 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h3>${study.studyTitle}</h3>
-                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="closeModal()"><i class="bi bi-x-lg"></i></button>
+                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/recruitReadForm">
@@ -98,7 +97,7 @@
                 </form>
             </div>
             <div class="modal-bottom">
-                <button type="button" class="secondary-default" onclick="closeModal()">취소</button>
+                <button type="button" class="secondary-default" onclick="madalClose()">취소</button>
                 <button type="button" class="primary-default" onclick="submitApplication()">신청</button>
             </div>
         </div>
@@ -107,13 +106,6 @@
 </div>
 
 <script>
-    function modalOpen() {
-        document.getElementById('modal-container').classList.add('active');
-    }
-
-    function closeModal() {
-        document.getElementById('modal-container').classList.remove('active');
-    }
 
     function submitApplication() {
         document.getElementById('joinForm').submit();

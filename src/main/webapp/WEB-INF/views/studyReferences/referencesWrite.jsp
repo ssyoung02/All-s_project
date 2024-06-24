@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<sec:csrfMetaTags />
+
 <%-- CSRF 토큰 자동 포함 --%>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -115,23 +115,23 @@
 </script>
 </head>
 <body>
-	<jsp:include page="../include/timer.jsp" />
-	<jsp:include page="../include/header.jsp" />
-	<!-- 중앙 컨테이너 -->
-	<div id="container">
-		<section class="mainContaner">
-			<!-- 메뉴 영역 -->
-			<nav>
-				<jsp:include page="../include/navbar.jsp" />
-			</nav>
-			<!-- 본문영역 -->
-			<main>
-				<!--모바일 메뉴 영역-->
-				<div class="m-menu-area" style="display: none;">
-					<jsp:include page="../include/navbar.jsp" />
-				</div>
-				<!--각 페이지의 콘텐츠-->
-				<h1>공부자료</h1>
+<jsp:include page="../include/timer.jsp"/>
+<jsp:include page="../include/header.jsp"/>
+<!-- 중앙 컨테이너 -->
+<div id="container">
+    <section class="mainContainer">
+        <!-- 메뉴 영역 -->
+        <nav>
+            <jsp:include page="../include/navbar.jsp"/>
+        </nav>
+        <!-- 본문영역 -->
+        <main>
+            <!--모바일 메뉴 영역-->
+            <div class="m-menu-area" style="display: none;">
+                <jsp:include page="../include/navbar.jsp" />
+            </div>
+            <!--각 페이지의 콘텐츠-->
+            <h1>공부자료</h1>
 
 				<!--본문 콘텐츠-->
 				<h4 class="s-header">글쓰기</h4>
@@ -154,7 +154,7 @@
 						<ul class="taglist">
 							<!-- 태그 항목 -->
 							<li>
-								<p class="tag-title">첨부파일</p> 
+								<p class="tag-title">첨부파일</p>
 								<input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
 								<label for="file">파일찾기</label> <input type="file" id="file">
 							</li>
