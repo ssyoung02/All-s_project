@@ -142,8 +142,14 @@
 						<input type="text" class="title-post" name="title" placeholder="제목을 입력해주세요" required>
 						<ul class="todolist">
 							<!-- 태그 항목 -->
-							<li><input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" value="true"> <label for="public" class="todo-label"> <span class="checkmark"><i class="bi bi-square"></i></span> 비밀글 <span class="private-mark"><i class=""></i></span>
-							</label></li>
+							<li>
+								<input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" value="true">
+								<label for="public" class="todo-label">
+									<span class="checkmark"><i class="bi bi-square"></i></span>
+									비밀글
+									<span class="private-mark"><i class=""></i></span>
+								</label>
+							</li>
 						</ul>
 
 						<!-- naver smart editor api -->
