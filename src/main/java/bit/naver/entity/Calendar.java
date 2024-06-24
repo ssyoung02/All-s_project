@@ -11,14 +11,10 @@ public class Calendar {
     private Long calIdx;
     private Long userIdx;
 
-    @NotBlank(message = "일정 제목을 입력해주세요.")
-    @Size(max = 20, message = "일정 제목은 20자 이하여야 합니다.")
     private String title;
 
-    @Size(max = 255, message = "일정 내용은 255자 이하여야 합니다.")
     private String description;
 
-    @NotBlank(message = "시작일을 입력해주세요.")
     private String start; // 시작 날짜 및 시간 (YYYY-MM-DDTHH:mm 형식)
 
     private String end; // 종료 날짜 및 시간 (YYYY-MM-DDTHH:mm 형식)

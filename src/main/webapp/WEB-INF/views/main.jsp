@@ -33,7 +33,7 @@
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
-    <section class="mainContainer">
+    <section class="mainContaner">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="include/navbar.jsp"/>

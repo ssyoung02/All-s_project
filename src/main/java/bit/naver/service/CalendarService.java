@@ -1,6 +1,8 @@
 package bit.naver.service;
 
 import bit.naver.entity.Calendar;
+import bit.naver.mapper.CalendarMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,16 +13,26 @@ import java.util.Map;
 @Service
 public class CalendarService {
 
-    // 사용자별 캘린더 데이터 저장 (Map 사용)
-    private Map<Long, List<Calendar>> userCalendars = new HashMap<>();
+    @Autowired
+    private CalendarMapper calendarMapper;
 
     public void saveCalendar(Calendar calendar) {
-        long userIdx = calendar.getUserIdx();
-        List<Calendar> userCalendarList = userCalendars.computeIfAbsent(userIdx, k -> new ArrayList<>());
-        userCalendarList.add(calendar);
+        calendarMapper.insertCalendar(calendar);
     }
 
-    public List<Calendar> getAllCalendars(long userIdx) {
-        return userCalendars.getOrDefault(userIdx, new ArrayList<>());
+    public List<Calendar> getAllCalendars(Long userIdx) {
+        return calendarMapper.selectAllCalendarsByUserIdx(userIdx);
+    }
+
+    public Calendar getCalendarByIdx(Long scheduleIdx) {
+        return calendarMapper.selectCalendarByIdx(scheduleIdx);
+    }
+
+    public void updateCalendar(Calendar calendar) {
+        calendarMapper.updateCalendar(calendar);
+    }
+
+    public void deleteCalendar(Long scheduleIdx) {
+        calendarMapper.deleteCalendar(scheduleIdx);
     }
 }
