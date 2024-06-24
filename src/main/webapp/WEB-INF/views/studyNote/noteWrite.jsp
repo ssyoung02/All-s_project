@@ -64,23 +64,40 @@
                 oEditors.getById["editorTxt"].exec("FOCUS");
                 return false;
             }
+
+            var $frm = $("#writeForm")[0];
+            var formData = new FormData($frm);
+            formData.append("content", formData.get("editorTxt"));
+            formData.append("uploadFile", $("#file")[0].files[0]);
+            formData.append("isPrivate", isPrivate);
+
             // AJAX를 사용하여 폼 데이터를 서버로 전송
             $.ajax({
-                url: '/studyNote/noteWrite',
-                type: 'POST',
-                data: {
-                    title: title,
-                    content: content,
-                    isPrivate: isPrivate
+                url : '/studyNote/noteWrite',
+                type : 'POST',
+                data : formData,
+                processData : false,
+                contentType : false,
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']")
+                        .attr("content"), $("meta[name='_csrf']").attr(
+                        "content"));
                 },
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                success : function(response) {
+                    if(response === 10){
+
+                        alert("파일 용량은 5MB를 초과할 수 없습니다.");
+                        return false
+                    }else if(response === 11){
+
+                        alert("이미지 파일만 저장할 수 있습니다.");
+                        return false
+                    }else{
+                        alert("글 작성이 완료되었습니다.");
+                        location.href = "${root}/studyNote/noteRead?referenceIdx=" + response
+                    }
                 },
-                success: function (response) {
-                    alert("글 작성이 완료되었습니다.");
-                    location.href = "${root}/studyNote/noteRead?referenceIdx=" + response
-                },
-                error: function () {
+                error : function() {
                     alert("글 작성에 실패하였습니다.");
                 }
             });
@@ -111,6 +128,7 @@
 
                 <!-- <div class="maxcontent"> -->
                 <form id="writeForm" onsubmit="submitPost(event);">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <div class="post-area">
                         <input type="text" class="title-post" name="title" placeholder="제목을 입력해주세요" required>
                         <ul class="todolist">
@@ -135,9 +153,8 @@
                             <!-- 태그 항목 -->
                             <li>
                                 <p class="tag-title">첨부파일</p>
-                                <input class="upload-name" value="첨부파일" placeholder="첨부파일" readonly>
-                                <label for="file">파일찾기</label>
-                                <input type="file" id="file">
+                                <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
+                                <label for="file">파일찾기</label> <input type="file" id="file">
                             </li>
                         </ul>
 

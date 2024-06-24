@@ -4,6 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 
@@ -139,19 +142,26 @@ public class StudyReferencesController {
 			return 10L;
 		}
 
+		try {
+			entity.setFileName(URLEncoder.encode(uploadFile.getOriginalFilename(), "UTF-8").replaceAll("\\+", "%20"));
+			entity.setFileAttachments(uploadFile.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return -1L;
+		}
+
 		return studyReferencesService.writePost(entity, uploadFile);
 	}
 
 	@RequestMapping("/deletePost")
 	@ResponseBody
 	public int deletePost(@RequestParam("referenceIdx") int referenceIdx) {
-		System.out.println("referenceIdx: " + referenceIdx);
+		//System.out.println("referenceIdx: " + referenceIdx);
 		return studyReferencesService.deletePost(referenceIdx);
 	}
 
 	@RequestMapping("/referencesModify")
 	public String modifyPost(Model model, @ModelAttribute StudyReferencesEntity entity, HttpSession session) {
-		System.out.println("entity: " + entity);
 		Users user = (Users) session.getAttribute("userVo");
 		String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
 		StudyReferencesEntity studyReferencesEntity = studyReferencesService
@@ -179,7 +189,14 @@ public class StudyReferencesController {
 		String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
 		StudyReferencesEntity entity = studyReferencesService.getStudyReferenceById(referenceIdx, userIdx);
 
-		response.setContentType("application/octet-stream");
+		String mimeType = "application/octet-stream";
+		try {
+			mimeType = Files.probeContentType(Paths.get(entity.getFileName()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		response.setContentType(mimeType);
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + entity.getFileName() + "\"");
 
 		try (InputStream inputStream = new ByteArrayInputStream(entity.getFileAttachments());
@@ -195,5 +212,4 @@ public class StudyReferencesController {
 			e.printStackTrace();
 		}
 	}
-
 }

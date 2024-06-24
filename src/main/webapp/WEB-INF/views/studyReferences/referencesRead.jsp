@@ -240,6 +240,7 @@
                         <div class="post-content">
                             ${studyReferencesEntity.content}
                         </div>
+
 						<ul class="taglist">
 							<!-- 태그 항목 -->
 							<li>
@@ -254,6 +255,7 @@
 								</c:choose>
 							</li>
 						</ul>
+
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
@@ -300,8 +302,8 @@
                             <button class="secondary-default" onclick="deletePost(${studyReferencesEntity.referenceIdx})">삭제</button>
                             <button class="secondary-default" onclick="modifyPost(${studyReferencesEntity.referenceIdx})">수정</button>
                         </c:if>
-<%--                        <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesList'">목록</button>--%>
-                        <button class="primary-default" onclick="history.back();">목록</button>
+                        <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesList'">목록</button>
+<%--                        <button class="primary-default" onclick="history.back();">목록</button>--%>
                     </div>
                 </div>
 

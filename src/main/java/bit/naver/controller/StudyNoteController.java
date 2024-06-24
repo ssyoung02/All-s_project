@@ -1,5 +1,30 @@
 package bit.naver.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.Principal;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import bit.naver.entity.CommentsEntity;
 import bit.naver.entity.LikeReferencesEntity;
 import bit.naver.entity.StudyReferencesEntity;
@@ -8,16 +33,6 @@ import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.StudyNoteService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.w3c.dom.ls.LSOutput;
-
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
-import java.util.List;
 
 // StudyReferencesController 클래스: 클라이언트의 요청을 처리하는 컨트롤러 계층
 @Controller
@@ -28,10 +43,14 @@ public class StudyNoteController {
     private UsersMapper usersMapper;
 
     private final UsersUserDetailsService usersUserDetailsService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private StudyNoteService studyNoteService;
+
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     @RequestMapping("/noteList")
     public String getStudyNoteList(Model model, @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
@@ -87,7 +106,6 @@ public class StudyNoteController {
     @RequestMapping("/insertLike")
     @ResponseBody
     public int insertLike(@ModelAttribute LikeReferencesEntity entity) {
-        System.out.println("ENTITY >>>" + entity.toString());
         return studyNoteService.insertLike(entity);
     }
 
@@ -110,18 +128,31 @@ public class StudyNoteController {
 
     @PostMapping("/noteWrite")
     @ResponseBody
-    public Long submitPost(@ModelAttribute StudyReferencesEntity entity, HttpSession session) {
+    public Long submitPost(@ModelAttribute StudyReferencesEntity entity, MultipartFile uploadFile, HttpSession session,
+                           HttpServletResponse response) {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
         entity.setUserIdx(userIdx);
 
-        return studyNoteService.writePost(entity);
+        if (uploadFile.getSize() > MAX_FILE_SIZE) {
+            return 10L;
+        }
+
+        try {
+            entity.setFileName(URLEncoder.encode(uploadFile.getOriginalFilename(), "UTF-8").replaceAll("\\+", "%20"));
+            entity.setFileAttachments(uploadFile.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1L;
+        }
+
+        return studyNoteService.writePost(entity, uploadFile);
     }
 
     @RequestMapping("/deletePost")
     @ResponseBody
     public int deletePost(@RequestParam("referenceIdx") int referenceIdx) {
-        System.out.println("referenceIdx: " + referenceIdx);
+        //System.out.println("referenceIdx: " + referenceIdx);
         return studyNoteService.deletePost(referenceIdx);
     }
 
@@ -141,4 +172,35 @@ public class StudyNoteController {
         return studyNoteService.updatePost(entity);
     }
 
+    @GetMapping(value = "/download")
+    public void fileDownload(@RequestParam("referenceIdx") Long referenceIdx, HttpSession session,
+                             HttpServletResponse response) {
+        Users user = (Users) session.getAttribute("userVo");
+        String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
+        StudyReferencesEntity entity = studyNoteService.getStudyNoteById(referenceIdx, userIdx);
+
+        String mimeType = "application/octet-stream";
+        try {
+            mimeType = Files.probeContentType(Paths.get(entity.getFileName()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        response.setContentType(mimeType);
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + entity.getFileName() + "\"");
+
+
+        try (InputStream inputStream = new ByteArrayInputStream(entity.getFileAttachments());
+             OutputStream outputStream = response.getOutputStream()) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
