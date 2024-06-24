@@ -15,7 +15,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -105,6 +104,7 @@
     </div>
 
 </div>
+<jsp:include page="../include/timer.jsp" />
 
 <script>
     function modalOpen() {

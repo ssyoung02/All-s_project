@@ -21,6 +21,9 @@
         <result property="socialLogin" column="social_login" />
         <result property="createdAt" column="created_at" />
         <result property="updatedAt" column="updated_at" />
+        <result property="mobile" column="mobile" />
+        <result property="total_study_time" column="total_study_time" />
+        <result property="today_study_time" column="today_study_time" />
     </resultMap>
 
     <select id="findById" resultMap="UsersResultMap">

@@ -55,9 +55,6 @@
     .lnb-open ul{
         padding: 0;
     }
-    .time-area{
-        font-size: 4em;
-    }
 
     /*회원정보 수정 모바일*/
     .userinfo{
@@ -82,6 +79,11 @@
 
 }
 
+@media (max-width: 1250px) {
+    .time-area{
+        font-size: 4em;
+    }
+}
 @media (max-width: 850px) {
     /*메인*/
     .loginMain{
@@ -94,5 +96,9 @@
     }
     .file-item{
         width: 100%;
+    }
+
+    .time-area{
+        font-size: 3em;
     }
 }

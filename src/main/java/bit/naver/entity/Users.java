@@ -48,6 +48,9 @@ public class Users {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    private int total_study_time;
+    private int today_study_time;
+
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER
     }
