@@ -11,6 +11,8 @@ public interface TimerMapper {
     void insertStartTime(TimerEntity timerEntity);
 
     int updateEndTime(TimerEntity timer);
-    int updateEndTimeAndStudyTime(TimerEntity timer);
     int updateMemo(TimerEntity timer);
+
+    Long totalStudyTime(Long user_idx);
+    Long todayStudyTime(Long user_idx);
 }

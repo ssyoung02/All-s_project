@@ -5,26 +5,26 @@
 <mapper namespace="bit.naver.mapper.TimerMapper">
     <insert id="insertStartTime" useGeneratedKeys="true" keyColumn="record_idx" keyProperty="record_idx">
         INSERT INTO StudyRecords (user_idx, date, start_time)
-        VALUES (#{userIdx}, now(), now())
+        VALUES (#{user_idx}, now(), now())
     </insert>
-
-<!-- select order by = idx값 기준 최신 recodeidx-->
 
     <update id="updateEndTime">
         UPDATE StudyRecords
-        SET end_time = now(), study_time = #{studyTime}
-        WHERE user_idx = #{userIdx} and record_idx = #{record_idx}
-    </update>
-
-    <update id="updateEndTimeAndStudyTime">
-        UPDATE StudyRecords
-        SET end_time = now(), study_time = #{studyTime}
-        WHERE user_idx = #{userIdx} and record_idx = #{record_idx}
+        SET end_time = now(), study_time = #{study_time}
+        WHERE user_idx = #{user_idx} and record_idx = #{record_idx}
     </update>
 
     <update id="updateMemo">
         UPDATE StudyRecords
         SET memo = #{memo}
-        WHERE user_idx = #{userIdx} and record_idx = #{record_idx}
+        WHERE user_idx = #{user_idx} and record_idx = #{record_idx}
     </update>
+
+    <select id="totalStudyTime">
+        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx}
+    </select>
+
+    <select id="todayStudyTime">
+        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = now()
+    </select>
 </mapper>
