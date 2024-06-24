@@ -3,12 +3,13 @@ package bit.naver.entity;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Data
-public class Users {
+public class Users implements Serializable {
 
     private Long userIdx;
 
@@ -51,4 +52,5 @@ public class Users {
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER
     }
+
 }

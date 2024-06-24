@@ -1,15 +1,4 @@
 
-const skipnavLink = document.querySelector('#skipnav a');
-skipnavLink.addEventListener('focus', function () {
-    const skipnav = document.querySelector('#skipnav');
-    skipnav.style.opacity = 1;
-});
-
-skipnavLink.addEventListener('blur', function () {
-    const skipnav = document.querySelector('#skipnav');
-    skipnav.style.opacity = 0;
-});
-
 //화면 위치에 따라 TOP 버튼 보이게
 window.addEventListener("scroll", function () {
     if (window.scrollY > 500) {
@@ -19,10 +8,21 @@ window.addEventListener("scroll", function () {
     }
 });
 
-//화면 스크롤에 따라 top버튼 보이게
-document.querySelector(".top").addEventListener("click", function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+// 화면 스크롤에 따라 top 버튼 보이게
+const topButton = document.querySelector(".top");
+if (topButton) {
+    topButton.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 500) {
+            topButton.style.display = "block";
+        } else {
+            topButton.style.display = "none";
+        }
+    });
+}
 
 //화면 너비에 따라 메인메뉴 숨김처리
 window.addEventListener("resize", function () {

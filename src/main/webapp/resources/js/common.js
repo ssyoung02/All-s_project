@@ -15,13 +15,11 @@ function loadScript(url, callback)
       head.appendChild(script);
   }
 // Promise.all (필요에 따라 사용)
+// Promise.all (필요에 따라 사용)
 Promise.all([
     loadScript('/resources/js/index.js'),
     loadScript('/resources/js/joinValidChecker.js')
-]).then(() => {
-    // skipnavLink 변수 선언
-    let skipNavLink = document.getElementById("skipnav");
+]).then(function() { // then 메서드의 인자를 익명 함수로 감싸기
 
-    // ... (나머지 코드)
 });
 
