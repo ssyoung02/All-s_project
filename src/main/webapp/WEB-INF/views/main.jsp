@@ -28,7 +28,7 @@
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="include/navbar.jsp"/>
@@ -118,12 +118,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="weekly">
-                                <h2>주간 공부시간</h2>
-                                <div class="weeklyGrape">
-
                                 </div>
                             </div>
                         </div>
