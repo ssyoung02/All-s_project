@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,7 @@ public class ChatController {
     @Autowired
     private ChatMapper chatMapper;
     // 채팅
-    @RequestMapping("/chat")
+    @GetMapping("/chat")
     public String chat(@RequestParam("studyIdx") Long studyIdx, Model model, HttpSession session, Principal principal) {
 
         Users user = (Users) session.getAttribute("userVo");
@@ -33,19 +34,18 @@ public class ChatController {
 
         StudyGroup study = chatMapper.getStudyDescriptionTitle(studyIdx);
         model.addAttribute("study", study);
-        System.out.println("1. " + study.toString());
 
         List<Users> members = chatMapper.getNames(studyIdx);
         model.addAttribute("members", members);
-        System.out.println("2. " + members.toString());
 
-        List<Chat> messages = chatMapper.getAllMessages(); // 모든 메시지를 가져오는 예시 메서드
+        List<Chat> messages = chatMapper.getAllMessages(studyIdx); // 모든 메시지를 가져오는 예시 메서드
 
         // Model에 데이터를 담아서 View로 전달
         model.addAttribute("messages", messages);
 
         return "studyGroup/chat";
     }
+
 
     @PostMapping("/sendMessage")
     // 메시지 전송 처리
@@ -66,7 +66,6 @@ public class ChatController {
 
         try {
             chatMapper.insertMessage(chatMessage); // 메시지 저장
-            System.out.println(chatMessage.toString());
             return ResponseEntity.ok("Message sent successfully");
         } catch (Exception e) {
             e.printStackTrace();

@@ -41,8 +41,18 @@
 
         .message {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             margin-bottom: 10px;
+            align-items: flex-start;
+        }
+
+        .message.right {
+            align-items: flex-end;
+        }
+
+        .message .name {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .message .bubble {
@@ -51,14 +61,6 @@
             background-color: #f2f2f2;
             border: 1px solid #ccc;
             max-width: 70%;
-        }
-
-        .message .right {
-            align-self: flex-end;
-        }
-
-        .message .left {
-            align-self: flex-start;
         }
 
         .input-container {
@@ -122,8 +124,9 @@
                 <!-- 채팅 메시지 영역 -->
                 <div id="chatMessages" class="chat-messages">
                     <c:forEach var="message" items="${messages}">
-                        <div class="message">
-                            <div class="bubble ${message.userName == userVo.name ? 'left' : 'right'}">
+                        <div class="message ${message.userName == userVo.name ? 'right' : 'left'}">
+                            <span class="name">${message.userName}</span>
+                            <div class="bubble">
                                 <p>${message.messageContent}</p>
                                 <span class="regDate">${message.messageRegdate}</span>
                             </div>
@@ -151,8 +154,8 @@
 
                 function addMessageToChat(message) {
                     var chatMessages = document.getElementById('chatMessages');
-                    var newMessageHTML = '<div class="message"><div class="bubble ' + (message.userName == '${userVo.name}' ? 'left' : 'right')
-                        + '"><p>' + message.messageContent + '</p><span class="regDate">' + message.messageRegdate + '</span></div></div>';
+                    var newMessageHTML = '<div class="message ' + (message.userName == '${userVo.name}' ? 'right' : 'left')
+                        + '"><span class="name">' + message.userName + '</span><div class="bubble"><p>' + message.messageContent + '</p><span class="regDate">' + message.messageRegdate + '</span></div></div>';
                     chatMessages.insertAdjacentHTML('afterbegin', newMessageHTML);
                     scrollChatToBottom();
                 }

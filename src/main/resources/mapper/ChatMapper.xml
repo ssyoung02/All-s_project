@@ -57,8 +57,15 @@
     </insert>
 
     <select id="getAllMessages" resultType="bit.naver.entity.Chat">
-        SELECT *
+        SELECT
+            chat_id as chatId,
+            study_idx as studyIdx,
+            user_idx as userIdx,
+            message_content as messageContent,
+            message_regdate as messageRegdate,
+            user_name as userName
         FROM Chat
+        WHERE study_idx = #{studyIdx}
         ORDER BY message_regdate DESC
     </select>
 
