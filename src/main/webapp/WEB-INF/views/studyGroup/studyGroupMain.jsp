@@ -6,6 +6,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        /* 기존 CSS ... */
+
+        /* 캘린더 영역 스타일 */
+        .group-calender {
+            display: flex; /* flexbox 사용 */
+            flex-direction: column; /* 세로 배치 */
+        }
+
+        .calendar-area {
+            display: flex; /* 캘린더들을 수평 배치 */
+            width: 100%;
+        }
+
+
+        #monthCalendar { /* 월별 캘린더 */
+            width: 67%;
+            margin-right: 10px;
+        }
+
+        #dayCalendar { /* 일별 캘린더 */
+            width: 33%;
+            margin-top: 62px;
+        }
+
+        /* 일별 캘린더 제목 숨기기 */
+        #dayCalendar .fc-toolbar {
+            display: none;
+        }
+
+        .fc .fc-toolbar-chunk .fc-prev-button, .fc .fc-toolbar-chunk .fc-next-button {
+            background-color: #f0f0f0 !important;
+            border: none !important; /* 테두리 제거 */
+        }
+
+        .fc .fc-toolbar-chunk .fc-prev-button.fc-button, .fc .fc-toolbar-chunk .fc-next-button.fc-button {
+            border: none !important; /* 테두리 제거 */
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스터디그룹 메인 > 내 스터디 > 스터디 > 공부 > All's</title>
@@ -14,10 +53,76 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+
+    <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
+    <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
+    <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
     <script>
         function openChatWindow() {
             window.open('${root}/studyGroup/chat', 'ChatWindow', 'width=400,height=500');
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            let eventsData = [];
+            const studyIdx = ${study.studyIdx};
+            let monthCalendar, dayCalendar;
+
+            // 캘린더 렌더링 함수
+            function renderCalendars() {
+                const monthCalendarEl = document.getElementById('monthCalendar');
+                monthCalendar = new FullCalendar.Calendar(monthCalendarEl, {
+                    initialView: 'dayGridMonth',
+                    headerToolbar: { left: 'title', center: '', right: 'prev,next today' },
+                    events: eventsData,
+                    editable: false,
+                    selectable: false,
+                    eventClick: false,
+                    locale: 'ko'
+                });
+                monthCalendar.render();
+
+                const dayCalendarEl = document.getElementById('dayCalendar');
+                dayCalendar = new FullCalendar.Calendar(dayCalendarEl, {
+                    initialView: 'listDay',
+                    headerToolbar: { left: '', center: 'title', right: '' },
+                    events: eventsData,
+                    editable: false,
+                    selectable: false,
+                    eventClick: false,
+                    locale: 'ko',
+                    height: 'auto'
+                });
+                dayCalendar.render();
+            }
+
+            // 초기 렌더링 및 이벤트 리스너 등록
+            $.ajax({
+                url: "${root}/calendar/teamEvents/" + studyIdx,
+                type: "GET",
+                headers: {
+                    "${_csrf.headerName}": "${_csrf.token}"
+                },
+                success: function (response) {
+                    eventsData = response.map(event => ({
+                        id: event.teamScheduleIdx,
+                        title: event.title,
+                        start: event.start,
+                        end: event.end,
+                        allDay: event.allDay === 1,
+                        color: event.backgroundColor,
+                    }));
+
+                    renderCalendars(); // 캘린더 렌더링
+
+                    // 캘린더가 변경될 때마다 다시 렌더링 (변수 범위 수정)
+                    monthCalendar.on('datesSet', renderCalendars);
+                    dayCalendar.on('datesSet', renderCalendars);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching events:', errorThrown);
+                    alert('이벤트를 불러오는 중 오류가 발생했습니다.');
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -154,8 +259,10 @@
                                 </div>
                             </div>
                             <div class="group-calender">
-                                <h3>그룹 일정</h3>
-                                <%--캘린더--%>
+                                <div class="calendar-area">
+                                    <div id="monthCalendar"></div>
+                                    <div id="dayCalendar"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="group-member">
