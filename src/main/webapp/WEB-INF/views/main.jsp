@@ -641,6 +641,7 @@
                     '<p>' + study.category + '</p>' +
                     '<p>' + "♥ : " + study.likes_count + '</p>' +
                     '<p>' + study.currentParticipants + '/' + study.capacity + '</p>' +
+                    '<a href="${root}/studies/detail/' + studys.studyIdx + '" class="btn btn-primary">상세보기</a>' + // 상세보기 버튼 추가
                     '</div>',
                 removable: Removeable,
                 yAnchor: -45 // 인포윈도우를 마커 위쪽으로 이동
@@ -679,10 +680,11 @@
             var infowindow = new kakao.maps.InfoWindow({
                 position: position,
                 content: '<div style="width:150px;text-align:center;padding:6px 0;">' +
-                    '<h3>' + studys.study_title + '</h3>' +
+                    '<h3>' + studys.studyTitle + '</h3>' +
                     '<p>' + studys.category + '</p>' +
                     '<p>' +"♥ : " +studys.likes_count + '</p>' +
                     '<p>' + studys.currentParticipants + '/' + studys.capacity + '</p>' +
+                    '<a href="${root}/studies/detail/' + studys.studyIdx + '" class="btn btn-primary">상세보기</a>' + // 상세보기 버튼 추가
                     '</div>',
                 removable: Removeable,
                 yAnchor: -45
