@@ -51,11 +51,14 @@ public class StudyGroup {
     private String image;
 
     private StudyStatus status;
+    private int currentParticipants; // 현재 참여 인원 (기본값: 1)
 
     private Date createdAt;
 
     // DB에 없는 엔티티
     private String leaderName;
+
+
 
 
 }

@@ -106,6 +106,10 @@
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <button type="submit" class="link-button">나의 정보</button>
                             </form>
+                            <form method="POST" action="<c:url value='${root }/Users/userInfoProcess' />">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <button type="submit" class="link-button">나의 정보</button>
+                            </form>
                         </div>
                     </li>
                     <li class="submenu-item">
@@ -118,7 +122,10 @@
                     </li>
                     <li class="submenu-item">
                         <div class="menu-area">
-                            <a href="${root}/Users/userDelete">회원 탈퇴</a>
+                            <form method="POST" action="<c:url value='${root}/Users/userdelete'/>">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <button type="submit" class="link-button">회원 탈퇴</button>
+                            </form>
                         </div>
                     </li>
                 </ul>

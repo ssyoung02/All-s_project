@@ -53,11 +53,42 @@ public interface UsersMapper {
     //        "WHERE user_idx = #{userIdx}")
     void updateUser(Users user);
 
-    // user_idx를 이용하여 사용자 정보를 삭제합니다.
-  //  @Delete("DELETE FROM Users WHERE user_idx = #{userIdx}")
-    void deleteUser(Long userIdx);
 
     boolean findByEmail(String email);
 
     Users findUserByEmail(String email); // 이메일로 사용자 정보 가져오기
+
+    void deleteUserByUsername(String username);
+
+    void deleteUserAuthorities(@Param("username") String username);
+
+    void deleteUserCalendars(@Param("userId") Long userId);
+
+    void deleteUserOAuth2Logins(@Param("userId") Long userId);
+
+    void deleteUserPersonalStatements(@Param("userId") Long userId);
+
+    void deleteUserResumes(@Param("userId") Long userId);
+
+    void deleteUserStudyMembers(@Param("userId") Long userId);
+
+    void deleteUserChats(@Param("userId") Long userId);
+
+    void deleteUserLikeStudies(@Param("userId") Long userId);
+
+    void deleteUserNotifications(@Param("userId") Long userId);
+
+    void deleteUserStudyRecords(@Param("userId") Long userId);
+
+    void deleteUserStudyReferences(@Param("userId") Long userId);
+
+    void deleteUserComments(@Param("userId") Long userId);
+
+    void deleteUserLikeReferences(@Param("userId") Long userId);
+
+    void deleteUserTodos(@Param("userId") Long userId);
+
+    void deleteUser(@Param("userId") Long userId);
+
+    Long findUserIdByUsername(@Param("username") String username);
 }

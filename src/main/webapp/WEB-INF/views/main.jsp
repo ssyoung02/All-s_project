@@ -8,11 +8,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}"></script>
+        <script>
+        $(document).ajaxSend(function(e, xhr, options) {
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+        });
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
@@ -21,6 +26,21 @@
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
 
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <style>
+
+        /* 토글 버튼 스타일 */
+        .toggle-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
 </head>
 
 <body>
@@ -66,8 +86,51 @@
                             <button class="secondary-default" onclick="location.href='${root}/Users/Join'">회원가입</button>
                         </div>
                     </div>
+                    <h2>주변에서 함께할 동료들을 찾으세요!</h2><br>
+                    <sec:authorize access="isAnonymous()">
+                        <div id="map-anonymous" style="width:100%; height:250px;"></div> <%-- 로그인 전 지도 컨테이너 --%>
+                    </sec:authorize>
+                    <script>
+                        $(document).ready(function() {
+
+                            initializeMapAnonymous();
+                            getLocationAndDisplayOnAnonymousMap();
+
+                            $.ajax({
+                                url: '/studies/listOnAnonymousMap',
+                                type: 'GET', // GET 방식으로 변경
+                                dataType: 'json',
+                                success: function (studyData1) {
+                                    displayStudyMarkersAnonymous(mapAnonymous, studyData1);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('스터디 정보를 가져오는 중 오류가 발생했습니다.', error);
+                                    alert("스터디 정보를 가져오는데 실패했습니다.");
+                                }
+                            });
+<%--                            <c:if test="${not empty studyList}">--%>
+<%--                            displayStudyMarkersAnonymous(mapAnonymous, ${studyList}); // 스터디 마커 표시--%>
+<%--                            </c:if>--%>
+
+                            // 10초마다 위치 정보 업데이트
+                            setInterval(getLocationAndDisplayOnAnonymousMap, 1000);
+
+                            // 토글 버튼 생성 및 추가
+                            var toggleButtonAnonymous = document.createElement('button');
+                            toggleButtonAnonymous.id = 'toggleButtonAnonymous';
+                            toggleButtonAnonymous.textContent = '지도 확대';
+                            toggleButtonAnonymous.className = 'toggle-button';
+                            document.getElementById('map-anonymous').appendChild(toggleButtonAnonymous);
+
+                            // 토글 버튼 클릭 이벤트 리스너 등록
+                            toggleButtonAnonymous.addEventListener('click', toggleAnonymousMapView);
+
+                        });
+                    </script>
+                    <br>
+                    <br>
                 </sec:authorize>
-                <%-- 로그인한 사용자에게만 표시 --%>
+            <%-- 로그인한 사용자에게만 표시 --%>
                 <sec:authorize access="isAuthenticated()">
                     <div class="loginMain">
                         <div class="loginUserInfoLeft">
@@ -186,6 +249,11 @@
                         </div>
                     </div>
                 </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
+                    <div id="map-authenticated" style="width:100%; height:250px;"> </div> <%-- 로그인 후 지도 컨테이너 --%>
+                </sec:authorize>
+                <br>
+                <br>
                 <!--슬라이드 배너-->
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
@@ -336,6 +404,363 @@
         }
     });
 </script>
+<script>
+    var mapAnonymous;
+    var mapAuthenticated;
+    var marker;
+    var markerAnonymous;
+    var zoomLevel = 6;
+    var isWideView = false;
+    // 인포윈도우 객체 배열 (로그인 안 한 상태)
+    var infowindowAnonymouses = [];
+
+    // 인포윈도우 객체 배열 (로그인 상태)
+    var infowindows = [];
+
+    // 마커 이미지 생성
+    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'; // 마커 이미지 URL
+    var imageSize = new kakao.maps.Size(24, 35);
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+
+
+    // 지도 생성 및 초기화 (로그인 전)
+    function initializeMapAnonymous() {
+        var mapContainer = document.getElementById('map-anonymous');
+        var mapOption = {
+            center: new kakao.maps.LatLng(37.49564, 127.0275), // 초기 지도 중심좌표 (비트캠프)
+            level: 6 // 지도의 확대 레벨
+        };
+        mapAnonymous = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 지도 확대, 축소 컨트롤 생성 및 추가
+        var zoomControlAnonymous = new kakao.maps.ZoomControl();
+        mapAnonymous.addControl(zoomControlAnonymous, kakao.maps.ControlPosition.RIGHT);
+
+        // 마커를 생성합니다
+        markerAnonymous = new kakao.maps.Marker({
+            position: mapAnonymous.getCenter()
+        });
+        markerAnonymous.setMap(mapAnonymous);
+    }
+
+    // 지도 생성 및 초기화 (로그인 후)
+    function initializeMapAuthenticated() {
+        var mapContainer = document.getElementById('map-authenticated');
+        var mapOption = {
+            center: new kakao.maps.LatLng(37.49564, 127.0275), // 초기 지도 중심좌표 (비트캠프)
+            level: zoomLevel
+        };
+        mapAuthenticated = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 지도 확대, 축소 컨트롤 생성 및 추가
+        var zoomControl = new kakao.maps.ZoomControl();
+        mapAuthenticated.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+        // 마커를 생성합니다
+        marker = new kakao.maps.Marker({
+            position: mapAuthenticated.getCenter()
+        });
+        marker.setMap(mapAuthenticated);
+
+    }
+
+
+    // 지도 확대/축소 토글 함수
+    function toggleMapView() {
+        var mapContainer = document.getElementById('map-authenticated');
+        var toggleButton = document.getElementById('toggleButton');
+
+        if (isWideView) {
+            // 현재 확대 상태이면 축소
+            getLocationAndDisplayOnMap();
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '250px';
+            toggleButton.textContent = '창 확대';
+        } else {
+            // 현재 축소 상태이면 확대
+            getLocationAndDisplayOnMap();
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '800px';
+            toggleButton.textContent = '창 축소';
+        }
+
+
+        mapAuthenticated.relayout(); // 지도 크기 변경 후 relayout 호출
+
+        isWideView = !isWideView; // 확대 상태 반전
+    }
+
+    function toggleAnonymousMapView() {
+        var mapContainer = document.getElementById('map-anonymous');
+        var toggleButton = document.getElementById('toggleButtonAnonymous');
+
+        if (isWideView) {
+            // 현재 확대 상태이면 축소
+            getLocationAndDisplayOnAnonymousMap();
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '250px';
+            toggleButton.textContent = '창 확대';
+        } else {
+            // 현재 축소 상태이면 확대
+            getLocationAndDisplayOnAnonymousMap();
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '800px';
+            toggleButton.textContent = '창 축소';
+        }
+
+        mapAnonymous.relayout();
+
+        isWideView = !isWideView; // 확대 상태 반전
+    }
+
+
+    // 사용자 위치 가져오기 및 지도에 표시
+    function getLocationAndDisplayOnMap() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+
+                var locPosition = new kakao.maps.LatLng(lat, lon);
+                marker.setPosition(locPosition);
+
+                mapAuthenticated.setCenter(locPosition);
+                // 로그인 여부 확인 후 위치 정보 전송
+                <sec:authorize access="isAuthenticated()">
+                sendLocationToServer(lat, lon);
+                </sec:authorize>
+            }, function(error) {
+                console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
+            });
+        } else {
+            // Geolocation을 사용할 수 없을 때 처리 로직
+        }
+    }
+
+    // 사용자 위치 가져오기 및 지도에 표시
+    function getLocationAndDisplayOnAnonymousMap() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+
+                var locPosition = new kakao.maps.LatLng(lat, lon);
+                markerAnonymous.setPosition(locPosition);
+
+                mapAnonymous.setCenter(locPosition);
+
+            }, function(error) {
+                console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
+            });
+        } else {
+            // Geolocation을 사용할 수 없을 때 처리 로직
+        }
+    }
+
+    // 위치 정보 서버 전송 함수
+    function sendLocationToServer(latitude, longitude) {
+        $.ajax({
+            url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
+            type: 'POST',
+            data: { latitude: latitude, longitude: longitude },
+        success: function(response) {
+            console.log('위치 정보 업데이트 성공:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('위치 정보 업데이트 실패:', error);
+        }
+    })
+    }
+
+
+    // 스터디 마커 표시 함수
+    function displayStudyMarkers(map, studyData) {
+        for (var i = 0; i < studyData.length; i++) {
+            var study = studyData[i];
+            var position = new kakao.maps.LatLng(study.latitude, study.longitude);
+            var Removeable = true;
+
+            // 마커 생성
+            var marker = new kakao.maps.Marker({
+                map: mapAuthenticated,
+                position: position,
+                title: study.study_title,
+                image: markerImage // 마커 이미지 설정
+            });
+
+            // // 인포윈도우 생성 및 내용 설정
+            // var infowindow = new kakao.maps.InfoWindow({
+            //     position:position,
+            //     content: '<div style="width:150px;text-align:center;padding:6px 0;">' +
+            //         '<h3>' + study.study_title + '</h3>' +
+            //         '<p>' + study.category + '</p>' +
+            //         '<p>' +"♥ : " +study.likes_count + '</p>' +
+            //         '<p>' + study.currentParticipants + '/' + study.capacity + '</p>' +
+            //         '</div>',
+            //     removable: Removeable
+            // });
+
+            // // 마커에 클릭 이벤트 리스너 등록
+            // kakao.maps.event.addListener(marker, 'click', function() {
+            //     // 인포윈도우 생성 및 내용 설정
+            //     var infowindow = new kakao.maps.InfoWindow({
+            //         position:position,
+            //         content: '<div style="width:150px;text-align:center;padding:6px 0;">' +
+            //             '<h3>' + study.study_title + '</h3>' +
+            //             '<p>' + study.category + '</p>' +
+            //             '<p>' +"♥ : " +study.likes_count + '</p>' +
+            //             '<p>' + study.currentParticipants + '/' + study.capacity + '</p>' +
+            //             '</div>',
+            //         removable: Removeable
+            //     });
+            //     infowindow.open(mapAuthenticated, marker);
+            // });
+            //
+            // kakao.maps.event.addListener(mapAuthenticated, 'zoom_changed', function() {
+            //     // 열려있는 인포윈도우가 있다면 yAnchor 값을 다시 계산하여 위치 조정
+            //     if (infowindow.getMap()) {
+            //         var level = mapAuthenticated.getLevel();
+            //         var yAnchor = -45 - (level * 5);
+            //         infowindow.setOptions({ yAnchor: yAnchor });
+            //     }
+            // });
+
+
+
+
+            // // 마커에 마우스아웃 이벤트 리스너 등록
+            // kakao.maps.event.addListener(marker, '', function() {
+            //     infowindow.close();
+            // });
+
+            // 인포윈도우 생성 및 배열에 저장
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">' +
+                    '<h3>' + study.studyTitle + '</h3>' +
+                    '<p>' + study.category + '</p>' +
+                    '<p>' + "♥ : " + study.likes_count + '</p>' +
+                    '<p>' + study.currentParticipants + '/' + study.capacity + '</p>' +
+                    '</div>',
+                removable: Removeable,
+                yAnchor: -45 // 인포윈도우를 마커 위쪽으로 이동
+            });
+            infowindows.push(infowindow);
+
+            // 마커 클릭 이벤트 리스너 등록 (클로저 활용)
+            (function(marker, infowindow) {
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    // 다른 인포윈도우 닫기
+                    infowindows.forEach(function(iw) {
+                        iw.close();
+                    });
+                    infowindow.open(mapAuthenticated, marker);
+                });
+            })(marker, infowindow);
+
+        }
+    }
+
+    // 스터디 마커 표시 함수
+    function displayStudyMarkersAnonymous(map1, studyData1) {
+        for (var j = 0; j < studyData1.length; j++) {
+            var studys = studyData1[j];
+            var position = new kakao.maps.LatLng(studys.latitude, studys.longitude);
+            var Removeable = true;
+
+            var markerAnonymous = new kakao.maps.Marker({
+                map: mapAnonymous,
+                position: position,
+                title: studys.study_title,
+                image: markerImage // 마커 이미지 설정
+            });
+
+            // 인포윈도우 생성 및 내용 설정
+            var infowindow = new kakao.maps.InfoWindow({
+                position: position,
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">' +
+                    '<h3>' + studys.study_title + '</h3>' +
+                    '<p>' + studys.category + '</p>' +
+                    '<p>' +"♥ : " +studys.likes_count + '</p>' +
+                    '<p>' + studys.currentParticipants + '/' + studys.capacity + '</p>' +
+                    '</div>',
+                removable: Removeable,
+                yAnchor: -45
+            });
+            infowindowAnonymouses.push(infowindow);
+
+            // // 마커에 클릭 이벤트 리스너 등록
+            // kakao.maps.event.addListener(markerAnonymous, 'click', function() {
+            //     // 지도 레벨에 따라 yAnchor 값을 동적으로 조절
+            //     infowindowAnonymous.open(mapAnonymous, markerAnonymous);
+            // });
+            //
+            // kakao.maps.event.addListener(mapAnonymous, 'zoom_changed', function() {
+            //     // 열려있는 인포윈도우가 있다면 yAnchor 값을 다시 계산하여 위치 조정
+            //     if (infowindowAnonymous.getMap()) {
+            //         var level = mapAnonymous.getLevel();
+            //         var yAnchor = -45 - (level * 5);
+            //         infowindowAnonymous.setOptions({ yAnchor: yAnchor });
+            //     }
+            // });
+
+            // // 마커에 마우스아웃 이벤트 리스너 등록
+            // kakao.maps.event.addListener(markerAnonymous, 'mouseout', function() {
+            //     infowindowAnonymous.close();
+            // });
+
+            // 마커 클릭 이벤트 리스너 등록 (클로저 활용)
+            (function(marker, infowindow) {
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    // 다른 인포윈도우 닫기
+                    infowindowAnonymouses.forEach(function(iw) {
+                        iw.close();
+                    });
+                    infowindow.open(mapAnonymous, marker);
+                });
+            })(markerAnonymous, infowindow);
+        }
+    }
+
+
+
+    // 페이지 로드 시 지도 초기화 및 위치 정보 가져오기
+    $(document).ready(function () {
+
+        <sec:authorize access="isAuthenticated()">
+        initializeMapAuthenticated();
+        getLocationAndDisplayOnMap();
+
+        $.ajax({
+            url: '/studies/listOnMap',
+            type: 'GET',
+            dataType: 'json',
+            success: function (studyData) {
+                displayStudyMarkers(mapAuthenticated, studyData);
+            },
+            error: function (xhr, status, error) {
+                console.error('스터디 정보를 가져오는 중 오류가 발생했습니다.', error);
+            }
+        });
+
+        // 1초마다 위치 정보 업데이트
+        setInterval(getLocationAndDisplayOnMap, 1000);
+
+        // 토글 버튼 생성 및 추가
+        var toggleButton = document.createElement('button');
+        toggleButton.id = 'toggleButton';
+        toggleButton.textContent = '지도 확대';
+        toggleButton.className = 'toggle-button';
+        document.getElementById('map-authenticated').appendChild(toggleButton);
+
+        // 토글 버튼 클릭 이벤트 리스너 등록
+        toggleButton.addEventListener('click', toggleMapView);
+        </sec:authorize>
+    });
+
+</script>
+
+
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
 </body>
