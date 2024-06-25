@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="profile-link">
-                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo"><i class="bi bi-gear"></i>관리</a>
+                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${study.studyIdx}"><i class="bi bi-gear"></i>관리</a>
                             <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅 </button>
                         </div>
                     </section>
