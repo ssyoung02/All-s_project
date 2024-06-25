@@ -38,7 +38,7 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${studyGroup.studyIdx}">스터디 정보</a>
+                        <a href="${root}/studyGroup/studyGroupManagerInfo">스터디 정보</a>
                     </div>
                     <div class="tapItem tapSelect">
                         <a href="${root}/studyGroup/studyGroupManagerMember?studyIdx=${studyGroup.studyIdx}">멤버 관리</a>
@@ -117,7 +117,6 @@
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>

@@ -115,6 +115,7 @@
                         <dt>연령대</dt>
                         <dd>
                             <ul class="todolist">
+                                <!-- 할 일 항목 -->
                                 <li>
                                     <input type="checkbox" id="twenty" class="todo-checkbox" name="age" value="20대"
                                            <c:if test="${fn:contains(studyGroup.age, '20대')}">checked</c:if>>

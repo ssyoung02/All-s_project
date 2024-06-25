@@ -44,6 +44,7 @@ public class StudyGroupController {
         // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
+
         return "studyGroup/studyGroupList";
     }
 
