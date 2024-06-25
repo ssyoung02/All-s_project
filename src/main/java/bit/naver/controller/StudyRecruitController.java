@@ -43,10 +43,13 @@ public class StudyRecruitController {
     public String getStudyDetail(@RequestParam("studyIdx") Long studyIdx, Model model) {
         // 스터디 상세 정보 조회
         StudyGroup study = studyMapper.getStudyById(studyIdx);
+        List<StudyMembers> members = studyMapper.getStudyMembersByStudyId(studyIdx);
         model.addAttribute("study", study);
+        model.addAttribute("members", members);
 
         return "studyRecruit/recruitReadForm";
     }
+
 
     // 스터디 등록 insert
     @RequestMapping("/recruitReadForm")
@@ -59,7 +62,7 @@ public class StudyRecruitController {
         studyMember.setStudyIdx(studyIdx);
         studyMember.setUserIdx(userIdx);
         studyMember.setRole("MEMBER");
-        studyMember.setStatus("ACCEPTED");
+        studyMember.setStatus("PENDING");
         studyMember.setJoinReason(joinReason);
         studyMember.setCreatedAt(LocalDateTime.now());
         studyMember.setUpdatedAt(LocalDateTime.now());
@@ -69,4 +72,12 @@ public class StudyRecruitController {
 
         return "/main";
     }
+
+    // 스터디 멤버 상태 업데이트
+    @PostMapping("/updateMemberStatus")
+    public String updateMemberStatus(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx, @RequestParam("status") String status) {
+        studyMapper.updateStudyMemberStatus(studyIdx, userIdx, status);
+        return "redirect:/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
+    }
+
 }

@@ -22,6 +22,13 @@ public class StudyMembers {
 
     private LocalDateTime updatedAt;
 
+    private String userName; // Join된 사용자 이름
+
     // DB에 없는 부분
     private String name;
+
+    public String getStudyTime() {
+
+        return "";
+    }
 }

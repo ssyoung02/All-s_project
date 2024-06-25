@@ -276,7 +276,7 @@
                                             </div>
                                             <div class="status"><span class="status">접속중</span></div>
                                         </div>
-                                        <p class="memberId">${member.name}</p>
+                                        <p class="memberId">${member.userName}</p>
                                     </div>
                                 </c:forEach>
                             </div>

@@ -64,33 +64,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="tableList">
-                        <td>Jiyeon</td>
-                        <td>운영자</td>
-                        <td>2024.06.10</td>
-                        <td>6시간</td>
-                        <td>
-                            <button class="button-disabled">강제 탈퇴</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>sangmin</td>
-                        <td>일반멤버</td>
-                        <td>2024.06.10</td>
-                        <td>120시간</td>
-                        <td>
-                            <button class="secondary-default" onclick="modalOpen()">강제 탈퇴</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>Jeayung</td>
-                        <td>가입대기</td>
-                        <td>2024.06.10</td>
-                        <td>20시간</td>
-                        <td>
-                            <button class="primary-default">가입 승인</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="member" items="${members}">
+                        <tr class="tableList">
+                            <td>${member.userName}</td>
+                            <td>${member.role}</td>
+                            <td>${member.createdAt}</td>
+                            <td>${member.studyTime != null ? member.studyTime : 'N/A'}</td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
 
