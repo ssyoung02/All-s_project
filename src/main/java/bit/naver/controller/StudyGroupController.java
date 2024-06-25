@@ -2,6 +2,7 @@ package bit.naver.controller;
 
 import bit.naver.entity.*;
 import bit.naver.mapper.StudyGroupMapper;
+import bit.naver.mapper.StudyRecruitMapper;
 import bit.naver.mapper.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ public class StudyGroupController {
     @Autowired
     private StudyGroupMapper studyGroupMapper;
 
+    @Autowired
+    private StudyRecruitMapper studyRecruitMapper;
 
     // 스터디 관리 페이지로 이동
     @GetMapping("/studyGroupManagerInfo")
@@ -116,6 +119,16 @@ public class StudyGroupController {
         // 스터디 ID를 통해 스터디 정보를 가져옴
         StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
         List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+
+        // 콘솔에 멤버 정보 출력
+        System.out.println("Study ID: " + studyIdx);
+        for (StudyMembers member : members) {
+            System.out.println("Member Name: " + member.getUserName());
+            System.out.println("Member Role: " + member.getRole());
+            System.out.println("Member Created At: " + member.getCreatedAt());
+            System.out.println("Member Study Time: " + member.getStudyTime());
+        }
+
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute("members", members);
         return "studyGroup/studyGroupManagerMember";
@@ -187,5 +200,11 @@ public class StudyGroupController {
         return "redirect:/studyGroup/studyGroupList"; // 스터디 리스트 페이지로 리디렉션
     }
 
+    // 스터디 멤버 상태 업데이트
+    @PostMapping("/updateMemberStatus")
+    public String updateMemberStatus(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx, @RequestParam("status") String status) {
+        studyRecruitMapper.updateStudyMemberStatus(studyIdx, userIdx, status);
+        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    }
 
 }

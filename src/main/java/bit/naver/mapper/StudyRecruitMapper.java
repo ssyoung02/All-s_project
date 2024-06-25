@@ -3,6 +3,7 @@ package bit.naver.mapper;
 import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface StudyRecruitMapper {
 
     // 스터디 등록
     void insertStudyMember(StudyMembers studyMember);
+
+    // 스터디 멤버 상태 업데이트
+    void updateStudyMemberStatus(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx, @Param("status") String status);
+
+    // 특정 스터디의 멤버 조회
+    List<StudyMembers> getStudyMembersByStudyId(Long studyIdx);
 }

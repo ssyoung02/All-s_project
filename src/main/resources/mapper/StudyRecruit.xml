@@ -86,6 +86,16 @@
         VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
     </insert>
 
+    <update id="updateStudyMemberStatus" parameterType="map">
+        UPDATE StudyMembers
+        SET status = #{status}, updated_at = NOW()
+        WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx}
+    </update>
+
+    <select id="getStudyMembersByStudyId" resultType="bit.naver.entity.StudyMembers" parameterType="java.lang.Long">
+        SELECT * FROM StudyMembers WHERE study_idx = #{studyIdx}
+    </select>
+
 
 </mapper>
 

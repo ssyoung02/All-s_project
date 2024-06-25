@@ -63,11 +63,22 @@
         WHERE study_idx = #{studyIdx}
     </select>
 
-    <select id="getStudyMembers" parameterType="Long" resultType="bit.naver.entity.StudyMembers">
-        SELECT m.user_idx, m.name
-        FROM StudyMembers sm
-                 INNER JOIN Users m ON sm.user_idx = m.user_idx
-        WHERE sm.study_idx = #{studyIdx}
+    <!-- 스터디 멤버 조회 -->
+    <select id="getStudyMembers" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyMembers">
+        SELECT
+            sm.user_idx AS userIdx,
+            sm.study_idx AS studyIdx,
+            sm.role AS role,
+            sm.status AS status,
+            sm.join_reason AS joinReason,
+            sm.created_at AS createdAt,
+            sm.updated_at AS updatedAt,
+            u.name AS userName
+        FROM
+            StudyMembers sm
+                JOIN Users u ON sm.user_idx = u.user_idx
+        WHERE
+            sm.study_idx = #{studyIdx}
     </select>
 
     <!-- 스터디 삭제 SQL -->
