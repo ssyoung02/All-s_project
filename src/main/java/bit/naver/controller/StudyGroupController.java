@@ -2,7 +2,6 @@ package bit.naver.controller;
 
 import bit.naver.entity.*;
 import bit.naver.mapper.StudyGroupMapper;
-import bit.naver.mapper.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

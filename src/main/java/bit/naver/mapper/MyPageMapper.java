@@ -3,7 +3,6 @@ package bit.naver.mapper;
 import bit.naver.entity.LikeReferencesEntity;
 import bit.naver.entity.ResumesEntity;
 import bit.naver.entity.StudyReferencesEntity;
-import bit.naver.entity.Users;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
