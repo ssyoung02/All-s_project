@@ -54,6 +54,29 @@
 
                 <%-- 스케줄 표시 영역 --%>
                 <div class="schedule-section">
+                    <h2>스터디 일정 관리</h2>
+                    <form method="post" action="${root}/studyGroup/addSchedule">
+                        <input type="hidden" name="studyIdx" value="${studyGroup.studyIdx}">
+                        <label for="scheduleTitle">일정 제목:</label>
+                        <input type="text" id="scheduleTitle" name="scheduleTitle" required>
+                        <label for="scheduleDate">일정 날짜:</label>
+                        <input type="date" id="scheduleDate" name="scheduleDate" required>
+                        <label for="scheduleTime">일정 시간:</label>
+                        <input type="time" id="scheduleTime" name="scheduleTime" required>
+                        <button type="submit" class="primary-default">일정 추가</button>
+                    </form>
+
+                    <h3>기존 스케줄</h3>
+                    <table class="schedule-table">
+                        <thead>
+                        <tr>
+                            <th>제목</th>
+                            <th>날짜</th>
+                            <th>시간</th>
+                            <th>관리</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         <c:forEach var="schedule" items="${schedules}">
                             <tr>
                                 <td>${schedule.title}</td>
@@ -68,7 +91,9 @@
                                 </td>
                             </tr>
                         </c:forEach>
-
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <%--콘텐츠 끝--%>
         </main>

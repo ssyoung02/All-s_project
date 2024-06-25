@@ -44,6 +44,7 @@ public class StudyGroupController {
         // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
+
         return "studyGroup/studyGroupList";
     }
 
@@ -137,14 +138,13 @@ public class StudyGroupController {
 
     // ***********************************************************
     // 스터디 관리 - 일정
-//    @GetMapping("/studyGroupManagerSchedule")
-//    public String getStudyGroupManagerSchedule(@RequestParam Long studyIdx, Model model) {
-//        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
-//        List<StudySchedule> schedules = studyGroupMapper.getStudySchedules(studyIdx); // 스터디 스케줄을 가져오는 메서드 추가 필요
-//        model.addAttribute("studyGroup", studyGroup);
-//        model.addAttribute("schedules", schedules);
-//        return "studyGroup/studyGroupManagerSchedule";
-//    }
+// 스터디 관리 - 일정
+    @GetMapping("/studyGroupManagerSchedule")
+    public String getStudyGroupManagerSchedule(@RequestParam("studyIdx") Long studyIdx, Model model) {
+        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+        model.addAttribute("studyGroup", studyGroup);
+        return "studyGroup/studyGroupManagerSchedule";
+    }
 //
 //    @PostMapping("/addSchedule")
 //    public String addSchedule(@RequestParam("studyIdx") Long studyIdx,

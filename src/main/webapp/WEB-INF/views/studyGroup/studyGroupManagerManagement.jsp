@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> <!-- JSTL 함수 라이브러리 추가 -->
 
-<c:set var="root" value="${pageContext.request.contextPath}"/>
+<c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,23 +14,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <sec:csrfMetaTags/> <%-- CSRF 토큰 자동 포함 --%>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+
 </head>
 <body>
-<jsp:include page="../include/timer.jsp"/>
-<jsp:include page="../include/header.jsp"/>
+<jsp:include page="../include/timer.jsp" />
+<jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="../include/navbar.jsp"/>
+            <jsp:include page="../include/navbar.jsp" />
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="../include/navbar.jsp"/>
+                <jsp:include page="../include/navbar.jsp" />
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
@@ -67,27 +67,21 @@
                     <div class="webInfo-itemfull">
                         <dt>공개여부</dt>
                         <dd>
-                            <input type="radio" id="public" name="public" value="public"
-                                   <c:if test="${studyGroup.isPublic}">checked</c:if>>
+                            <input type="radio" id="public" name="public">
                             <label for="public">공개</label>
-                            <input type="radio" id="private" name="public" value="private"
-                                   <c:if test="${!studyGroup.isPublic}">checked</c:if>>
+                            <input type="radio" id="private" name="public">
                             <label for="private">비공개</label>
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
                         <dt>스터디 삭제</dt>
                         <dd>
-                            <form id="deleteForm" method="post" action="${root}/studyGroup/deleteStudyGroup">
-                                <input type="hidden" name="studyIdx" value="${studyGroup.studyIdx}">
-                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                                <button type="submit" class="btn btn-danger">스터디 삭제하기</button>
-                            </form>
+                            <a id="studyGroupDelet" href="#">스터디 삭제하기</a>
                         </dd>
                     </div>
                 </div>
                 <div class="board-bottom">
-                    <button class="secondary-default" onclick="location.href='${root}/studyGroup/studyGroupList'">취소</button>
+                    <button class="secondary-default" onclick="location.href='${root}/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
                     <button class="primary-default" onclick="modalOpen()">확인</button>
                 </div>
             </div>
@@ -96,7 +90,7 @@
         </main>
     </section>
     <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
+    <jsp:include page="../include/footer.jsp" />
     <%-- 오류 메세지 모달 --%>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay">
@@ -104,13 +98,13 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
                 스터디 관리 정보를 변경하겠습니까?
             </div>
             <div class="modal-bottom">
-                <button class="secondary-default" onclick="modalClose()">취소</button>
+                <button class="secondary-default" onclick="madalClose()">취소</button>
                 <button type="button" class="modal-close" data-dismiss="modal">확인</button>
             </div>
         </div>
