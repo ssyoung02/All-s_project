@@ -15,8 +15,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <script>
-        function openChatWindow() {
-            window.open('${root}/studyGroup/chat', 'ChatWindow', 'width=400,height=500');
+        function openChatWindow(studyIdx) {
+            window.open('${root}/studyGroup/chat?studyIdx=' + studyIdx, 'ChatWindow', 'width=500,height=500,resizable=no');
         }
     </script>
 </head>
@@ -51,8 +51,8 @@
                             </div>
                         </div>
                         <div class="profile-link">
-                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${study.studyIdx}"><i class="bi bi-gear"></i>관리</a>
-                            <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅</button>
+                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo"><i class="bi bi-gear"></i>관리</a>
+                            <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅 </button>
                         </div>
                     </section>
                     <section class="group-main">
