@@ -257,101 +257,43 @@
                 <!--슬라이드 배너-->
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
-                        <!--슬라이드 아이템들-->
-                        <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                <div class="banner-item-top">
-                                    <div class="banner-img">
-                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
+                        <!-- 동적으로 생성된 슬라이드 아이템들 -->
+                        <c:forEach var="study" items="${study_18}">
+                            <div class="swiper-slide">
+                                <div class="study-banner-item bgwhite" tabindex="0"
+                                     onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
+                                    <div class="banner-bottom flex-between">
+                                        <p class="study-tag">
+                                            <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                            <span class="department">${study.category}</span>
+                                        </p>
+                                        <button class="banner-like" aria-label="좋아요">
+                                            <i class="bi bi-heart"></i>
+                                        </button>
                                     </div>
-                                    <div class="banner-title">
-                                        <p class="banner-main-title">강남인근 면접 스터디 모집1</p>
-                                        <p class="banner-id">Jihyeon</p>
+                                    <div class="banner-item-top">
+                                        <div class="banner-img">
+                                            <img src="${root}/resources/images/${study.image}" alt="스터디 그룹 로고"/>
+                                        </div>
+                                        <div class="banner-title">
+                                            <p class="banner-main-title">${study.studyTitle}</p>
+                                            <p class="banner-id">${study.leaderName}</p>
+                                        </div>
                                     </div>
+                                    <p class="banner-content">${study.description}</p>
+                                    <p class="study-tag">
+                                        <span class="study-tagItem">#${study.gender}</span>
+                                        <span class="study-tagItem">#${study.age}</span>
+                                        <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
+                                    </p>
                                 </div>
-                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                <div class="banner-bottom flex-between">
-                                    <div>
-                                        <span class="banner-tag">면접</span>
-                                        <span class="banner-tag">강남</span>
-                                    </div>
-                                    <button class="banner-like" aria-label="좋아요">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                </div>
-                            </dlv>
-                        </div>
-                        <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                <div class="banner-item-top">
-                                    <div class="banner-img">
-                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                    </div>
-                                    <div class="banner-title">
-                                        <p class="banner-main-title">강남인근 면접 스터디 모집2</p>
-                                        <p class="banner-id">Jihyeon</p>
-                                    </div>
-                                </div>
-                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                <div class="banner-bottom flex-between">
-                                    <div>
-                                        <span class="banner-tag">면접</span>
-                                        <span class="banner-tag">강남</span>
-                                    </div>
-                                    <button class="banner-like" aria-label="좋아요">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                </div>
-                            </dlv>
-                        </div>
-                        <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                <div class="banner-item-top">
-                                    <div class="banner-img">
-                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                    </div>
-                                    <div class="banner-title">
-                                        <p class="banner-main-title">강남인근 면접 스터디 모집3</p>
-                                        <p class="banner-id">Jihyeon</p>
-                                    </div>
-                                </div>
-                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                <div class="banner-bottom flex-between">
-                                    <div>
-                                        <span class="banner-tag">면접</span>
-                                        <span class="banner-tag">강남</span>
-                                    </div>
-                                    <button class="banner-like" aria-label="좋아요">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                </div>
-                            </dlv>
-                        </div>
-                        <div class="swiper-slide">
-                            <dlv class="banner-item bgwhite" tabindex="0" onclick="">
-                                <div class="banner-item-top">
-                                    <div class="banner-img">
-                                        <img src="${root}/resources/images/logo.png" alt="스터디 그룹 로고"/>
-                                    </div>
-                                    <div class="banner-title">
-                                        <p class="banner-main-title">강남인근 면접 스터디 모집4</p>
-                                        <p class="banner-id">Jihyeon</p>
-                                    </div>
-                                </div>
-                                <p class="banner-content">강남역 근처에서 스터디 모집해요~</p>
-                                <div class="banner-bottom flex-between">
-                                    <div>
-                                        <span class="banner-tag">면접</span>
-                                        <span class="banner-tag">강남</span>
-                                    </div>
-                                    <button class="banner-like" aria-label="좋아요">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                </div>
-                            </dlv>
-                        </div>
-                        <!-- 다른 슬라이드들 추가 가능 -->
+                            </div>
+                        </c:forEach>
                     </div>
+
+
+                    <!-- 다른 슬라이드들 추가 가능 -->
+
                     <!-- 페이지 네이션 -->
                     <div class="swiper-pagination"></div>
 
