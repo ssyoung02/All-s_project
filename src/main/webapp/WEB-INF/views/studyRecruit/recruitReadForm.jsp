@@ -38,7 +38,7 @@
                     <p class="study-tag">
                         <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status eq 'CLOSED' ? '모집완료' : '모집중'}</span>
                         <span class="department">${study.category}</span>
-                        <span class="study-tagItem">#${study.studyOnline ? "#온라인" : "#오프라인"}</span>
+                        <span class="study-tagItem">${study.studyOnline ? "#온라인" : "#오프라인"}</span>
                         <span class="study-tagItem">#${study.age}</span>
                         <span class="study-tagItem">#${study.gender}</span>
                     </p>
