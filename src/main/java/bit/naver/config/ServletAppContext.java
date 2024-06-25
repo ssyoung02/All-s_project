@@ -15,6 +15,7 @@
 
 package bit.naver.config;
 
+//import bit.naver.controller.WebSocketHandler;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,6 +24,11 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
+import org.springframework.web.socket.server.support.WebSocketHandlerMapping;
+
+import java.util.Arrays;
+import java.util.Map;
 
 @Configuration
 // 해당 클래스를 Spring 설정 클래스로 지정하여 빈(Bean) 등록 및 설정을 처리합니다.
@@ -78,5 +84,20 @@ public class ServletAppContext implements WebMvcConfigurer {
     public Validator getValidator() {
         return validator();
     }
+
+//    @Bean
+//    public WebSocketHandlerMapping webSocketHandlerMapping() {
+//        WebSocketHandlerMapping handlerMapping = new WebSocketHandlerMapping();
+//        handlerMapping.setOrder(1);
+//        handlerMapping.setUrlMap(Map.of("/websocket/chat.do", myHandler()));
+//        handlerMapping.setInterceptors(new HttpSessionHandshakeInterceptor()); // 단일 인터셉터 설정
+//        return handlerMapping;
+//
+//    }
+//
+//    @Bean
+//    public WebSocketHandler myHandler() {
+//        return new WebSocketHandler();
+//    }
 
 }

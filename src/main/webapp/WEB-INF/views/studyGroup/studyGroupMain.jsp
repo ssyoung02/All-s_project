@@ -15,8 +15,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <script>
-        function openChatWindow() {
-            window.open('${root}/studyGroup/chat', 'ChatWindow', 'width=400,height=500');
+        function openChatWindow(studyIdx) {
+            window.open('${root}/studyGroup/chat?studyIdx=' + studyIdx, 'ChatWindow', 'width=500,height=500,resizable=no');
         }
     </script>
 </head>

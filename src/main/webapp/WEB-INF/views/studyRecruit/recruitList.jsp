@@ -67,7 +67,7 @@
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
                             <!-- 동적으로 생성된 슬라이드 아이템들 -->
-                            <c:forEach var="study" items="${studies}">
+                            <c:forEach var="study" items="${study_18}">
                                 <div class="swiper-slide">
                                     <div class="study-banner-item bgwhite" tabindex="0"
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">

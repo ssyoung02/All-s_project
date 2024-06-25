@@ -47,7 +47,13 @@
                         <div class="imgtitle flex-row">
                             <div class="board-item flex-columleft">
                                 <h3 class="board-title">${study.studyTitle}</h3>
-                                <p>작성자: ${study.leaderName} | 작성일: ${study.createdAt} </p>
+                                <p>작성자: ${study.leaderName} | 작성일:
+                                    <script>
+                                        var dateString = '${study.createdAt}'; // 서버에서 전송된 날짜 문자열
+                                        var dateWithoutTimeZone = dateString.replace(' KST 2024', ''); // " KST 2024" 부분을 공백으로 대체하여 제거
+                                        document.write(dateWithoutTimeZone);
+                                    </script>
+                                </p>
                             </div>
                         </div>
                         <!--좋아요-->

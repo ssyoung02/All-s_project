@@ -12,6 +12,9 @@ public interface StudyRecruitMapper {
     // 스터디 모집 리스트
     List<StudyGroup> getAllStudies();
 
+    // 18개 리밋
+    List<StudyGroup> getAllStudy_9();
+
     // 가입 폼
     StudyGroup getStudyById(Long studyIdx);
 

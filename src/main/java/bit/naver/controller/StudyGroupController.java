@@ -96,16 +96,5 @@ public class StudyGroupController {
         return "/studyGroup/studyGroupList";
     }
 
-    // 채팅
-    @RequestMapping("/chat")
-    public String chat(HttpSession session, Principal principal) {
-
-        Users user = (Users) session.getAttribute("userVo");
-        System.out.println(user.toString());
-        return "studyGroup/chat";
-    }
-
-
-
 
 }

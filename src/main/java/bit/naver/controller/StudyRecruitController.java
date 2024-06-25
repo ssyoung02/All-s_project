@@ -31,6 +31,10 @@ public class StudyRecruitController {
         List<StudyGroup> studies = studyMapper.getAllStudies();
         model.addAttribute("studies", studies);
 
+        List<StudyGroup> study_18 = studyMapper.getAllStudy_9();
+        model.addAttribute("study_18", study_18);
+
+
         return "studyRecruit/recruitList"; // recruitList.jsp로 이동
     }
 
@@ -41,7 +45,6 @@ public class StudyRecruitController {
         StudyGroup study = studyMapper.getStudyById(studyIdx);
         model.addAttribute("study", study);
 
-        System.out.println(study.toString());
         return "studyRecruit/recruitReadForm";
     }
 
