@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags />
+
     <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,8 +134,7 @@
                     <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">
-                                <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필">
-                            </div>
+                                <img src="${userVo.profileImage}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';">                            </div>
                             <h3>${userVo.username}</h3>
                         </div>
                         <div class="userdata bgwhite">

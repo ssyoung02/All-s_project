@@ -31,7 +31,7 @@
                     <!-- 프로필 링크 -->
                     <a class="profile" href="#">
                         <div class="profile-img">
-                            <img src="${root}/resources/profileImages/${userVo.profileImage}" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
+                            <img src="${userVo.profileImage}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';">
                         </div>
                         <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
                     </a>
@@ -39,7 +39,7 @@
                     <div class="alarm flex-colum hidden">
                         <div>
                             <div class="profile-img">
-                                <img src="${root}/resources/profileImages/${userVo.profileImage}" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
+                                <img src="${userVo.profileImage}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';">
                             </div>
                             <p class="profile-username">${userVo.name}</p>
                         </div>

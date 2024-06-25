@@ -720,8 +720,6 @@
         clustererAnonymous.addMarkers(markers); // 클러스터러에 마커 추가
     }
 
-
-
     // 페이지 로드 시 지도 초기화 및 위치 정보 가져오기
     $(document).ready(function () {
 
