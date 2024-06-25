@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="root" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,20 +17,20 @@
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
-<jsp:include page="../include/header.jsp" />
+<jsp:include page="../include/timer.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="../include/navbar.jsp" />
+            <jsp:include page="../include/navbar.jsp"/>
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="../include/navbar.jsp" />
+                <jsp:include page="../include/navbar.jsp"/>
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
@@ -38,22 +38,22 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerInfo">스터디 정보</a>
+                        <a href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${studyGroup.studyIdx}">스터디 정보</a>
                     </div>
                     <div class="tapItem tapSelect">
-                        <a href="${root}/studyGroup/studyGroupManagerMember">멤버 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerMember?studyIdx=${studyGroup.studyIdx}">멤버 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerSchedule">일정 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerSchedule?studyIdx=${studyGroup.studyIdx}">일정 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerManagement">스터디 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerManagement?studyIdx=${studyGroup.studyIdx}">스터디 관리</a>
                     </div>
                 </div>
                 <%--탭 메뉴 끝--%>
 
                 <div class="list-title flex-between">
-                    <h3>스터디 수(5)</h3>
+                    <h3>스터디 수(${members.size()})</h3>
                     <fieldset class="search-box flex-row">
                         <button class="secondary-default">선택 스터디 삭제</button>
                         <p class="search-field">
@@ -77,60 +77,60 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="tableList">
-                        <td>Jiyeon</td>
-                        <td>운영자</td>
-                        <td>2024.06.10</td>
-                        <td>6시간</td>
-                        <td>
-                            <button class="button-disabled">강제 탈퇴</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>sangmin</td>
-                        <td>일반멤버</td>
-                        <td>2024.06.10</td>
-                        <td>120시간</td>
-                        <td>
-                            <button class="secondary-default" onclick="modalOpen()">강제 탈퇴</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>Jeayung</td>
-                        <td>가입대기</td>
-                        <td>2024.06.10</td>
-                        <td>20시간</td>
-                        <td>
-                            <button class="primary-default">가입 승인</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="member" items="${members}">
+                        <tr class="tableList">
+                            <td>${member.name}</td>
+                            <td>${member.role}</td>
+                            <td>${member.joinDate}</td>
+                            <td>${member.studyTime} 시간</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${member.role eq 'LEADER'}">
+                                        <button class="button-disabled">강제 탈퇴</button>
+                                    </c:when>
+                                    <c:when test="${member.status eq 'PENDING'}">
+                                        <form method="post" action="${root}/studyGroup/approveMember">
+                                            <input type="hidden" name="studyIdx" value="${studyGroup.studyIdx}">
+                                            <input type="hidden" name="userIdx" value="${member.userIdx}">
+                                            <button type="submit" class="primary-default">가입 승인</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form method="post" action="${root}/studyGroup/removeMember">
+                                            <input type="hidden" name="studyIdx" value="${studyGroup.studyIdx}">
+                                            <input type="hidden" name="userIdx" value="${member.userIdx}">
+                                            <button type="submit" class="secondary-default">강제 탈퇴</button>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
-
             </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>
     <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
+    <jsp:include page="../include/footer.jsp"/>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay">
         </div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
                 선택한 회원을 강제탈퇴 시키겠습니까?
             </div>
             <div class="modal-bottom">
-                <button class="secondary-default" onclick="madalClose()">취소</button>
+                <button class="secondary-default" onclick="modalClose()">취소</button>
                 <button type="button" class="modal-close" data-dismiss="modal">확인</button>
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>

@@ -2,15 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="root" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <title>Title</title>
+    <title>스케쥴 관리 > 관리 > 스터디그룹 > 내 스터디 > 스터디 > 공부 > All's</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스케쥴 관리 > 관리 > 스터디그룹 > 내 스터디 > 스터디 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -39,21 +38,36 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerInfo">스터디 정보</a>
+                        <a href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${studyGroup.studyIdx}">스터디 정보</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerMember">멤버 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerMember?studyIdx=${studyGroup.studyIdx}">멤버 관리</a>
                     </div>
                     <div class="tapItem tapSelect">
-                        <a href="${root}/studyGroup/studyGroupManagerSchedule">일정 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerSchedule?studyIdx=${studyGroup.studyIdx}">일정 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerManagement">스터디 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerManagement?studyIdx=${studyGroup.studyIdx}">스터디 관리</a>
                     </div>
                 </div>
                 <%--탭 메뉴 끝--%>
 
-
+                <%-- 스케줄 표시 영역 --%>
+                <div class="schedule-section">
+                        <c:forEach var="schedule" items="${schedules}">
+                            <tr>
+                                <td>${schedule.title}</td>
+                                <td>${schedule.date}</td>
+                                <td>${schedule.time}</td>
+                                <td>
+                                    <form method="post" action="${root}/studyGroup/deleteSchedule">
+                                        <input type="hidden" name="scheduleId" value="${schedule.id}">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                                        <button type="submit" class="secondary-default">삭제</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </c:forEach>
 
             </div>
             <%--콘텐츠 끝--%>

@@ -8,6 +8,43 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        .loginMain {
+            display: flex; /* flexbox 사용 */
+        }
+
+        .loginUserInfoLeft {
+            width: 65%;
+            margin-right: 20px;
+            display: flex; /* 내부 요소들을 flexbox로 배치 */
+        }
+        .scheduler-area {
+            display: flex;
+            width: 100%; /* scheduler-area가 loginUserInfoLeft의 전체 너비를 차지하도록 설정 */
+        }
+        .scheduler { /* 월별 캘린더 */
+            width: 67%;
+            margin-right: 10px;  /*일별 캘린더와의 간격 */
+        }
+
+        .todo { /* 일별 캘린더 */
+            width: 33%;
+            margin-top: 62px;
+        }
+
+        .fc-calendarLink-button {
+            background-color: #717171 !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        /* 일별 캘린더 제목 숨기기 */
+        #dayCalendar .fc-toolbar {
+            display: none;
+        }
+
+
+    </style>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,11 +53,85 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
-
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
 
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
+    <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
+    <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 캘린더 이벤트 데이터 가져오기
+            let eventsData = [];
+            $.ajax({
+                url: "${root}/calendar/events",
+                type: "GET",
+                headers: {
+                    "${_csrf.headerName}": "${_csrf.token}"
+                },
+                success: function (response) {
+                    eventsData = response.map(event => ({
+                        id: event.scheduleIdx,
+                        title: event.title,
+                        start: event.start,
+                        end: event.end,
+                        allDay: event.allDay === 1,
+                        color: event.backgroundColor,
+                    }));
+
+                    // 캘린더 렌더링 함수
+                    function renderCalendars() {
+                        const monthCalendarEl = document.getElementById('monthCalendar');
+                        new FullCalendar.Calendar(monthCalendarEl, {
+                            initialView: 'dayGridMonth',
+                            customButtons: { // 버튼 추가
+                                calendarLink: {
+                                    text: '캘린더 바로가기',
+                                    click: function() {
+                                        location.href = "${root}/calendar"; // 페이지 이동
+                                    }
+                                }
+                            },
+                            headerToolbar: {
+                                left: 'title',
+                                center: '',
+                                right: 'calendarLink' // 버튼 위치 지정
+                            },
+                            events: eventsData,
+                            editable: false,
+                            selectable: false,
+                            eventClick: false,
+                            locale: 'ko'
+                        }).render();
+
+                        const dayCalendarEl = document.getElementById('dayCalendar');
+                        new FullCalendar.Calendar(dayCalendarEl, {
+                            initialView: 'listDay',
+                            headerToolbar: { left: '', center: 'title', right: '' },
+                            events: eventsData,
+                            editable: false,
+                            selectable: false,
+                            eventClick: false,
+                            locale: 'ko',
+                            height: 'auto' // 높이를 자동으로 조절
+                        }).render();
+                    }
+
+                    // 초기 렌더링 및 이벤트 리스너 등록
+                    renderCalendars();
+
+                    // 캘린더가 변경될 때마다 다시 렌더링
+                    monthCalendar.on('datesSet', renderCalendars);
+                    dayCalendar.on('datesSet', renderCalendars);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching events:', errorThrown);
+                    alert('이벤트를 불러오는 중 오류가 발생했습니다.');
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -71,53 +182,12 @@
                 <sec:authorize access="isAuthenticated()">
                     <div class="loginMain">
                         <div class="loginUserInfoLeft">
-                            <div class="sceduler-area">
-                                <div class="sceduler">
-                                    달력 영역
+                            <div class="scheduler-area">
+                                <div class="scheduler">
+                                    <div id="monthCalendar"></div>
                                 </div>
                                 <div class="todo">
-                                    <h3>6월 15일</h3>
-                                    <div class="achieve">
-                                        <div class="todoTitle">달성도</div>
-                                        <div class="gaugeBar">
-                                            <progress id="progress" value="60" max="100"></progress>
-                                        </div>
-                                        <p class="percent">60%</p>
-                                    </div>
-                                    <div class="todoList">
-                                        <div class="todoTitle">할 일</div>
-                                        <ul class="todolist">
-                                            <li>
-                                                <input type="checkbox" id="todolist11" class="todo-checkbox">
-                                                <label for="todolist11" class="todo-label">
-                                                    <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                    자바 공부
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" id="todolist22" class="todo-checkbox">
-                                                <label for="todolist22" class="todo-label">
-                                                    <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                    면접 준비
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" id="todolist33" class="todo-checkbox">
-                                                <label for="todolist33" class="todo-label">
-                                                    <span class="checkmark"><i class="bi bi-square"></i></span>
-                                                    UI 설계
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" id="todolist44" class="todo-checkbox">
-                                                <label for="todolist44" class="todo-label">
-                                                        <span class="checkmark"><i
-                                                                class="bi bi-check-square"></i></span>
-                                                    자소서 작성
-                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <div id="dayCalendar"></div>
                                 </div>
                             </div>
                         </div>
