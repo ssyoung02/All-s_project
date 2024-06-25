@@ -30,4 +30,8 @@ public interface StudyGroupMapper {
     List<StudyMembers> getStudyMembers(Long studyIdx);
 
     void deleteStudy(Long studyIdx);
+
+    void removeMember(Long studyIdx, Long userIdx);
+
+    void approveMember(Long studyIdx, Long userIdx);
 }

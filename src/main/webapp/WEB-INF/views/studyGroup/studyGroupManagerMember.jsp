@@ -38,33 +38,20 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerInfo">스터디 정보</a>
+                        <a href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${studyGroup.studyIdx}">스터디 정보</a>
                     </div>
                     <div class="tapItem tapSelect">
-                        <a href="${root}/studyGroup/studyGroupManagerMember">멤버 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerMember?studyIdx=${studyGroup.studyIdx}">멤버 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerSchedule">일정 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerSchedule?studyIdx=${studyGroup.studyIdx}">일정 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerManagement">스터디 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerManagement?studyIdx=${studyGroup.studyIdx}">스터디 관리</a>
                     </div>
                 </div>
                 <%--탭 메뉴 끝--%>
 
-                <div class="list-title flex-between">
-                    <h3>스터디 수(5)</h3>
-                    <fieldset class="search-box flex-row">
-                        <button class="secondary-default">선택 스터디 삭제</button>
-                        <p class="search-field">
-                            <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                            <button type="submit">
-                                <span class="hide">검색</span>
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </p>
-                    </fieldset>
-                </div>
                 <table class="manager-table">
                     <caption style="opacity: 0">스터디 멤버 관리표. 강제 탈퇴 및 가입 승인이 가능합니다</caption>
                     <thead>

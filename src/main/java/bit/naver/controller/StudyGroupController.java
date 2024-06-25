@@ -22,8 +22,6 @@ public class StudyGroupController {
     @Autowired
     private StudyGroupMapper studyGroupMapper;
 
-    @Autowired
-    private UsersMapper usersMapper;
 
     // 스터디 관리 페이지로 이동
     @GetMapping("/studyGroupManagerInfo")
@@ -122,6 +120,57 @@ public class StudyGroupController {
         model.addAttribute("members", members);
         return "studyGroup/studyGroupManagerMember";
     }
+
+    @PostMapping("/removeMember")
+    public String removeMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        studyGroupMapper.removeMember(studyIdx, userIdx);
+        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    }
+
+    @PostMapping("/approveMember")
+    public String approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        studyGroupMapper.approveMember(studyIdx, userIdx);
+        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    }
+
+
+
+    // ***********************************************************
+    // 스터디 관리 - 일정
+// 스터디 관리 - 일정
+    @GetMapping("/studyGroupManagerSchedule")
+    public String getStudyGroupManagerSchedule(@RequestParam("studyIdx") Long studyIdx, Model model) {
+        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+        model.addAttribute("studyGroup", studyGroup);
+        return "studyGroup/studyGroupManagerSchedule";
+    }
+//
+//    @PostMapping("/addSchedule")
+//    public String addSchedule(@RequestParam("studyIdx") Long studyIdx,
+//                              @RequestParam("scheduleTitle") String title,
+//                              @RequestParam("scheduleDate") String date,
+//                              @RequestParam("scheduleTime") String time) {
+//        StudySchedule schedule = new StudySchedule();
+//        schedule.setStudyIdx(studyIdx);
+//        schedule.setTitle(title);
+//        schedule.setDate(date);
+//        schedule.setTime(time);
+//
+//        studyGroupMapper.insertSchedule(schedule);
+//        return "redirect:/studyGroup/studyGroupManagerSchedule?studyIdx=" + studyIdx;
+//    }
+//
+//    @PostMapping("/deleteSchedule")
+//    public String deleteSchedule(@RequestParam("scheduleId") Long scheduleId,
+//                                 @RequestParam("studyIdx") Long studyIdx) {
+//        studyGroupMapper.deleteSchedule(scheduleId);
+//        return "redirect:/studyGroup/studyGroupManagerSchedule?studyIdx=" + studyIdx;
+//    }
+//
+
+    // *************************************************************
+
+
     // 스터디 관리 페이지로 이동
     @GetMapping("/studyGroupManagerManagement")
     public String getStudyGroupManagerManagement(Model model, @RequestParam("studyIdx") Long studyIdx) {
