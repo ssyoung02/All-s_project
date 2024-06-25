@@ -31,7 +31,7 @@
 <jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
@@ -49,7 +49,7 @@
                     <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">
-                                <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
+                                <img src="${root}/resources/profileImages/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
                             </div>
                             <h3>${userVo.username}</h3>
                         </div>

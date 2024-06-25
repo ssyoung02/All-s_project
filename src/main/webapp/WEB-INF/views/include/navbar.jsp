@@ -9,17 +9,15 @@
 <head>
     <meta charset="UTF-8">
     <title>All's</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
 <div class="menu">
-    <button class="primary-default timestart" onclick="timerOpen()">공부 시작</button>
-    <div id="lnb" class="lnb">
+    <%-- 로그인한 사용자에게만 표시 --%>
+    <sec:authorize access="isAuthenticated()">
+        <button class="primary-default timestart" onclick="timerOpen()">공부 시작</button>
+    </sec:authorize>    <div id="lnb" class="lnb">
         <ul class="main-menu">
             <li class="menu-item">
                 <div class="menu-area menu-select">
@@ -62,12 +60,18 @@
                         <ul class="dropdown-menu">
                             <li class="dropdown-item">
                                 <div class="menu-area">
-                                    <a href="${root}/studyGroup/studyGroupList">내 스터디</a>
+                                    <form method="POST" action="<c:url value='${root}/studyGroup/studyGroupList' />">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        <button type="submit" class="link-button">내 스터디</button>
+                                    </form>
                                 </div>
                             </li>
                             <li class="dropdown-item">
                                 <div class="menu-area">
-                                    <a href="${root}/studyRecruit/recruitList">스터디 모집</a>
+                                    <form method="POST" action="<c:url value='${root}/studyRecruit/recruitList' />">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        <button type="submit" class="link-button">스터디 모집</button>
+                                    </form>
                                 </div>
                             </li>
                         </ul>
@@ -98,6 +102,7 @@
                 <ul class="submenu">
                     <li class="submenu-item">
                         <div class="menu-area">
+<%--                            <form method="POST" action="<c:url value='${root }/myPage/myPageInfo' />">--%>
                             <form method="POST" action="<c:url value='${root }/Users/userInfoProcess' />">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                 <button type="submit" class="link-button">나의 정보</button>
@@ -114,7 +119,10 @@
                     </li>
                     <li class="submenu-item">
                         <div class="menu-area">
-                            <a href="${root}/Users/userDelete">회원 탈퇴</a>
+                            <form method="POST" action="<c:url value='${root}/Users/userdelete'/>">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <button type="submit" class="link-button">회원 탈퇴</button>
+                            </form>
                         </div>
                     </li>
                 </ul>
@@ -123,3 +131,4 @@
     </div>
 </div>
 </body>
+

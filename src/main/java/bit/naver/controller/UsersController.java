@@ -23,12 +23,16 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -61,6 +65,23 @@ public class UsersController {
     @Autowired
     private CustomAccountDeletionService customAccountDeletionService;
 
+
+    @PostMapping("/updateLocation")
+    @ResponseBody // JSON 형태로 응답
+    public String updateLocation(@RequestParam double latitude, @RequestParam double longitude, Principal principal) {
+        String username = principal.getName();
+        Users user = usersMapper.findByUsername(username);
+
+        if (user != null) {
+            user.setLatitude(latitude);
+            user.setLongitude(longitude);
+            usersMapper.updateUser(user);
+            return "success";
+        } else {
+            return "fail"; // 사용자 정보를 찾을 수 없는 경우
+        }
+    }
+
     @ModelAttribute("genderOptions") // 성별 옵션을 모델에 추가
     public Users.Gender[] getGenderOptions() {
         return Users.Gender.values();
@@ -92,7 +113,7 @@ public class UsersController {
                                 @RequestParam(value = "provider", required = false) String provider,
                                 @RequestParam(value = "profileImage", required = false) String profileImage,
                                 @RequestParam(value = "mobile", required = false) String mobile,
-                                HttpSession session) {
+                                HttpSession session, HttpServletRequest request) {
 
         // 입력 값 유효성 검사 (직접 구현)
         if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty() || mobile.isEmpty()) {
@@ -140,7 +161,7 @@ public class UsersController {
                     user.setProfileImage(profileImage);
                 }
             } else {
-                user.setProfileImage("기본이미지.gif"); // 기본 이미지 설정
+                user.setProfileImage("img.png");
             }
 
             ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID

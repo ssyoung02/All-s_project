@@ -110,13 +110,13 @@
         <div class="inputbox">
             <c:choose>
                 <c:when test="${not empty googleUserInfo.name}">
-                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw11" readonly>
+                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw11구글로그인" readonly>
                 </c:when>
                 <c:when test="${not empty kakaoUserInfo.name}">
-                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw11" readonly>
+                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw11카카오로그인" readonly>
                 </c:when>
                 <c:when test="${not empty naverUserInfo.name}">
-                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw22" readonly>
+                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw22네이버로그인" readonly>
                 </c:when>
                 <c:otherwise>
                     <label for="password2">비밀번호 확인<span class="essential">*</span></label>
@@ -128,9 +128,6 @@
         <div class="inputbox">
             <label for="mobile">휴대전화<span class="essential">*</span></label>
             <c:choose>
-<%--                <c:when test="${not empty googleUserInfo.mobile}">--%>
-<%--                    <input type="text" id="mobile" name="mobile" value="${googleUserInfo.mobile}" readonly>--%>
-<%--                </c:when>--%>
                 <c:when test="${not empty kakaoUserInfo.mobile}">
                     <input type="text" id="mobile" name="mobile" value="${kakaoUserInfo.mobile}" required>
                 </c:when>
@@ -163,14 +160,6 @@
             <label>성별<span class="essential">*</span></label>
             <div class="">
                 <c:choose>
-<%--                    <c:when test="${not empty googleUserInfo.gender}">--%>
-<%--                        <input id="male" class="gender" name="gender" type="radio" value="M" ${googleUserInfo.gender == 'M' ? 'checked' : ''} readonly>--%>
-<%--                        <label for="male">남자</label>--%>
-<%--                        <input id="female" class="gender" name="gender" type="radio" value="F" ${googleUserInfo.gender == 'F' ? 'checked' : ''} readonly>--%>
-<%--                        <label for="female">여자</label>--%>
-<%--                        <input id="other" class="gender" name="gender" type="radio" value="OTHER" ${googleUserInfo.gender == 'OTHER' ? 'checked' : ''} readonly>--%>
-<%--                        <label for="other">기타</label>--%>
-<%--                    </c:when>--%>
                     <c:when test="${not empty kakaoUserInfo.gender}">
                         <input id="male" class="gender" name="gender" type="radio" value="M" ${kakaoUserInfo.gender == 'M' ? 'checked' : ''} >
                         <label for="male">남자</label>
@@ -219,27 +208,27 @@
     </form>
 </div>
 
-<%-- 오류 메세지 모달 --%>
-<div id="modal-container" class="modal unstaged">
-    <div class="modal-overlay"></div>
-    <div class="modal-contents">
-        <div class="modal-text flex-between">
-            <h4>오류 메세지</h4>
-            <button class="modal-close-x" aria-label="닫기" onclick="modalClose()">
-                <i class="bi bi-x-lg"></i>
-            </button>
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
         </div>
-        <div class="modal-center">
-            <%-- 메시지 내용이 여기에 표시됩니다. --%>
-            <c:if test="${not empty alertModal}">
-                <p>${alertModal}</p>
-            </c:if>
-        </div>
-        <div class="modal-bottom">
-            <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>오류 메세지</h4>
+                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+                    <i class="bi bi-x-lg"></i>
+                </button>            </div>
+            <div class="modal-center">
+                <%-- 메시지 내용이 여기에 표시됩니다. --%>
+                    <c:if test="${not empty error}">
+                        <p>${error}</p>
+                    </c:if>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+            </div>
         </div>
     </div>
-</div>
 </body>
 <script>
     $(document).ready(function() {

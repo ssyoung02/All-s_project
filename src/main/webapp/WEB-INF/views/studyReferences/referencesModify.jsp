@@ -7,8 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>글 수정 > 공부 자료 > 공부 > All's</title>
@@ -55,10 +53,11 @@
 
       let title = document.getElementById('title-post').value;
       let content = document.getElementById('editorTxt').value;
+      let isPrivate = document.getElementsByName("isPrivate")[0].checked;
 
       if (title.trim() === '') {
         alert("제목을 입력해주세요");
-        document.getElementById('title-post').focus();
+        document.querySelector('.title-post').focus();
         return false;
       }
 
@@ -71,7 +70,7 @@
       $.ajax({
         url: '/studyReferences/updatePost',
         type: 'POST',
-        data: {referenceIdx: idx, title: title, content: content},
+        data: {referenceIdx: idx, title: title, content: content, isPrivate: isPrivate},
         beforeSend: function(xhr) {
           xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
         },
@@ -93,7 +92,7 @@
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-  <section class="mainContaner">
+  <section class="mainContainer">
     <!-- 메뉴 영역 -->
     <nav>
       <jsp:include page="../include/navbar.jsp"/>
@@ -115,15 +114,16 @@
         <input type="text" id="title-post" class="title-post" name="title" value="${studyReferencesEntity.title}">
 
         <ul class="todolist">
-            <!-- 태그 항목 -->
-            <li>
-              <input type="checkbox" id="public" class="private-post" name="privatePost">
-              <label for="public" class="todo-label">
-                <span class="checkmark"><i class="bi bi-square"></i></span>
-                게시물 비공개
-              </label>
-            </li>
-          </ul>
+          <!-- 태그 항목 -->
+          <li>
+            <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
+            <label for="public" class="todo-label">
+              <span class="checkmark"><i class="bi bi-square"></i></span>
+              비밀글
+              <span class="private-mark"><i class=""></i></span>
+            </label>
+          </li>
+        </ul>
 
           <!-- naver smart editor api -->
           <div id="smarteditor">

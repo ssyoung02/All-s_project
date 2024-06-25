@@ -6,6 +6,7 @@ import bit.naver.security.UsersUser;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,10 @@ public class MainController {
 
     @Autowired
     private UsersMapper usersMapper;
+
+    @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoMapApiKey;
+
 
     @RequestMapping("/main")
     public String mainScreen(Model model ,HttpSession session) {
@@ -40,6 +45,7 @@ public class MainController {
         } else {
             log.warn("메인 페이지 접근 시도 (로그인되지 않은 사용자)"); // 로그 추가
         }
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
         return "/main";
     }
 
