@@ -37,6 +37,7 @@
                 <jsp:include page="../include/navbar.jsp" />
             </div>
             <!--각 페이지의 콘텐츠-->
+
             <div id="content">
                 <h1>내 스터디</h1>
                 <%--본문 콘텐츠--%>
@@ -50,7 +51,7 @@
                             </div>
                         </div>
                         <div class="profile-link">
-                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo"><i class="bi bi-gear"></i>관리</a>
+                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${study.studyIdx}"><i class="bi bi-gear"></i>관리</a>
                             <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅</button>
                         </div>
                     </section>
