@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/chat.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
-    <script src="http://localhost:82/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <!-- jQuery 및 Socket.io -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="http://localhost:82/socket.io/socket.io.js"></script>
 </head>
 <body>
 <!-- 중앙 컨테이너 -->
@@ -68,22 +68,12 @@
             <script>
                 $(document).ready(function () {
                     var socket = io("http://localhost:82");
-
-                    function scrollChatToBottom() {
-                        var chatMessages = document.getElementById('chatMessages');
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
-
-                    window.onload = function () {
-                        scrollChatToBottom();
-                    };
+                    var messageContainer = document.getElementById('chatMessages');
 
                     function addMessageToChat(message) {
-                        var chatMessages = document.getElementById('chatMessages');
-                        var newMessageHTML = '<div class="message ' + (message.userName == '${userVo.name}' ? 'right' : 'left')
+                        var newMessageHTML = '<div class="message ' + (message.userName === '${userVo.name}' ? 'right' : 'left')
                             + '"><span class="name">' + message.userName + '</span><div class="bubble"><p>' + message.messageContent + '</p><span class="regDate">' + message.messageRegdate + '</span></div></div>';
-                        chatMessages.insertAdjacentHTML('afterbegin', newMessageHTML);
-                        scrollChatToBottom();
+                        messageContainer.insertAdjacentHTML('afterbegin', newMessageHTML);  // 메시지를 맨 위에 추가
                     }
 
                     function getQueryParam(param) {
@@ -117,7 +107,8 @@
                             success: function (response) {
                                 console.log('Message sent successfully');
                                 messageInput.val('');
-                                addMessageToChat({
+                                // 메시지를 서버에 보내기
+                                socket.emit('send_msg', {
                                     messageContent: message,
                                     userName: '${userVo.name}',
                                     messageRegdate: new Date().toISOString().slice(0, 19).replace('T', ' ')
@@ -132,7 +123,7 @@
                     $("#messageInput").keydown(function (event) {
                         if (event.key === 'Enter' && !event.shiftKey) {
                             event.preventDefault();
-                            $(".send-button").click();
+                            sendMessage();
                         }
                     });
 
@@ -140,9 +131,16 @@
                         sendMessage();
                     });
 
+                    // 한 번만 이벤트 리스너 등록
+                    var messageEventRegistered = false;
                     socket.on("send_msg", function (data) {
-                        addMessageToChat(data);
+                        if (!messageEventRegistered) {
+                            messageEventRegistered = true;
+                            console.log(data); // 메시지를 로그로 출력하여 확인
+                            addMessageToChat(data);
+                        }
                     });
+
                 });
             </script>
         </main>
