@@ -2,7 +2,6 @@ package bit.naver.controller;
 
 import bit.naver.entity.*;
 import bit.naver.mapper.StudyGroupMapper;
-import bit.naver.mapper.UsersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +21,14 @@ public class StudyGroupController {
     @Autowired
     private StudyGroupMapper studyGroupMapper;
 
-    @Autowired
-    private UsersMapper usersMapper;
 
+    // 스터디 관리 페이지로 이동
+    @GetMapping("/studyGroupManagerInfo")
+    public String getStudyGroupManagerInfo(Model model, @RequestParam("studyIdx") Long studyIdx) {
+        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+        model.addAttribute("studyGroup", studyGroup);
+        return "studyGroup/studyGroupManagerInfo";
+    }
 
     // 스터디 리스트 조회 페이지로 이동
     @RequestMapping("/studyGroupList")
@@ -36,6 +40,7 @@ public class StudyGroupController {
         // DB에서 해당 사용자가 참여 중인 스터디 목록 조회
         List<StudyList> myStudies = studyGroupMapper.getMyStudies(userIdx);
 
+        // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
 
@@ -105,7 +110,82 @@ public class StudyGroupController {
         return "studyGroup/chat";
     }
 
+    // 스터디 멤버 관리 페이지로 이동
+    @GetMapping("/studyGroupManagerMember")
+    public String getStudyGroupManagerMember(Model model, @RequestParam("studyIdx") Long studyIdx) {
+        // 스터디 ID를 통해 스터디 정보를 가져옴
+        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+        List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+        model.addAttribute("studyGroup", studyGroup);
+        model.addAttribute("members", members);
+        return "studyGroup/studyGroupManagerMember";
+    }
 
+    @PostMapping("/removeMember")
+    public String removeMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        studyGroupMapper.removeMember(studyIdx, userIdx);
+        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    }
+
+    @PostMapping("/approveMember")
+    public String approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        studyGroupMapper.approveMember(studyIdx, userIdx);
+        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    }
+
+
+
+    // ***********************************************************
+    // 스터디 관리 - 일정
+// 스터디 관리 - 일정
+    @GetMapping("/studyGroupManagerSchedule")
+    public String getStudyGroupManagerSchedule(@RequestParam("studyIdx") Long studyIdx, Model model) {
+        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+        model.addAttribute("studyGroup", studyGroup);
+        return "studyGroup/studyGroupManagerSchedule";
+    }
+//
+//    @PostMapping("/addSchedule")
+//    public String addSchedule(@RequestParam("studyIdx") Long studyIdx,
+//                              @RequestParam("scheduleTitle") String title,
+//                              @RequestParam("scheduleDate") String date,
+//                              @RequestParam("scheduleTime") String time) {
+//        StudySchedule schedule = new StudySchedule();
+//        schedule.setStudyIdx(studyIdx);
+//        schedule.setTitle(title);
+//        schedule.setDate(date);
+//        schedule.setTime(time);
+//
+//        studyGroupMapper.insertSchedule(schedule);
+//        return "redirect:/studyGroup/studyGroupManagerSchedule?studyIdx=" + studyIdx;
+//    }
+//
+//    @PostMapping("/deleteSchedule")
+//    public String deleteSchedule(@RequestParam("scheduleId") Long scheduleId,
+//                                 @RequestParam("studyIdx") Long studyIdx) {
+//        studyGroupMapper.deleteSchedule(scheduleId);
+//        return "redirect:/studyGroup/studyGroupManagerSchedule?studyIdx=" + studyIdx;
+//    }
+//
+
+    // *************************************************************
+
+
+    // 스터디 관리 페이지로 이동
+    @GetMapping("/studyGroupManagerManagement")
+    public String getStudyGroupManagerManagement(Model model, @RequestParam("studyIdx") Long studyIdx) {
+        // 스터디 ID를 통해 스터디 정보를 가져옴
+        StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+        model.addAttribute("studyGroup", studyGroup);
+        return "studyGroup/studyGroupManagerManagement";
+    }
+
+    @PostMapping("/studyGroup/deleteStudyGroup")
+    public String deleteStudyGroup(@RequestParam("studyIdx") Long studyIdx) {
+        // DB에서 스터디 삭제
+        studyGroupMapper.deleteStudy(studyIdx);
+        return "redirect:/studyGroup/studyGroupList"; // 스터디 리스트 페이지로 리디렉션
+    }
 
 
 }

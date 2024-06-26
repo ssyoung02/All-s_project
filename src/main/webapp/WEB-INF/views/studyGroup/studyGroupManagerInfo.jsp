@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
@@ -39,16 +40,16 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem tapSelect">
-                        <a href="${root}/studyGroup/studyGroupManagerInfo">스터디 정보</a>
+                        <a href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${studyGroup.studyIdx}">스터디 정보</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerMember">멤버 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerMember?studyIdx=${studyGroup.studyIdx}">멤버 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerSchedule">일정 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerSchedule?studyIdx=${studyGroup.studyIdx}">일정 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerManagement">스터디 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerManagement?studyIdx=${studyGroup.studyIdx}">스터디 관리</a>
                     </div>
                 </div>
                 <%--탭 메뉴 끝--%>
@@ -56,12 +57,12 @@
                 <div class="tabInfo">
                     <div class="webInfo-itemfull">
                         <dt>스터디명</dt>
-                        <dd><input class="manager-studyName" value="자바 공부할 사람 모여라" title="스터디명" disabled></dd>
+                        <dd><input class="manager-studyName" value="${studyGroup.studyTitle}" title="스터디명" disabled></dd>
                     </div>
                     <div class="webInfo-itemfull">
                         <dt>설 명</dt>
                         <dd>
-                            <textarea placeholder="스터디를 설명할 문장을 입력해주세요" title="설명">전공자, 비전공자 상관없이 자바에 올인할 사람들을 위한 모임</textarea>
+                            <textarea placeholder="스터디를 설명할 문장을 입력해주세요" title="설명">${studyGroup.description}</textarea>
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
@@ -71,7 +72,7 @@
                                 <input type="file" id="imageChange">
                                 <label for="imageChange" class="imgbox">
                                     <i class="bi bi-plus-lg"></i>
-                                    <img src="${root}/resources/images/02.%20intellij.png" alt="스터디 그룹 프로필" width="100px" height="100px">
+                                    <img src="${studyGroup.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
                                 </label>
                             </form>
                             <div class="profile-change">
@@ -96,13 +97,17 @@
                     <div class="webInfo-itemfull">
                         <dt>모집분야</dt>
                         <dd>
-                            <input type="radio" id="interview">
+                            <input type="radio" id="interview" name="category" value="면접"
+                                   <c:if test="${studyGroup.category eq '면접'}">checked</c:if>>
                             <label for="interview">면접</label>
-                            <input type="radio" id="introduction">
+                            <input type="radio" id="introduction" name="category" value="자소서"
+                                   <c:if test="${studyGroup.category eq '자소서'}">checked</c:if>>
                             <label for="introduction">자소서</label>
-                            <input type="radio" id="certificate">
+                            <input type="radio" id="certificate" name="category" value="자격증"
+                                   <c:if test="${studyGroup.category eq '자격증'}">checked</c:if>>
                             <label for="certificate">자격증</label>
-                            <input type="radio" id="studyGroup">
+                            <input type="radio" id="studyGroup" name="category" value="스터디"
+                                   <c:if test="${studyGroup.category eq '스터디'}">checked</c:if>>
                             <label for="studyGroup">스터디</label>
                         </dd>
                     </div>
@@ -112,30 +117,34 @@
                             <ul class="todolist">
                                 <!-- 할 일 항목 -->
                                 <li>
-                                    <input type="checkbox" id="twenty" class="todo-checkbox">
+                                    <input type="checkbox" id="twenty" class="todo-checkbox" name="age" value="20대"
+                                           <c:if test="${fn:contains(studyGroup.age, '20대')}">checked</c:if>>
                                     <label for="twenty" class="todo-label">
                                         <span class="checkmark"><i class="bi bi-square"></i></span>
                                         20대
                                     </label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="thirty" class="todo-checkbox">
+                                    <input type="checkbox" id="thirty" class="todo-checkbox" name="age" value="30대"
+                                           <c:if test="${fn:contains(studyGroup.age, '30대')}">checked</c:if>>
                                     <label for="thirty" class="todo-label">
                                         <span class="checkmark"><i class="bi bi-square"></i></span>
                                         30대
                                     </label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="forty" class="todo-checkbox">
+                                    <input type="checkbox" id="forty" class="todo-checkbox" name="age" value="40대"
+                                           <c:if test="${fn:contains(studyGroup.age, '40대')}">checked</c:if>>
                                     <label for="forty" class="todo-label">
                                         <span class="checkmark"><i class="bi bi-square"></i></span>
                                         40대
                                     </label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="allAge" class="todo-checkbox">
+                                    <input type="checkbox" id="allAge" class="todo-checkbox" name="age" value="연령무관"
+                                           <c:if test="${fn:contains(studyGroup.age, '연령무관')}">checked</c:if>>
                                     <label for="allAge" class="todo-label">
-                                        <span class="checkmark"><i class="bi bi-check-square"></i></span>
+                                        <span class="checkmark"><i class="bi bi-square"></i></span>
                                         연령무관
                                     </label>
                                 </li>
@@ -145,16 +154,20 @@
                     <div class="webInfo-itemfull">
                         <dt>성별</dt>
                         <dd>
-                            <input id="male" class="gender" name="gender" type="radio" value="M" required>
+                            <input id="male" class="gender" name="gender" type="radio" value="남자"
+                                   <c:if test="${studyGroup.gender eq '남자'}">checked</c:if>>
                             <label for="male">남자</label>
-                            <input id="female" class="gender" name="gender" type="radio" value="F">
+                            <input id="female" class="gender" name="gender" type="radio" value="여자"
+                                   <c:if test="${studyGroup.gender eq '여자'}">checked</c:if>>
                             <label for="female">여자</label>
-                            <input id="other" class="gender" name="gender" type="radio" value="OTHER">
-                            <label for="other">기타</label>                        </dd>
+                            <input id="allGender" class="gender" name="gender" type="radio" value="성별무관"
+                                   <c:if test="${studyGroup.gender eq '성별무관'}">checked</c:if>>
+                            <label for="allGender">남여모두</label>
+                        </dd>
                     </div>
                 </div>
                 <div class="board-bottom">
-                    <button class="secondary-default">취소</button>
+                    <button class="secondary-default" onclick="location.href='${root}/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
                     <button class="primary-default" onclick="modalOpen()">수정</button>
                 </div>
             </div>

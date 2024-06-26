@@ -99,7 +99,7 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/timegrid/index.global.js"></script>
-
+    <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
     <script>
         // 전역 변수
         let currentModalId = null;
@@ -189,23 +189,18 @@
                     $('#' + currentModalId + ' form')[0].reset();
                 }
             });
-            // 월/주 전환 버튼 클릭 이벤트 핸들러
-            $('#btnMonth, #btnWeek').click(function() {
-                const viewName = this.id === 'btnMonth' ? 'dayGridMonth' : 'timeGridWeek';
+            // 월/주/일 전환 버튼 클릭 이벤트 핸들러
+            $('#btnMonth, #btnWeek, #btnList').click(function() {
+                const viewName = this.id === 'btnMonth' ? 'dayGridMonth' : (this.id === 'btnWeek' ? 'timeGridWeek' : 'listDay');
                 calendar.changeView(viewName);
 
-                // 버튼 스타일 업데이트 (활성화된 버튼에만 selected 클래스 추가)
+                // 버튼 스타일 업데이트
                 $('#calendar-header .fc-button').removeClass('fc-button-active');
                 $(this).addClass('fc-button-active');
 
-                // 월 버튼 스타일 수정
-                if (this.id === 'btnMonth') {
-                    $('#btnMonth').css('background-color', '#3B593F').css('color', 'white');
-                    $('#btnWeek').css('background-color', 'white').css('color', '#3B593F');
-                } else {
-                    $('#btnWeek').css('background-color', '#3B593F').css('color', 'white');
-                    $('#btnMonth').css('background-color', 'white').css('color', '#3B593F');
-                }
+                // 월/주/일 버튼 배경색 및 글자색 설정
+                $('#btnMonth, #btnWeek, #btnList').css('background-color', 'white').css('color', '#3B593F');
+                $(this).css('background-color', '#3B593F').css('color', 'white');
             });
 
             // 일정 삭제 버튼 클릭 이벤트 처리
@@ -415,6 +410,7 @@
                 <div id="calendar-header">
                     <button id="btnMonth" class="fc-button fc-button-primary">월</button>
                     <button id="btnWeek" class="fc-button fc-button-primary">주</button>
+                    <button id="btnList" class="fc-button fc-button-primary">일</button>
                 </div>
                 <div id='calendar' style="position: relative"></div>
             </div>

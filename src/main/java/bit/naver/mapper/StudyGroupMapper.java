@@ -4,6 +4,7 @@ import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyList;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -29,4 +30,12 @@ public interface StudyGroupMapper {
     //  스터디 메인 페이지 유저
     List<StudyMembers> getStudyMembers(Long studyIdx);
 
+    void deleteStudy(Long studyIdx);
+
+    void removeMember(Long studyIdx, Long userIdx);
+
+    void approveMember(Long studyIdx, Long userIdx);
+
+    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude FROM Studies") // 필요한 정보만 조회
+    List<StudyGroup> findAllStudies();
 }
