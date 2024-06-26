@@ -130,57 +130,11 @@
                                 <h2 class="">오늘의 공부 시간</h2>
                                 <div>
                                     <div class="todoTitle">Total</div>
-                                    <p id="totalstudytime">
-                                        <%--<c:set var="totalSeconds" value="${userVo.total_study_time}" />
-
-                                        <c:choose>
-                                            <c:when test="${totalSeconds < 60}">
-                                                &lt;%&ndash; 60초 미만일 경우: 초만 표시 &ndash;%&gt;
-                                                ${totalSeconds} 초
-                                            </c:when>
-                                            <c:when test="${totalSeconds >= 60 and totalSeconds < 3600}">
-                                                &lt;%&ndash; 60초 이상, 3600초 미만일 경우: 분과 초 표시 &ndash;%&gt;
-                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${totalSeconds / 60}" />
-                                                <c:set var="seconds" value="${totalSeconds % 60}" />
-                                                ${minutes} 분 ${seconds} 초
-                                            </c:when>
-                                            <c:otherwise>
-                                                &lt;%&ndash; 3600초 이상일 경우: 시간, 분, 초 표시 &ndash;%&gt;
-                                                <fmt:formatNumber var="hours" type="number" pattern="0" value="${totalSeconds / 3600}" />
-                                                <c:set var="remainingSeconds" value="${totalSeconds % 3600}" />
-                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${remainingSeconds / 60}" />
-                                                <c:set var="seconds" value="${remainingSeconds % 60}" />
-                                                ${hours} 시간 ${minutes} 분 ${seconds} 초
-                                            </c:otherwise>
-                                        </c:choose>--%>
-                                    </p>
+                                    <p id="totalstudytime"></p>
                                 </div>
                                 <div>
                                     <div class="todoTitle">Today</div>
-                                    <p id="todaystudytime">
-                                        <%--<c:set var="todaySeconds" value="${userVo.today_study_time}" />
-
-                                        <c:choose>
-                                            <c:when test="${todaySeconds < 60}">
-                                                &lt;%&ndash; 60초 미만일 경우: 초만 표시 &ndash;%&gt;
-                                                ${todaySeconds} 초
-                                            </c:when>
-                                            <c:when test="${todaySeconds >= 60 and todaySeconds < 3600}">
-                                                &lt;%&ndash; 60초 이상, 3600초 미만일 경우: 분과 초 표시 &ndash;%&gt;
-                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${todaySeconds / 60}" />
-                                                <c:set var="seconds" value="${todaySeconds % 60}" />
-                                                ${minutes} 분 ${seconds} 초
-                                            </c:when>
-                                            <c:otherwise>
-                                                &lt;%&ndash; 3600초 이상일 경우: 시간, 분, 초 표시 &ndash;%&gt;
-                                                <fmt:formatNumber var="hours" type="number" pattern="0" value="${todaySeconds / 3600}" />
-                                                <c:set var="remainingSeconds" value="${todaySeconds % 3600}" />
-                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${remainingSeconds / 60}" />
-                                                <c:set var="seconds" value="${remainingSeconds % 60}" />
-                                                ${hours} 시간 ${minutes} 분 ${seconds} 초
-                                            </c:otherwise>
-                                        </c:choose>--%>
-                                    </p>
+                                    <p id="todaystudytime"></p>
                                 </div>
                             </div>
                             <div class="userStudyGroup">
