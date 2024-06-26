@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
@@ -25,6 +22,7 @@ public class ChatController {
 
     @Autowired
     private ChatMapper chatMapper;
+
     // 채팅
     @GetMapping("/chat")
     public String chat(@RequestParam("studyIdx") Long studyIdx, Model model, HttpSession session, Principal principal) {
@@ -45,7 +43,6 @@ public class ChatController {
 
         return "studyGroup/chat";
     }
-
 
     @PostMapping("/sendMessage")
     // 메시지 전송 처리

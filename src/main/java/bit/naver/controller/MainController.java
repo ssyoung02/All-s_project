@@ -42,19 +42,31 @@ public class MainController {
             Users user = usersUser.getUsers();
             model.addAttribute("userVo", user); // Users 객체를 모델에 추가
             session.setAttribute("userVo", user);
+            String username = user.getName();
+            Users users = usersMapper.findByUsername(username);
+            Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
+            List<StudyGroup> study_18 = studyMapper.getAllStudy_9(userIdx);
+            model.addAttribute("study_18", study_18);
         }
         Users userVo = (Users) session.getAttribute("userVo");
         if (userVo != null) {
             log.info("메인 페이지 접속 (username: {})", userVo.getUsername()); // 로그 추가
             model.addAttribute("userVo", userVo);
             session.setAttribute("userVo", userVo);
+            String username = userVo.getName();
+            Users users = usersMapper.findByUsername(username);
+            Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
+            List<StudyGroup> study_18 = studyMapper.getAllStudy_9(userIdx);
+            model.addAttribute("study_18", study_18);
         } else {
             log.warn("메인 페이지 접근 시도 (로그인되지 않은 사용자)"); // 로그 추가
+
+            List<StudyGroup> study_18 = studyMapper.getAllStudy_9(0);
+            model.addAttribute("study_18", study_18);
         }
         model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
 
-        List<StudyGroup> study_18 = studyMapper.getAllStudy_9();
-        model.addAttribute("study_18", study_18);
+
 
         return "/main";
     }

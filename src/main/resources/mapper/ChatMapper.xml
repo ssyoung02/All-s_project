@@ -73,6 +73,4 @@
         SELECT * FROM StudyMembers WHERE user_idx = #{userIdx}
     </select>
 
-
-
 </mapper>
