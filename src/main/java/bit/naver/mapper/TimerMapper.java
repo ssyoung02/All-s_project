@@ -3,6 +3,10 @@ package bit.naver.mapper;
 import bit.naver.entity.TimerEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Mapper
 public interface TimerMapper {
@@ -13,6 +17,11 @@ public interface TimerMapper {
     int updateEndTime(TimerEntity timer);
     int updateMemo(TimerEntity timer);
 
-    Long totalStudyTime(Long user_idx);
-    Long todayStudyTime(Long user_idx);
+    List<TimerEntity> getStudyTimeBetweenDates(@Param("userIdx") Long userIdx,
+                                               @Param("startDate") LocalDate startDate,
+                                               @Param("endDate") LocalDate endDate);
+
+    List<TimerEntity> getMonthlyStudyTime(@Param("userIdx") Long userIdx,
+                                          @Param("startOfMonth") LocalDate startOfMonth,
+                                          @Param("endOfMonth") LocalDate endOfMonth);
 }

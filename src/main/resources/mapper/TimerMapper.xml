@@ -3,6 +3,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="bit.naver.mapper.TimerMapper">
+
+    <resultMap id="TimerEntityMap" type="bit.naver.entity.TimerEntity">
+        <result property="record_idx" column="record_idx" />
+        <result property="user_idx" column="user_idx" />
+        <result property="date" column="date" />
+        <result property="start_time" column="start_time" />
+        <result property="end_time" column="end_time" />
+        <result property="study_time" column="study_time" />
+        <result property="memo" column="memo" />
+    </resultMap>
+
+
     <insert id="insertStartTime" useGeneratedKeys="true" keyColumn="record_idx" keyProperty="record_idx">
         INSERT INTO StudyRecords (user_idx, date, start_time)
         VALUES (#{user_idx}, now(), now())
@@ -26,5 +38,22 @@
 
     <select id="todayStudyTime">
         SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = now()
+    </select>
+
+    <select id="getStudyTimeBetweenDates" resultMap="TimerEntityMap">
+        SELECT date, SUM(study_time) AS study_time
+        FROM StudyRecords
+        WHERE user_idx = #{userIdx}
+          AND date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY date
+    </select>
+
+    <select id="getMonthlyStudyTime" parameterType="map" resultMap="TimerEntityMap" resultType="bit.naver.entity.TimerEntity">
+        SELECT date, COALESCE(SUM(study_time), 0) AS study_time
+        FROM StudyRecords
+        WHERE user_idx = #{userIdx}
+          AND date BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY date
+        ORDER BY date ASC
     </select>
 </mapper>

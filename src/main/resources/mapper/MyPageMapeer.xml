@@ -35,6 +35,22 @@
 
     </select>
 
+    <select id="getResumesList" resultType="bit.naver.entity.ResumesEntity">
+        SELECT
+            r.resume_idx AS resumeIdx,
+            r.user_idx AS userIdx,
+            r.resume_path AS resumePath,
+            r.created_at AS createdAt,
+            r.updated_at AS updatedAt,
+            r.file_name AS fileName
+        FROM
+            Resumes r
+        WHERE
+            r.user_idx = #{userIdx}
+        ORDER BY
+            r.created_at DESC;
+    </select>
+
     <select id="getLikePostList" resultType="bit.naver.entity.StudyReferencesEntity">
         SELECT study.reference_idx AS referenceIdx,
         study.user_idx AS userIdx,
@@ -98,5 +114,34 @@
         SET likes_count = likes_count - 1
         WHERE reference_idx = #{referenceIdx}
     </update>
+
+    <!-- 공부자료 한개의 글 조회하는 SQl 쿼리 -->
+    <select id="getMyPageById" resultType="bit.naver.entity.ResumesEntity">
+        SELECT resume_idx AS resumeIdx, user_idx AS  userIdx, resume_path AS resumePath, created_at AS createAt, updated_at AS updateAt, file_name AS fileName
+        FROM Resumes
+        WHERE resume_idx = #{resumeIdx}
+    </select>
+
+    <insert id="uploadResume" keyColumn="resume_idx" keyProperty="resumeIdx" useGeneratedKeys="true">
+        INSERT INTO Resumes (
+            user_idx,
+            resume_path,
+            created_at,
+            updated_at,
+            file_name
+        )
+        VALUES (
+                   #{userIdx},
+                   #{resumePath},
+                   now(),
+                   now(),
+                   #{fileName}
+               )
+    </insert>
+
+    <delete id="deleteResume">
+        DELETE FROM Resumes
+        WHERE resume_idx = #{resumeIdx}
+    </delete>
 
 </mapper>

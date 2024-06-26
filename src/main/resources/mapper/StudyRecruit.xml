@@ -44,10 +44,15 @@
             sg.image AS image,
             sg.status AS status,
             sg.created_at AS createdAt,
-            u.name AS leaderName
+            u.name AS leaderName,
+            IFNULL(lr.study_idx, 0) AS isLike
         FROM
             Studies sg
-                JOIN Users u ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN Users u
+                          ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN LikeStudy lr
+                          ON sg.study_idx = lr.study_idx
+                              AND lr.user_idx = #{userIdx}
         WHERE
             sg.status = 'RECRUITING'
         ORDER BY
@@ -77,10 +82,15 @@
             sg.image AS image,
             sg.status AS status,
             sg.created_at AS createdAt,
-            u.name AS leaderName
+            u.name AS leaderName,
+            IFNULL(lr.study_idx, 0) AS isLike
         FROM
             Studies sg
-                JOIN Users u ON sg.study_leader_idx = u.user_idx
+              LEFT JOIN Users u
+                  ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN LikeStudy lr
+                          ON sg.study_idx = lr.study_idx
+                              AND lr.user_idx = #{userIdx}
         WHERE
             sg.status = 'RECRUITING'
     </select>
@@ -107,11 +117,17 @@
             sg.image AS image,
             sg.status AS status,
             sg.created_at AS createdAt,
-            u.name AS leaderName
+            u.name AS leaderName,
+            IFNULL(lr.study_idx, 0) AS isLike
         FROM
             Studies sg
-                JOIN Users u ON sg.study_leader_idx = u.user_idx
-        WHERE study_idx = #{studyIdx}
+                LEFT JOIN Users u
+                          ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN LikeStudy lr
+                          ON sg.study_idx = lr.study_idx
+                              AND lr.user_idx = #{userIdx}
+        WHERE sg.study_idx = #{studyIdx}
+
     </select>
 
     <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers">
@@ -128,6 +144,35 @@
     <select id="getStudyMembersByStudyId" resultType="bit.naver.entity.StudyMembers" parameterType="java.lang.Long">
         SELECT * FROM StudyMembers WHERE study_idx = #{studyIdx}
     </select>
+
+    <insert id="insertLike" parameterType="bit.naver.entity.LikeStudyEntity">
+        INSERT INTO LikeStudy (user_idx, study_idx, created_at)
+        VALUES (#{userIdx}, #{studyIdx}, NOW())
+    </insert>
+
+    <update id="plusLike">
+        UPDATE Studies
+        SET likes_count = likes_count + 1
+        WHERE study_idx = #{studyIdx}
+    </update>
+
+    <delete id="deleteLike">
+        DELETE FROM LikeStudy
+        WHERE study_idx = #{studyIdx}
+          AND user_idx = #{userIdx}
+    </delete>
+
+    <update id="minusLike">
+        UPDATE Studies
+        SET likes_count = likes_count - 1
+        WHERE study_idx = #{studyIdx}
+    </update>
+
+    <insert id="updateReport">
+        UPDATE Studies
+        SET report_count = report_count + 1
+        WHERE study_idx = #{studyIdx}
+    </insert>
 
 
     <select id="getMembersByStudyIdx" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyMembers">

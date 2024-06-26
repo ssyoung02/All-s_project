@@ -22,7 +22,6 @@ package bit.naver.mapper;
 
 import bit.naver.entity.Users; // Users 엔티티 클래스 임포트
 import org.apache.ibatis.annotations.*; // MyBatis 어노테이션 임포트
-import org.mybatis.spring.annotation.MapperScan;
 
 import java.util.List; // List 인터페이스 임포트
 

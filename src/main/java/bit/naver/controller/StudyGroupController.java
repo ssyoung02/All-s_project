@@ -42,13 +42,16 @@ public class StudyGroupController {
     // 스터디 리스트 조회 페이지로 이동
     @RequestMapping("/studyGroupList")
     public String getMyStudies(Model model, HttpSession session) {
+        // 세션에서 현재 사용자 정보 가져오기 (예: 로그인한 사용자 정보)
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
         // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
         List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
 
+        // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
+
 
         return "studyGroup/studyGroupList";
     }
@@ -80,11 +83,16 @@ public class StudyGroupController {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
+        // 여기서 studyLeaderIdx를 user의 username에서 가져오는 로직
+        // 예시로 구현하면 아래와 같이 userRepository.findByUsername(user.getUsername()).getUserIdx()를 호출
+
+
         study.setStudyLeaderIdx(userIdx);
         study.setStartDate(new Date());
         study.setEndDate(new Date());
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
+
 
         studyGroupMapper.insertStudy(study);
 
@@ -105,6 +113,7 @@ public class StudyGroupController {
     // 채팅
     @RequestMapping("/chat")
     public String chat(HttpSession session, Principal principal) {
+
         Users user = (Users) session.getAttribute("userVo");
         System.out.println(user.toString());
         return "studyGroup/chat";
@@ -186,6 +195,7 @@ public class StudyGroupController {
     // 스터디 관리 페이지로 이동
     @GetMapping("/studyGroupManagerManagement")
     public String getStudyGroupManagerManagement(Model model, @RequestParam("studyIdx") Long studyIdx) {
+        // 스터디 ID를 통해 스터디 정보를 가져옴
         StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
         model.addAttribute("studyGroup", studyGroup);
         return "studyGroup/studyGroupManagerManagement";
