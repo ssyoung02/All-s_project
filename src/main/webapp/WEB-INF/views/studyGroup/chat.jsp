@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
@@ -12,86 +12,10 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <!-- CSS 링크 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="${root}/resources/css/chat.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
-    <style>
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            width: 400px;
-            text-align: center;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .chat-messages {
-            width: 400px;
-            margin-top: 20px;
-            overflow-y: auto;
-            max-height: calc(100vh - 200px);
-            display: flex;
-            flex-direction: column-reverse;
-        }
-
-        .message {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
-            align-items: flex-start;
-        }
-
-        .message.right {
-            align-items: flex-end;
-        }
-
-        .message .name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .message .bubble {
-            padding: 10px;
-            border-radius: 10px;
-            background-color: #f2f2f2;
-            border: 1px solid #ccc;
-            max-width: 70%;
-        }
-
-        .input-container {
-            display: flex;
-            align-items: center;
-            position: fixed;
-            bottom: 0;
-            background-color: #f0f0f0;
-            padding: 10px;
-            width: 100%;
-        }
-
-        textarea {
-            flex: 1;
-            margin-right: 10px;
-            height: 40px;
-            resize: none;
-        }
-
-        .chat-input {
-            width: 100%;
-            margin-top: auto;
-            margin-bottom: 20px;
-        }
-
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
+    <script src="http://localhost:82/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
@@ -109,7 +33,6 @@
                 </div>
                 <!-- 멤버 목록 -->
                 <div class="members-list">
-                    <h3>스터디 멤버</h3>
                     <div class="members">
                         <div class="member">
                             <p>
@@ -138,75 +61,88 @@
             <div class="chat-input">
                 <div class="input-container">
                     <textarea id="messageInput" placeholder="메시지를 입력하세요." cols="40" rows="1"></textarea>
-                    <button class="send-button" onclick="sendMessage()">전송</button>
+                    <button class="send-button">전송</button>
                 </div>
             </div>
             <!-- JavaScript -->
             <script>
-                function scrollChatToBottom() {
-                    var chatMessages = document.getElementById('chatMessages');
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
+                $(document).ready(function () {
+                    var socket = io("http://localhost:82");
 
-                window.onload = function () {
-                    scrollChatToBottom();
-                };
+                    function scrollChatToBottom() {
+                        var chatMessages = document.getElementById('chatMessages');
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
 
-                function addMessageToChat(message) {
-                    var chatMessages = document.getElementById('chatMessages');
-                    var newMessageHTML = '<div class="message ' + (message.userName == '${userVo.name}' ? 'right' : 'left')
-                        + '"><span class="name">' + message.userName + '</span><div class="bubble"><p>' + message.messageContent + '</p><span class="regDate">' + message.messageRegdate + '</span></div></div>';
-                    chatMessages.insertAdjacentHTML('afterbegin', newMessageHTML);
-                    scrollChatToBottom();
-                }
+                    window.onload = function () {
+                        scrollChatToBottom();
+                    };
 
-                function getQueryParam(param) {
-                    var urlParams = new URLSearchParams(window.location.search);
-                    return urlParams.get(param);
-                }
+                    function addMessageToChat(message) {
+                        var chatMessages = document.getElementById('chatMessages');
+                        var newMessageHTML = '<div class="message ' + (message.userName == '${userVo.name}' ? 'right' : 'left')
+                            + '"><span class="name">' + message.userName + '</span><div class="bubble"><p>' + message.messageContent + '</p><span class="regDate">' + message.messageRegdate + '</span></div></div>';
+                        chatMessages.insertAdjacentHTML('afterbegin', newMessageHTML);
+                        scrollChatToBottom();
+                    }
 
-                function sendMessage() {
-                    var messageInput = document.getElementById('messageInput');
-                    var message = messageInput.value.trim();
-                    if (message === "") return;
+                    function getQueryParam(param) {
+                        var urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get(param);
+                    }
 
-                    var studyIdx = getQueryParam('studyIdx'); // URL에서 studyIdx 가져오기
+                    function sendMessage() {
+                        var messageInput = $("#messageInput");
+                        var message = messageInput.val().trim();
+                        if (message === "") return;
 
-                    var csrfToken = $("meta[name='_csrf']").attr("content");
-                    var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                        var studyIdx = getQueryParam('studyIdx');
 
-                    $.ajax({
-                        type: 'POST',
-                        url: '${root}/studyGroup/sendMessage',
-                        data: {
-                            message: message,
-                            studyIdx: studyIdx
-                        },
-                        beforeSend: function(xhr) {
-                            if (csrfToken && csrfHeader) {
-                                xhr.setRequestHeader(csrfHeader, csrfToken);
-                            }
-                        },
-                        success: function (response) {
-                            console.log('Message sent successfully');
-                            messageInput.value = ''; // 입력창 비우기
-                            addMessageToChat({
-                                messageContent: message,
+                        var csrfToken = $("meta[name='_csrf']").attr("content");
+                        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '${root}/studyGroup/sendMessage',
+                            data: {
+                                message: message,
                                 userName: '${userVo.name}',
-                                messageRegdate: new Date().toISOString().slice(0, 19).replace('T', ' ')
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Failed to send message: ' + xhr.responseText);
+                                studyIdx: studyIdx
+                            },
+                            beforeSend: function (xhr) {
+                                if (csrfToken && csrfHeader) {
+                                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                                }
+                            },
+                            success: function (response) {
+                                console.log('Message sent successfully');
+                                messageInput.val('');
+                                addMessageToChat({
+                                    messageContent: message,
+                                    userName: '${userVo.name}',
+                                    messageRegdate: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Failed to send message: ' + xhr.responseText);
+                            }
+                        });
+                    }
+
+                    $("#messageInput").keydown(function (event) {
+                        if (event.key === 'Enter' && !event.shiftKey) {
+                            event.preventDefault();
+                            $(".send-button").click();
                         }
                     });
-                }
 
-                document.getElementById('messageInput').addEventListener('keydown', function (event) {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                        event.preventDefault();
+                    $(".send-button").click(function () {
                         sendMessage();
-                    }
+                    });
+
+                    socket.on("send_msg", function (data) {
+                        addMessageToChat(data);
+                    });
                 });
             </script>
         </main>
