@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>글 수정 > 공부 자료 > 공부 > All's</title>
@@ -48,10 +49,12 @@
     }
 
     function updatePost(event, idx) {
+      console.log("updatePost함수 호출됨");
+
       event.preventDefault(); // 폼 제출을 막음
       oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
 
-      let title = document.getElementById('title-post').value;
+      let title = document.querySelector('.title-post').value;
       let content = document.getElementById('editorTxt').value;
       let isPrivate = document.getElementsByName("isPrivate")[0].checked;
 
@@ -67,17 +70,33 @@
         return false;
       }
 
+      let $frm = $("#writeForm")[0];
+      let formData = new FormData($frm);
+      formData.append("content", formData.get("editorTxt"));
+      formData.append("uploadFile", $("#file")[0].files[0]);
+      formData.append("isPrivate", isPrivate);
+      formData.append("referenceIdx", idx);
+
       $.ajax({
         url: '/studyReferences/updatePost',
         type: 'POST',
-        data: {referenceIdx: idx, title: title, content: content, isPrivate: isPrivate},
+        data: formData,
+        processData: false,
+        contentType: false,
         beforeSend: function(xhr) {
           xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
         },
-
         success: function(response) {
-          alert("글 수정이 완료되었습니다.");
-          location.href ="${root}/studyReferences/referencesRead?referenceIdx="+idx
+          if(response === 10){
+            alert("파일 용량은 5MB를 초과할 수 없습니다.");
+            return false;
+          } else if(response === 11){
+            alert("이미지 파일만 저장할 수 있습니다.");
+            return false;
+          } else {
+            alert("글 수정이 완료되었습니다.");
+            location.href = "${root}/studyReferences/referencesRead?referenceIdx=" + idx;
+          }
         },
         error: function() {
           alert("글 수정에 실패하였습니다.");
@@ -116,7 +135,14 @@
         <ul class="todolist">
           <!-- 태그 항목 -->
           <li>
-            <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
+            <c:choose>
+              <c:when test="${studyReferencesEntity.isPrivate}">
+                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" checked>
+              </c:when>
+              <c:otherwise>
+                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
+              </c:otherwise>
+            </c:choose>
             <label for="public" class="todo-label">
               <span class="checkmark"><i class="bi bi-square"></i></span>
               비밀글
@@ -130,6 +156,21 @@
                         <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;"
                         >${studyReferencesEntity.content}</textarea>
           </div>
+
+        <ul class="taglist">
+          <!-- 태그 항목 -->
+          <li>
+            <p class="tag-title">첨부파일</p>
+            <c:if test="${not empty studyReferencesEntity.fileName}">
+                <input id="uploadFile" class="upload-name" value="${studyReferencesEntity.fileName}" name="uploadFile" readonly>
+            </c:if>
+            <c:if test="${empty studyReferencesEntity.fileName}">
+                <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
+            </c:if>
+            <label for="file">파일찾기</label> <input type="file" id="file">
+          </li>
+        </ul>
+
           <div class="buttonBox">
             <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyReferences/referencesList'">취소</button>
             <button type="submit" class="updatebutton primary-default" onclick="updatePost(${studyReferencesEntity.referenceIdx})">수정</button>
