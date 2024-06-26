@@ -39,16 +39,16 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerInfo">스터디 정보</a>
+                        <a href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${studyGroup.studyIdx}">스터디 정보</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerMember">멤버 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerMember?studyIdx=${studyGroup.studyIdx}">멤버 관리</a>
                     </div>
                     <div class="tapItem">
-                        <a href="${root}/studyGroup/studyGroupManagerSchedule">일정 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerSchedule?studyIdx=${studyGroup.studyIdx}">일정 관리</a>
                     </div>
                     <div class="tapItem tapSelect">
-                        <a href="${root}/studyGroup/studyGroupManagerManagement">스터디 관리</a>
+                        <a href="${root}/studyGroup/studyGroupManagerManagement?studyIdx=${studyGroup.studyIdx}">스터디 관리</a>
                     </div>
                 </div>
                 <%--탭 메뉴 끝--%>
@@ -56,12 +56,12 @@
                 <div class="tabInfo">
                     <div class="webInfo-itemfull">
                         <dt>모집글 제목</dt>
-                        <dd><input value="자바 같이 공부해요~" title="모집글 제목" style="width: 30em"></dd>
+                        <dd><input value="${studyGroup.studyTitle}" title="모집글 제목" style="width: 30em"></dd>
                     </div>
                     <div class="webInfo-itemfull">
                         <dt>모집글 내용</dt>
                         <dd>
-                            <textarea placeholder="스터디를 모집 내용을 입력해주세요" title="모집글 내용">강남근처에서 주1회 같이 공부하실 수 있는 분 구합니다!</textarea>
+                            <textarea placeholder="스터디를 모집 내용을 입력해주세요" title="모집글 내용">${studyGroup.description}</textarea>
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="board-bottom">
-                    <button class="secondary-default">취소</button>
+                    <button class="secondary-default" onclick="location.href='${root}/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
                     <button class="primary-default" onclick="modalOpen()">확인</button>
                 </div>
             </div>

@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>글 수정 > 공부 자료 > 공부 > All's</title>

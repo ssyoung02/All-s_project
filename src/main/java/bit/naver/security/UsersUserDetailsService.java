@@ -24,7 +24,6 @@ import bit.naver.mapper.UsersMapper; // UsersMapper 인터페이스 임포트 (M
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails; // UserDetails 인터페이스 임포트
 import org.springframework.security.core.userdetails.UserDetailsService; // UserDetailsService 인터페이스 임포트
 import org.springframework.security.core.userdetails.UsernameNotFoundException; // UsernameNotFoundException 예외 클래스 임포트

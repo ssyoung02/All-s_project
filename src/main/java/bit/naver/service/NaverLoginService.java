@@ -65,6 +65,13 @@ public class NaverLoginService implements INaverLoginService {
             }
         }
     }
+    public String getClientId() {
+        return env.getProperty("oauth2.naver.client-id");
+    }
+
+    public String getClientSecret() {
+        return env.getProperty("oauth2.naver.client-secret");
+    }
 
     private NaverUsersInfo getUserInfo(String accessToken) throws IOException, ParseException {
         String userInfoUri = "https://openapi.naver.com/v1/nid/me";

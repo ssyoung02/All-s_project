@@ -70,4 +70,8 @@
         WHERE sm.study_idx = #{studyIdx}
     </select>
 
+    <!-- 스터디 삭제 SQL -->
+    <delete id="deleteStudy" parameterType="Long">
+        DELETE FROM Studies WHERE study_idx = #{studyIdx}
+    </delete>
 </mapper>

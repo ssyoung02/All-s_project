@@ -1,12 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
+<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/> --%>
+<%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
+<%--이제 필요없는 코드 --%>
+
 <!DOCTYPE html>
 <html>
 <head>
+    <sec:csrfMetaTags />
+    <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나의 정보 > 내 정보 > All's</title>
@@ -25,6 +30,82 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+
+    <script>
+        function uploadResume(event) {
+            event.preventDefault(); // 폼 제출을 막음
+
+            var $frm = $("#uploadForm")[0];
+            var fileInput = $("#uploadFile")[0];
+
+            //파일이 선택되지 않았을 경우 알림창 표시
+            if(fileInput.files.length === 0) {
+                alert("업로드할 파일을 선택해주세요.");
+                return;
+            }
+
+            var formData = new FormData($frm);
+            formData.append("uploadFile", fileInput.files[0]);
+
+            console.log("uploadFile 호출됨");
+
+            // AJAX를 사용하여 폼 데이터를 서버로 전송
+            $.ajax({
+                url : '/myPage/uploadResume',
+                type : 'POST',
+                data : formData,
+                processData : false,
+                contentType : false,
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                },
+                success : function(response) {
+                    if (typeof response === 'string' && response.startsWith('파일 용량은')) {
+                        alert(response);
+                    } else if (typeof response === 'string' && response.startsWith('이미지 파일만')) {
+                        alert(response);
+                    } else {
+                        alert("파일업로드가 완료되었습니다.");
+                        location.reload();
+                    }
+                },
+                error : function(xhr) {
+                    alert("파일업로드에 실패하였습니다. " + xhr.responseText);
+                }
+            });
+        }
+
+        //다운로드
+        function download(resumeIdx){
+            window.location.href = '/myPage/download?resumeIdx=' + resumeIdx;
+        }
+
+        function deleteResume(element, idx) {
+            if (confirm('이력서를 삭제하시겠습니까?')) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/myPage/deleteResume',
+                    data: {resumeIdx: idx},
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                    },
+
+                    success: function (result) {
+                        const fileItem = element.closest('.file-item');
+                        if (fileItem) {
+                            fileItem.remove();
+                        }
+                        alert("이력서가 삭제되었습니다.");
+                        location.reload();  // 페이지 새로고침(=댓글(전체댓글수) 새로고침하기 위해서)
+                    },
+                    error: function() {
+                        alert("이력서 삭제에 실패하였습니다.");
+                    }
+                });
+            }
+        }
+    </script>
+
 </head>
 <body>
 <jsp:include page="${root}/WEB-INF/views/include/timer.jsp"/>
@@ -116,31 +197,34 @@
                             <h3>이력서</h3>
                             <a href="https://chatgpt.com/">AI로 자소서 작성하기 →</a>
                         </div>
+
                         <div class= "resume-file flex-between">
+                            <!-- 파일 업로드 됐을 때 만들기 -->
+                            <c:choose>
+                            <c:when test="${ resumesEntity[0].fileName ne '' and resumesEntity[0].fileName ne null }">
                             <div class="file-item">
-                                <button class="file-delete">
+                                <button class="file-delete" onclick="deleteResume(this, ${resumesEntity[0].resumeIdx})">
                                     <i class="bi bi-x-lg"></i>
                                 </button>
-                                <input type="file" id="resume1" class="customfile">
-                                <label for="resume1" class="customfile-lable flex-colum">
-                                    <p class="filename">이력서1.hwp</p>
-                                    <div class="fileUpload">업로드↑</div>
-                                </label>
+                                <div class="customfile-lable flex-colum">
+                                            <p class="filename">${resumesEntity[0].fileName}</p>
+                                            <a href="javascript:download('${resumesEntity[0].resumeIdx}')" class="fileUpload">이력서 다운로드</a>
+                                </div>
                             </div>
-                            <div class="file-item non-file">
-                                <input type="file" id="resume2" class="customfile">
-                                <label for="resume2" class="customfile-lable flex-colum">
-                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
-                                    <div class="fileUpload">업로드↑</div>
-                                </label>
-                            </div>
-                            <div class="file-item non-file">
-                                <input type="file" id="resume3" class="customfile">
-                                <label for="resume3" class="customfile-lable flex-colum">
-                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
-                                    <div class="fileUpload">업로드↑</div>
-                                </label>
-                            </div>
+                            </c:when>
+                                <c:otherwise>
+                                    <form id="uploadForm" onsubmit="uploadResume(event);">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                        <div class="file-item non-file">
+                                            <input type="file" id="uploadFile" name="uploadFile" class="customfile">
+                                            <label for="uploadFile" class="customfile-lable flex-colum">
+                                                <p class="filename">이력서 파일을 업로드 해주세요</p>
+                                            </label>
+                                                <button type="submit" class="fileUpload">업로드</button>
+                                        </div>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </sec:authorize>

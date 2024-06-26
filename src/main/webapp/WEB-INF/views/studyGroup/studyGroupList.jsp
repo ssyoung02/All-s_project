@@ -14,6 +14,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <script>
+
+        //검색 버튼
+        function searchPosts() {
+            let searchKeyword = document.getElementById('searchInput').value;
+            let searchOption = document.getElementById('searchOption').value;
+
+            location.href = "${root}/studyReferences/referencesList?searchKeyword=" + searchKeyword + "&searchOption=" + searchOption;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    searchPosts();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp"/>
@@ -38,15 +58,16 @@
                 <!--본문 콘텐츠-->
                 <div class="maxcontent">
                     <div class="list-title flex-between">
-                        <h3>가입 스터디(<c:out value="${myStudies.size()}" />)</h3>
+                        <h3>가입 스터디(<c:out value="${myStudies.size()}"/>)</h3>
                         <fieldset class="search-box flex-row">
                             <select name="searchCnd" title="검색 조건 선택">
                                 <option value="제목">제목</option>
                                 <option value="글내용">글내용</option>
                             </select>
                             <p class="search-field">
-                                <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                                <button type="submit">
+                                <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
+                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
+                                <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -55,7 +76,8 @@
                     </div>
                     <div class="boardContent flex-colum">
                         <c:forEach items="${myStudies}" var="study">
-                            <div class="board-listBoarder flex-columleft" onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}'">
+                            <div class="board-listBoarder flex-columleft"
+                                 onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}'">
                                 <div class="studygroup-item flex-between">
                                     <!-- 스터디 목록 -->
                                     <div class="imgtitle flex-row">
