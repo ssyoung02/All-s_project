@@ -162,12 +162,13 @@
           <li>
             <p class="tag-title">첨부파일</p>
             <c:if test="${not empty studyReferencesEntity.fileName}">
-                <input id="uploadFile" class="upload-name" value="${studyReferencesEntity.fileName}" name="uploadFile" readonly>
+              <input id="uploadFile" class="upload-name" value="${studyReferencesEntity.fileName}" name="uploadFile" readonly>
             </c:if>
             <c:if test="${empty studyReferencesEntity.fileName}">
-                <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
+              <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
             </c:if>
-            <label for="file">파일찾기</label> <input type="file" id="file">
+            <label for="file">파일찾기</label>
+            <input type="file" id="file" name="uploadFile">
           </li>
         </ul>
 

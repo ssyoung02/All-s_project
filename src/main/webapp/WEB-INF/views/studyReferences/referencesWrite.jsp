@@ -3,7 +3,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 
 <c:set var="userVo" value="${sessionScope.userVo}" />
-<%-- 세션에서 userVo 가져오기 --%>
 <c:set var="root" value="${pageContext.request.contextPath }" />
 <!DOCTYPE html>
 <html>

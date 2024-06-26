@@ -183,15 +183,15 @@
     <update id="updatePost">
         UPDATE StudyReferences
         SET
-        title = #{title},
-        content = #{content},
-        isPrivate = #{isPrivate},
-        updated_at = now(),
-        <if test="fileAttachments != null">
-            file_attachments = #{fileAttachments},
-            file_name = #{fileName}
-        </if>
+            title = #{title},
+            content = #{content},
+            isPrivate = #{isPrivate},
+            updated_at = now(),
+            file_attachments = CASE WHEN #{fileAttachments} IS NOT NULL THEN #{fileAttachments} ELSE file_attachments END,
+            file_name = CASE WHEN #{fileName} IS NOT NULL THEN #{fileName} ELSE file_name END
         WHERE reference_idx = #{referenceIdx}
     </update>
+
+
 
 </mapper>

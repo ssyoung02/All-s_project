@@ -87,29 +87,8 @@ public class StudyReferencesService {
 		return studyReferencesMapper.deletePost(referenceIdx);
 	}
 
-	public Long updatePost(StudyReferencesEntity entity, MultipartFile uploadFile) {
-
-		try {
-			// 파일이 있을 경우에만
-			if (uploadFile != null && !uploadFile.isEmpty()) {
-				String fileName = uploadFile.getOriginalFilename();
-				byte[] fileBytes = uploadFile.getBytes();
-				entity.setFileAttachments(fileBytes);
-				entity.setFileName(fileName);
-			} else {
-				entity.setFileAttachments(null);
-				entity.setFileName(null);
-			}
-			int result = studyReferencesMapper.updatePost(entity);
-
-			return entity.getReferenceIdx(); // 성공적으로 업데이트 되면 참조 인덱스를 반환
-		} catch (IllegalStateException | IOException e) {
-			e.printStackTrace();
-			return -1L;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return -1L;
-		}
+	public Long updatePost(StudyReferencesEntity entity) {
+		int result = studyReferencesMapper.updatePost(entity);
+		return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환ㅍ
 	}
-
 }
