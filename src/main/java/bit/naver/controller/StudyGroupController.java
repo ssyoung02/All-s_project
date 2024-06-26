@@ -3,7 +3,8 @@ package bit.naver.controller;
 import bit.naver.entity.*;
 import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyRecruitMapper;
-import bit.naver.mapper.UsersMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/studyGroup")
@@ -25,6 +28,8 @@ public class StudyGroupController {
 
     @Autowired
     private StudyRecruitMapper studyRecruitMapper;
+
+    private static final Logger logger = LoggerFactory.getLogger(StudyGroupController.class);
 
     // 스터디 관리 페이지로 이동
     @GetMapping("/studyGroupManagerInfo")
@@ -37,25 +42,22 @@ public class StudyGroupController {
     // 스터디 리스트 조회 페이지로 이동
     @RequestMapping("/studyGroupList")
     public String getMyStudies(Model model, HttpSession session) {
-        // 세션에서 현재 사용자 정보 가져오기 (예: 로그인한 사용자 정보)
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
-        // DB에서 해당 사용자가 참여 중인 스터디 목록 조회
-        List<StudyList> myStudies = studyGroupMapper.getMyStudies(userIdx);
+        // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
+        List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
 
-        // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
-
 
         return "studyGroup/studyGroupList";
     }
 
+
     // 스터디 생성 폼을 위한 GET 요청 처리
     @GetMapping("/studyGroupCreate")
     public String getStudyGroupCreate(Model model) {
-        model.addAttribute("studyGroup", new StudyGroup()
-        );
+        model.addAttribute("studyGroup", new StudyGroup());
         return "studyGroup/studyGroupCreate";
     }
 
@@ -78,16 +80,11 @@ public class StudyGroupController {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
-        // 여기서 studyLeaderIdx를 user의 username에서 가져오는 로직
-        // 예시로 구현하면 아래와 같이 userRepository.findByUsername(user.getUsername()).getUserIdx()를 호출
-
-
         study.setStudyLeaderIdx(userIdx);
         study.setStartDate(new Date());
         study.setEndDate(new Date());
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
-
 
         studyGroupMapper.insertStudy(study);
 
@@ -102,13 +99,12 @@ public class StudyGroupController {
 
         studyGroupMapper.insertStudyMember(studyMember);
 
-        return "/studyGroup/studyGroupList";
+        return "redirect:/studyGroup/studyGroupList";
     }
 
     // 채팅
     @RequestMapping("/chat")
     public String chat(HttpSession session, Principal principal) {
-
         Users user = (Users) session.getAttribute("userVo");
         System.out.println(user.toString());
         return "studyGroup/chat";
@@ -117,17 +113,17 @@ public class StudyGroupController {
     // 스터디 멤버 관리 페이지로 이동
     @GetMapping("/studyGroupManagerMember")
     public String getStudyGroupManagerMember(Model model, @RequestParam("studyIdx") Long studyIdx) {
+        logger.info("Accessing studyGroupManagerMember for studyIdx: {}", studyIdx);
+
         // 스터디 ID를 통해 스터디 정보를 가져옴
         StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
         List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
 
-        // 콘솔에 멤버 정보 출력
-        System.out.println("Study ID: " + studyIdx);
+        logger.info("StudyGroup: {}", studyGroup);
+
+        // 디버깅을 위한 로그 추가
         for (StudyMembers member : members) {
-            System.out.println("Member Name: " + member.getUserName());
-            System.out.println("Member Role: " + member.getRole());
-            System.out.println("Member Created At: " + member.getCreatedAt());
-            System.out.println("Member Study Time: " + member.getStudyTime());
+            System.out.println("Member: " + member.getUserName() + ", Status: " + member.getStatus() + ", JoinReason: " + member.getJoinReason());
         }
 
         model.addAttribute("studyGroup", studyGroup);
@@ -136,76 +132,83 @@ public class StudyGroupController {
     }
 
     @PostMapping("/removeMember")
-    public String removeMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
-        studyGroupMapper.removeMember(studyIdx, userIdx);
-        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    @ResponseBody
+    public Map<String, Object> removeMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            studyGroupMapper.removeMember(studyIdx, userIdx);
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return response;
     }
 
     @PostMapping("/approveMember")
-    public String approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
-        studyGroupMapper.approveMember(studyIdx, userIdx);
-        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+    @ResponseBody
+    public Map<String, Object> approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            studyGroupMapper.approveMember(studyIdx, userIdx);
+            response.put("success", true);
+            response.put("message", "가입 승인이 완료되었습니다.");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "가입 승인에 실패했습니다: " + e.getMessage());
+        }
+        return response;
     }
 
+    @PostMapping("/rejectMember")
+    @ResponseBody
+    public Map<String, Object> rejectMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            studyGroupMapper.updateMemberStatus(studyIdx, userIdx, "REJECTED");
+            response.put("success", true);
+            response.put("message", "가입 승인을 거절하였습니다.");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "가입 승인 거절에 실패했습니다: " + e.getMessage());
+        }
+        return response;
+    }
 
-
-    // ***********************************************************
     // 스터디 관리 - 일정
-// 스터디 관리 - 일정
     @GetMapping("/studyGroupManagerSchedule")
     public String getStudyGroupManagerSchedule(@RequestParam("studyIdx") Long studyIdx, Model model) {
         StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
         model.addAttribute("studyGroup", studyGroup);
         return "studyGroup/studyGroupManagerSchedule";
     }
-//
-//    @PostMapping("/addSchedule")
-//    public String addSchedule(@RequestParam("studyIdx") Long studyIdx,
-//                              @RequestParam("scheduleTitle") String title,
-//                              @RequestParam("scheduleDate") String date,
-//                              @RequestParam("scheduleTime") String time) {
-//        StudySchedule schedule = new StudySchedule();
-//        schedule.setStudyIdx(studyIdx);
-//        schedule.setTitle(title);
-//        schedule.setDate(date);
-//        schedule.setTime(time);
-//
-//        studyGroupMapper.insertSchedule(schedule);
-//        return "redirect:/studyGroup/studyGroupManagerSchedule?studyIdx=" + studyIdx;
-//    }
-//
-//    @PostMapping("/deleteSchedule")
-//    public String deleteSchedule(@RequestParam("scheduleId") Long scheduleId,
-//                                 @RequestParam("studyIdx") Long studyIdx) {
-//        studyGroupMapper.deleteSchedule(scheduleId);
-//        return "redirect:/studyGroup/studyGroupManagerSchedule?studyIdx=" + studyIdx;
-//    }
-//
-
-    // *************************************************************
-
 
     // 스터디 관리 페이지로 이동
     @GetMapping("/studyGroupManagerManagement")
     public String getStudyGroupManagerManagement(Model model, @RequestParam("studyIdx") Long studyIdx) {
-        // 스터디 ID를 통해 스터디 정보를 가져옴
         StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
         model.addAttribute("studyGroup", studyGroup);
         return "studyGroup/studyGroupManagerManagement";
     }
 
-    @PostMapping("/studyGroup/deleteStudyGroup")
-    public String deleteStudyGroup(@RequestParam("studyIdx") Long studyIdx) {
-        // DB에서 스터디 삭제
-        studyGroupMapper.deleteStudy(studyIdx);
-        return "redirect:/studyGroup/studyGroupList"; // 스터디 리스트 페이지로 리디렉션
-    }
+    @PostMapping("/deleteStudyGroup")
+    @ResponseBody
+    public Map<String, Object> deleteStudyGroup(@RequestParam("studyIdx") Long studyIdx) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            // 종속 레코드 삭제
+            studyGroupMapper.deleteTeamCalendarsByStudyIdx(studyIdx);
+            studyGroupMapper.deleteStudyMembersByStudyIdx(studyIdx);
 
-    // 스터디 멤버 상태 업데이트
-    @PostMapping("/updateMemberStatus")
-    public String updateMemberStatus(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx, @RequestParam("status") String status) {
-        studyRecruitMapper.updateStudyMemberStatus(studyIdx, userIdx, status);
-        return "redirect:/studyGroup/studyGroupManagerMember?studyIdx=" + studyIdx;
+            // 부모 레코드 삭제
+            studyGroupMapper.deleteStudy(studyIdx);
+            response.put("success", true);
+            response.put("message", "스터디가 성공적으로 삭제되었습니다.");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "스터디 삭제에 실패했습니다: " + e.getMessage());
+        }
+        return response;
     }
 
 }

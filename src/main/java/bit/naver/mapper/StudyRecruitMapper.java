@@ -14,7 +14,7 @@ public interface StudyRecruitMapper {
     List<StudyGroup> getAllStudies();
 
     // 18개 리밋
-    List<StudyGroup> getAllStudy_9();
+    List<StudyGroup> getAllStudy_9();   ///// ??????????????
 
     // 가입 폼
     StudyGroup getStudyById(Long studyIdx);
@@ -27,4 +27,8 @@ public interface StudyRecruitMapper {
 
     // 특정 스터디의 멤버 조회
     List<StudyMembers> getStudyMembersByStudyId(Long studyIdx);
+
+    List<StudyMembers> getMembersByStudyIdx(Long studyIdx);
+
+
 }

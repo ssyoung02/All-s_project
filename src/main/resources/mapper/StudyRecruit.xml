@@ -130,5 +130,20 @@
     </select>
 
 
+    <select id="getMembersByStudyIdx" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyMembers">
+        SELECT
+            sm.user_idx AS userIdx,
+            u.name AS userName,
+            sm.role AS role,
+            sm.status AS status,
+            sm.join_reason AS joinReason,
+            sm.created_at AS createdAt
+#             sm.study_time AS studyTime
+        FROM
+            StudyMembers sm
+                JOIN Users u ON sm.user_idx = u.user_idx
+        WHERE
+            sm.study_idx = #{studyIdx}
+    </select>
 </mapper>
 

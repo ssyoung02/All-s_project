@@ -70,9 +70,8 @@
                     </div>
                 </div>
                 <div class="board-bottom">
-                    <button class="secondary-default" onclick="">삭제</button>
                     <button class="secondary-default" onclick="">수정</button>
-                    <button class="primary-default" onclick="">목록</button>
+                    <button class="secondary-default" onclick="location.href='${root}/studyRecruit/recruitList'">목록</button>
                 </div>
             </div>
             <%--콘텐츠 끝--%>
@@ -81,17 +80,17 @@
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
 
-    <%-- 오류 메세지 모달 --%>
+    <%-- 가입 신청 모달 --%>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay"></div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h3>${study.studyTitle}</h3>
-                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
-                <form id="joinForm" method="post" action="${root}/studyRecruit/recruitReadForm">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요
 예)
 거주지(또는 직장):
@@ -103,7 +102,7 @@
                 </form>
             </div>
             <div class="modal-bottom">
-                <button type="button" class="secondary-default" onclick="madalClose()">취소</button>
+                <button type="button" class="secondary-default" onclick="modalClose()">취소</button>
                 <button type="button" class="primary-default" onclick="submitApplication()">신청</button>
             </div>
         </div>
@@ -113,8 +112,19 @@
 <jsp:include page="../include/timer.jsp" />
 
 <script>
+    function modalOpen() {
+        document.getElementById('modal-container').classList.remove('unstaged');
+    }
+
+    function modalClose() {
+        document.getElementById('modal-container').classList.add('unstaged');
+    }
 
     function submitApplication() {
+        const joinReasonTextarea = document.getElementById('joinReasonTextarea');
+        if (joinReasonTextarea.value.trim() === "") {
+            joinReasonTextarea.value = "신청내용이 없습니다";
+        }
         document.getElementById('joinForm').submit();
     }
 </script>

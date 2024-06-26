@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bit.naver.mapper.StudyGroupMapper">
-
 
     <resultMap id="studyResultMap" type="bit.naver.entity.StudyGroup">
         <id property="studyIdx" column="study_idx" />
@@ -23,35 +21,44 @@
         <result property="createdAt" column="created_at" />
     </resultMap>
 
-<!--스터디 모집 테이블 데이터 삽입-->
     <insert id="insertStudy" parameterType="bit.naver.entity.StudyGroup">
         INSERT INTO Studies (study_leader_idx, study_title, description_title, description, category, study_online,
                              meeting_time, latitude, longitude, age, capacity, gender,
                              start_date, end_date, status, created_at)
-        VALUES (#{studyLeaderIdx}, #{studyTitle},#{descriptionTitle}, #{description}, #{category}, #{studyOnline},
+        VALUES (#{studyLeaderIdx}, #{studyTitle}, #{descriptionTitle}, #{description}, #{category}, #{studyOnline},
                 #{meetingTime}, #{latitude}, #{longitude}, #{age}, #{capacity}, #{gender},
                 #{startDate}, #{endDate}, #{status}, #{createdAt})
     </insert>
 
-<!--Memebers 테이블에 데이터 삽입-->
     <select id="findStudyIdx" parameterType="Long" resultType="Long">
         SELECT study_idx
         FROM Studies
         WHERE study_leader_idx = #{userIdx}
-        ORDER BY created_at DESC  <!-- 최신 스터디부터 가져오기 위해 생성일 기준으로 정렬 -->
+        ORDER BY created_at DESC
         LIMIT 1
     </select>
 
-<!--studyIdx 최근에 생성된 것 찾기-->
     <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers">
         INSERT INTO StudyMembers (study_idx, user_idx, role, status, join_reason, created_at, updated_at)
         VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
     </insert>
 
-
-<!--내 스터디 리스트-->
     <select id="getMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
         SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description
+        FROM StudyMembers sm
+                 JOIN Studies s ON sm.study_idx = s.study_idx
+        WHERE sm.user_idx = #{userIdx}
+    </select>
+
+<!--    <select id="getApprovedStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">-->
+<!--        SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description-->
+<!--        FROM StudyMembers sm-->
+<!--                 JOIN Studies s ON sm.study_idx = s.study_idx-->
+<!--        WHERE sm.user_idx = #{userIdx} AND sm.status = 'ACCEPTED'-->
+<!--    </select>-->
+
+    <select id="getAllMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
+        SELECT sm.study_idx AS studyIdx, sm.role, sm.status, s.study_title AS studyTitle, s.description
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
         WHERE sm.user_idx = #{userIdx}
@@ -63,7 +70,6 @@
         WHERE study_idx = #{studyIdx}
     </select>
 
-    <!-- 스터디 멤버 조회 -->
     <select id="getStudyMembers" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyMembers">
         SELECT
             sm.user_idx AS userIdx,
@@ -81,8 +87,38 @@
             sm.study_idx = #{studyIdx}
     </select>
 
-    <!-- 스터디 삭제 SQL -->
     <delete id="deleteStudy" parameterType="Long">
         DELETE FROM Studies WHERE study_idx = #{studyIdx}
+    </delete>
+
+    <select id="getStudyMember" parameterType="map" resultType="bit.naver.entity.StudyMembers">
+        SELECT *
+        FROM StudyMembers
+        WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx}
+    </select>
+
+    <update id="updateMemberStatus">
+        UPDATE StudyMembers
+        SET status = #{status}
+        WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx}
+    </update>
+
+    <update id="approveMember">
+        UPDATE StudyMembers
+        SET status = 'ACCEPTED'
+        WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx}
+    </update>
+
+    <delete id="removeMember">
+        DELETE FROM StudyMembers
+        WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx}
+    </delete>
+
+    <delete id="deleteTeamCalendarsByStudyIdx" parameterType="Long">
+        DELETE FROM TeamCalendars WHERE study_idx = #{studyIdx}
+    </delete>
+
+    <delete id="deleteStudyMembersByStudyIdx" parameterType="Long">
+        DELETE FROM StudyMembers WHERE study_idx = #{studyIdx}
     </delete>
 </mapper>

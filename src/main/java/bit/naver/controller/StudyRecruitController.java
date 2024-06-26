@@ -51,10 +51,11 @@ public class StudyRecruitController {
     }
 
 
-    // 스터디 등록 insert
-    @RequestMapping("/recruitReadForm")
-    public String registerStudyMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("joinReason") String joinReason, HttpSession session, Principal principal) {
-
+    // 스터디 가입 신청서 제출
+    @PostMapping("/apply")
+    public String applyForStudy(@RequestParam("studyIdx") Long studyIdx,
+                                @RequestParam("joinReason") String joinReason,
+                                HttpSession session, Principal principal) {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
 
@@ -63,14 +64,13 @@ public class StudyRecruitController {
         studyMember.setUserIdx(userIdx);
         studyMember.setRole("MEMBER");
         studyMember.setStatus("PENDING");
-        studyMember.setJoinReason(joinReason);
+        studyMember.setJoinReason(joinReason.isEmpty() ? "신청내용이 없습니다" : joinReason);
         studyMember.setCreatedAt(LocalDateTime.now());
         studyMember.setUpdatedAt(LocalDateTime.now());
 
-
         studyMapper.insertStudyMember(studyMember);
 
-        return "/main";
+        return "redirect:/studyRecruit/recruitList";
     }
 
     // 스터디 멤버 상태 업데이트
@@ -78,6 +78,17 @@ public class StudyRecruitController {
     public String updateMemberStatus(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx, @RequestParam("status") String status) {
         studyMapper.updateStudyMemberStatus(studyIdx, userIdx, status);
         return "redirect:/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
+    }
+
+    // 멤버 목록 가져오기
+    @GetMapping("/studyGroupManagerMember")
+    public String getStudyMembers(@RequestParam("studyIdx") Long studyIdx, Model model) {
+        List<StudyMembers> members = studyMapper.getMembersByStudyIdx(studyIdx);
+        for (StudyMembers member : members) {
+            System.out.println(member);
+        }
+        model.addAttribute("members", members);
+        return "studyGroup/studyGroupManagerMember";
     }
 
 }
