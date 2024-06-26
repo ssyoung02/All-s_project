@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
@@ -14,6 +15,9 @@
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
 
@@ -126,11 +130,57 @@
                                 <h2 class="">오늘의 공부 시간</h2>
                                 <div>
                                     <div class="todoTitle">Total</div>
-                                    <p id="totalstudytime">${userVo.total_study_time}</p>
+                                    <p id="totalstudytime">
+                                        <%--<c:set var="totalSeconds" value="${userVo.total_study_time}" />
+
+                                        <c:choose>
+                                            <c:when test="${totalSeconds < 60}">
+                                                &lt;%&ndash; 60초 미만일 경우: 초만 표시 &ndash;%&gt;
+                                                ${totalSeconds} 초
+                                            </c:when>
+                                            <c:when test="${totalSeconds >= 60 and totalSeconds < 3600}">
+                                                &lt;%&ndash; 60초 이상, 3600초 미만일 경우: 분과 초 표시 &ndash;%&gt;
+                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${totalSeconds / 60}" />
+                                                <c:set var="seconds" value="${totalSeconds % 60}" />
+                                                ${minutes} 분 ${seconds} 초
+                                            </c:when>
+                                            <c:otherwise>
+                                                &lt;%&ndash; 3600초 이상일 경우: 시간, 분, 초 표시 &ndash;%&gt;
+                                                <fmt:formatNumber var="hours" type="number" pattern="0" value="${totalSeconds / 3600}" />
+                                                <c:set var="remainingSeconds" value="${totalSeconds % 3600}" />
+                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${remainingSeconds / 60}" />
+                                                <c:set var="seconds" value="${remainingSeconds % 60}" />
+                                                ${hours} 시간 ${minutes} 분 ${seconds} 초
+                                            </c:otherwise>
+                                        </c:choose>--%>
+                                    </p>
                                 </div>
                                 <div>
                                     <div class="todoTitle">Today</div>
-                                    <p id="todaystudytime">${userVo.today_study_time}</p>
+                                    <p id="todaystudytime">
+                                        <%--<c:set var="todaySeconds" value="${userVo.today_study_time}" />
+
+                                        <c:choose>
+                                            <c:when test="${todaySeconds < 60}">
+                                                &lt;%&ndash; 60초 미만일 경우: 초만 표시 &ndash;%&gt;
+                                                ${todaySeconds} 초
+                                            </c:when>
+                                            <c:when test="${todaySeconds >= 60 and todaySeconds < 3600}">
+                                                &lt;%&ndash; 60초 이상, 3600초 미만일 경우: 분과 초 표시 &ndash;%&gt;
+                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${todaySeconds / 60}" />
+                                                <c:set var="seconds" value="${todaySeconds % 60}" />
+                                                ${minutes} 분 ${seconds} 초
+                                            </c:when>
+                                            <c:otherwise>
+                                                &lt;%&ndash; 3600초 이상일 경우: 시간, 분, 초 표시 &ndash;%&gt;
+                                                <fmt:formatNumber var="hours" type="number" pattern="0" value="${todaySeconds / 3600}" />
+                                                <c:set var="remainingSeconds" value="${todaySeconds % 3600}" />
+                                                <fmt:formatNumber var="minutes" type="number" pattern="0" value="${remainingSeconds / 60}" />
+                                                <c:set var="seconds" value="${remainingSeconds % 60}" />
+                                                ${hours} 시간 ${minutes} 분 ${seconds} 초
+                                            </c:otherwise>
+                                        </c:choose>--%>
+                                    </p>
                                 </div>
                             </div>
                             <div class="userStudyGroup">
@@ -185,6 +235,10 @@
                             </div>
                         </div>
                     </div>
+                    <%--공부시간 차트--%>
+                    <h3>주간 공부시간</h3>
+                    <canvas id="studyTimeChart" style="max-height: 300px;"></canvas>
+
                 </sec:authorize>
                 <!--슬라이드 배너-->
                 <div class="swiper-container">
@@ -320,6 +374,112 @@
     <jsp:include page="include/footer.jsp"/>
 </div>
 <script>
+    fetch('/include/updateTime?userIdx=${userVo.userIdx}')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 데이터에서 total_study_time과 today_study_time 값을 추출
+            const totalStudyTime = data.total_study_time;
+            const todayStudyTime = data.today_study_time;
+
+            // HTML 요소에 데이터를 삽입
+            document.getElementById('totalstudytime').innerText = formatTime(totalStudyTime);
+            document.getElementById('todaystudytime').innerText = formatTime(todayStudyTime);
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        const hDisplay = h > 0 ? h + '시간 ' : '';
+        const mDisplay = m > 0 ? m + '분 ' : '';
+        const sDisplay = s > 0 ? s + '초' : '';
+        return hDisplay + mDisplay + sDisplay;
+    }
+
+    fetch('/include/study-time?userIdx=${userVo.userIdx}') // Adjust the userIdx as needed
+        .then(response => response.json())
+        .then(data => {
+            const labels = ['일', '월', '화', '수', '목', '금', '토'];
+            const currentWeekData = new Array(7).fill(0);
+            const previousWeekData = new Array(7).fill(0);
+
+            data.currentWeek.forEach(record => {
+                const date = new Date(record.date.year, record.date.monthValue - 1, record.date.dayOfMonth);
+                const dayIndex = date.getDay(); // 0 (일요일) - 6 (토요일)
+                currentWeekData[dayIndex] = record.study_time;
+            });
+
+            data.previousWeek.forEach(record => {
+                const date = new Date(record.date.year, record.date.monthValue - 1, record.date.dayOfMonth);
+                const dayIndex = date.getDay(); // 0 (일요일) - 6 (토요일)
+                previousWeekData[dayIndex] = record.study_time;
+            });
+
+            const ctx = document.getElementById('studyTimeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '저번주',
+                            data: previousWeekData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            backgroundColor: 'rgba(154, 208, 245, 1)',
+                            fill: false
+                        },
+                        {
+                            label: '이번주',
+                            data: currentWeekData,
+                            borderColor: 'rgb(255,99,132)',
+                            borderWidth: 1,
+                            backgroundColor: 'rgba(255, 177, 193, 1)',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false, // 가로 세로 비율을 유지하지 않음
+                    aspectRatio: 4, // 가로 세로 비율 (width / height)
+                    scales: {
+                        x: {
+                            type: 'category', // 범주형 x축
+                            labels: labels // 레이블을 요일로 설정
+                        },
+                        y: {
+                            beginAtZero: true, // y축이 0부터 시작하도록 설정
+                            display: true // y축 범위 나타내기
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.raw;
+                                    return label + ': ' + formatTime(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+
+
+
     $(document).ready(function () {
         if ("${error}" !== "") {
             $("#messageContent").text("${error}");

@@ -1,10 +1,12 @@
 package bit.naver.controller;
 
+import bit.naver.entity.TimerEntity;
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.GoogleLoginService;
+import bit.naver.service.TimerService;
 import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -62,6 +65,8 @@ public class UsersController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TimerService timerService;
 
     @ModelAttribute("genderOptions") // 성별 옵션을 모델에 추가
     public Users.Gender[] getGenderOptions() {
@@ -190,7 +195,7 @@ public class UsersController {
 
     // 로그인 처리
     @RequestMapping("/Login")
-    public String usersLogin(Users user, @RequestParam("loginState") String loginState, RedirectAttributes rttr, HttpSession session, Principal principal) {
+    public String usersLogin(Users user, @RequestParam("loginState") String loginState, Model model,RedirectAttributes rttr, HttpSession session, Principal principal) {
 
 
         System.out.println("로그인 버튼 누른 후 작업");
@@ -232,6 +237,7 @@ public class UsersController {
             session.setAttribute("userVo", userVo);
             session.setAttribute("error", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
+
             return "forward:/main";
         } else {
             System.out.println("회원 정보 없음");

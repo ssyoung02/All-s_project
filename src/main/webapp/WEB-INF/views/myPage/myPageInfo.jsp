@@ -1,12 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
-<%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/> --%>
-<%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
-<%--이제 필요없는 코드 --%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +17,9 @@
         });
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -95,25 +95,22 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="statistics flex-between">
-                        <div class="graph-area" style="width: 200px; height: 50px;">
-                            그래프 영역
-                        </div>
-                        <div class="total-activity flex-colum">
-                            <button class="secondary-default flex-between">
-                                <p class="activity-title">총 공부시간</p>
-                                <p>150시간</p>
-                            </button>
-                            <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikePost'">
-                                <p class="activity-title">좋아요한 게시글</p>
-                                <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
-                            </button>
-                            <button class="secondary-default flex-between">
-                                <p class="activity-title">좋아요한 스터디</p>
-                                <p>5개</p>
-                            </button>
-                        </div>
+                    <div class="total-activity flex-between">
+                        <button class="secondary-default flex-between">
+                            <p class="activity-title">총 공부시간</p>
+                            <p id="totalstudytime"></p>
+                        </button>
+                        <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikePost'">
+                            <p class="activity-title">좋아요한 게시글</p>
+                            <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
+                        </button>
+                        <button class="secondary-default flex-between">
+                            <p class="activity-title">좋아요한 스터디</p>
+                            <p>5개</p>
+                        </button>
                     </div>
+                    <%--차트영역--%>
+                    <canvas id="monthlyStudyTimeChart" style="max-height: 300px;"></canvas>
                     <div class="resume">
                         <div class="resume-title flex-between">
                             <h3>이력서</h3>
@@ -152,11 +149,111 @@
         </main>
     </section>
 
-
-
     <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
     <jsp:include page="../include/timer.jsp" />
 </div>
+<sec:authorize access="isAuthenticated()">
+    <script>
+        fetch('/include/updateTime?userIdx=${userVo.userIdx}')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 데이터에서 total_study_time과 today_study_time 값을 추출
+                const totalStudyTime = data.total_study_time;
+
+                // HTML 요소에 데이터를 삽입
+                document.getElementById('totalstudytime').innerText = formatTime(totalStudyTime);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            const hDisplay = h > 0 ? h + '시간 ' : '';
+            const mDisplay = m > 0 ? m + '분 ' : '';
+            const sDisplay = s > 0 ? s + '초' : '';
+            return hDisplay + mDisplay + sDisplay;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/include/monthly?userIdx=${userVo.userIdx}')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const labels = [];
+                    const studyTimes = [];
+
+                    data.monthlyStudyTime.forEach(record => {
+                        const date = new Date(record.date);
+                        labels.push(date.getDate()); // 일(day)만 표시
+                        studyTimes.push(record.studytime);
+                    });
+
+                    const ctx = document.getElementById('monthlyStudyTimeChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '공부시간',
+                                data: studyTimes,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    grid: {
+                                        display: false // 가로 줄 숨기기
+                                    },
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: ''
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        display: false // 세로 줄 숨기기
+                                    },
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '공부시간'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            const label = context.dataset.label || '';
+                                            const value = context.raw;
+                                            return label + ': ' + formatTime(value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching study time data:', error));
+        });
+    </script>
+</sec:authorize>
 
 <%-- 모달 --%>
 <div id="modal-container" class="modal unstaged">
@@ -176,23 +273,23 @@
     </div>
 </div>
 
-
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
         if ("${error}" !== "") {
-            $("#messageContent").text("${error}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
+        $("#messageContent").text("${error}");
+        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('unstaged');
+        $('#modal-close').focus();
+    }
 
         if ("${msg}" !== "") {
-            $("#messageContent").text("${msg}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
+        $("#messageContent").text("${msg}");
+        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('unstaged');
+        $('#modal-close').focus();
+    }
     });
+
 </script>
 
 </body>

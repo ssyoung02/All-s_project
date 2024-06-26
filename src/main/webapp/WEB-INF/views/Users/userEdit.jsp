@@ -57,6 +57,7 @@
             }
         });
     }
+
 </script>
 <jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />

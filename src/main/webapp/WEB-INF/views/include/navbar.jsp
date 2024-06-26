@@ -6,6 +6,7 @@
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 
 
+
 <head>
     <meta charset="UTF-8">
     <title>All's</title>
@@ -14,10 +15,16 @@
 </head>
 <body>
 <div class="menu">
-    <%-- 로그인한 사용자에게만 표시 --%>
+    <input type="hidden" id="hiddenid" value="${userVo.userIdx}">
+    <!-- 로그인하지 않은 경우 -->
+    <sec:authorize access="isAnonymous()">
+        <button class="button-disabled timestart" onclick="alert('로그인 후 이용해주세요')">공부 시작</button>
+    </sec:authorize>
+    <!-- 로그인한 경우 -->
     <sec:authorize access="isAuthenticated()">
-        <button class="primary-default timestart" onclick="timerOpen()">공부 시작</button>
-    </sec:authorize>    <div id="lnb" class="lnb">
+    <button class="primary-default timestart" onclick="timerOpen()">공부 시작</button>
+    </sec:authorize>
+    <div id="lnb" class="lnb">
         <ul class="main-menu">
             <li class="menu-item">
                 <div class="menu-area menu-select">
@@ -127,4 +134,5 @@
     </div>
 </div>
 </body>
+
 
