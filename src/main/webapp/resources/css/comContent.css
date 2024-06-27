@@ -52,6 +52,14 @@
 .m-size-nav{
     display: none;
 }
+.studyTime{
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border-radius: 10px;
+    border: 1px solid #dad8cc;
+}
 
 /*header*/
 #skipnav{
@@ -113,14 +121,14 @@
 /*알림 목록*/
 .alarm{
     position: absolute;
-    top: 120px;
+    top: 70px;
     gap: 5px;
     padding: 20px;
     border-radius: 5px;
     border: 1px solid #588159;
     background-color: white;
     box-shadow: 0 3px 3px rgba(0,0,0,0.3);
-    z-index: 1;
+    z-index: 2;
 }
 .profile-username{
     margin: 5px 0 10px 0;
@@ -336,5 +344,76 @@ footer p{
     padding: 1em 2em;
 }
 #modal-container .modal-close-x{
+    padding: 1em 0 1em 1em;
+}
+
+/*타이머 모달*/
+.timer-modal{
+    opacity : 0;
+    position: fixed;
+    top: 0px; left: 0;
+    width: 100%; height: 100%;
+    max-width : 100%;
+    max-height : 100%;
+    display: flex;
+    justify-content: center;
+    align-items : center;
+    transition : opacity 0.5s;
+}
+.timer-modal.opaque{
+    opacity : 1;
+    transition : opacity 0.5s;
+}
+.timer-modal.unstaged {
+    top:-100px;
+    height : 0;
+}
+
+.timer-modal-overlay{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : RGBA(0, 0, 0, 0.6);
+}
+
+.timer-modal-contents{
+    width: 20em;
+    display:flex;
+    flex-direction : column;
+    align-items : center;
+    position: relative;
+    padding: 1em 2em;
+    background-color: rgb(255,255,255);
+    border-radius: 5px;
+    margin: 2em 0;
+}
+
+.timer-modal-text{
+    gap: 7em;
+    width: 100%;
+}
+
+.timer-modal-bottom .timer-modal-close{
+    color: white;
+    background-color : #3b593f;
+    border-radius: 5px;
+}
+.timer-modal-close:hover{
+    color: white;
+    background-color : #3b593f;
+}
+.timer-modal-center{
+    margin: 1em 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3em;
+}
+
+#timer-modal-container button{
+    padding: 1em 2em;
+}
+#timer-modal-container .modal-close-x{
     padding: 1em 0 1em 1em;
 }

@@ -7,6 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <sec:csrfMetaTags />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>내 공부노트 > 공부 > All's</title>

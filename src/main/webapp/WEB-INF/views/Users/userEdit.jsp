@@ -11,6 +11,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" content="${_csrf.token}">
+    <meta name="_csrf_header" content="${_csrf.headerName}">
+
     <title>회원정보 수정 > 내 정보 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
@@ -20,21 +23,26 @@
 </head>
 <body>
 <script>
-    $(document).ajaxSend(function(e, xhr, options) {
-        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-    });
-</script>
-<script>
+    //토큰값 전달
     $(document).ready(function() {
-        // 회원가입 결과 메시지 처리 (모달 표시)
-        <c:if test="${not empty error}">
+        var csrfToken = $('meta[name="_csrf"]').attr('content');
+        var csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+    });
+    //에러 메세지 모달
+    $(document).ready(function () {
+        // 회원정보 수정 결과 메시지 처리 (모달 표시)
+        <c:if test="${not empty param.error}">
         $("#messageContent").text("${error}");
-        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('opaque'); // 모달 활성화
         $('#modal-container').toggleClass('unstaged');
-        $('#modal-close').focus();
+        $('.modal-close-x').focus();
         </c:if>
     });
-
+    //비밀번호 중복 체크
     function checkDuplicate() {
         const username = $("#username").val();
         $.ajax({
@@ -54,6 +62,100 @@
             error: function() { // AJAX 요청 실패 시
                 $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
                 $("#usernameCheckResult").removeClass("success").addClass("error");
+            }
+        });
+    }
+
+    //프로필 업로드 모달
+    function profileModalOpen() {
+        let profileModalContainer = document.getElementById('profile-modal-container');
+        profileModalContainer.classList.toggle('opaque'); // 모달 활성화
+        profileModalContainer.classList.toggle('unstaged');
+        document.getElementById('modal-close').focus();
+    }
+    function profileModalClose(){
+        let modalContainer = document.getElementById('profile-modal-container');
+        modalContainer.classList.toggle('opaque'); // 모달 활성화
+        modalContainer.classList.toggle('unstaged');
+        document.getElementById('modal-close').focus();
+    }
+
+    // 프로필 이미지 업로드 함수
+    function uploadImage(event) {
+        event.preventDefault(); // 폼 제출 방지
+        var formData = new FormData(document.getElementById("uploadForm"));
+
+        $.ajax({
+            url: '/Users/UsersImageUpdate',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+            },
+            success: function(response) {
+                if (typeof response === 'string' && response.startsWith('파일 용량은')) {
+                    alert(response);
+                } else if (typeof response === 'string' && response.startsWith('이미지 파일만')) {
+                    alert(response);
+                } else {
+                    alert("파일 업로드가 완료되었습니다.");
+                    location.reload(); // 성공 시 페이지 새로고침
+                }
+                closeModal(); // 모달 닫기
+            },
+            error: function(xhr) {
+                alert("파일 업로드에 실패하였습니다. " + xhr.responseText);
+                closeModal(); // 모달 닫기
+            }
+        });
+    }
+
+
+
+    function submitUpdateForm(event) {
+        event.preventDefault(); // 기본 폼 제출 방지
+
+        const password = $("#password").val();
+        const password2 = $("#password2").val();
+        const email = $("#email").val();
+
+        // 필수 입력값 검증
+        if (password === "" || email === "") {
+            alert("비밀번호와 이메일을 모두 입력해주세요.");
+            return;
+        }
+
+        // 비밀번호 일치 검사
+        if (password !== password2) {
+            $("#passwordCheckResult").text("비밀번호가 일치하지 않습니다.");
+            $("#passwordCheckResult").removeClass("success").addClass("error");
+            return;
+        } else {
+            $("#passwordCheckResult").text(""); // 오류 메시지 제거
+            $("#passwordCheckResult").removeClass("error");
+        }
+
+        // 이메일 중복 검사 (AJAX)
+        $.ajax({
+            url: "/Users/checkDuplicateEmail", // 컨트롤러의 이메일 중복 확인 메서드 URL
+            type: "POST",
+            data: { email: email },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+            },
+            success: function(response) {
+                if (response === 0) {
+                    // 중복되지 않은 이메일
+                    $("#userEditForm").submit(); // 회원 정보 수정 폼 제출
+                } else {
+                    // 중복된 이메일
+                    alert("이미 사용 중인 이메일입니다.");
+                }
+            },
+            error: function() {
+                alert("이메일 중복 확인 중 오류가 발생했습니다.");
             }
         });
     }
@@ -78,7 +180,7 @@
             <div id="content">
                 <h1>나의 정보</h1>
                 <div class="updateForm bgwhite">
-                    <form method="POST" action="${root }/Users/userUpdate" id="user">
+                    <form method="POST" action="${root }/Users/userUpdate" id="userEditForm">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                         <div class="userinputbox">
                             <label for="name">이름<span class="essential">*</span></label>
@@ -92,6 +194,9 @@
                         <c:choose>
                             <c:when test="${not empty userVo.provider}">
                                 <!-- provider가 있을 때, 비밀번호 입력란 숨김 -->
+                                <input type="hidden" id="password" name="password" value="${userVo.password}">
+                                <input type="hidden" id="password2" name="password2" value="${userVo.password}">
+                                <span id="passwordCheckResult"></span>
                             </c:when>
                             <c:otherwise>
                                 <div class="userinputbox">
@@ -102,6 +207,7 @@
                                     <label for="password2">비밀번호 확인<span class="essential">*</span></label>
                                     <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
                                     <span id="passwordCheckResult"></span>
+                                        <%--                                    password와 passsword2,passwordCheckResult 중복오류 표시 작동하는데 문제 없습니다!!--%>
                                 </div>
                             </c:otherwise>
                         </c:choose>
@@ -110,8 +216,8 @@
                             <input type="text" id="birthdate" name="birthdate" value="${userVo.birthdate}" readonly required>
                         </div>
                         <div class="userinputbox">
-                            <label for="tel">전화번호<span class="essential">*</span></label>
-                            <input type="text" id="tel" name="tel" value="${userVo.mobile}" readonly required>
+                            <label for="mobile">전화번호<span class="essential">*</span></label>
+                            <input type="text" id="mobile" name="mobile" value="${userVo.mobile}" required>
                         </div>
                         <div class="userinputbox">
                             <label for="gender">성별<span class="essential">*</span></label>
@@ -119,49 +225,96 @@
                         </div>
                         <div class="userinputbox">
                             <label for="email">이메일<span class="essential">*</span></label>
-                            <input type="email" id="email" name="email" placeholder="변경하려는 이메일을 입력해주세요">
+                            <c:choose>
+                                <c:when test="${not empty userVo.provider}">
+                                    <input type="text" id="email" name="email" value="${userVo.email}" readonly>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="text" id="email" name="email" placeholder="변경하려는 이메일을 입력해주세요" required>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
-                        <div class="userinputbox">
-                            <dt>프로필</dt>
-                            <dd class="profile-chage">
-                                <input type="file" id="imageChange">
-                                <label for="imageChange" class="imgbox">
-                                    <i class="bi bi-plus-lg"></i>
-                                    <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
-                                </label>
-                                <div class="profile-change">
-                                    <p>변경할 프로필을 등록해주세요.</p>
-                                    <p>(300px X 300px / 500kb 미만)</p>
-                                </div>
-                            </dd>
-                        </div>
-                        <div class="buttonBox">
-                            <button class="updatebutton secondary-default" type="button" onclick="window.location.href='${root}/main';">취소</button>
-                            <button class="updatebutton primary-default" type="submit">정보 수정</button>
-                        </div>
+
                     </form>
+                    <div class="userinputbox">
+                        <dt style="width: 7em;">프로필</dt>
+                        <dd class="profile-chage" onclick="profileModalOpen()">
+                            <div class="imgbox div-img-box">
+                                <i class="bi bi-plus-lg"></i>
+                                <img src="${root}/resources/images/${userVo.profileImage}" alt="Profile Image" style="width: 100px; height: 100px">
+                            </div>
+                            <div class="profile-change-user">
+                                <p>변경할 프로필을 등록해주세요.</p>
+                                <p>(300px X 300px / 500kb 미만)</p>
+                            </div>
+                        </dd>
+                    </div>
+
+                    <div class="buttonBox">
+                        <button class="updatebutton secondary-default" type="button" onclick="window.location.href='${root}/main'">취소</button>
+                        <button class="updatebutton primary-default" type="submit" form="userEditForm" onclick="submitUpdateForm(event)">정보 수정</button>
+                    </div>
+                </div>
+            </div>
+
+            <%--                <div id="imageModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button" onclick="closeModal()">&times;</span> &lt;%&ndash; 닫기 버튼 &ndash;%&gt;
+                        <h2>프로필 이미지 변경</h2>
+                    </div>
+                </div>--%>
+
+            <%-- 프로필 업로드 모달 --%>
+            <div id="profile-modal-container" class="modal unstaged">
+                <div class="modal-overlay">
+                </div>
+                <div class="modal-contents">
+                    <div class="modal-text flex-between">
+                        <h4>프로필 업로드</h4>
+                        <button class="modal-close-x" aria-label="닫기" onclick="profileModalClose()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="modal-center">
+                        <form method="POST" action="${root}/Users/UsersImageUpdate" enctype="multipart/form-data" id="uploadForm">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <input type="hidden" name="username" value="${userVo.username}" /> <%-- 사용자 아이디 추가 --%>
+                            <div>
+                                <label for="profileImage">프로필 이미지:</label>
+                                <input type="file" id="profileImage" name="profileImage" accept="image/*">
+                                <button type="submit" class="primary-default" form="uploadForm">이미지 변경</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-bottom">
+                        <button type="button" class="secondary-default" data-dismiss="modal" onclick="profileModalClose()">닫기</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <%-- 오류 메세지 모달 --%>
+            <div id="modal-container" class="modal unstaged">
+                <div class="modal-overlay">
+                </div>
+                <div class="modal-contents">
+                    <div class="modal-text flex-between">
+                        <h4>오류 메세지</h4>
+                        <button class="modal-close-x" aria-label="닫기" onclick="modalClose()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>            </div>
+                    <div class="modal-center">
+                        <%-- 메시지 내용이 여기에 표시됩니다. --%>
+                        <c:if test="${not empty error}">
+                            <p>${error}</p>
+                        </c:if>
+                    </div>
+                    <div class="modal-bottom">
+                        <button type="button" class="modal-close" data-dismiss="modal" onclick="modalClose()">닫기</button>
+                    </div>
                 </div>
 
-                <%-- 오류 메세지 모달 --%>
-                <div id="modal-container" class="modal unstaged">
-                    <div class="modal-overlay">
-                    </div>
-                    <div class="modal-contents">
-                        <div class="modal-text flex-between">
-                            <h4>오류 메세지</h4>
-                            <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
-                        </div>
-                        <div class="modal-center">
-                            <%-- 메시지 내용이 여기에 표시됩니다. --%>
-                            <c:if test="${not empty error}">
-                                <p>${error}</p>
-                            </c:if>
-                        </div>
-                        <div class="modal-bottom">
-                            <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
-                        </div>
-                    </div>
-                </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>

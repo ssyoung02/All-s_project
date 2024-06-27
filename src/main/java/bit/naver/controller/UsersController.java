@@ -1,12 +1,10 @@
 package bit.naver.controller;
 
-import bit.naver.entity.TimerEntity;
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.CustomAccountDeletionService;
 import bit.naver.service.GoogleLoginService;
-import bit.naver.service.TimerService;
 import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +41,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -61,8 +59,6 @@ public class UsersController {
     private final UsersUserDetailsService usersUserDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private TimerService timerService;
     @Autowired
     private CustomAccountDeletionService customAccountDeletionService;
 
@@ -102,6 +98,14 @@ public class UsersController {
         Users user = usersMapper.findByUsername(username);
         return (user == null || username.isEmpty()) ? 0 : 1;
     }
+
+
+    @PostMapping("/checkDuplicateEmail") // 이메일 중복 확인 메서드 추가
+    @ResponseBody
+    public int checkDuplicateEmail(@RequestParam("email") String email) {
+        return usersMapper.findByEmail(email) ? 1 : 0;
+    }
+
 
     @RequestMapping(value = "/UsersRegister", method = RequestMethod.POST)
     public String usersRegister(@RequestParam("username") String username,
@@ -210,7 +214,7 @@ public class UsersController {
 
     // 로그인 처리
     @RequestMapping("/Login")
-    public String usersLogin(Users user, @RequestParam("loginState") String loginState, Model model,RedirectAttributes rttr, HttpSession session, Principal principal) {
+    public String usersLogin(Users user, @RequestParam("loginState") String loginState, RedirectAttributes rttr, HttpSession session, Principal principal) {
 
 
         System.out.println("로그인 버튼 누른 후 작업");
@@ -252,7 +256,6 @@ public class UsersController {
             session.setAttribute("userVo", userVo);
             session.setAttribute("error", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
-
             return "forward:/main";
         } else {
             System.out.println("회원 정보 없음");
@@ -332,18 +335,20 @@ public class UsersController {
         return "Users/userEdit";
     }
 
-    // 회원 정보 수정 처리
 
     @RequestMapping(value = "/userUpdate", method = RequestMethod.POST)
     public String usersUpdate(@RequestParam("username") String username,
                               @RequestParam("password") String password,
-                              @RequestParam("email") String email,
-                              RedirectAttributes rttr, HttpSession session, Principal principal) {
+                              @RequestParam("email") String email, // 이미지 파일
+                              @RequestParam(value = "profileImage", required = false) String profileImage,
+                              @RequestParam(value = "mobile", required = false) String mobile,
+
+                              RedirectAttributes rttr, HttpSession session, Principal principal) throws Exception {
 
         // 입력 값 유효성 검사 (직접 구현)
         if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
             rttr.addFlashAttribute("error", "모든 필드를 입력해주세요.");
-            return "redirect:/Users/userEdit";
+            return "redirect:/Users/userEdit?error=true";
         }
         try {
             // 4. 이메일 중복 검사
@@ -353,7 +358,7 @@ public class UsersController {
             }
             if (usersMapper.findByEmail(email) && !usersMapper.findByUsername(username).getEmail().equals(email)) {
                 rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
-                return "redirect:/Users/userEdit";
+                return "redirect:/Users/userEdit?error=true";
             }
 
 
@@ -363,14 +368,13 @@ public class UsersController {
             user.setEmail(email);
             user.setEnabled(true);
             user.setGradeIdx(1L); // 추후 조정 필요, 기본값으로 둔 것
+            user.setMobile(mobile);
             ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID-
             LocalDateTime currentDateTime = LocalDateTime.now();
             LocalDateTime zonedDateTime = ZonedDateTime.of(currentDateTime, zoneId).toLocalDateTime();
             Timestamp updatedAt = Timestamp.valueOf(zonedDateTime);
             user.setUpdatedAt(updatedAt.toLocalDateTime());
             System.out.println("회원 수정시 서울 타임존 현재 시간: " + currentDateTime);
-
-
             // 사용자 정보 저장
             usersMapper.updateUser(user);
             Users userAfterUpdate = usersMapper.findByUsername(username);
@@ -378,12 +382,12 @@ public class UsersController {
 
             rttr.addFlashAttribute("alertModal", "회원수정에 성공했습니다.");
 
-            return "redirect:/main";
+            return "redirect:/main?alertModal=true";
         } catch (Exception e) { // 예외 발생 시 처리
             log.error("회원수정 중 오류 발생:", e); // 오류 로깅
 
-            rttr.addFlashAttribute("alertModal", "회원가입 중 오류가 발생했습니다.");
-            return "redirect:/Users/Edit"; // 회원수정 페이지로 리다이렉트
+            rttr.addFlashAttribute("alertModal", "회원수정 중 오류가 발생했습니다.");
+            return "redirect:/Users/userEdit?error=true"; // 회원수정 페이지로 리다이렉트
         }
     }
 
@@ -396,66 +400,44 @@ public class UsersController {
         return "Users/UsersImageForm";
     }
 
-    @RequestMapping("/UsersImageUpdate")
-    public String memberImageUpdate(HttpServletRequest request, HttpSession session, RedirectAttributes rttr) throws Exception {
+    @PostMapping("/UsersImageUpdate") // 이미지 업로드 요청 처리
+    public String memberImageUpdate(@RequestParam("username") String username,
+                                    @RequestParam("profileImage") MultipartFile profileImage,
+                                    HttpServletRequest request,
+                                    RedirectAttributes rttr) throws Exception {
 
-        // 파일 업로드 처리 (Apache Commons FileUpload 사용)
-        if (ServletFileUpload.isMultipartContent(request)) {
-            ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
-            List<FileItem> items = upload.parseRequest(request);
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String fileName = profileImage.getOriginalFilename();
+            String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
 
-            String username = "";
-            String newProfile = "";
+            // 이미지 파일 확장자 검사
+            if (ext.equals("PNG") || ext.equals("GIF") || ext.equals("JPG") || ext.equals("JPEG")) {
+                String savePath = request.getServletContext().getRealPath("/resources/upload");
+                File uploadFile = new File(savePath + "/" + fileName);
+                profileImage.transferTo(uploadFile); // 파일 저장
 
-            for (FileItem item : items) {
-                if (item.isFormField() && item.getFieldName().equals("username")) {
-                    username = item.getString();
-                } else if (!item.isFormField() && item.getFieldName().equals("profileImage")) {
-                    // 파일 처리 로직
-                    if (item.getSize() > 0) { // 파일이 존재하는 경우에만 처리
-                        String fileName = item.getName();
-                        String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+                // 사용자 정보 업데이트
+                Users user = usersMapper.findByUsername(username);
+                user.setProfileImage("/resources/upload/" + fileName); // 이미지 경로 설정
+                usersMapper.updateUser(user);
 
-                        // 이미지 파일 확장자 검사
-                        if (ext.equals("PNG") || ext.equals("GIF") || ext.equals("JPG") || ext.equals("JPEG")) {
-                            String savePath = request.getServletContext().getRealPath("/resources/upload");
-                            File uploadFile = new File(savePath + "/" + fileName);
-                            item.write(uploadFile); // 파일 저장
-                            newProfile = fileName; // 새로운 프로필 이미지 파일 이름 저장
+                // 인증 정보 업데이트 (세션에 저장된 사용자 정보 갱신)
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                UserDetails userDetails = usersUserDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(userDetails, authentication.getCredentials(), userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-                            // 기존 프로필 이미지 삭제 (필요한 경우)
-                            String oldProfile = usersMapper.findByUsername(username).getProfileImage();
-                            if (!oldProfile.isEmpty()) {
-                                File oldFile = new File(savePath + "/" + oldProfile);
-                                if (oldFile.exists()) {
-                                    oldFile.delete();
-                                }
-                            }
-                        } else {
-                            rttr.addFlashAttribute("msg1", "실패");
-                            rttr.addFlashAttribute("msg2", "이미지 파일만 업로드할 수 있습니다.");
-                            return "redirect:/UsersImageForm";
-                        }
-                    }
-                }
+                rttr.addFlashAttribute("msg", "프로필 이미지가 업데이트되었습니다.");
+            } else {
+                rttr.addFlashAttribute("error", "이미지 파일만 업로드할 수 있습니다.");
             }
-
-            // 사용자 정보 업데이트
-            Users user = usersMapper.findByUsername(username); // 기존 사용자 정보 가져오기
-            user.setProfileImage(newProfile);
-            usersMapper.updateUser(user);
-
-            // 인증 정보 업데이트 (세션에 저장된 사용자 정보 갱신)
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetails userDetails = usersUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(userDetails, authentication.getCredentials(), userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        } else {
+            rttr.addFlashAttribute("error", "파일을 선택해주세요.");
         }
 
-        rttr.addFlashAttribute("msg1", "성공");
-        rttr.addFlashAttribute("msg2", "프로필 이미지가 업데이트되었습니다.");
-        return "redirect:/";
+        return "redirect:/Users/userEdit"; // 회원 정보 수정 페이지로 리다이렉트
     }
+
     //----------------------------------------------------------------------------------------------------------------------------------------
     //회원탈퇴기능
     @RequestMapping("/userdelete")

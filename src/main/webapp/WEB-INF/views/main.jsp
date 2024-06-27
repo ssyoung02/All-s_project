@@ -9,60 +9,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .loginMain {
-            display: flex; /* flexbox 사용 */
-        }
-
-        .loginUserInfoLeft {
-            width: 65%;
-            margin-right: 20px;
-            display: flex; /* 내부 요소들을 flexbox로 배치 */
-        }
-        .scheduler-area {
-            display: flex;
-            width: 100%; /* scheduler-area가 loginUserInfoLeft의 전체 너비를 차지하도록 설정 */
-        }
-        .scheduler { /* 월별 캘린더 */
-            width: 67%;
-            margin-right: 10px;  /*일별 캘린더와의 간격 */
-        }
-
-        .todo { /* 일별 캘린더 */
-            width: 33%;
-            margin-top: 62px;
-        }
-
-        .fc-calendarLink-button {
-            background-color: #717171 !important;
-            color: white !important;
-            border: none !important;
-        }
-
-        /* 일별 캘린더 제목 숨기기 */
-        #dayCalendar .fc-toolbar {
-            display: none;
-        }
-
-        /* 토글 버튼 스타일 */
-        .toggle-button {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 10;
-        }
-        #map-authenticated {
-            transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
-        }
-        #map-anonymous {
-            transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
@@ -128,9 +74,11 @@
                             editable: false,
                             selectable: false,
                             eventClick: false,
-                            locale: 'ko'
+                            locale: 'ko',
+                            height: 'auto' // 높이를 자동으로 조절
                         }).render();
 
+                        //일간 캘린더
                         const dayCalendarEl = document.getElementById('dayCalendar');
                         new FullCalendar.Calendar(dayCalendarEl, {
                             initialView: 'listDay',
@@ -142,14 +90,12 @@
                             locale: 'ko',
                             height: 'auto' // 높이를 자동으로 조절
                         }).render();
+
                     }
 
                     // 초기 렌더링 및 이벤트 리스너 등록
                     renderCalendars();
 
-                    // 캘린더가 변경될 때마다 다시 렌더링
-                    monthCalendar.on('datesSet', renderCalendars);
-                    dayCalendar.on('datesSet', renderCalendars);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error('Error fetching events:', errorThrown);
@@ -261,19 +207,10 @@
                             </div>
                         </div>
                         <div class="loginUserInfoRight">
-                            <div class="studyTime">
-                                <h2 class="">오늘의 공부 시간</h2>
-                                <div>
-                                    <div class="todoTitle">Total</div>
-                                    <p id="totalstudytime"></p>
-                                </div>
-                                <div>
-                                    <div class="todoTitle">Today</div>
-                                    <p id="todaystudytime"></p>
-                                </div>
-                            </div>
+                            <%--공부시간 차트--%>
+                            <canvas id="studyTimeChart" style="max-width: 200px; max-height: 150px;"></canvas>
                             <div class="userStudyGroup">
-                                <div class="userStudyGroupTitle flex-between">
+                                <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
                                     <div class="slide-button-group">
                                         <button class="slide-button" title="이전">
@@ -287,53 +224,43 @@
                                     </div>
                                 </div>
                                 <div class="userStudyGroupMember">
+
                                     <div class="memberItem">
                                         <div class="studyMemberProfile">
                                             <a class="profile" href="#">
-                                                <div class="profile-img">
+                                                <div class="study-profile-img">
                                                     <img src="${root}/resources/images/manggom.png" alt="내 프로필">
                                                 </div>
-                                                <div class="status"><span class="status">접속중</span></div>
+
                                             </a>
                                         </div>
                                         <a href="#" class="memberName">Yejoon</a>
+                                        <div class="study-status"><span class="status">접속중</span></div>
                                     </div>
+
                                     <div class="memberItem">
                                         <div class="studyMemberProfile">
                                             <a class="profile" href="#">
-                                                <div class="profile-img">
+                                                <div class="study-profile-img">
                                                     <img src="${root}/resources/images/manggom.png" alt="내 프로필">
                                                 </div>
-                                                <div class="status"><span class="status">접속중</span></div>
+
                                             </a>
                                         </div>
-                                        <a href="#" class="memberName">Jeayang</a>
+                                        <a href="#" class="memberName">Yejoon</a>
+                                        <div class="study-status"><span class="status">접속중</span></div>
                                     </div>
-                                    <div class="memberItem">
-                                        <div class="studyMemberProfile">
-                                            <a class="profile" href="#">
-                                                <div class="profile-img">
-                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                                </div>
-                                                <div class="status"><span class="status">접속중</span></div>
-                                            </a>
-                                        </div>
-                                        <a href="#" class="memberName">Yujung</a>
-                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <%--공부시간 차트--%>
-                    <h3>주간 공부시간</h3>
-                    <canvas id="studyTimeChart" style="max-height: 300px;"></canvas>
 
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
-                    <div id="map-authenticated" style="width:100%; height:250px;border-radius: 5px;"> </div> <%-- 로그인 후 지도 컨테이너 --%>
+                    <div id="map-authenticated" style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> </div> <%-- 로그인 후 지도 컨테이너 --%>
                 </sec:authorize>
-                <br>
-                <br>
 
                 <!--슬라이드 배너-->
                 <div class="swiper-container">
@@ -412,26 +339,7 @@
     <jsp:include page="include/footer.jsp"/>
 </div>
 <script>
-    fetch('/include/updateTime?userIdx=${userVo.userIdx}')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // 데이터에서 total_study_time과 today_study_time 값을 추출
-            const totalStudyTime = data.total_study_time;
-            const todayStudyTime = data.today_study_time;
-
-            // HTML 요소에 데이터를 삽입
-            document.getElementById('totalstudytime').innerText = formatTime(totalStudyTime);
-            document.getElementById('todaystudytime').innerText = formatTime(todayStudyTime);
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-
+    //숫자 계산
     function formatTime(seconds) {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
@@ -441,7 +349,7 @@
         const sDisplay = s > 0 ? s + '초' : '';
         return hDisplay + mDisplay + sDisplay;
     }
-
+    //주간 그래프
     fetch('/include/study-time?userIdx=${userVo.userIdx}') // Adjust the userIdx as needed
         .then(response => response.json())
         .then(data => {
@@ -471,7 +379,7 @@
                             label: '저번주',
                             data: previousWeekData,
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
+                            borderWidth: 4,
                             backgroundColor: 'rgba(154, 208, 245, 1)',
                             fill: false
                         },
@@ -479,7 +387,7 @@
                             label: '이번주',
                             data: currentWeekData,
                             borderColor: 'rgb(255,99,132)',
-                            borderWidth: 1,
+                            borderWidth: 4,
                             backgroundColor: 'rgba(255, 177, 193, 1)',
                             fill: false
                         }
@@ -487,18 +395,36 @@
                 },
                 options: {
                     maintainAspectRatio: false, // 가로 세로 비율을 유지하지 않음
-                    aspectRatio: 4, // 가로 세로 비율 (width / height)
+                    aspectRatio: 3, // 가로 세로 비율 (width / height)
                     scales: {
                         x: {
+                            grid: {
+                                display: false // 가로 줄 숨기기
+                            },
                             type: 'category', // 범주형 x축
                             labels: labels // 레이블을 요일로 설정
                         },
                         y: {
+                            grid: {
+                                display: false // 세로 줄 숨기기
+                            },
                             beginAtZero: true, // y축이 0부터 시작하도록 설정
-                            display: true // y축 범위 나타내기
+                            display: false // y축 범위 나타내기
                         }
                     },
                     plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 8 // 폰트 크기 설정
+                                }
+                            },
+                            title: {
+                                display: true // 범례 제목 duqn
+                            },
+                            maxWidth: 70, // 범례의 최대 너비 설정
+                            padding: 5 // 범례 주변 패딩 설정
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {

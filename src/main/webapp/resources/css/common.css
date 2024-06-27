@@ -24,3 +24,6 @@
 
 /*회원정보 스타일*/
 @import url(user.css);
+
+/*스케쥴러*/
+@import url(scheduler.css);

@@ -99,7 +99,7 @@
     </delete>
 
     <delete id="deleteUserChats" parameterType="Long">
-        DELETE FROM Chats WHERE user_id = #{userId}
+        DELETE FROM Chat WHERE user_idx = #{userId}
     </delete>
 
     <delete id="deleteUserLikeStudies" parameterType="Long">
@@ -107,7 +107,7 @@
     </delete>
 
     <delete id="deleteUserNotifications" parameterType="Long">
-        DELETE FROM Notifications WHERE user_id = #{userId}
+        DELETE FROM Notifications WHERE user_idx = #{userId}
     </delete>
 
     <delete id="deleteUserStudyRecords" parameterType="Long">
