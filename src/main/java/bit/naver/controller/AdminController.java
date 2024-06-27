@@ -109,13 +109,6 @@ public class AdminController {
             int totalReportedReferences = studyReferencesMapper.countReportedStudyReferences();
             int totalPages = (int) Math.ceil((double) totalReportedReferences / pageSize);
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            reportedReferences.forEach(reference -> {
-                if (reference.getCreatedAt() != null) {
-                    reference.setFormattedCreatedAt(reference.getCreatedAt().format(formatter));
-                }
-            });
-
             // 페이지 네비게이션 처리
             int startPage = Math.max(1, page - 5);
             int endPage = Math.min(startPage + 9, totalPages);

@@ -87,7 +87,7 @@
                             </td>
                             <td>${reference.username}</td>
                             <td>${reference.title}</td>
-                            <td>${reference.formattedCreatedAt}</td>
+                            <td>${reference.createdAt}</td>
                             <td>${reference.reportCount}</td>
                             <td>
                                 <button class="secondary-default">게시글 삭제</button>

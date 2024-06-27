@@ -20,14 +20,14 @@ public class StudyReferencesEntity {
     private Integer commentsCount;
     private Integer viewsCount;
     private Integer reportCount;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private LocalDateTime updatedAt;
 
     private String name;
     private String TOTALCOUNT;
 
     private Integer isLike;
-
+/*
     private String formattedCreatedAt;
 
     public void setCreatedAt(LocalDateTime createdAt) {
@@ -38,4 +38,5 @@ public class StudyReferencesEntity {
             this.formattedCreatedAt = "";
         }
     }
+ */
 }
