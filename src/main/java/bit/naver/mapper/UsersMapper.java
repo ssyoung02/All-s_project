@@ -90,6 +90,8 @@ public interface UsersMapper {
 
     void deleteUserTodos(@Param("userId") Long userId);
 
+    void deleteStudies(@Param("userId") Long userId);
+
     void deleteUser(@Param("userId") Long userId);
 
     Long findUserIdByUsername(@Param("username") String username);
@@ -103,4 +105,6 @@ public interface UsersMapper {
     int countAllUsersWithAuthorities();
 
     List<Users> findAllUsersWithAuthoritiesPaged(@Param("offset") int offset, @Param("limit") int limit);
+
+    String findUsernameByUserIdx(@Param("userIdx") Long userIdx);
 }

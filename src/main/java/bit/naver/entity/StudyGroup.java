@@ -54,7 +54,7 @@ public class StudyGroup {
     private int currentParticipants; // 현재 참여 인원 (기본값: 1)
 
     private Date createdAt;
-
+    private String createdAtString;
     // DB에 없는 엔티티
     private String leaderName;
 

@@ -16,6 +16,77 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <script>
+        // 선택된 회원 강제 탈퇴
+        function deleteSelectedUsers() {
+            const selectedUserIds = [];
+            $('input[name="selectedUserIds"]:checked').each(function() {
+                selectedUserIds.push($(this).val());
+            });
+
+            if (selectedUserIds.length === 0) {
+                alert("강제 탈퇴할 회원을 선택해주세요.");
+                return;
+            }
+
+            if (confirm("선택한 회원을 강제 탈퇴시키겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteUsers',
+                    type: 'DELETE',
+                    data: JSON.stringify({ userIds: selectedUserIds }),
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            alert("선택한 회원이 강제 탈퇴되었습니다.");
+                            location.reload();
+                        } else {
+                            const errorMessage = result.error || "회원 강제 탈퇴에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function(error) {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+
+        // 개별 회원 강제 탈퇴
+        function deleteUser(userIdx) {
+            if (confirm("정말로 이 회원을 강제 탈퇴시키겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteUser',
+                    type: 'DELETE',
+                    data: JSON.stringify({ userIdx: userIdx }),
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            alert("회원이 강제 탈퇴되었습니다.");
+                            location.reload();
+                        } else {
+                            const errorMessage = result.error || "회원 강제 탈퇴에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function() {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
@@ -55,14 +126,7 @@
                 <div class="list-title flex-between">
                     <h3>전체 회원</h3>
                     <fieldset class="search-box flex-row">
-                        <button class="secondary-default">선택회원 강제탈퇴</button>
-                        <p class="search-field">
-                            <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                            <button type="submit">
-                                <span class="hide">검색</span>
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </p>
+                        <button class="secondary-default" onclick="deleteSelectedUsers()">선택 회원 강제탈퇴</button>
                     </fieldset>
                 </div>
                 <table class="manager-table">
@@ -73,7 +137,7 @@
                         <th scope="col" class="trname">회원명</th>
                         <th scope="col" class="trname">멤버등급</th>
                         <th scope="col" class="trtime">가입날짜</th>
-                        <th scope="col">공부시간</th>
+                        <th scope="col">공부 시간</th>
                         <th scope="col" class="trbutton">관리</th>
                     </tr>
                     </thead>
@@ -81,7 +145,7 @@
                     <c:forEach var="user" items="${users}">
                         <tr class="tableList">
                             <td>
-                                <input type="checkbox" id="todolist${user.userIdx}" class="todo-checkbox">
+                                <input type="checkbox" id="todolist${user.userIdx}" class="todo-checkbox" name="selectedUserIds" value="${user.userIdx}">
                                 <label for="todolist${user.userIdx}" class="todo-label">
                                     <span class="checkmark"><i class="bi bi-square"></i></span>
                                 </label>
@@ -91,7 +155,7 @@
                             <td>${user.formattedCreatedAt}</td>
                             <td>${user.totalStudyTime} 시간</td>
                             <td>
-                                <button class="button-disabled" tabindex="-1">강제 탈퇴</button>
+                                <button class="secondary-default" onclick="deleteUser(${user.userIdx})">강제 탈퇴</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -129,25 +193,6 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
-
-    <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
-        </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
-                <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div class="modal-center">
-                선택한 회원을 강제탈퇴 시키겠습니까?
-            </div>
-            <div class="modal-bottom">
-                <button class="secondary-default" onclick="madalClose()">취소</button>
-                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
-            </div>
-        </div>
-    </div>
 
 </div>
 </body>

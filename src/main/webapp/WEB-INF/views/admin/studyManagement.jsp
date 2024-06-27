@@ -16,6 +16,70 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <script>
+        function deleteSelectedStudies() {
+            const selectedStudyIds = [];
+            $('input[name="selectedStudyIds"]:checked').each(function() {
+                selectedStudyIds.push($(this).val());
+            });
+
+            if (selectedStudyIds.length === 0) {
+                alert("삭제할 스터디를 선택해주세요.");
+                return;
+            }
+
+            if (confirm("선택한 스터디를 삭제하시겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteStudies',
+                    type: 'DELETE',
+                    data: JSON.stringify({ studyIds: selectedStudyIds }),
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            alert("선택한 스터디가 삭제되었습니다.");
+                            location.reload(); // 페이지 새로고침
+                        } else {
+                            const errorMessage = result.error || "스터디 삭제에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function(error) {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+
+        function deleteStudy(studyIdx) {
+            if (confirm("정말로 이 스터디를 삭제하시겠습니까?")) {
+                $.ajax({
+                    url: '${root}/admin/deleteStudy',// 쿼리 파라미터 형태로 전달
+                    type: 'DELETE',
+                    data: JSON.stringify({ studyIdx: studyIdx }), // studyIdx를 JSON 데이터로 전송
+                    contentType: 'application/json',
+                    success: function(result) {
+                        if (result.success) {
+                            alert("스터디가 삭제되었습니다.");
+                            location.reload(); // 페이지 새로고침
+                        } else {
+                            // 추가적인 예외 정보를 받을 경우 처리
+                            const errorMessage = result.error || "스터디 삭제에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function() {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
@@ -53,16 +117,9 @@
                 </div>
                 <%--탭 메뉴 끝--%>
                 <div class="list-title flex-between">
-                    <h3>스터디 수(5)</h3>
+                    <h3>신고된 스터디</h3>
                     <fieldset class="search-box flex-row">
-                        <button class="secondary-default">선택 스터디 삭제</button>
-                        <p class="search-field">
-                            <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                            <button type="submit">
-                                <span class="hide">검색</span>
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </p>
+                        <button class="secondary-default" onclick="deleteSelectedStudies()">선택 스터디 삭제</button>
                     </fieldset>
                 </div>
                 <table class="manager-table">
@@ -73,38 +130,28 @@
                         <th scope="col" class="trname">스터디장</th>
                         <th scope="col">스터디명</th>
                         <th scope="col" class="trtime">생성날짜</th>
+                        <th scope="col" class="trcount">신고 횟수</th>
                         <th scope="col" class="trbutton">관리</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="tableList">
-                        <td>
-                            <input type="checkbox" id="todolist11" class="todo-checkbox">
-                            <label for="todolist11" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                            </label>
-                        </td>
-                        <td>sangmin</td>
-                        <td>자바 공부할 사람 모여라</td>
-                        <td>2024.06.10</td>
-                        <td>
-                            <button class="secondary-default">스터디 삭제</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>
-                            <input type="checkbox" id="todolist1" class="todo-checkbox">
-                            <label for="todolist1" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                            </label>
-                        </td>
-                        <td>Yujung</td>
-                        <td>자바 공부할 사람 모여라</td>
-                        <td>2024.06.10</td>
-                        <td>
-                            <button class="secondary-default">스터디 삭제</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="study" items="${reportedStudies}">
+                        <tr class="tableList">
+                            <td>
+                                <input type="checkbox" id="todolist${study.studyIdx}" class="todo-checkbox" name="selectedStudyIds" value="${study.studyIdx}">
+                                <label for="todolist${study.studyIdx}" class="todo-label">
+                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                </label>
+                            </td>
+                            <td>${study.leaderName}</td>
+                            <td>${study.studyTitle}</td>
+                            <td>${study.createdAtString}</td>
+                            <td>${study.reportCount}</td>
+                            <td>
+                                <button class="secondary-default" onclick="deleteStudy(${study.studyIdx})">스터디 삭제</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
 
@@ -137,6 +184,7 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
+
 </div>
 </body>
 </html>

@@ -99,7 +99,7 @@
     </delete>
 
     <delete id="deleteUserChats" parameterType="Long">
-        DELETE FROM Chats WHERE user_id = #{userId}
+        DELETE FROM Chats WHERE user_idx = #{userId}
     </delete>
 
     <delete id="deleteUserLikeStudies" parameterType="Long">
@@ -107,7 +107,7 @@
     </delete>
 
     <delete id="deleteUserNotifications" parameterType="Long">
-        DELETE FROM Notifications WHERE user_id = #{userId}
+        DELETE FROM Notifications WHERE user_idx = #{userId}
     </delete>
 
     <delete id="deleteUserStudyRecords" parameterType="Long">
@@ -128,6 +128,10 @@
 
     <delete id="deleteUserTodos" parameterType="Long">
         DELETE FROM Todo WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteStudies" parameterType="Long">
+        DELETE FROM Studies WHERE study_leader_idx = #{userId}
     </delete>
 
     <delete id="deleteUser" parameterType="Long">
@@ -169,5 +173,11 @@
         WHERE u.username = a.username
         ORDER BY u.user_idx
         LIMIT ${limit} OFFSET ${offset}
+    </select>
+
+    <select id="findUsernameByUserIdx" resultType="java.lang.String">
+        SELECT username
+        FROM Users
+        WHERE user_idx = #{userIdx}
     </select>
 </mapper>

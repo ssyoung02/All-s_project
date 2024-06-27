@@ -49,4 +49,8 @@ public interface StudyReferencesMapper {
 
     // 신고된 게시글 개수 조회
     int countReportedStudyReferences();
+
+    // 개별 게시글 삭제
+    void deleteStudyReference(@Param("referenceIdx") Long referenceIdx);
+
 }

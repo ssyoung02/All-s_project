@@ -32,7 +32,7 @@ public interface StudyGroupMapper {
     //  스터디 메인 페이지 유저
     List<StudyMembers> getStudyMembers(Long studyIdx);
 
-    void deleteStudy(Long studyIdx);
+    void deleteStudy(@Param("studyIdx")Long studyIdx);
 
     void removeMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
 
@@ -57,4 +57,12 @@ public interface StudyGroupMapper {
 
     @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude FROM Studies") // 필요한 정보만 조회
     List<StudyGroup> findAllStudies();
+
+    // 신고된 스터디 목록 조회
+    List<StudyGroup> getReportedStudies(@Param("offset") int offset, @Param("limit") int limit);
+
+    // 신고된 스터디 개수 조회
+    int countReportedStudies();
+
+
 }

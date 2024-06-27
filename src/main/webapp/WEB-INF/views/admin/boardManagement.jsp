@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -15,6 +16,75 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <script>
+        function deleteSelectedReferences() {
+            const selectedReferenceIds = [];
+            $('input[name="selectedReferenceIds"]:checked').each(function () { // name 속성 수정
+                selectedReferenceIds.push($(this).val());
+            });
+
+            if (selectedReferenceIds.length === 0) {
+                alert("삭제할 게시글을 선택해주세요.");
+                return;
+            }
+
+            if (confirm("선택한 게시글을 삭제하시겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteReferences',
+                    type: 'DELETE',
+                    data: JSON.stringify({referenceIds: selectedReferenceIds}),
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken // CSRF 토큰 헤더 추가
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            alert("선택한 게시글이 삭제되었습니다.");
+                            location.reload(); // 페이지 새로고침
+                        } else {
+                            const errorMessage = result.error || "게시글 삭제에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function (error) {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+        function deleteReference(referenceIdx) {
+            if (confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteReference',
+                    type: 'DELETE',
+                    data: JSON.stringify({ referenceIdx: referenceIdx }), // JSON 데이터로 전송
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            alert("게시글이 삭제되었습니다.");
+                            location.reload(); // 페이지 새로고침
+                        } else {
+                            // 추가적인 예외 정보를 받을 경우 처리
+                            const errorMessage = result.error || "게시글 삭제에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function() {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
@@ -54,14 +124,7 @@
                 <div class="list-title flex-between">
                     <h3>신고 게시글</h3>
                     <fieldset class="search-box flex-row">
-                        <button class="secondary-default">선택 게시글 삭제</button>
-                        <p class="search-field">
-                            <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                            <button type="submit">
-                                <span class="hide">검색</span>
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </p>
+                        <button class="secondary-default" onclick="deleteSelectedReferences()">선택 게시글 삭제</button>
                     </fieldset>
                 </div>
                 <table class="manager-table">
@@ -80,7 +143,7 @@
                     <c:forEach var="reference" items="${reportedReferences}">
                         <tr class="tableList">
                             <td>
-                                <input type="checkbox" id="todolist${reference.referenceIdx}" class="todo-checkbox">
+                                <input type="checkbox" id="todolist${reference.referenceIdx}" class="todo-checkbox"  name="selectedReferenceIds" value="${reference.referenceIdx}">
                                 <label for="todolist${reference.referenceIdx}" class="todo-label">
                                     <span class="checkmark"><i class="bi bi-square"></i></span>
                                 </label>
@@ -90,7 +153,7 @@
                             <td>${reference.createdAt}</td>
                             <td>${reference.reportCount}</td>
                             <td>
-                                <button class="secondary-default">게시글 삭제</button>
+                                <button class="secondary-default" onclick="deleteReference(${reference.referenceIdx})">게시글 삭제</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -126,25 +189,6 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
-
-    <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
-        </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
-                <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div class="modal-center">
-                선택한 게시글을 삭제하시겠습니까?
-            </div>
-            <div class="modal-bottom">
-                <button class="secondary-default" onclick="modalClose()">취소</button>
-                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
-            </div>
-        </div>
-    </div>
 </div>
 </body>
 </html>

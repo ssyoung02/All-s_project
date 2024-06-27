@@ -191,7 +191,7 @@
     </select>
 
     <select id="getReportedStudyReferences" resultType="bit.naver.entity.StudyReferencesEntity">
-        SELECT s.reference_idx, u.username, s.title,
+        SELECT s.reference_idx as referenceIdx, u.username, s.title,
                DATE_FORMAT(s.created_at, '%Y-%m-%d %H:%i') AS createdAt, s.report_count as reportCount
         FROM StudyReferences s, Users u
         WHERE s.user_idx = u.user_idx and s.report_count > 0
@@ -202,4 +202,15 @@
     <select id="countReportedStudyReferences" resultType="int">
         SELECT COUNT(*) FROM StudyReferences WHERE report_count > 0
     </select>
+
+    <delete id="deleteStudyReference" parameterType="Long">
+        DELETE FROM StudyReferences WHERE reference_idx = #{referenceIdx}
+    </delete>
+
+    <delete id="deleteStudyReferences">
+        DELETE FROM StudyReferences WHERE reference_idx IN
+        <foreach item="referenceIdx" collection="referenceIds" open="(" separator="," close=")">
+            #{referenceIdx}
+        </foreach>
+    </delete>
 </mapper>
