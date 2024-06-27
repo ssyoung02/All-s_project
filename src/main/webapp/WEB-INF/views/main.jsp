@@ -785,7 +785,7 @@
         clusterer.addMarkers(markers); // 클러스터러에 마커 추가
 
         }
-    }
+
 
 
     // 스터디 마커 표시 함수

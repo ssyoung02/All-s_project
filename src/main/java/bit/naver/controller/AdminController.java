@@ -2,7 +2,6 @@ package bit.naver.controller;
 
 import bit.naver.entity.StudyReferencesEntity;
 import bit.naver.entity.Users;
-import bit.naver.mapper.StudiesMapMapper;
 import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyReferencesMapper;
 import bit.naver.mapper.UsersMapper;
