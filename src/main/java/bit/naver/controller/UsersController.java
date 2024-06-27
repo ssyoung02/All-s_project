@@ -134,7 +134,7 @@ public class UsersController {
                                 @RequestParam(value = "provider", required = false) String provider,
                                 @RequestParam(value = "profileImage", required = false) String profileImage,
                                 @RequestParam(value = "mobile") String mobile,
-                                RedirectAttributes rttr) {
+                                RedirectAttributes rttr,HttpSession session) {
 
         // 입력 값 유효성 검사 (직접 구현)
         if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty() || mobile.isEmpty()) {
@@ -277,6 +277,9 @@ public class UsersController {
             // 로그인 성공 처리
             System.out.println("로그인 정보 확인 o");
 
+            // activityStatus 업데이트
+            userVo.setActivityStatus(Users.ActivityStatus.ACTIVE);
+            usersMapper.updateActivityStatus(userVo.getUserIdx(), userVo.getActivityStatus()); // 업데이트된 사용자 정보 저장
             // 인증 정보 생성
             Authentication authentication = new UsernamePasswordAuthenticationToken(userVo.getUsername(), userVo.getPassword());
 
@@ -306,9 +309,16 @@ public class UsersController {
 
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
+
+            Users user = (Users) session.getAttribute("userVo"); // 세션에서 사용자 정보 가져오기
+
+            if (user != null) {
+                user.setActivityStatus(Users.ActivityStatus.NOT_LOGGED_IN); // activityStatus 변경
+                usersMapper.updateActivityStatus(user.getUserIdx(), user.getActivityStatus()); // 데이터베이스 업데이트
+            }
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/main"; // 로그아웃 후 메인 페이지로 이동

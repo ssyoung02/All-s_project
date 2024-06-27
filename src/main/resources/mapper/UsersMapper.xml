@@ -24,6 +24,7 @@
         <result column="updated_at" property="updatedAt"/>
         <result column="total_study_time" property="totalStudyTime"/>
         <result column="today_study_time" property="todayStudyTime"/>
+        <result column="activity_status" property="activityStatus"/>
     </resultMap>
 
     <select id="findById" resultMap="UsersResultMap">

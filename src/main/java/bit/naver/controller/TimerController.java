@@ -37,6 +37,14 @@ public class TimerController {
     public ResponseEntity<Long> startTimer(@RequestBody Map<String, Long> request) {
         Long user_idx = request.get("user_idx");
         System.out.println("user_idx: " + user_idx);
+
+        // 공부 시작 시 activityStatus 업데이트
+        Users user = usersMapper.findById(user_idx);
+        if (user != null) {
+            user.setActivityStatus(Users.ActivityStatus.STUDYING);
+            usersMapper.updateActivityStatus(user_idx, user.getActivityStatus());
+        }
+
         Long recordIdx = timerService.startTimer(user_idx);
         return ResponseEntity.ok(recordIdx);
     }
@@ -44,16 +52,30 @@ public class TimerController {
     @PostMapping("/pause")
     public ResponseEntity<String> pauseTimer(@RequestParam("userIdx") Long user_idx, @RequestParam("study_time") int study_time, HttpSession session) {
         System.out.println(user_idx + ": " + study_time);
+
+        // 공부 일시 정지 시 activityStatus 업데이트
+        Users user = usersMapper.findById(user_idx);
+        if (user != null) {
+            user.setActivityStatus(Users.ActivityStatus.RESTING);
+            usersMapper.updateActivityStatus(user_idx, user.getActivityStatus());
+        }
         timerService.pauseTimer(user_idx, study_time);
         return ResponseEntity.ok("처리 완료");
     }
 
     @GetMapping("/updateTime")
     @ResponseBody
-    public Users getUpdateTime(@RequestParam("userIdx") Long userIdx) {
+    public Users getUpdateTime(@RequestParam("userIdx") Long userIdx,HttpSession session) {
         try {
             Users updateUser = usersMapper.findById(userIdx);
             System.out.println("updateuser data: " + updateUser);
+            // 공부 종료 후 다시 로그인 시 activityStatus 업데이트
+            if (session.getAttribute("userVo") != null) {
+                Users loggedInUser = (Users) session.getAttribute("userVo");
+                loggedInUser.setActivityStatus(Users.ActivityStatus.ACTIVE);
+                usersMapper.updateActivityStatus(loggedInUser.getUserIdx(), loggedInUser.getActivityStatus());
+                session.setAttribute("userVo", loggedInUser); // 세션 정보 갱신
+            }
             return updateUser;
         } catch (Exception e) {
             e.printStackTrace();
