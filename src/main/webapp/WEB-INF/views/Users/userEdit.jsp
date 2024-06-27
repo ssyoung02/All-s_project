@@ -308,7 +308,7 @@
                 </div>
                 <div class="modal-contents">
                     <div class="modal-text flex-between">
-                        <h4>오류 메세지</h4>
+                        <h4>메세지</h4>
                         <button class="modal-close-x-userEdit" aria-label="닫기" onclick="UserEditModalClose()">
                             <i class="bi bi-x-lg"></i>
                         </button>

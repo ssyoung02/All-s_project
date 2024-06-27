@@ -4,7 +4,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
-<c:set var="error" value="${requestScope.error}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -30,6 +29,32 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            <c:if test="${not empty sessionScope.error}">
+            $("#messageContent-main").text("${sessionScope.error}");
+            $('#modal-container-main').toggleClass('opaque'); //모달 활성화
+            $('#modal-container-main').toggleClass('unstaged');
+            $('#modal-close').focus();
+            </c:if>
+
+        });
+        function MainModalOpen() {
+            let mainModalContainer = document.getElementById('modal-container-main');
+            mainModalContainer.classList.toggle('opaque'); // 모달 활성화
+            mainModalContainer.classList.toggle('unstaged');
+            document.getElementById('modal-close').focus();
+        }
+
+        function MainModalClose() {
+            let mainModalContainerClose = document.getElementById('modal-container-main');
+            mainModalContainerClose.classList.toggle('opaque'); // 모달 활성화
+            mainModalContainerClose.classList.toggle('unstaged');
+            document.getElementById('modal-close').focus();
+        }
+    </script>
     <script>
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
@@ -111,6 +136,23 @@
 <!-- 중앙 컨테이너 -->
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
+<%-- 로그인 성공 모달 --%>
+<div id="modal-container-main" class="modal unstaged" style="z-index: 100">
+    <div class="modal-overlay">
+    </div>
+    <div class="modal-contents">
+        <div class="modal-text flex-between">
+            <h4>알림</h4>
+            <button id="modal-close" class="modal-close" aria-label="닫기" onclick="MainModalClose()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div id="messageContent-main" class="modal-center">
+            <%-- 메시지 내용이 여기에 표시됩니다. --%>
+        </div>
+        <div class="modal-bottom">
+            <button type="button" class="modal-close" data-dismiss="modal" onclick="MainModalClose()">닫기</button>
+        </div>
+    </div>
+</div>
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
@@ -319,26 +361,10 @@
         </main>
     </section>
 
-    <%-- 로그인 성공 모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
-        </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
-                <h4>알림</h4>
-                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div id="messageContent" class="modal-center">
-                <%-- 메시지 내용이 여기에 표시됩니다. --%>
-            </div>
-            <div class="modal-bottom">
-                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-
-    <jsp:include page="include/footer.jsp"/>
 </div>
+    <jsp:include page="include/footer.jsp"/>
+
+
 <script>
     //주간 그래프
     fetch('/include/study-time?userIdx=${userVo.userIdx}') // Adjust the userIdx as needed
@@ -436,24 +462,6 @@
         .catch(error => {
             console.error('Fetch error:', error);
         });
-
-
-
-    $(document).ready(function () {
-        if (${param.error}) {
-            $("#messageContent").text("${error}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
-
-        if ("${msg}" !== "") {
-            $("#messageContent").text("${msg}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
-    });
 </script>
 <script>
     var mapAnonymous;
@@ -791,7 +799,7 @@
         toggleButton.addEventListener('click', toggleMapView);
         </sec:authorize>
     });
-
+    <%session.removeAttribute("error");%> <%-- 오류 메시지 제거 --%>
 </script>
 
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class KakaoLoginController {
 
     // 카카오 로그인 리다이렉트 및 사용자 인증 처리
     @RequestMapping(value = "/kakao/login/alls", method = RequestMethod.GET)
-    public ModelAndView kakaoLogin(@RequestParam(value = "code", required = false) String code) throws Throwable {
+    public ModelAndView kakaoLogin(@RequestParam(value = "code", required = false) String code, HttpSession session) throws Throwable {
         System.out.println("Code: " + code);
 
         // 1. Access token 획득
@@ -73,6 +74,7 @@ public class KakaoLoginController {
                     userDetails, null, userDetails.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            session.setAttribute("error", "로그인에 성공했습니다");
 
             // 4. 메인 페이지로 리다이렉트
             return new ModelAndView("redirect:/main");

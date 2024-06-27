@@ -74,5 +74,32 @@ public class Users implements Serializable {
             this.formattedCreatedAt = "";
         }
     }
+    private ActivityStatus activityStatus;
+
+    public enum ActivityStatus {
+        ACTIVE("온라인"),
+        STUDYING("공부 중"),
+        RESTING("쉬는 중"),
+        NOT_LOGGED_IN("오프라인");
+
+        private String value;
+
+        ActivityStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static ActivityStatus fromValue(String value) {
+            for (ActivityStatus status : ActivityStatus.values()) {
+                if (status.value.equals(value)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Invalid ActivityStatus value: " + value);
+        }
+    }
 
 }

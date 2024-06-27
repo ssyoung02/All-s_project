@@ -260,7 +260,9 @@ public class UsersController {
         }
         if (principal != null && principal instanceof UsernamePasswordAuthenticationToken) {
             // 사용자가 이미 인증된 경우 (구글 로그인 등)
-            return "forward:/main";
+            session.setAttribute("error", "로그인에 성공했습니다");
+
+            return "/main";
         }
         // 입력 값 유효성 검사
         if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
@@ -277,6 +279,10 @@ public class UsersController {
             // 로그인 성공 처리
             System.out.println("로그인 정보 확인 o");
 
+            // activityStatus 업데이트
+            userVo.setActivityStatus(Users.ActivityStatus.ACTIVE);
+            usersMapper.updateUser(userVo); // 업데이트된 사용자 정보 저장
+
             // 인증 정보 생성
             Authentication authentication = new UsernamePasswordAuthenticationToken(userVo.getUsername(), userVo.getPassword());
 
@@ -289,7 +295,7 @@ public class UsersController {
             session.setAttribute("userVo", userVo);
             session.setAttribute("error", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
-            return "forward:/main";
+            return "/main";
         } else {
             System.out.println("회원 정보 없음");
             log.warn("로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다."); // 로그 추가
@@ -306,9 +312,17 @@ public class UsersController {
 
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
+
+            Users user = (Users) session.getAttribute("userVo"); // 세션에서 사용자 정보 가져오기
+
+            if (user != null) {
+                user.setActivityStatus(Users.ActivityStatus.NOT_LOGGED_IN); // activityStatus 변경
+                usersMapper.updateActivityStatus(user.getUserIdx(), user.getActivityStatus()); // 데이터베이스 업데이트
+            }
+
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/main"; // 로그아웃 후 메인 페이지로 이동
