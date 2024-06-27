@@ -207,7 +207,7 @@
                     <div class="total-activity flex-between">
                         <button class="secondary-default flex-between">
                             <p class="activity-title">총 공부시간</p>
-                            <p id="totalstudytime"></p>
+                            <p class="totalstudytime"></p>
                         </button>
                         <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikePost'">
                             <p class="activity-title">좋아요한 게시글</p>
@@ -268,24 +268,6 @@
 </div>
 <sec:authorize access="isAuthenticated()">
     <script>
-        fetch('/include/updateTime?userIdx=${userVo.userIdx}')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // 데이터에서 total_study_time과 today_study_time 값을 추출
-                const totalStudyTime = data.total_study_time;
-
-                // HTML 요소에 데이터를 삽입
-                document.getElementById('totalstudytime').innerText = formatTime(totalStudyTime);
-            })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-            });
-
         function formatTime(seconds) {
             const h = Math.floor(seconds / 3600);
             const m = Math.floor((seconds % 3600) / 60);

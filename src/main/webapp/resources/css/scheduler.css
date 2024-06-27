@@ -1,0 +1,60 @@
+.loginUserInfoLeft {
+    width: 75%;
+    margin-right: 20px;
+    display: flex; /* 내부 요소들을 flexbox로 배치 */
+}
+.scheduler-area {
+    display: flex;
+    width: 100%; /* scheduler-area가 loginUserInfoLeft의 전체 너비를 차지하도록 설정 */
+}
+.scheduler { /* 월별 캘린더 */
+    width: 67%;
+    margin-right: 10px;  /*일별 캘린더와의 간격 */
+}
+
+.todo { /* 일별 캘린더 */
+    width: 33%;
+    border: 1px solid #dad8cc;
+}
+
+.fc-calendarLink-button {
+    background-color: #717171 !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* 일별 캘린더 제목 숨기기 */
+#dayCalendar .fc-toolbar {
+    display: none;
+}
+
+/* 토글 버튼 스타일 */
+.toggle-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+}
+#map-authenticated {
+    transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
+}
+#map-anonymous {
+    transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
+}
+.fc .fc-list-table tr > *{
+    border: 0;
+}
+.fc-theme-standard .fc-list {
+    border: 0;
+}
+.fc .fc-toolbar-title{
+    font-size: 1.75em;
+}
+#dayCalendar .fc-list-event-time{
+    
+}

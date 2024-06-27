@@ -134,7 +134,7 @@ public class UsersController {
                                 @RequestParam(value = "provider", required = false) String provider,
                                 @RequestParam(value = "profileImage", required = false) String profileImage,
                                 @RequestParam(value = "mobile") String mobile,
-                                RedirectAttributes rttr) {
+                                RedirectAttributes rttr, HttpSession session) {
 
         // 입력 값 유효성 검사 (직접 구현)
         if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty() || mobile.isEmpty()) {
