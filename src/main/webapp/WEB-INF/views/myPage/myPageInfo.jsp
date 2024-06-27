@@ -10,8 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags />
-    <%-- CSRF 토큰 자동 포함 --%>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나의 정보 > 내 정보 > All's</title>

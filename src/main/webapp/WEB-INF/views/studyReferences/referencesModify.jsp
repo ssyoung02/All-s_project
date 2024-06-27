@@ -145,21 +145,23 @@
         <input type="text" id="title-post" class="title-post" name="title" value="${studyReferencesEntity.title}">
 
         <ul class="todolist">
-          <!-- 태그 항목 -->
           <li>
-            <c:choose>
-              <c:when test="${studyReferencesEntity.isPrivate}">
-                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" checked>
-              </c:when>
-              <c:otherwise>
-                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
-              </c:otherwise>
-            </c:choose>
-            <label for="public" class="todo-label">
-              <span class="checkmark"><i class="bi bi-square"></i></span>
-              비밀글
-              <span class="private-mark"><i class=""></i></span>
-            </label>
+            <c:if test="${studyReferencesEntity.isPrivate}">
+              <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" checked="checked">
+              <label for="public" class="todo-label">
+                <span class="checkmark"><i class="bi bi-check-square"></i></span>
+                비밀글
+                <span class="private-mark"><i class="bi bi-lock-fill"></i></span>
+              </label>
+            </c:if>
+            <c:if test="${not studyReferencesEntity.isPrivate}">
+              <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
+              <label for="public" class="todo-label">
+                <span class="checkmark"><i class="bi bi-square"></i></span>
+                비밀글
+                <span class="private-mark"><i class=""></i></span>
+              </label>
+            </c:if>
           </li>
         </ul>
 
