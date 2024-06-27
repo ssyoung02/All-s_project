@@ -16,12 +16,12 @@ import bit.naver.mapper.StudyReferencesMapper;
 @Service
 public class StudyReferencesService {
 
-	
+
 	@Autowired
 	private StudyReferencesMapper studyReferencesMapper;
 
 	public List<StudyReferencesEntity> getStudyReferencesList(String userIdx, String searchKeyword, String searchOption,
-			String limits) {
+															  String limits) {
 		return studyReferencesMapper.getAllStudyReferences(userIdx, searchKeyword, searchOption, limits);
 	}
 
@@ -73,46 +73,11 @@ public class StudyReferencesService {
 		return studyReferencesMapper.updateReport(entity);
 	}
 
-	public Long writePost(StudyReferencesEntity entity, MultipartFile uploadFile) {
-
-		try {
-			// 파일이 있을경우에만
-			if (!uploadFile.isEmpty()) {
-				//일반적인 저장소 파일업로드방식 주석처리
-				
-				String fileName = uploadFile.getOriginalFilename();
-//				String uploadPath = "c:\\uploadPath"; //파일이 저장될경로, 나중에 config로 전역변수로 빼면될듯 UUID는 따로 처리안하였음.
-//				String originFilename = uploadFile.getOriginalFilename();
-//				long size = uploadFile.getSize();
-//
-//				File file = new File(uploadPath, uploadFile.getOriginalFilename());
-//				uploadFile.transferTo(file);
-//				
-//				entity.setFilename(originFilename);
-//				entity.setUploadPath(file.getAbsolutePath());
-				//이미지 파일만 저장 가능
-//				if(fileName.toLowerCase().endsWith(".png") ||
-//			            fileName.toLowerCase().endsWith(".jpg") ||
-//			            fileName.toLowerCase().endsWith(".jpeg")) {
-//					return 11L;
-//				}
-				
-				byte[] fileBytes = uploadFile.getBytes();
-				entity.setFileAttachments(fileBytes);
-				entity.setFileName(fileName);
-
-			}
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public Long writePost(StudyReferencesEntity entity) {
 		int result = studyReferencesMapper.writePost(entity);
-
-		return entity.getReferenceIdx();
+		return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환
 	}
+
 
 	@Transactional // 3가지 모두 에러가 나지 않고 실행 되었을때만, 데이터베이스 변경이 반영이 되는것
 	public int deletePost(int referenceIdx) {
@@ -121,7 +86,8 @@ public class StudyReferencesService {
 		return studyReferencesMapper.deletePost(referenceIdx);
 	}
 
-	public int updatePost(StudyReferencesEntity entity) {
-		return studyReferencesMapper.updatePost(entity);
+	public Long updatePost(StudyReferencesEntity entity) {
+		int result = studyReferencesMapper.updatePost(entity);
+		return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환ㅍ
 	}
 }

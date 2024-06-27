@@ -10,8 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags />
-    <%-- CSRF 토큰 자동 포함 --%>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나의 정보 > 내 정보 > All's</title>
@@ -32,14 +31,41 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 
     <script>
-        function uploadResume(event) {
-            event.preventDefault(); // 폼 제출을 막음
+        document.addEventListener('DOMContentLoaded', function() {
+            for (let i = 0; i < 3; i++) {
+                let fileInput = document.getElementById('uploadFile' + i);
+                if (fileInput) {
+                    fileInput.addEventListener('change', function() {
+                        updateFileName(i);
+                    });
+                }
+            }
+        });
 
-            var $frm = $("#uploadForm")[0];
-            var fileInput = $("#uploadFile")[0];
+        function updateFileName(index) {
+            var fileInput = document.getElementById('uploadFile' + index);
+            if (!fileInput) return;
 
-            //파일이 선택되지 않았을 경우 알림창 표시
-            if(fileInput.files.length === 0) {
+            var fileNameLabel = fileInput.nextElementSibling.querySelector('.filename');
+            if (!fileNameLabel) return;
+
+            if (fileInput.files.length > 0) {
+                fileNameLabel.textContent = fileInput.files[0].name;
+            } else {
+                fileNameLabel.textContent = "이력서 파일을 업로드 해주세요";
+            }
+        }
+
+        function uploadResume(event, index) {
+            event.preventDefault();
+
+            var formId = "#uploadForm" + index;
+            var fileInputId = "#uploadFile" + index;
+
+            var $frm = $(formId)[0];
+            var fileInput = $(fileInputId)[0];
+
+            if (fileInput.files.length === 0) {
                 alert("업로드할 파일을 선택해주세요.");
                 return;
             }
@@ -47,19 +73,16 @@
             var formData = new FormData($frm);
             formData.append("uploadFile", fileInput.files[0]);
 
-            console.log("uploadFile 호출됨");
-
-            // AJAX를 사용하여 폼 데이터를 서버로 전송
             $.ajax({
-                url : '/myPage/uploadResume',
-                type : 'POST',
-                data : formData,
-                processData : false,
-                contentType : false,
-                beforeSend : function(xhr) {
+                url: '/myPage/uploadResume',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function(xhr) {
                     xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                 },
-                success : function(response) {
+                success: function(response) {
                     if (typeof response === 'string' && response.startsWith('파일 용량은')) {
                         alert(response);
                     } else if (typeof response === 'string' && response.startsWith('이미지 파일만')) {
@@ -69,13 +92,13 @@
                         location.reload();
                     }
                 },
-                error : function(xhr) {
+                error: function(xhr) {
                     alert("파일업로드에 실패하였습니다. " + xhr.responseText);
                 }
             });
         }
 
-        //다운로드
+        // 다운로드
         function download(resumeIdx){
             window.location.href = '/myPage/download?resumeIdx=' + resumeIdx;
         }
@@ -89,14 +112,13 @@
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                     },
-
-                    success: function (result) {
+                    success: function(result) {
                         const fileItem = element.closest('.file-item');
                         if (fileItem) {
                             fileItem.remove();
                         }
                         alert("이력서가 삭제되었습니다.");
-                        location.reload();  // 페이지 새로고침(=댓글(전체댓글수) 새로고침하기 위해서)
+                        location.reload();  // 페이지 새로고침
                     },
                     error: function() {
                         alert("이력서 삭제에 실패하였습니다.");
@@ -105,6 +127,8 @@
             }
         }
     </script>
+
+
 
 </head>
 <body>
@@ -198,40 +222,42 @@
                             <a href="https://chatgpt.com/">AI로 자소서 작성하기 →</a>
                         </div>
 
-                        <div class= "resume-file flex-between">
+                        <div class="resume-file flex-between">
                             <!-- 파일 업로드 됐을 때 만들기 -->
-                            <c:choose>
-                            <c:when test="${ resumesEntity[0].fileName ne '' and resumesEntity[0].fileName ne null }">
-                            <div class="file-item">
-                                <button class="file-delete" onclick="deleteResume(this, ${resumesEntity[0].resumeIdx})">
-                                    <i class="bi bi-x-lg"></i>
-                                </button>
-                                <div class="customfile-lable flex-colum">
-                                            <p class="filename">${resumesEntity[0].fileName}</p>
-                                            <a href="javascript:download('${resumesEntity[0].resumeIdx}')" class="fileUpload">이력서 다운로드</a>
-                                </div>
-                            </div>
-                            </c:when>
-                                <c:otherwise>
-                                    <form id="uploadForm" onsubmit="uploadResume(event);">
-                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                                        <div class="file-item non-file">
-                                            <input type="file" id="uploadFile" name="uploadFile" class="customfile">
-                                            <label for="uploadFile" class="customfile-lable flex-colum">
-                                                <p class="filename">이력서 파일을 업로드 해주세요</p>
-                                            </label>
-                                                <button type="submit" class="fileUpload">업로드</button>
+                            <c:forEach begin="0" end="2" varStatus="status">
+                                <c:choose>
+                                    <c:when test="${resumesEntity[status.index].fileName ne '' and resumesEntity[status.index].fileName ne null}">
+                                        <div class="file-item">
+                                            <button class="file-delete" onclick="deleteResume(this, ${resumesEntity[status.index].resumeIdx})">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                            <div class="customfile-label flex-column">
+                                                <p class="filename" style="margin-bottom: 20px;">${resumesEntity[status.index].fileName}</p>
+                                                <a href="javascript:download('${resumesEntity[status.index].resumeIdx}')" class="fileUpload" style="padding-left: 20px; padding-right: 20px;"> 이력서 다운로드 </a>
+                                            </div>
                                         </div>
-                                    </form>
-                                </c:otherwise>
-                            </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="file-item non-file">
+                                            <form id="uploadForm${status.index}" onsubmit="uploadResume(event, ${status.index});" style="width: 100%;">
+                                                <input type="file" id="uploadFile${status.index}" name="uploadFile" class="customfile" style="width: 100%;">
+                                                <label for="uploadFile${status.index}" class="customfile-label flex-column" style="width: 100%;">
+                                                    <p class="filename">이력서 파일을 업로드 해주세요</p>
+                                                </label>
+                                                <button type="submit" class="fileUpload" style="font-size: 17px;">업로드</button>
+                                            </form>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
                         </div>
                     </div>
-                </sec:authorize>
 
+                </sec:authorize>
             </div>
         </main>
     </section>
+
 
     <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
     <jsp:include page="../include/timer.jsp" />
