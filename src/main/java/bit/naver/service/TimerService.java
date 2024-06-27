@@ -69,6 +69,9 @@ public class TimerService {
         result.put("currentWeek", currentWeek);
         result.put("previousWeek", previousWeek);
 
+        System.out.println("currentWeek: " + currentWeek);
+        System.out.println("previousWeek: " + previousWeek);
+
         return result;
     }
 

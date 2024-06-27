@@ -135,6 +135,24 @@
 .profile-chage{
     margin-left: 0;
 }
+#userEditForm{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.profile-change-user{
+    width: 180px;
+}
+
+.div-img-box{
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
 /*회원정보 수정 모바일*/
 @media (max-width: 1200px) {
     .userinfo{

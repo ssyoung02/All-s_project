@@ -140,29 +140,29 @@
 
     <insert id="writePost" keyColumn="reference_idx" keyProperty="referenceIdx" useGeneratedKeys="true">
         INSERT INTO StudyReferences (
-  	      user_idx, 
-  	      title, 
-  	      isPrivate,
-  	      <if test="fileAttachments != null">
-  	      file_attachments,
-  	      file_name,
-  	      </if> 
-  	      content, 
-  	      created_at, 
-  	      updated_at
-  	      )
+        user_idx,
+        title,
+        isPrivate,
+        <if test="fileAttachments != null and fileAttachments != ''">
+            file_attachments,
+            file_name,
+        </if>
+        content,
+        created_at,
+        updated_at
+        )
         VALUES (
-        	#{userIdx}, 
-        	#{title}, 
-        	#{isPrivate}, 
-  	      <if test="fileAttachments != null">
-        	#{fileAttachments},
-  	      	#{fileName},
-  	      </if> 
-        	#{content}, 
-        	now(), 
-        	now()
-        	)
+        #{userIdx},
+        #{title},
+        #{isPrivate},
+        <if test="fileAttachments != null and fileAttachments != ''">
+            #{fileAttachments},
+            #{fileName},
+        </if>
+        #{content},
+        now(),
+        now()
+        )
     </insert>
 
     <delete id="deleteLikeRef">
@@ -182,9 +182,18 @@
 
     <update id="updatePost">
         UPDATE StudyReferences
-        SET title = #{title}, content = #{content}, isPrivate = #{isPrivate}
+        SET
+            title = #{title},
+            content = #{content},
+            isPrivate = #{isPrivate},
+            updated_at = now(),
+            file_attachments = CASE WHEN #{fileAttachments} IS NOT NULL THEN #{fileAttachments} ELSE file_attachments END,
+            file_name = CASE WHEN #{fileName} IS NOT NULL THEN #{fileName} ELSE file_name END
         WHERE reference_idx = #{referenceIdx}
     </update>
+
+
+
 
     <select id="countAllPosts" resultType="int">
         SELECT COUNT(*) FROM StudyReferences

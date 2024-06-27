@@ -176,6 +176,7 @@
         }
 
     </script>
+
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />

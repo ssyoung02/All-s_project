@@ -68,7 +68,7 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -93,13 +93,13 @@
             $('.modal-close-x').focus();
 
 
-            <c:if test="${not empty sessionScope.loginusername}">
+                <c:if test="${not empty sessionScope.loginusername}">
 
-            var loginusername = "${sessionScope.loginusername}"; // 세션에서 값 가져오기
-            console.log("Username: " + loginusername);
-            $("#username").val(loginusername);
+                var loginusername = "${sessionScope.loginusername}"; // 세션에서 값 가져오기
+                console.log("Username: " + loginusername);
+                $("#username").val(loginusername);
 
-            </c:if>
+                </c:if>
             </c:if>
         });
     </script>

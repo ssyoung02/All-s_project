@@ -55,7 +55,7 @@ public interface StudyGroupMapper {
     void deleteStudyMembersByStudyIdx(Long studyIdx);
 //    void approveMember(Long studyIdx, Long userIdx);
 
-    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude FROM Studies") // 필요한 정보만 조회
+    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude,likes_count AS likesCount, currentParticipants, capacity FROM Studies") // 필요한 정보만 조회
     List<StudyGroup> findAllStudies();
 
     // 신고된 스터디 목록 조회

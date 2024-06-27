@@ -8,6 +8,7 @@
 <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

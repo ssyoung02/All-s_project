@@ -128,25 +128,36 @@ public class StudyNoteController {
 
     @PostMapping("/noteWrite")
     @ResponseBody
-    public Long submitPost(@ModelAttribute StudyReferencesEntity entity, MultipartFile uploadFile, HttpSession session,
+    public Long submitPost(@ModelAttribute StudyReferencesEntity entity, @RequestParam(required = false) MultipartFile uploadFile, HttpSession session,
                            HttpServletResponse response) {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
         entity.setUserIdx(userIdx);
 
-        if (uploadFile.getSize() > MAX_FILE_SIZE) {
+        // 파일 크기 검사
+        if (uploadFile != null && uploadFile.getSize() > MAX_FILE_SIZE) {
             return 10L;
         }
 
         try {
-            entity.setFileName(URLEncoder.encode(uploadFile.getOriginalFilename(), "UTF-8").replaceAll("\\+", "%20"));
-            entity.setFileAttachments(uploadFile.getBytes());
+            // 파일이 있는 경우 처리
+            if (uploadFile != null && !uploadFile.isEmpty()) {
+                String fileName = uploadFile.getOriginalFilename();
+                if (fileName.length() > 100) { // 최대 길이 제한
+                    fileName = fileName.substring(0, 100);
+                }
+                entity.setFileName(fileName);
+                entity.setFileAttachments(uploadFile.getBytes());
+            } else {
+                entity.setFileName(null);
+                entity.setFileAttachments(null);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return -1L;
         }
 
-        return studyNoteService.writePost(entity, uploadFile);
+        return studyNoteService.writePost(entity);
     }
 
     @RequestMapping("/deletePost")
@@ -166,11 +177,45 @@ public class StudyNoteController {
         return "/studyNote/noteModify";
     }
 
-    @RequestMapping("/updatePost")
+    @PostMapping("/updatePost")
     @ResponseBody
-    public int updatePost(@ModelAttribute StudyReferencesEntity entity) {
+    public Long updatePost(@ModelAttribute StudyReferencesEntity entity,
+                           @RequestParam("referenceIdx") Long referenceIdx,
+                           @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile,
+                           HttpSession session, HttpServletResponse response) {
+        Users user = (Users) session.getAttribute("userVo");
+        Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
+        entity.setUserIdx(userIdx);
+        entity.setReferenceIdx(referenceIdx); //전달받은 IDX값 저장
+
+        // 파일 크기 검사
+        if (uploadFile != null && uploadFile.getSize() > MAX_FILE_SIZE) {
+            return 10L;
+        }
+
+        try {
+            // 파일이 있는 경우 처리
+            if (uploadFile != null && !uploadFile.isEmpty()) {
+                String fileName = uploadFile.getOriginalFilename();
+                if (fileName.length() > 100) { // 최대 길이 제한
+                    fileName = fileName.substring(0, 100);
+                }
+                entity.setFileName(fileName);
+                entity.setFileAttachments(uploadFile.getBytes());
+            } else {
+                // 파일이 없으면 null로 설정
+                entity.setFileName(null);
+                entity.setFileAttachments(null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1L;
+        }
+
+        // 파일 여부와 관계없이 글 수정 처리
         return studyNoteService.updatePost(entity);
     }
+
 
     @GetMapping(value = "/download")
     public void fileDownload(@RequestParam("referenceIdx") Long referenceIdx, HttpSession session,
