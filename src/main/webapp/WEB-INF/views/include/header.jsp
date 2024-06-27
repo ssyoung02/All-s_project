@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="userVo" value="${sessionScope.userVo}"/>
+<c:set var="userVoUpdatedProfile" value="${sessionScope.userVoUpdated}"/>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
@@ -31,7 +32,14 @@
                     <!-- 프로필 링크 -->
                     <a class="profile" href="#">
                         <div class="profile-img">
-                            <img src="${userVo.profileImage}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';">
+                            <c:choose>
+                                <c:when test="${not empty userVoUpdatedProfile}">
+                                    <img src="${userVoUpdatedProfile}?t=${System.currentTimeMillis()}" alt="Profile Image">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${userVo.profileImage}?t=${System.currentTimeMillis()}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';" alt="Profile Image">
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
                     </a>
@@ -39,8 +47,14 @@
                     <div class="alarm flex-colum hidden">
                         <div>
                             <div class="profile-img">
-                                <img src="${userVo.profileImage}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';">
-                            </div>
+                                <c:choose>
+                                    <c:when test="${not empty userVoUpdatedProfile}">
+                                        <img src="${userVoUpdatedProfile}?t=${System.currentTimeMillis()}" alt="Profile Image">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${userVo.profileImage}?t=${System.currentTimeMillis()}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';" alt="Profile Image">
+                                    </c:otherwise>
+                                </c:choose>                            </div>
                             <p class="profile-username">${userVo.name}</p>
                         </div>
                         <div class="alarmList">
@@ -91,4 +105,3 @@
             </div>
         </div>
     </header>
-

@@ -170,6 +170,10 @@
                                 <li><b>가입날짜</b></li>
                                 <li>${userVo.createdAt}</li>
                             </ul>
+                            <ul class="userItem">
+                                <li><b>연락처</b></li>
+                                <li>${userVo.mobile}</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="statistics flex-between">

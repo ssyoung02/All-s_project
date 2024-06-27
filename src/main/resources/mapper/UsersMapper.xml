@@ -47,7 +47,7 @@
 
     <update id="updateUser">
         UPDATE Users
-        SET password = #{password}, email = #{email}, profile_image = #{profileImage}, enabled = #{enabled}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, updated_at = #{updatedAt}
+        SET password = #{password}, email = #{email}, profile_image = #{profileImage}, enabled = #{enabled}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, updated_at = #{updatedAt}, mobile = #{mobile}
         WHERE username = #{username}
     </update>
 
@@ -99,7 +99,7 @@
     </delete>
 
     <delete id="deleteUserChats" parameterType="Long">
-        DELETE FROM Chats WHERE user_id = #{userId}
+        DELETE FROM Chat WHERE user_idx = #{userId}
     </delete>
 
     <delete id="deleteUserLikeStudies" parameterType="Long">
@@ -107,7 +107,7 @@
     </delete>
 
     <delete id="deleteUserNotifications" parameterType="Long">
-        DELETE FROM Notifications WHERE user_id = #{userId}
+        DELETE FROM Notifications WHERE user_idx = #{userId}
     </delete>
 
     <delete id="deleteUserStudyRecords" parameterType="Long">

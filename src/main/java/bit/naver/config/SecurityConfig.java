@@ -68,9 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
-        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**","/studies/listOnAnonymousMap","/detail/{studyIdx}");
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**",
+                "/studies/listOnAnonymousMap","/detail/{studyIdx}",
+                "/Users/checkDuplicate","/Users/UsersImageUpdate");
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -92,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                           "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
                     .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+//                .antMatchers("/Users/UsersImageUpdate", "/Users/checkDuplicateEmail").permitAll()
                     .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
                     .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
@@ -99,6 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .antMatchers("/Users/userInfoProcess").authenticated()
                     .antMatchers("/Users/userInfo").authenticated()
                     .antMatchers("/calendar/*").authenticated()
+                    .antMatchers("/Users/updateLocation").authenticated()
                     .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
                 .anyRequest().authenticated()
                 .and()
@@ -118,7 +121,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
-                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation")
+                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation","/Users/UsersImageUpdate","/include/updateMemo")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
 //                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성

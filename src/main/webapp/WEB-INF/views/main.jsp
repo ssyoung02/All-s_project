@@ -3,6 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
+<c:set var="error" value="${requestScope.error}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -18,13 +19,15 @@
             margin-right: 20px;
             display: flex; /* 내부 요소들을 flexbox로 배치 */
         }
+
         .scheduler-area {
             display: flex;
             width: 100%; /* scheduler-area가 loginUserInfoLeft의 전체 너비를 차지하도록 설정 */
         }
+
         .scheduler { /* 월별 캘린더 */
             width: 67%;
-            margin-right: 10px;  /*일별 캘린더와의 간격 */
+            margin-right: 10px; /*일별 캘린더와의 간격 */
         }
 
         .todo { /* 일별 캘린더 */
@@ -55,9 +58,11 @@
             cursor: pointer;
             z-index: 10;
         }
+
         #map-authenticated {
             transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
         }
+
         #map-anonymous {
             transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
         }
@@ -66,7 +71,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
@@ -79,7 +85,7 @@
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
     <script>
-        $(document).ajaxSend(function(e, xhr, options) {
+        $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
         });
 
@@ -110,7 +116,7 @@
                             customButtons: { // 버튼 추가
                                 calendarLink: {
                                     text: '캘린더 바로가기',
-                                    click: function() {
+                                    click: function () {
                                         location.href = "${root}/calendar"; // 페이지 이동
                                     }
                                 }
@@ -130,7 +136,7 @@
                         const dayCalendarEl = document.getElementById('dayCalendar');
                         new FullCalendar.Calendar(dayCalendarEl, {
                             initialView: 'listDay',
-                            headerToolbar: { left: '', center: 'title', right: '' },
+                            headerToolbar: {left: '', center: 'title', right: ''},
                             events: eventsData,
                             editable: false,
                             selectable: false,
@@ -182,7 +188,8 @@
                             <div class="service-info-left">
                                 <h3>서비스</h3>
                                 <h2>혼자 공부하기 힘든 분들을 위한 스터디 서비스!</h2>
-                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을 제공합니다</p>
+                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을
+                                    제공합니다</p>
                             </div>
                             <div class="service-info-right flex-colum">
                                 <button class="secondary-default">공부노트<i class="bi bi-arrow-right"></i></button>
@@ -201,10 +208,11 @@
                     </div>
                     <h2>주변에서 함께할 동료들을 찾으세요!</h2><br>
                     <sec:authorize access="isAnonymous()">
-                        <div id="map-anonymous" style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 전 지도 컨테이너 --%>
+                        <div id="map-anonymous"
+                             style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 전 지도 컨테이너 --%>
                     </sec:authorize>
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
 
                             initializeMapAnonymous();
                             getLocationAndDisplayOnAnonymousMap();
@@ -221,12 +229,12 @@
                                     alert("스터디 정보를 가져오는데 실패했습니다.");
                                 }
                             });
-<%--                            <c:if test="${not empty studyList}">--%>
-<%--                            displayStudyMarkersAnonymous(mapAnonymous, ${studyList}); // 스터디 마커 표시--%>
-<%--                            </c:if>--%>
+                            <%--                            <c:if test="${not empty studyList}">--%>
+                            <%--                            displayStudyMarkersAnonymous(mapAnonymous, ${studyList}); // 스터디 마커 표시--%>
+                            <%--                            </c:if>--%>
 
                             // 10초마다 위치 정보 업데이트
-                            setInterval(getLocationAndDisplayOnAnonymousMap, 1000);
+                            setInterval(getLocationAndDisplayOnAnonymousMap, 1500);
 
                             // 토글 버튼 생성 및 추가
                             var toggleButtonAnonymous = document.createElement('button');
@@ -243,7 +251,7 @@
                     <br>
                     <br>
                 </sec:authorize>
-            <%-- 로그인한 사용자에게만 표시 --%>
+                <%-- 로그인한 사용자에게만 표시 --%>
                 <sec:authorize access="isAuthenticated()">
                     <div class="loginMain">
                         <div class="loginUserInfoLeft">
@@ -322,7 +330,8 @@
                     </div>
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
-                    <div id="map-authenticated" style="width:100%; height:250px;border-radius: 5px;"> </div> <%-- 로그인 후 지도 컨테이너 --%>
+                    <div id="map-authenticated"
+                         style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 후 지도 컨테이너 --%>
                 </sec:authorize>
                 <br>
                 <br>
@@ -405,7 +414,7 @@
 </div>
 <script>
     $(document).ready(function () {
-        if ("${error}" !== "") {
+        if (${param.error}) {
             $("#messageContent").text("${error}");
             $('#modal-container').toggleClass('opaque'); //모달 활성화
             $('#modal-container').toggleClass('unstaged');
@@ -450,7 +459,6 @@
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'; // 마커 이미지 URL
     var imageSize = new kakao.maps.Size(24, 35);
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
 
 
     // 지도 생성 및 초기화 (로그인 전)
@@ -530,7 +538,7 @@
 
 
         // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function() {
+        setTimeout(function () {
             mapAuthenticated.relayout();
         }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
 
@@ -556,7 +564,7 @@
         }
 
         // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function() {
+        setTimeout(function () {
             mapAnonymous.relayout();
         }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
 
@@ -567,7 +575,7 @@
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnMap() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
@@ -579,7 +587,7 @@
                 <sec:authorize access="isAuthenticated()">
                 sendLocationToServer(lat, lon);
                 </sec:authorize>
-            }, function(error) {
+            }, function (error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -590,7 +598,7 @@
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnAnonymousMap() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
@@ -599,7 +607,7 @@
 
                 mapAnonymous.setCenter(locPosition);
 
-            }, function(error) {
+            }, function (error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -609,17 +617,22 @@
 
     // 위치 정보 서버 전송 함수
     function sendLocationToServer(latitude, longitude) {
-        $.ajax({
-            url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
-            type: 'POST',
-            data: { latitude: latitude, longitude: longitude },
-        success: function(response) {
-            console.log('위치 정보 업데이트 성공:', response);
-        },
-        error: function(xhr, status, error) {
-            console.error('위치 정보 업데이트 실패:', error);
-        }
-    })
+        // 로그인 여부 확인
+            $.ajax({
+                url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
+                type: 'POST',
+                data: {latitude: latitude, longitude: longitude},
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+                },
+                success: function (response) {
+                    console.log('위치 정보 업데이트 성공:', response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('위치 정보 업데이트 실패:', error);
+                }
+            });
+
     }
 
 
@@ -647,7 +660,7 @@
                 content: '<div style="width:160px;text-align:center;padding:10px 0;border-radius: 20px;">' +
                     '<h4>' + study.studyTitle + '</h4>' +
                     '<p>' + study.category + '</p>' +
-                    '<p>' +"💚 likes : " +study.likesCount + '</p>' +
+                    '<p>' + "💚 likes : " + study.likesCount + '</p>' +
                     '<p>' + "모집 :" + study.currentParticipants + '/' + study.capacity + '</p>' +
                     '<a href="${root}/studyRecruit/recruitReadForm?studyIdx=' + study.studyIdx + '" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">더보기</a>' + // 상세보기 버튼 추가
                     '</div>',
@@ -657,10 +670,10 @@
             infowindows.push(infowindow);
 
             // 마커 클릭 이벤트 리스너 등록 (클로저 활용)
-            (function(marker, index) { // index 매개변수 추가
-                kakao.maps.event.addListener(marker, 'click', function() {
+            (function (marker, index) { // index 매개변수 추가
+                kakao.maps.event.addListener(marker, 'click', function () {
                     // 다른 인포윈도우 닫기
-                    infowindows.forEach(function(iw) {
+                    infowindows.forEach(function (iw) {
                         iw.close();
                     });
                     // 클릭된 마커에 해당하는 인포윈도우 열기
@@ -669,7 +682,6 @@
             })(marker, i); // marker와 index를 클로저에 전달
         }
         clusterer.addMarkers(markers); // 클러스터러에 마커 추가
-
     }
 
 
@@ -697,7 +709,7 @@
                 content: '<div style="width:160px;text-align:center;padding:10px 0;border-radius: 20px;">' +
                     '<h4>' + studys.studyTitle + '</h4>' +
                     '<p>' + studys.category + '</p>' +
-                    '<p>' +"💚 likes : " +studys.likesCount + '</p>' +
+                    '<p>' + "💚 likes : " + studys.likesCount + '</p>' +
                     '<p>' + "모집 :" + studys.currentParticipants + '/' + studys.capacity + '</p>' +
                     '<a href="${root}/studyRecruit/recruitReadForm?studyIdx=' + studys.studyIdx + '" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">더보기</a>' + // 상세보기 버튼 추가추가
                     '</div>',
@@ -707,10 +719,10 @@
             infowindowAnonymouses.push(infowindow);
 
             // 마커 클릭 이벤트 리스너 등록 (클로저 활용)
-            (function(marker, infowindow) {
-                kakao.maps.event.addListener(marker, 'click', function() {
+            (function (marker, infowindow) {
+                kakao.maps.event.addListener(marker, 'click', function () {
                     // 다른 인포윈도우 닫기
-                    infowindowAnonymouses.forEach(function(iw) {
+                    infowindowAnonymouses.forEach(function (iw) {
                         iw.close();
                     });
                     infowindow.open(mapAnonymous, marker);
@@ -740,7 +752,7 @@
         });
 
         // 1초마다 위치 정보 업데이트
-        setInterval(getLocationAndDisplayOnMap, 1000);
+        setInterval(getLocationAndDisplayOnMap, 1500);
 
         // 토글 버튼 생성 및 추가
         var toggleButton = document.createElement('button');
