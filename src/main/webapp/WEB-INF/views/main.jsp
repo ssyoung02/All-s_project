@@ -16,12 +16,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--차트-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
+    <!--부트, CSS-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
-
+    <!--롤링배너-->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
 
@@ -346,6 +347,10 @@
             const labels = ['일', '월', '화', '수', '목', '금', '토'];
             const currentWeekData = new Array(7).fill(0);
             const previousWeekData = new Array(7).fill(0);
+
+            console.log(data)
+            console.log(currentWeekData);
+            console.log(previousWeekData)
 
             data.currentWeek.forEach(record => {
                 const date = new Date(record.date.year, record.date.monthValue - 1, record.date.dayOfMonth);

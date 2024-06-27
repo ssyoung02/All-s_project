@@ -296,6 +296,8 @@
                         studyTimes.push(record.studytime);
                     });
 
+                    console.log(data)
+
                     const ctx = document.getElementById('monthlyStudyTimeChart').getContext('2d');
                     new Chart(ctx, {
                         type: 'bar',

@@ -173,8 +173,8 @@
         })
         .then(data => {
             // 데이터에서 total_study_time과 today_study_time 값을 추출
-            const totalStudyTime = data.total_study_time;
-            const todayStudyTime = data.today_study_time;
+            const totalStudyTime = data.totalStudyTime;
+            const todayStudyTime = data.todayStudyTime;
 
             // HTML 요소에 데이터를 삽입
             document.querySelectorAll('.totalstudytime').forEach(element => {
