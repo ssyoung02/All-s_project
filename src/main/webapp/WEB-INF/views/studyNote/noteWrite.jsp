@@ -101,6 +101,19 @@
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('removeFileButton').addEventListener('click', function() {
+                console.log("파일 삭제");
+
+                let fileInput = document.getElementById('file');
+                fileInput.value = ''; // 파일 입력 요소 초기화
+
+                let uploadFileInput = document.getElementById('uploadFile');
+                uploadFileInput.value = '첨부파일'; // 표시되는 텍스트 초기화
+            });
+        });
+
     </script>
 </head>
 <body>
@@ -154,6 +167,7 @@
                                 <p class="tag-title">첨부파일</p>
                                 <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
                                 <label for="file">파일찾기</label> <input type="file" id="file">
+                                <button type="button" class="secondary-default" id="removeFileButton">파일삭제</button>
                             </li>
                         </ul>
 
