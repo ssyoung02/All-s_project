@@ -68,9 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
-        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**","/studies/listOnAnonymousMap","/detail/{studyIdx}");
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**",
+                "/studies/listOnAnonymousMap","/detail/{studyIdx}",
+                "/Users/checkDuplicate","/Users/UsersImageUpdate");
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -82,22 +83,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                         "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
-                .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
-                .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
-                .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll()
-                .antMatchers("/calendar/**").authenticated()
-                .antMatchers("/Users/userInfoProcess").authenticated()
-                .antMatchers("/Users/userInfo").authenticated()
-                .antMatchers("/calendar/*").authenticated()
-                .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
-                .anyRequest().authenticated() // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
+                // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/calendar/**").authenticated()
+                    .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
+        // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/Users/userInfoProcess").authenticated()
+                    .antMatchers("/Users/userInfo").authenticated()
+                    .antMatchers("/calendar/*").authenticated()
+                    .antMatchers("/Users/updateLocation").authenticated()
+                    .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/Users/UsersLoginForm")
-                .loginProcessingUrl("/Users/Login")
-                .defaultSuccessUrl("/main")
-                .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
-                .permitAll()
+                    .loginPage("/Users/UsersLoginForm")
+                    .loginProcessingUrl("/Users/Login")
+                    .defaultSuccessUrl("/main")
+                    .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/Users/logout")
@@ -108,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
-                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/calendar/**")
+                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/calendar/**","/Users/UsersImageUpdate","/include/updateMemo")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
 //                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
@@ -119,15 +123,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                 .invalidSessionUrl("/Users/UsersLoginForm?invalid")
                 .and()
-                .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
+                    .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
 
 
         http.sessionManagement()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
-                .expiredUrl("/Users/UsersLoginForm?expired")
+                .expiredUrl("/main?expired")
                 .and()
-                .invalidSessionUrl("/Users/UsersLoginForm?invalid")
+                .invalidSessionUrl("/main")
                 .sessionFixation().migrateSession(); // 세션 고정 공격 방지
         /*
             추가 설정 시 필요:

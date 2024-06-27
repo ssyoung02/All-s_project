@@ -100,7 +100,7 @@
             </li>
             <li class="menu-item">
                 <div class="menu-area menu-icon flex-between">
-                    <a href="${root}/Users/userInfo" class="menu-top menu-text">내 정보</a>
+                    <a href="#" class="menu-top menu-text">내 정보</a>
                     <button class="tertiary-default">
                         <i class="bi bi-chevron-up"></i>
                         <span class="hide">메뉴 열기/닫기</span>

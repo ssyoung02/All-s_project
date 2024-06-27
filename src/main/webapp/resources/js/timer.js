@@ -190,7 +190,7 @@ function updateMemo() {
         success: function(response) {
             console.log('메모 저장 성공:', response);
             alert('메모가 작성되었습니다.');
-            timermadalClose();
+            timermodalClose();
             timeStop();
         },
         error: function(xhr, status, error) {

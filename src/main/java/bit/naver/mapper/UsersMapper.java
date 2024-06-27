@@ -92,6 +92,7 @@ public interface UsersMapper {
 
     void deleteUser(@Param("userId") Long userId);
 
+
     Long findUserIdByUsername(@Param("username") String username);
 
     boolean isAdmin(@Param("username") String username);

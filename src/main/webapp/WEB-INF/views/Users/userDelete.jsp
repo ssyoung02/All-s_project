@@ -23,28 +23,28 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-
-<jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
+<jsp:include page="../include/timer.jsp" />
+<jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
+            <jsp:include page="../include/navbar.jsp" />
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
+                <jsp:include page="../include/navbar.jsp" />
             </div>
             <!--각 페이지의 콘텐츠-->
             <div id="content">
                 <h1>회원탈퇴</h1>
 
                 <!--각 페이지의 콘텐츠-->
-                <div class="form-container">
-                    <form method="POST" action="${root }/Users/delete" id="userEditForm">
+                <div class="updateForm bgwhite">
+                    <form method="POST" action="${root }/Users/delete" id="user">
                         <div class="updateForm bgwhite">
                             <h1>"함께하면 더 멀리 갈 수 있습니다!"</h1>
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -55,7 +55,7 @@
                             </div>
                             <div>
                                 <ul>
-                                <li><h3>서로에게 도움이 되는 네트워크</h3>: 여러분이 겪는 어려움을 함께 나누고 해결할 수 있는 든든한 동료들이 있습니다.</li>
+                                    <li><h3>서로에게 도움이 되는 네트워크</h3>: 여러분이 겪는 어려움을 함께 나누고 해결할 수 있는 든든한 동료들이 있습니다.</li>
                                     <li><h3>고유한 학습 자원</h3>: 우리 커뮤니티만의 특별한 자료와 정보를 공유받을 수 있습니다.</li>
                                     <li><h3>동기 부여</h3>: 서로의 성과를 통해 더욱 강력한 동기부여를 얻을 수 있습니다.</li><br>
                                     <li><h2>지금의 노력이 쌓여 큰 성과로 돌아옵니다. 이곳에서 계속 함께 성장해 나가요!</h2></li><br>
