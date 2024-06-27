@@ -5,25 +5,25 @@
 <mapper namespace="bit.naver.mapper.UsersMapper">
 
     <resultMap id="UsersResultMap" type="bit.naver.entity.Users">
-        <id property="userIdx" column="user_idx" />
-        <result property="username" column="username" />
-        <result property="password" column="password" />
-        <result property="email" column="email" />
-        <result property="name" column="name" />
-        <result property="birthdate" column="birthdate" />
-        <result property="profileImage" column="profile_image" />
-        <result property="enabled" column="enabled" />
-        <result property="gradeIdx" column="grade_idx" />
-        <result property="provider" column="provider" />
-        <result property="latitude" column="latitude" />
-        <result property="longitude" column="longitude" />
-        <result property="gender" column="gender" />
-        <result property="socialLogin" column="social_login" />
-        <result property="createdAt" column="created_at" />
-        <result property="updatedAt" column="updated_at" />
-        <result property="mobile" column="mobile" />
-        <result property="total_study_time" column="total_study_time" />
-        <result property="today_study_time" column="today_study_time" />
+        <id column="user_idx" property="userIdx"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="name" property="name"/>
+        <result column="birthdate" property="birthdate"/>
+        <result column="profile_image" property="profileImage"/>
+        <result column="enabled" property="enabled"/>
+        <result column="grade_idx" property="gradeIdx"/>
+        <result column="provider" property="provider"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
+        <result column="gender" property="gender"/>
+        <result column="mobile" property="mobile"/>
+        <result column="social_login" property="socialLogin"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="total_study_time" property="totalStudyTime"/>
+        <result column="today_study_time" property="todayStudyTime"/>
     </resultMap>
 
     <select id="findById" resultMap="UsersResultMap">
@@ -133,4 +133,41 @@
     <delete id="deleteUser" parameterType="Long">
         DELETE FROM Users WHERE user_idx = #{userId}
     </delete>
+
+    <insert id="insertUserAuthority" parameterType="String">
+        INSERT INTO Authorities (username, authority_name, description)
+        VALUES (#{username}, 'ROLE_USER', '일반 회원 가입 시 부여되는 기본 권한')
+    </insert>
+
+    <select id="isAdmin" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM Authorities
+        WHERE username = #{username} AND authority_name = 'ROLE_ADMIN'
+    </select>
+
+    <select id="findAuthoritiesByUsername" parameterType="String" resultType="String">
+        SELECT authority_name
+        FROM Authorities
+        WHERE username = #{username}
+    </select>
+
+    <select id="countAllUsers" resultType="int">
+        SELECT COUNT(*) FROM Users
+    </select>
+
+    <!-- Authorities 테이블을 기준으로 총 사용자 수 조회 -->
+    <select id="countAllUsersWithAuthorities" resultType="int">
+        SELECT COUNT(*)
+        FROM Users u
+        INNER JOIN Authorities a ON u.username = a.username
+    </select>
+
+    <!-- 모든 회원 정보와 권한 정보를 조인하여 조회 -->
+    <select id="findAllUsersWithAuthoritiesPaged" resultType="bit.naver.entity.Users">
+        SELECT u.user_idx as userIdx, u.username, a.authority_name as authorityName, u.created_at as createdAt, u.total_study_time as totalStudyTime
+        FROM Users u, Authorities a
+        WHERE u.username = a.username
+        ORDER BY u.user_idx
+        LIMIT ${limit} OFFSET ${offset}
+    </select>
 </mapper>

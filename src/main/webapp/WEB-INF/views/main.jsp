@@ -257,11 +257,11 @@
                                 <h2 class="">오늘의 공부 시간</h2>
                                 <div>
                                     <div class="todoTitle">Total</div>
-                                    <p id="totalstudytime">${userVo.total_study_time}</p>
+                                    <p id="totalstudytime">${userVo.totalStudyTime}</p>
                                 </div>
                                 <div>
                                     <div class="todoTitle">Today</div>
-                                    <p id="todaystudytime">${userVo.today_study_time}</p>
+                                    <p id="todaystudytime">${userVo.todayStudyTime}</p>
                                 </div>
                             </div>
                             <div class="userStudyGroup">

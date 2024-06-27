@@ -1,14 +1,25 @@
 package bit.naver.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.apache.ibatis.mapping.FetchType;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Users implements Serializable {
 
     private Long userIdx;
@@ -50,11 +61,23 @@ public class Users implements Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private int total_study_time;
-    private int today_study_time;
+    private int totalStudyTime=0;
+    private int todayStudyTime=0;
 
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER
+    }
+    private String authorityName;
+    private String formattedCreatedAt;
+
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+        if (createdAt != null) {
+            this.formattedCreatedAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        } else {
+            this.formattedCreatedAt = "";
+        }
     }
 
 }

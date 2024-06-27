@@ -175,7 +175,7 @@ public class UsersController {
 
             // 사용자 정보 저장
             usersMapper.insertUser(user);
-
+            usersMapper.insertUserAuthority(username);
             session.setAttribute("error", "회원가입에 성공했습니다.");
 
             return "redirect:/main";
@@ -486,7 +486,15 @@ public class UsersController {
     }
 
 
-
+    @GetMapping("/isAdmin")
+    @ResponseBody
+    public boolean isAdmin(Principal principal) {
+        if (principal != null) {
+            String username = principal.getName();
+            return usersMapper.isAdmin(username);
+        }
+        return false;
+    }
 
 
     //------------------------------------------------------------------------------------------------------------------------
@@ -495,5 +503,6 @@ public class UsersController {
     public String accessDenied() {
         return "access-denied";
     }
+
 
 }

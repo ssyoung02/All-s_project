@@ -4,6 +4,7 @@ import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyList;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface StudyGroupMapper {
     void removeMember(Long studyIdx, Long userIdx);
 
     void approveMember(Long studyIdx, Long userIdx);
+
+    int countAllStudies();
 }

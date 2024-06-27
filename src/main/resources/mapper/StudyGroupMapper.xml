@@ -74,4 +74,8 @@
     <delete id="deleteStudy" parameterType="Long">
         DELETE FROM Studies WHERE study_idx = #{studyIdx}
     </delete>
+    
+    <select id="countAllStudies" resultType="int">
+        SELECT COUNT(*) FROM Studies;
+    </select>
 </mapper>

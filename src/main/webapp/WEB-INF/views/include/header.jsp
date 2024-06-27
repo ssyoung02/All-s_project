@@ -21,8 +21,22 @@
             <div id="topmenu">
                 <%-- 로그인한 사용자에게만 정보 표시 --%>
                 <sec:authorize access="isAuthenticated()">
-                <!-- 관리자 페이지 링크 -->
-                    <a class="manager-page" href="#"><i class="bi bi-gear"></i>관리자</a>
+                    <%-- 관리자 권한을 가진 사용자에게만 표시 --%>
+                    <script>
+                        $(document).ready(function() {
+                            $.ajax({
+                                url: "${root}/Users/isAdmin",
+                                method: "GET",
+                                success: function(isAdmin) {
+                                    if (isAdmin) {
+                                        $('.manager-page').show();
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                    <%-- 관리자 권한을 가진 사용자에게만 표시 --%>
+                    <a class="manager-page" href="${root}/admin/websiteInfo" style="display: none;"><i class="bi bi-gear"></i>관리자</a>
                 </sec:authorize>
                 <!-- 날씨 정보 링크 -->
                 <a class="weather" href="#"><i class="bi bi-cloud-moon"></i>강남구 25°C</a>

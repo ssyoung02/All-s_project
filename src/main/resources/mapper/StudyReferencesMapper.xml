@@ -185,4 +185,20 @@
         SET title = #{title}, content = #{content}, isPrivate = #{isPrivate}
         WHERE reference_idx = #{referenceIdx}
     </update>
+
+    <select id="countAllPosts" resultType="int">
+        SELECT COUNT(*) FROM StudyReferences
+    </select>
+
+    <select id="getReportedStudyReferences" resultType="bit.naver.entity.StudyReferencesEntity">
+        SELECT s.reference_idx, u.username, s.title, s.created_at as createdAt, s.report_count as reportCount
+        FROM StudyReferences s, Users u
+        WHERE s.user_idx = u.user_idx and s.report_count > 0
+        ORDER BY s.reference_idx
+        LIMIT ${limit} OFFSET ${offset}
+    </select>
+
+    <select id="countReportedStudyReferences" resultType="int">
+        SELECT COUNT(*) FROM StudyReferences WHERE report_count > 0
+    </select>
 </mapper>
