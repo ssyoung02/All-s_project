@@ -13,7 +13,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
-<body>
 <div class="menu">
     <input type="hidden" id="hiddenid" value="${userVo.userIdx}">
     <!-- 로그인하지 않은 경우 -->
@@ -139,7 +138,54 @@
             </li>
         </ul>
     </div>
+    <%-- 로그인한 사용자에게만 표시 --%>
+    <sec:authorize access="isAuthenticated()">
+        <div class="studyTime">
+            <h3 class="">오늘의 공부 시간</h3>
+            <div class="flex-between">
+                <div class="todoTitle">Total</div>
+                <p class="totalstudytime"></p>
+            </div>
+            <div class="flex-between">
+                <div class="todoTitle">Today</div>
+                <p id="todaystudytime"></p>
+            </div>
+        </div>
+    </sec:authorize>
 </div>
-</body>
+<script>
+    //숫자 계산
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        const hDisplay = h > 0 ? h + '시간 ' : '';
+        const mDisplay = m > 0 ? m + '분 ' : '';
+        const sDisplay = s > 0 ? s + '초' : '';
+        return hDisplay + mDisplay + sDisplay;
+    }
+    fetch(`/include/updateTime?userIdx=${userVo.userIdx}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 데이터에서 total_study_time과 today_study_time 값을 추출
+            const totalStudyTime = data.totalStudyTime;
+            const todayStudyTime = data.todayStudyTime;
+
+            // HTML 요소에 데이터를 삽입
+            document.querySelectorAll('.totalstudytime').forEach(element => {
+                element.innerText = formatTime(totalStudyTime);
+            });
+            document.getElementById('todaystudytime').innerText = formatTime(todayStudyTime);
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+
+</script>
 
 

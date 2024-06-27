@@ -58,8 +58,8 @@ public class Users implements Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private int totalStudyTime=0;
-    private int todayStudyTime=0;
+    private int totalStudyTime;
+    private int todayStudyTime;
 
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER

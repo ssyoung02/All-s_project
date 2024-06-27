@@ -21,21 +21,21 @@ function countCharacters(textarea) {
 function timerAllClose(){
     let timerClose = confirm("공부 내용을 기록하지 않겠습니까?");
     if(timerClose){
-        timermadalClose();
+        timermodalClose();
         timeStop();
     }
 }
 
 //타이머 모달
 function timermodalOpen() {
-    let modalContainer = document.getElementById('modal-container');
+    let modalContainer = document.getElementById('timer-modal-container');
     modalContainer.classList.toggle('opaque'); // 모달 활성화
     modalContainer.classList.toggle('unstaged');
-    document.getElementById('modal-close').focus();
+    document.getElementById('timer-modal-close').focus();
 }
 
-function timermadalClose(){
-    let modalContainer = document.getElementById('modal-container');
+function timermodalClose(){
+    let modalContainer = document.getElementById('timer-modal-container');
     modalContainer.classList.toggle('opaque'); // 모달 활성화
     modalContainer.classList.toggle('unstaged');
     location.reload();
@@ -71,7 +71,7 @@ function timeReStart(){
 
 
 //ajax 영역
-const hiddentext = $('#hiddent').val();
+const hiddentext = $('#hiddenId').val();
 
 //csrf토큰 변수 저장
 const csrfHeader = $("meta[name='_csrf_header']").attr("content");

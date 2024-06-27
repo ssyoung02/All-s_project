@@ -10,75 +10,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .loginMain {
-            display: flex; /* flexbox 사용 */
-        }
-
-        .loginUserInfoLeft {
-            width: 65%;
-            margin-right: 20px;
-            display: flex; /* 내부 요소들을 flexbox로 배치 */
-        }
-
-        .scheduler-area {
-            display: flex;
-            width: 100%; /* scheduler-area가 loginUserInfoLeft의 전체 너비를 차지하도록 설정 */
-        }
-
-        .scheduler { /* 월별 캘린더 */
-            width: 67%;
-            margin-right: 10px; /*일별 캘린더와의 간격 */
-        }
-
-        .todo { /* 일별 캘린더 */
-            width: 33%;
-            margin-top: 62px;
-        }
-
-        .fc-calendarLink-button {
-            background-color: #717171 !important;
-            color: white !important;
-            border: none !important;
-        }
-
-        /* 일별 캘린더 제목 숨기기 */
-        #dayCalendar .fc-toolbar {
-            display: none;
-        }
-
-        /* 토글 버튼 스타일 */
-        .toggle-button {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 10;
-        }
-        #map-authenticated {
-            transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
-        }
-        #map-anonymous {
-            transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--차트-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-
+    <!--부트, CSS-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
-
+    <!--롤링배너-->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
 
@@ -118,7 +62,7 @@
                             customButtons: { // 버튼 추가
                                 calendarLink: {
                                     text: '캘린더 바로가기',
-                                    click: function () {
+                                    click: function() {
                                         location.href = "${root}/calendar"; // 페이지 이동
                                     }
                                 }
@@ -132,9 +76,11 @@
                             editable: false,
                             selectable: false,
                             eventClick: false,
-                            locale: 'ko'
+                            locale: 'ko',
+                            height: 'auto' // 높이를 자동으로 조절
                         }).render();
 
+                        //일간 캘린더
                         const dayCalendarEl = document.getElementById('dayCalendar');
                         new FullCalendar.Calendar(dayCalendarEl, {
                             initialView: 'listDay',
@@ -151,9 +97,6 @@
                     // 초기 렌더링 및 이벤트 리스너 등록
                     renderCalendars();
 
-                    // 캘린더가 변경될 때마다 다시 렌더링
-                    monthCalendar.on('datesSet', renderCalendars);
-                    dayCalendar.on('datesSet', renderCalendars);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error('Error fetching events:', errorThrown);
@@ -213,7 +156,7 @@
                              style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 전 지도 컨테이너 --%>
                     </sec:authorize>
                     <script>
-                        $(document).ready(function () {
+                        $(document).ready(function() {
 
                             initializeMapAnonymous();
                             getLocationAndDisplayOnAnonymousMap();
@@ -266,19 +209,10 @@
                             </div>
                         </div>
                         <div class="loginUserInfoRight">
-                            <div class="studyTime">
-                                <h2 class="">오늘의 공부 시간</h2>
-                                <div>
-                                    <div class="todoTitle">Total</div>
-                                    <p id="totalstudytime">${userVo.totalStudyTime}</p>
-                                </div>
-                                <div>
-                                    <div class="todoTitle">Today</div>
-                                    <p id="todaystudytime">${userVo.todayStudyTime}</p>
-                                </div>
-                            </div>
+                            <%--공부시간 차트--%>
+                            <canvas id="studyTimeChart" style="max-width: 200px; max-height: 150px;"></canvas>
                             <div class="userStudyGroup">
-                                <div class="userStudyGroupTitle flex-between">
+                                <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
                                     <div class="slide-button-group">
                                         <button class="slide-button" title="이전">
@@ -295,51 +229,39 @@
                                     <div class="memberItem">
                                         <div class="studyMemberProfile">
                                             <a class="profile" href="#">
-                                                <div class="profile-img">
+                                                <div class="study-profile-img">
                                                     <img src="${root}/resources/images/manggom.png" alt="내 프로필">
                                                 </div>
-                                                <div class="status"><span class="status">접속중</span></div>
+
                                             </a>
                                         </div>
                                         <a href="#" class="memberName">Yejoon</a>
+                                        <div class="study-status"><span class="status">접속중</span></div>
                                     </div>
+
                                     <div class="memberItem">
                                         <div class="studyMemberProfile">
                                             <a class="profile" href="#">
-                                                <div class="profile-img">
+                                                <div class="study-profile-img">
                                                     <img src="${root}/resources/images/manggom.png" alt="내 프로필">
                                                 </div>
-                                                <div class="status"><span class="status">접속중</span></div>
+
                                             </a>
                                         </div>
-                                        <a href="#" class="memberName">Jeayang</a>
+                                        <a href="#" class="memberName">Yejoon</a>
+                                        <div class="study-status"><span class="status">접속중</span></div>
                                     </div>
-                                    <div class="memberItem">
-                                        <div class="studyMemberProfile">
-                                            <a class="profile" href="#">
-                                                <div class="profile-img">
-                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                                </div>
-                                                <div class="status"><span class="status">접속중</span></div>
-                                            </a>
-                                        </div>
-                                        <a href="#" class="memberName">Yujung</a>
-                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <%--공부시간 차트--%>
-                    <h3>주간 공부시간</h3>
-                    <canvas id="studyTimeChart" style="max-height: 300px;"></canvas>
 
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
-                    <div id="map-authenticated"
-                         style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 후 지도 컨테이너 --%>
+                    <div id="map-authenticated" style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> </div> <%-- 로그인 후 지도 컨테이너 --%>
                 </sec:authorize>
-                <br>
-                <br>
 
                 <!--슬라이드 배너-->
                 <div class="swiper-container">
@@ -418,42 +340,17 @@
     <jsp:include page="include/footer.jsp"/>
 </div>
 <script>
-    fetch('/include/updateTime?userIdx=${userVo.userIdx}')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // 데이터에서 total_study_time과 today_study_time 값을 추출
-            const totalStudyTime = data.totalStudyTime;
-            const todayStudyTime = data.todayStudyTime;
-
-            // HTML 요소에 데이터를 삽입
-            document.getElementById('totalstudytime').innerText = formatTime(totalStudyTime);
-            document.getElementById('todaystudytime').innerText = formatTime(todayStudyTime);
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-
-    function formatTime(seconds) {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
-        const hDisplay = h > 0 ? h + '시간 ' : '';
-        const mDisplay = m > 0 ? m + '분 ' : '';
-        const sDisplay = s > 0 ? s + '초' : '';
-        return hDisplay + mDisplay + sDisplay;
-    }
-
+    //주간 그래프
     fetch('/include/study-time?userIdx=${userVo.userIdx}') // Adjust the userIdx as needed
         .then(response => response.json())
         .then(data => {
             const labels = ['일', '월', '화', '수', '목', '금', '토'];
             const currentWeekData = new Array(7).fill(0);
             const previousWeekData = new Array(7).fill(0);
+
+            console.log(data)
+            console.log(currentWeekData);
+            console.log(previousWeekData)
 
             data.currentWeek.forEach(record => {
                 const date = new Date(record.date.year, record.date.monthValue - 1, record.date.dayOfMonth);
@@ -477,7 +374,7 @@
                             label: '저번주',
                             data: previousWeekData,
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1,
+                            borderWidth: 4,
                             backgroundColor: 'rgba(154, 208, 245, 1)',
                             fill: false
                         },
@@ -485,7 +382,7 @@
                             label: '이번주',
                             data: currentWeekData,
                             borderColor: 'rgb(255,99,132)',
-                            borderWidth: 1,
+                            borderWidth: 4,
                             backgroundColor: 'rgba(255, 177, 193, 1)',
                             fill: false
                         }
@@ -493,18 +390,36 @@
                 },
                 options: {
                     maintainAspectRatio: false, // 가로 세로 비율을 유지하지 않음
-                    aspectRatio: 4, // 가로 세로 비율 (width / height)
+                    aspectRatio: 3, // 가로 세로 비율 (width / height)
                     scales: {
                         x: {
+                            grid: {
+                                display: false // 가로 줄 숨기기
+                            },
                             type: 'category', // 범주형 x축
                             labels: labels // 레이블을 요일로 설정
                         },
                         y: {
+                            grid: {
+                                display: false // 세로 줄 숨기기
+                            },
                             beginAtZero: true, // y축이 0부터 시작하도록 설정
-                            display: true // y축 범위 나타내기
+                            display: false // y축 범위 나타내기
                         }
                     },
                     plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 8 // 폰트 크기 설정
+                                }
+                            },
+                            title: {
+                                display: true // 범례 제목 duqn
+                            },
+                            maxWidth: 70, // 범례의 최대 너비 설정
+                            padding: 5 // 범례 주변 패딩 설정
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
@@ -649,7 +564,7 @@
 
 
         // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function () {
+        setTimeout(function() {
             mapAuthenticated.relayout();
         }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
 
@@ -675,7 +590,7 @@
         }
 
         // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function () {
+        setTimeout(function() {
             mapAnonymous.relayout();
         }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
 
@@ -686,7 +601,7 @@
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnMap() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
+            navigator.geolocation.getCurrentPosition(function(position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
@@ -698,7 +613,7 @@
                 <sec:authorize access="isAuthenticated()">
                 sendLocationToServer(lat, lon);
                 </sec:authorize>
-            }, function (error) {
+            }, function(error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -709,7 +624,7 @@
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnAnonymousMap() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
+            navigator.geolocation.getCurrentPosition(function(position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
@@ -718,7 +633,7 @@
 
                 mapAnonymous.setCenter(locPosition);
 
-            }, function (error) {
+            }, function(error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -794,7 +709,6 @@
         }
         clusterer.addMarkers(markers); // 클러스터러에 마커 추가
     }
-
 
 
     // 스터디 마커 표시 함수

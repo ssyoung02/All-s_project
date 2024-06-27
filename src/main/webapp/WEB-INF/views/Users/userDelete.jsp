@@ -50,10 +50,8 @@
                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <input type="hidden" name="userId" value="${userVo.userIdx}" />
                             <input type="hidden" name="username" value="${userVo.username}" />
-                            <div style="width: 100%; height: 90%;">
-                                <img src="${root}/resources/images/DALL·E 2024-06-22 15.06.07 - A Disney-style illustration of a small study group in the foreground with Earth in the background. The people in the study group are diverse, sitting .webp" style="width: 100%; height: 90%; object-fit: contain;">
-                            </div>
                             <div>
+                                <img src="${root}/resources/images/userDelete.png" style="width: 100%; height: 90%; object-fit: contain;">
                                 <ul>
                                     <li><h3>서로에게 도움이 되는 네트워크</h3>: 여러분이 겪는 어려움을 함께 나누고 해결할 수 있는 든든한 동료들이 있습니다.</li>
                                     <li><h3>고유한 학습 자원</h3>: 우리 커뮤니티만의 특별한 자료와 정보를 공유받을 수 있습니다.</li>
