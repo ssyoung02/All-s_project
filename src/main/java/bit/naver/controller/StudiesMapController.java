@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudiesMapController {
 
-
     private final StudyGroupMapper studiesMapMapper;
 
     @GetMapping("/listOnMap")

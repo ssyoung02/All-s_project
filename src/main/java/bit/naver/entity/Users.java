@@ -8,6 +8,8 @@ import lombok.ToString;
 import org.apache.ibatis.mapping.FetchType;
 import org.springframework.security.core.GrantedAuthority;
 
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -65,6 +67,33 @@ public class Users implements Serializable {
     private String authorityName;
     private String formattedCreatedAt;
 
+    private ActivityStatus activityStatus;
+
+    public enum ActivityStatus {
+        ACTIVE("활동중"),
+        STUDYING("공부중"),
+        RESTING("쉬는중"),
+        NOT_LOGGED_IN("미로그인");
+
+        private String value;
+
+        ActivityStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static ActivityStatus fromValue(String value) {
+            for (ActivityStatus status : ActivityStatus.values()) {
+                if (status.value.equals(value)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Invalid ActivityStatus value: " + value);
+        }
+    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;

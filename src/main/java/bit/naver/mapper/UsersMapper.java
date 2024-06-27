@@ -55,6 +55,8 @@ public interface UsersMapper {
     //        "WHERE user_idx = #{userIdx}")
     void updateUser(Users user);
 
+    @Update("UPDATE Users SET activity_status = #{activityStatus, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE user_idx = #{userIdx}")
+    void updateActivityStatus(@Param("userIdx") Long userIdx, @Param("activityStatus") Users.ActivityStatus activityStatus);
 
     boolean findByEmail(String email);
 
