@@ -269,15 +269,17 @@
                             <h3>그룹 멤버</h3>
                             <div class="group-memberList">
                                 <c:forEach var="member" items="${members}">
-                                    <div class="group-memberItem">
-                                        <div class="profile-imgGroup">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                    <c:if test="${member.status == 'ACCEPTED'}">
+                                        <div class="group-memberItem">
+                                            <div class="profile-imgGroup">
+                                                <div class="profile-img">
+                                                    <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                                </div>
+                                                <div class="status"><span class="status">접속중</span></div>
                                             </div>
-                                            <div class="status"><span class="status">접속중</span></div>
+                                            <p class="memberId">${member.userName}</p>
                                         </div>
-                                        <p class="memberId">${member.name}</p>
-                                    </div>
+                                    </c:if>
                                 </c:forEach>
                             </div>
                         </div>

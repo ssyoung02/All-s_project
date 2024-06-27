@@ -1,6 +1,5 @@
 package bit.naver.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 

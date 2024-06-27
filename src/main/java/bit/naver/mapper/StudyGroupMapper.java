@@ -5,6 +5,8 @@ import bit.naver.entity.StudyList;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -32,9 +34,27 @@ public interface StudyGroupMapper {
 
     void deleteStudy(Long studyIdx);
 
-    void removeMember(Long studyIdx, Long userIdx);
+    void removeMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
 
-    void approveMember(Long studyIdx, Long userIdx);
+    void approveMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
+
+    StudyMembers getStudyMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
+
+    void updateMemberStatus(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx, @Param("status") String status);
+
+    //void approveMember(Long studyIdx, Long userIdx);
 
     int countAllStudies();
+    // 추가된 메서드: 승인된 스터디 목록 가져오기
+    List<StudyList> getApprovedStudies(Long userIdx);
+
+    List<StudyList> getAllMyStudies(Long userIdx);
+
+    void deleteTeamCalendarsByStudyIdx(Long studyIdx);
+
+    void deleteStudyMembersByStudyIdx(Long studyIdx);
+//    void approveMember(Long studyIdx, Long userIdx);
+
+    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude FROM Studies") // 필요한 정보만 조회
+    List<StudyGroup> findAllStudies();
 }

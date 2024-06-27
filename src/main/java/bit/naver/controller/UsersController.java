@@ -1,10 +1,12 @@
 package bit.naver.controller;
 
+import bit.naver.entity.TimerEntity;
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.CustomAccountDeletionService;
 import bit.naver.service.GoogleLoginService;
+import bit.naver.service.TimerService;
 import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +25,12 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -44,6 +42,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -62,6 +61,8 @@ public class UsersController {
     private final UsersUserDetailsService usersUserDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TimerService timerService;
     @Autowired
     private CustomAccountDeletionService customAccountDeletionService;
 
@@ -209,7 +210,7 @@ public class UsersController {
 
     // 로그인 처리
     @RequestMapping("/Login")
-    public String usersLogin(Users user, @RequestParam("loginState") String loginState, RedirectAttributes rttr, HttpSession session, Principal principal) {
+    public String usersLogin(Users user, @RequestParam("loginState") String loginState, Model model,RedirectAttributes rttr, HttpSession session, Principal principal) {
 
 
         System.out.println("로그인 버튼 누른 후 작업");
@@ -251,6 +252,7 @@ public class UsersController {
             session.setAttribute("userVo", userVo);
             session.setAttribute("error", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
+
             return "forward:/main";
         } else {
             System.out.println("회원 정보 없음");

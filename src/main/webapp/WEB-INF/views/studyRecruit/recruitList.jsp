@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
-<c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="userVo" value="${sessionScope.userVo}"/>
+<c:set var="root" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,13 +11,13 @@
     <title>스터디 모집 > 스터디 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
-
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp"/>
@@ -76,9 +76,22 @@
                                                 <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
                                                 <span class="department">${study.category}</span>
                                             </p>
-                                            <button class="banner-like" aria-label="좋아요">
-                                                <i class="bi bi-heart"></i>
-                                            </button>
+                                            <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
+                                            <!-- 좋아요 상태를 반영하여 버튼 클래스 설정 -->
+                                            <c:choose>
+                                                <c:when test="${study.isLike != 0}">
+                                                    <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
+                                                        <i class="bi bi-heart-fill"></i>
+                                                        <p class="info-post"></p>
+                                                    </button>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
+                                                        <i class="bi bi-heart"></i>
+                                                        <p class="info-post"></p>
+                                                    </button>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                         <div class="banner-item-top">
                                             <div class="banner-img">
@@ -135,10 +148,21 @@
                                             <h3 class="board-title">${study.studyTitle}</h3>
                                         </div>
                                     </button>
-                                    <button class="board-like" onclick="">
-                                        <i class="bi bi-heart"></i>
-                                        <p class="info-post">좋아요</p>
-                                    </button>
+                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
+                                    <c:choose>
+                                        <c:when test="${study.isLike != 0}">
+                                            <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
+                                                <i class="bi bi-heart-fill"></i>
+                                                <p class="info-post">좋아요  </p>
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
+                                                <i class="bi bi-heart"></i>
+                                                <p class="info-post">좋아요</p>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <button class="board-content link-button" onclick="location.href='recruitReadForm.jsp'">
                                         ${study.description}
@@ -159,6 +183,7 @@
 <script src="${root}/resources/js/slider.js"></script>
 </body>
 </html>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const statusElements = document.querySelectorAll('.recruit-status');
@@ -173,12 +198,52 @@
             }
         });
     });
-</script>
-<script>
+
     function redirectToStudyDetail(studyIdx) {
-        // studyIdx를 이용하여 URL을 생성
         var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
-        // 페이지 이동
         window.location.href = url;
+    }
+
+    function toggleLike(element, idx) {
+        const icon = element.querySelector('i');
+        const isLiked = !element.classList.contains('liked');
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        if (isLiked) {
+            element.classList.add('liked');
+            icon.className = 'bi bi-heart-fill';
+            $.ajax({
+                method: 'POST',
+                url: '/studyRecruit/insertLike',
+                data: { studyIdx: idx, userIdx: ${userVo.userIdx} },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function(response) {
+                    console.log("Like inserted successfully.");
+                },
+                error: function(error) {
+                    console.error("Error inserting like:", error);
+                }
+            });
+        } else {
+            element.classList.remove('liked');
+            icon.className = 'bi bi-heart';
+            $.ajax({
+                method: 'POST',
+                url: '/studyRecruit/deleteLike',
+                data: { studyIdx: idx, userIdx: ${userVo.userIdx} },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function(response) {
+                    console.log("Like removed successfully.");
+                },
+                error: function(error) {
+                    console.error("Error removing like:", error);
+                }
+            });
+        }
     }
 </script>

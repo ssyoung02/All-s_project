@@ -12,4 +12,6 @@ public class StudyList {
     private String studyTitle;
 
     private String description;
+
+    private String status;
 }
