@@ -6,45 +6,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        /* 기존 CSS ... */
-
-        /* 캘린더 영역 스타일 */
-        .group-calender {
-            display: flex; /* flexbox 사용 */
-            flex-direction: column; /* 세로 배치 */
-        }
-
-        .calendar-area {
-            display: flex; /* 캘린더들을 수평 배치 */
-            width: 100%;
-        }
-
-
-        #monthCalendar { /* 월별 캘린더 */
-            width: 67%;
-            margin-right: 10px;
-        }
-
-        #dayCalendar { /* 일별 캘린더 */
-            width: 33%;
-            margin-top: 62px;
-        }
-
-        /* 일별 캘린더 제목 숨기기 */
-        #dayCalendar .fc-toolbar {
-            display: none;
-        }
-
-        .fc .fc-toolbar-chunk .fc-prev-button, .fc .fc-toolbar-chunk .fc-next-button {
-            background-color: #f0f0f0 !important;
-            border: none !important; /* 테두리 제거 */
-        }
-
-        .fc .fc-toolbar-chunk .fc-prev-button.fc-button, .fc .fc-toolbar-chunk .fc-next-button.fc-button {
-            border: none !important; /* 테두리 제거 */
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스터디그룹 메인 > 내 스터디 > 스터디 > 공부 > All's</title>
@@ -76,7 +37,8 @@
                     editable: false,
                     selectable: false,
                     eventClick: false,
-                    locale: 'ko'
+                    locale: 'ko',
+                    height: 'auto' // 높이를 자동으로 조절
                 });
                 monthCalendar.render();
 
@@ -126,7 +88,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -162,7 +123,7 @@
                     </section>
                     <section class="group-main">
                         <div class="group-content">
-                            <h3>이달의 스터디 왕</h3>
+                            <h2>이달의 스터디 왕</h2>
                             <div class="group-lank">
                                 <div class="lank-phase">
                                     <div class="lank-floor">
@@ -258,6 +219,8 @@
                                     </div>
                                 </div>
                             </div>
+                            <!--캘린더-->
+                            <h2>스터디 일정</h2>
                             <div class="group-calender">
                                 <div class="calendar-area">
                                     <div id="monthCalendar"></div>
@@ -289,8 +252,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/timer.jsp" />
+<jsp:include page="../include/footer.jsp" />
 </body>
 </html>

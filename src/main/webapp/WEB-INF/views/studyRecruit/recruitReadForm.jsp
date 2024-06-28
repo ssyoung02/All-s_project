@@ -89,9 +89,6 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
-
     <%-- 가입 신청 모달 --%>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay"></div>
@@ -124,8 +121,6 @@
     </div>
 
 </div>
-<jsp:include page="../include/timer.jsp"/>
-
 <script>
     function modalOpen() {
         document.getElementById('modal-container').classList.remove('unstaged');
@@ -203,6 +198,8 @@
         }
     }
 </script>
-
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

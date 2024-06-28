@@ -115,7 +115,15 @@
                     <span class="hide">메뉴 열기</span>
                 </button>
                 <!-- 공부 시작 버튼 -->
-                <button id="m-timestart" class="primary-default" onclick="timerOpen()">공부 시작</button>
+                <!-- 로그인하지 않은 경우 -->
+                <sec:authorize access="isAnonymous()">
+                    <button class="m-timestart button-disabled timestart" onclick="alert('로그인 후 이용해주세요')">공부 시작</button>
+                </sec:authorize>
+                <!-- 로그인한 경우 -->
+                <sec:authorize access="isAuthenticated()">
+                    <button class="m-timestart primary-default" onclick="timerOpen()">공부 시작</button>
+                </sec:authorize>
+
             </div>
         </div>
     </header>

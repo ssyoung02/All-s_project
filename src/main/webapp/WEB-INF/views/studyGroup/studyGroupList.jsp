@@ -14,41 +14,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <style>
-        .pending {
-            color: #3C578C;
-            font-style: italic;
-        }
-
-        .rejected {
-            color: darkred;
-            font-style: italic;
-        }
-
-        .no-studies {
-            text-align: center;
-            color: gray;
-            font-style: italic;
-            margin-top: 20px;
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .board-item {
-            flex-grow: 1;
-        }
-
-        .status-text {
-            margin-left: auto;
-            margin-right: 20px;
-            text-align: right;
-        }
-    </style>
-
     <script>
 
         //검색 버튼
@@ -71,7 +36,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -124,13 +88,13 @@
                                                 onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}'"
                                             </c:if>
                                     >
-                                        <div class="studygroup-item flex-between">
+                                        <div class="studygroup-item">
                                             <!-- 스터디 목록 -->
                                             <div class="imgtitle flex-row">
                                                 <div class="studygroup-profile-s">
                                                     <img src="${root}/img/logo.png">
                                                 </div>
-                                                <div class="board-item flex-columleft">
+                                                <div class="board-item-group flex-columleft">
                                                     <p class="board-title">${study.studyTitle}</p>
                                                     <p class="board-content">${study.description}</p>
                                                 </div>
@@ -171,8 +135,8 @@
                 <%--본문 콘텐츠 끝--%>
         </main>
     </section>
-    <%--푸터--%>
-    <jsp:include page="../include/footer.jsp"/>
 </div>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

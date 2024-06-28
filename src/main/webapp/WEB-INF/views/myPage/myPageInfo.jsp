@@ -133,20 +133,19 @@
 
 </head>
 <body>
-<jsp:include page="${root}/WEB-INF/views/include/timer.jsp"/>
-<jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
+            <jsp:include page="../include/navbar.jsp"/>
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
+                <jsp:include page="../include/navbar.jsp"/>
             </div>
             <div id="content">
                 <h1>${userVo.name} 님의 회원 정보</h1>
@@ -261,10 +260,6 @@
             </div>
         </main>
     </section>
-
-
-    <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
-    <jsp:include page="../include/timer.jsp" />
 </div>
 <sec:authorize access="isAuthenticated()">
     <script>
@@ -389,6 +384,7 @@
     });
 
 </script>
-
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

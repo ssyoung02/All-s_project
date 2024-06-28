@@ -23,7 +23,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -86,10 +85,6 @@
             </div>
         </main>
     </section>
-    <!--푸터-->
-
-    <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
-    <jsp:include page="../include/timer.jsp" />
 </div>
 <%-- 모달 --%>
 <div id="modal-container" class="modal unstaged">
@@ -108,8 +103,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
     $(document).ready(function () {
         if ("${error}" !== "") {
@@ -127,5 +120,8 @@
         }
     });
 </script>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>
