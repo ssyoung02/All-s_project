@@ -45,6 +45,7 @@ public interface StudyGroupMapper {
     List<StudyList> getApprovedStudies(Long userIdx);
 
     List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
+//    ,@Param("latitude")Double latitude,@Param("longitude")Double longitude
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 

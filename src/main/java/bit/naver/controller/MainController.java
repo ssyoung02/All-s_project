@@ -84,10 +84,6 @@ public class MainController {
 
         Long userIdx = user.getUserIdx();
 
-        List<NotificationEntity> notification = notificationMapper.getAlarmInfo(userIdx);
-        model.addAttribute("notification", notification);
-
-
 
         return "/include/header";
     }

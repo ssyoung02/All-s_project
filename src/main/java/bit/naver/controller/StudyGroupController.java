@@ -58,7 +58,6 @@ public class StudyGroupController {
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("searchOption", searchOption);
         model.addAttribute("userIdx",userIdx );
-        System.out.println(searchKeyword + " "+ searchOption);
         // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
@@ -84,7 +83,7 @@ public class StudyGroupController {
 
     // 스터디 생성을 위한 POST 요청 처리
     @PostMapping("/studyGroupCreate")
-    public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study, BindingResult result, HttpSession session, Principal principal) {
+        public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study, BindingResult result, HttpSession session, Principal principal) {
         if (result.hasErrors()) {
             return "studyGroup/studyGroupCreate";
         }
@@ -236,8 +235,9 @@ public class StudyGroupController {
     public List<NotificationEntity> getAlarmInfo(HttpSession session) {
         Users user = (Users) session.getAttribute("userVo");
 
+
         List<NotificationEntity> data = notificationMapper.getAlarmInfo(user.getUserIdx());
-        System.out.println("1" + data);
+
         return data;
     }
 
