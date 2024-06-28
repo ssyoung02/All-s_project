@@ -1,36 +1,42 @@
 package bit.naver.entity;
 
+import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.apache.ibatis.mapping.FetchType;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Users implements Serializable {
 
     private Long userIdx;
 
 
-    @NotBlank(message = "아이디는 필수 입력 값입니다.")
-    @Size(min = 4, max = 12, message = "아이디는 4~12자 사이여야 합니다.")
+
     private String username;
 
-    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-    @Size(min = 8, max = 16, message = "비밀번호는 8~16자 사이여야 합니다.")
+
     private String password;
 
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
+
     private String email;
 
-    @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
 
-    @NotNull(message = "생년월일은 필수 입력 값입니다.")
-    @PastOrPresent(message = "생년월일은 오늘 이전의 날짜여야 합니다.")
     private LocalDate birthdate;
 
     private String profileImage ;
@@ -40,7 +46,7 @@ public class Users implements Serializable {
     private Double latitude;
     private Double longitude;
 
-    @NotBlank(message = "성별은 필수 입력 값입니다.")
+
     private String gender; // String 타입 유지
 
     private String mobile; //휴대전화번호
@@ -50,11 +56,23 @@ public class Users implements Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private int total_study_time;
-    private int today_study_time;
+    private int totalStudyTime;
+    private int todayStudyTime;
 
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER
+    }
+    private String authorityName;
+    private String formattedCreatedAt;
+
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+        if (createdAt != null) {
+            this.formattedCreatedAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        } else {
+            this.formattedCreatedAt = "";
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package bit.naver.controller;
 
 import bit.naver.entity.TeamCalendar;
-import bit.naver.security.UsersUser;
 import bit.naver.service.TeamCalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

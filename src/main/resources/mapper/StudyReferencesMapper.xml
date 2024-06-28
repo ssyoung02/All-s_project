@@ -194,4 +194,21 @@
 
 
 
+
+    <select id="countAllPosts" resultType="int">
+        SELECT COUNT(*) FROM StudyReferences
+    </select>
+
+    <select id="getReportedStudyReferences" resultType="bit.naver.entity.StudyReferencesEntity">
+        SELECT s.reference_idx, u.username, s.title,
+               DATE_FORMAT(s.created_at, '%Y-%m-%d %H:%i') AS createdAt, s.report_count as reportCount
+        FROM StudyReferences s, Users u
+        WHERE s.user_idx = u.user_idx and s.report_count > 0
+        ORDER BY s.reference_idx
+        LIMIT ${limit} OFFSET ${offset}
+    </select>
+
+    <select id="countReportedStudyReferences" resultType="int">
+        SELECT COUNT(*) FROM StudyReferences WHERE report_count > 0
+    </select>
 </mapper>

@@ -21,9 +21,24 @@ function countCharacters(textarea) {
 function timerAllClose(){
     let timerClose = confirm("공부 내용을 기록하지 않겠습니까?");
     if(timerClose){
-        madalClose();
+        timermodalClose();
         timeStop();
     }
+}
+
+//타이머 모달
+function timermodalOpen() {
+    let modalContainer = document.getElementById('timer-modal-container');
+    modalContainer.classList.toggle('opaque'); // 모달 활성화
+    modalContainer.classList.toggle('unstaged');
+    document.getElementById('timer-modal-close').focus();
+}
+
+function timermodalClose(){
+    let modalContainer = document.getElementById('timer-modal-container');
+    modalContainer.classList.toggle('opaque'); // 모달 활성화
+    modalContainer.classList.toggle('unstaged');
+    location.reload();
 }
 
 //시간 설정
@@ -56,7 +71,7 @@ function timeReStart(){
 
 
 //ajax 영역
-const hiddentext = $('#hiddent').val();
+const hiddentext = $('#hiddenId').val();
 
 //csrf토큰 변수 저장
 const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -132,7 +147,7 @@ function endTimer() {
     pauseTimer();
     clearInterval(time);
     $('.timer-recode').val("");
-    modalOpen();
+    timermodalOpen();
     h=0;
     m=0;
     s=0;
@@ -175,7 +190,7 @@ function updateMemo() {
         success: function(response) {
             console.log('메모 저장 성공:', response);
             alert('메모가 작성되었습니다.');
-            madalClose();
+            timermodalClose();
             timeStop();
         },
         error: function(xhr, status, error) {
@@ -184,3 +199,4 @@ function updateMemo() {
         }
     })
 }
+

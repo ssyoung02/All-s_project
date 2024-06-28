@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bit.naver.mapper.NotificationMapper">
+    <insert id="createNotification" parameterType="bit.naver.entity.NotificationEntity">
+        INSERT INTO Notifications (user_idx, study_idx, notify_type, created_at)
+        VALUES (#{leaderIdx}, #{studyIdx}, #{notifyType}, #{createdAt})
+    </insert>
+
+
+    <select id="getAlarmInfo" parameterType="java.lang.Long" resultType="bit.naver.entity.NotificationEntity">
+        SELECT notification_idx As notificationIdx, user_idx As leaderIdx, study_idx AS studyIdx, notify_type as notifyType, created_at as createdAt
+        FROM Notifications
+        WHERE user_idx = #{leaderIdx}
+    </select>
+
+</mapper>

@@ -4,7 +4,6 @@ import bit.naver.entity.CommentsEntity;
 import bit.naver.entity.LikeReferencesEntity;
 import bit.naver.entity.StudyReferencesEntity;
 import bit.naver.mapper.StudyNoteMapper;
-import bit.naver.mapper.StudyReferencesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -10,7 +10,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+
+    <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나의 정보 > 내 정보 > All's</title>
@@ -21,6 +22,9 @@
         });
     </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -158,8 +162,7 @@
                     <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">
-                                <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필">
-                            </div>
+                                <img src="${userVo.profileImage}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';">                            </div>
                             <h3>${userVo.username}</h3>
                         </div>
                         <div class="userdata bgwhite">
@@ -195,28 +198,28 @@
                                 <li><b>가입날짜</b></li>
                                 <li>${userVo.createdAt}</li>
                             </ul>
+                            <ul class="userItem">
+                                <li><b>연락처</b></li>
+                                <li>${userVo.mobile}</li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="statistics flex-between">
-                        <div class="graph-area" style="width: 200px; height: 50px;">
-                            그래프 영역
-                        </div>
-                        <div class="total-activity flex-colum">
-                            <button class="secondary-default flex-between">
-                                <p class="activity-title">총 공부시간</p>
-                                <p>150시간</p>
-                            </button>
-                            <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikePost'">
-                                <p class="activity-title">좋아요한 게시글</p>
-                                <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
-                            </button>
-                            <button class="secondary-default flex-between">
-                                <p class="activity-title">좋아요한 스터디</p>
-                                <p>5개</p>
-                            </button>
-                        </div>
+                    <div class="total-activity flex-between">
+                        <button class="secondary-default flex-between">
+                            <p class="activity-title">총 공부시간</p>
+                            <p class="totalstudytime"></p>
+                        </button>
+                        <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikePost'">
+                            <p class="activity-title">좋아요한 게시글</p>
+                            <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
+                        </button>
+                        <button class="secondary-default flex-between">
+                            <p class="activity-title">좋아요한 스터디</p>
+                            <p>5개</p>
+                        </button>
                     </div>
-
+                    <%--차트영역--%>
+                    <canvas id="monthlyStudyTimeChart" style="max-height: 300px;"></canvas>
                     <div class="resume">
                         <div class="resume-title flex-between">
                             <h3>이력서</h3>
@@ -263,6 +266,92 @@
     <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
     <jsp:include page="../include/timer.jsp" />
 </div>
+<sec:authorize access="isAuthenticated()">
+    <script>
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            const hDisplay = h > 0 ? h + '시간 ' : '';
+            const mDisplay = m > 0 ? m + '분 ' : '';
+            const sDisplay = s > 0 ? s + '초' : '';
+            return hDisplay + mDisplay + sDisplay;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/include/monthly?userIdx=${userVo.userIdx}')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const labels = [];
+                    const studyTimes = [];
+
+                    data.monthlyStudyTime.forEach(record => {
+                        const date = new Date(record.date);
+                        labels.push(date.getDate()); // 일(day)만 표시
+                        studyTimes.push(record.studytime);
+                    });
+
+                    console.log(data)
+
+                    const ctx = document.getElementById('monthlyStudyTimeChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '공부시간',
+                                data: studyTimes,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    grid: {
+                                        display: false // 가로 줄 숨기기
+                                    },
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: ''
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        display: false // 세로 줄 숨기기
+                                    },
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '공부시간'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            const label = context.dataset.label || '';
+                                            const value = context.raw;
+                                            return label + ': ' + formatTime(value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching study time data:', error));
+        });
+    </script>
+</sec:authorize>
 
 <%-- 모달 --%>
 <div id="modal-container" class="modal unstaged">
@@ -282,23 +371,23 @@
     </div>
 </div>
 
-
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
         if ("${error}" !== "") {
-            $("#messageContent").text("${error}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
+        $("#messageContent").text("${error}");
+        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('unstaged');
+        $('#modal-close').focus();
+    }
 
         if ("${msg}" !== "") {
-            $("#messageContent").text("${msg}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
+        $("#messageContent").text("${msg}");
+        $('#modal-container').toggleClass('opaque'); //모달 활성화
+        $('#modal-container').toggleClass('unstaged');
+        $('#modal-close').focus();
+    }
     });
+
 </script>
 
 </body>

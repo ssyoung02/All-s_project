@@ -58,7 +58,10 @@ public class StudyGroup {
     // DB에 없는 엔티티
     private String leaderName;
 
+    private Integer isLike;
+
+    private Long userIdx;
 
 
-
+    public String role;
 }

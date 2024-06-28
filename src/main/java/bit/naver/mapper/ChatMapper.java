@@ -21,4 +21,6 @@ public interface ChatMapper {
     List<StudyMembers> getStudiesByUserId(@Param("userIdx") Long userIdx);
 
     List<Chat> getAllMessages(Long studyIdx);
+
+
 }

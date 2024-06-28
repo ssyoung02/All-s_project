@@ -15,7 +15,42 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <script>
+        function modalOpen() {
+            document.getElementById('modal-container').classList.remove('unstaged');
+        }
 
+        function modalClose() {
+            document.getElementById('modal-container').classList.add('unstaged');
+        }
+
+        function deleteStudyGroup() {
+            if (confirm('스터디를 삭제하시겠습니까?')) {
+                $.ajax({
+                    url: '${root}/studyGroup/deleteStudyGroup',
+                    type: 'POST',
+                    data: {
+                        studyIdx: ${studyGroup.studyIdx}
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert('스터디가 삭제되었습니다.');
+                            window.location.href = '${root}/studyGroup/studyGroupList';
+                        } else {
+                            alert('스터디 삭제에 실패했습니다: ' + response.message);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error deleting study group:', errorThrown);
+                        alert('스터디 삭제 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp" />
@@ -65,18 +100,9 @@
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
-                        <dt>공개여부</dt>
-                        <dd>
-                            <input type="radio" id="public" name="public">
-                            <label for="public">공개</label>
-                            <input type="radio" id="private" name="public">
-                            <label for="private">비공개</label>
-                        </dd>
-                    </div>
-                    <div class="webInfo-itemfull">
                         <dt>스터디 삭제</dt>
                         <dd>
-                            <a id="studyGroupDelet" href="#">스터디 삭제하기</a>
+                            <a id="studyGroupDelete" href="#" onclick="deleteStudyGroup()">스터디 삭제하기</a>
                         </dd>
                     </div>
                 </div>
@@ -98,13 +124,13 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()"><i class="bi bi-x-lg"></i></button>
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
                 스터디 관리 정보를 변경하겠습니까?
             </div>
             <div class="modal-bottom">
-                <button class="secondary-default" onclick="madalClose()">취소</button>
+                <button class="secondary-default" onclick="modalClose()">취소</button>
                 <button type="button" class="modal-close" data-dismiss="modal">확인</button>
             </div>
         </div>

@@ -68,37 +68,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
-        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**","/studies/listOnAnonymousMap");
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**",
+                "/studies/listOnAnonymousMap","/detail/{studyIdx}",
+                "/Users/checkDuplicate","/Users/UsersImageUpdate");
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests() //권한등급에 따른 엑세스 제한 - 권한 설정 후 주석 제거
-//                .antMatchers("/admin/ ** ").hasRole("ROLE_ADMIN")
-//                                                                  /admin/ ** 패턴의 URL은 ROLE_ADMIN 권한을 소요한 사용자만 요청할 수 있다는 설정이다.
-//                                                                  로그인된 현재 사용자가 ROLE_ADMIN 권한을 소유하고 있지 않다면
-//                                                                  /admin/ ** 패턴의 URL 요청은 spring security 엔진에 의해서 거부된다.
-//                .antMatchers("/professor/ ** ").hasRole("ROLE_PROFESSOR")
-//                .antMatchers("/user/ ** ").authenticated() ;
         http
                 .authorizeRequests()
-                // 모든 사용자 접근 허용 경로
-
-//                    .antMatchers("/Users/userInfo").authenticated()
-                    .antMatchers("/resources/**","/webapp/resources/css/**",
+                .antMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 제한
+                .antMatchers("/resources/**","/webapp/resources/css/**",
                         "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
-                    .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
-                          "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
+                .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
+                        "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
                     .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
                     .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                    .antMatchers("/calendar/**").authenticated()
                     .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
         // 그 외 모든 요청은 인증된 사용자만 접근 허용
                     .antMatchers("/Users/userInfoProcess").authenticated()
                     .antMatchers("/Users/userInfo").authenticated()
                     .antMatchers("/calendar/*").authenticated()
+                    .antMatchers("/Users/updateLocation").authenticated()
                     .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
                 .anyRequest().authenticated()
                 .and()
@@ -106,7 +100,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                     .loginPage("/Users/UsersLoginForm")
                     .loginProcessingUrl("/Users/Login")
                     .defaultSuccessUrl("/main")
-                   .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
                     .permitAll()
                 .and()
                 .logout()
@@ -118,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
-                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation")
+                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/include/start", "/include/pause", "/include/updateTime", "/include/updateMemo", "/calendar/**","/Users/UsersImageUpdate")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
 //                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성

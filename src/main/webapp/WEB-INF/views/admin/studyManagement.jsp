@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스터디 관리 > 관리자 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="${root}/resources/css/pagenation.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -21,7 +22,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -38,7 +39,7 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}admin/websiteInfo">웹사이트 정보</a>
+                        <a href="${root}/admin/websiteInfo">웹사이트 정보</a>
                     </div>
                     <div class="tapItem">
                         <a href="${root}/admin/userManagement">회원 관리</a>
@@ -70,7 +71,7 @@
                     <tr>
                         <th scope="col" class="trselect">선택</th>
                         <th scope="col" class="trname">스터디장</th>
-                        <th scope="col">스터디 명</th>
+                        <th scope="col">스터디명</th>
                         <th scope="col" class="trtime">생성날짜</th>
                         <th scope="col" class="trbutton">관리</th>
                     </tr>
@@ -107,6 +108,29 @@
                     </tbody>
                 </table>
 
+                <!-- 페이지네이션 바 시작 -->
+                <div class="pagination">
+                    <ul>
+                        <c:if test="${startPage > 1}">
+                            <li><a href="?page=1">&lt;&lt;</a></li>
+                        </c:if>
+                        <c:if test="${currentPage > 1}">
+                            <li><a href="?page=${currentPage - 1}">&lt;</a></li>
+                        </c:if>
+                        <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                            <li class="${pageNum == currentPage ? 'active' : ''}">
+                                <a href="?page=${pageNum}">${pageNum}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <li><a href="?page=${currentPage + 1}">&gt;</a></li>
+                        </c:if>
+                        <c:if test="${endPage < totalPages}">
+                            <li><a href="?page=${totalPages}">&gt;&gt;</a></li>
+                        </c:if>
+                    </ul>
+                </div>
+                <!-- 페이지네이션 바 끝 -->
             </div>
             <%--콘텐츠 끝--%>
         </main>

@@ -20,7 +20,6 @@
             width: 100%;
         }
 
-
         #monthCalendar { /* 월별 캘린더 */
             width: 67%;
             margin-right: 10px;
@@ -151,12 +150,14 @@
                         <div class="profile-header">
                             <img src="" alt="">
                             <div class="group-title">
-                                <h2>${study.studyTitle}</h2>
+                                <h2>${study.descriptionTitle}</h2>
                                 <p>${study.description}</p>
                             </div>
                         </div>
                         <div class="profile-link">
-                            <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${study.studyIdx}"><i class="bi bi-gear"></i>관리</a>
+                            <c:if test="${study.role != 'MEMBER'}">
+                                <a class="manager-page" href="${root}/studyGroup/studyGroupManagerInfo?studyIdx=${study.studyIdx}"><i class="bi bi-gear"></i>관리</a>
+                            </c:if>
                             <button class="primary-default" onclick="openChatWindow(${study.studyIdx})">채팅 </button>
                         </div>
                     </section>
@@ -269,15 +270,17 @@
                             <h3>그룹 멤버</h3>
                             <div class="group-memberList">
                                 <c:forEach var="member" items="${members}">
-                                    <div class="group-memberItem">
-                                        <div class="profile-imgGroup">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                    <c:if test="${member.status == 'ACCEPTED'}">
+                                        <div class="group-memberItem">
+                                            <div class="profile-imgGroup">
+                                                <div class="profile-img">
+                                                    <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                                </div>
+                                                <div class="status"><span class="status">접속중</span></div>
                                             </div>
-                                            <div class="status"><span class="status">접속중</span></div>
+                                            <p class="memberId">${member.userName}</p>
                                         </div>
-                                        <p class="memberId">${member.name}</p>
-                                    </div>
+                                    </c:if>
                                 </c:forEach>
                             </div>
                         </div>

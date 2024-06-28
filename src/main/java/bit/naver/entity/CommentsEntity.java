@@ -2,8 +2,6 @@ package bit.naver.entity;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class CommentsEntity {
 

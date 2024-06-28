@@ -22,9 +22,9 @@ package bit.naver.mapper;
 
 import bit.naver.entity.Users; // Users 엔티티 클래스 임포트
 import org.apache.ibatis.annotations.*; // MyBatis 어노테이션 임포트
-import org.mybatis.spring.annotation.MapperScan;
 
 import java.util.List; // List 인터페이스 임포트
+import java.util.Map;
 
 @Mapper // MyBatis Mapper 인터페이스임을 나타내는 어노테이션
 public interface UsersMapper {
@@ -47,6 +47,8 @@ public interface UsersMapper {
    // @Options(useGeneratedKeys = true, keyProperty = "userIdx")
     // 자동 생성된 키(user_idx)를 Users 객체에 설정합니다.
     void insertUser(Users user);
+
+    void insertUserAuthority(@Param("username") String username);
 
     // 기존 사용자 정보를 업데이트합니다.
    // @Update("UPDATE Users SET username = #{username}, password = #{password}, email = #{email}, name = #{name}, birthdate = #{birthdate}, profile_image = #{profileImage}, enabled = #{enabled}, grade_idx = #{gradeIdx}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, created_at = #{createdAt}, updated_at = #{updatedAt} " +
@@ -90,5 +92,16 @@ public interface UsersMapper {
 
     void deleteUser(@Param("userId") Long userId);
 
+
     Long findUserIdByUsername(@Param("username") String username);
+
+    boolean isAdmin(@Param("username") String username);
+
+    List<String> findAuthoritiesByUsername(@Param("username") String username);
+
+    int countAllUsers();
+
+    int countAllUsersWithAuthorities();
+
+    List<Users> findAllUsersWithAuthoritiesPaged(@Param("offset") int offset, @Param("limit") int limit);
 }

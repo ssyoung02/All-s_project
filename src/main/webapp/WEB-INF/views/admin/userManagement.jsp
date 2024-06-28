@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 관리 > 관리자 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="${root}/resources/css/pagenation.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -21,7 +22,7 @@
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -38,7 +39,7 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}admin/websiteInfo">웹사이트 정보</a>
+                        <a href="${root}/admin/websiteInfo">웹사이트 정보</a>
                     </div>
                     <div class="tapItem tapSelect">
                         <a href="${root}/admin/userManagement">회원 관리</a>
@@ -52,7 +53,7 @@
                 </div>
                 <%--탭 메뉴 끝--%>
                 <div class="list-title flex-between">
-                    <h3>전체 회원 수(5)</h3>
+                    <h3>전체 회원</h3>
                     <fieldset class="search-box flex-row">
                         <button class="secondary-default">선택회원 강제탈퇴</button>
                         <p class="search-field">
@@ -77,38 +78,50 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="tableList">
-                        <td>
-                            <input type="checkbox" id="todolist1" class="todo-checkbox">
-                            <label for="todolist1" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                            </label>
-                        </td>
-                        <td>Jihyeon</td>
-                        <td>관리자</td>
-                        <td>2024.06.10</td>
-                        <td>204시간</td>
-                        <td>
-                            <button class="button-disabled" tabindex="-1">강제 탈퇴</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>
-                            <input type="checkbox" id="todolist11" class="todo-checkbox">
-                            <label for="todolist11" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                            </label>
-                        </td>
-                        <td>Yejoon</td>
-                        <td>일반멤버</td>
-                        <td>2024.06.13</td>
-                        <td>154시간</td>
-                        <td>
-                            <button class="secondary-default" onclick="modalOpen()">강제 탈퇴</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="user" items="${users}">
+                        <tr class="tableList">
+                            <td>
+                                <input type="checkbox" id="todolist${user.userIdx}" class="todo-checkbox">
+                                <label for="todolist${user.userIdx}" class="todo-label">
+                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                </label>
+                            </td>
+                            <td>${user.username}</td>
+                            <td>${user.authorityName}</td>
+                            <td>${user.formattedCreatedAt}</td>
+                            <td>${user.totalStudyTime} 시간</td>
+                            <td>
+                                <button class="button-disabled" tabindex="-1">강제 탈퇴</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
+
+                <!-- 페이지네이션 바 시작 -->
+                <div class="pagination">
+                    <ul>
+                        <c:if test="${startPage > 1}">
+                            <li><a href="?page=1">&lt;&lt;</a></li>
+                        </c:if>
+                        <c:if test="${currentPage > 1}">
+                            <li><a href="?page=${currentPage - 1}">&lt;</a></li>
+                        </c:if>
+                        <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                            <li class="${pageNum == currentPage ? 'active' : ''}">
+                                <a href="?page=${pageNum}">${pageNum}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <li><a href="?page=${currentPage + 1}">&gt;</a></li>
+                        </c:if>
+                        <c:if test="${endPage < totalPages}">
+                            <li><a href="?page=${totalPages}">&gt;&gt;</a></li>
+                        </c:if>
+                    </ul>
+                </div>
+                <!-- 페이지네이션 바 끝 -->
+
 
             </div>
             <%--콘텐츠 끝--%>
