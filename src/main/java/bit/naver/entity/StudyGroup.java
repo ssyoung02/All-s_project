@@ -63,6 +63,5 @@ public class StudyGroup {
     private Long userIdx;
 
 
-
-
+    public String role;
 }

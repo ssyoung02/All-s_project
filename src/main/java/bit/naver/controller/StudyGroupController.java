@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/studyGroup")
@@ -35,9 +32,20 @@ public class StudyGroupController {
     @GetMapping("/studyGroupManagerInfo")
     public String getStudyGroupManagerInfo(Model model, @RequestParam("studyIdx") Long studyIdx) {
         StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+
+        // category, gender, age 값을 모델에 추가
         model.addAttribute("studyGroup", studyGroup);
+        model.addAttribute("category", studyGroup.getCategory());
+        model.addAttribute("gender", studyGroup.getGender());
+        model.addAttribute("age", studyGroup.getAge());
+
+        logger.info("Category: " + studyGroup.getCategory());
+        logger.info("Gender: " + studyGroup.getGender());
+        logger.info("Age: " + studyGroup.getAge());
+
         return "studyGroup/studyGroupManagerInfo";
     }
+
 
     // 스터디 리스트 조회 페이지로 이동
     @RequestMapping("/studyGroupList")
@@ -52,10 +60,8 @@ public class StudyGroupController {
         // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
-
         return "studyGroup/studyGroupList";
     }
-
 
     // 스터디 생성 폼을 위한 GET 요청 처리
     @GetMapping("/studyGroupCreate")
@@ -65,12 +71,24 @@ public class StudyGroupController {
     }
 
     @RequestMapping("/studyGroupMain")
-    public String getStudyGroupMain(@RequestParam("studyIdx") Long studyIdx, Model model) {
+    public String getStudyGroupMain(@RequestParam("studyIdx") Long studyIdx, Model model, HttpSession session) {
+        Users user = (Users) session.getAttribute("userVo");
+        Long userIdx = user.getUserIdx();
+
         StudyGroup study = studyGroupMapper.getStudyById(studyIdx);
         List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+
+        // studyGroup의 role 설정
+        for (StudyMembers member : members) {
+            if (member.getUserIdx().equals(userIdx)) {
+                study.setRole(member.getRole());
+                break;
+            }
+        }
+
         model.addAttribute("study", study);
         model.addAttribute("members", members);
-        return "studyGroup/studyGroupMain"; // 스터디 상세 정보를 보여줄 JSP 페이지
+        return "studyGroup/studyGroupMain";
     }
 
     // 스터디 생성을 위한 POST 요청 처리
@@ -83,16 +101,11 @@ public class StudyGroupController {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
-        // 여기서 studyLeaderIdx를 user의 username에서 가져오는 로직
-        // 예시로 구현하면 아래와 같이 userRepository.findByUsername(user.getUsername()).getUserIdx()를 호출
-
-
         study.setStudyLeaderIdx(userIdx);
         study.setStartDate(new Date());
         study.setEndDate(new Date());
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
-
 
         studyGroupMapper.insertStudy(study);
 
@@ -113,7 +126,6 @@ public class StudyGroupController {
     // 채팅
     @RequestMapping("/chat")
     public String chat(HttpSession session, Principal principal) {
-
         Users user = (Users) session.getAttribute("userVo");
         System.out.println(user.toString());
         return "studyGroup/chat";
@@ -221,4 +233,33 @@ public class StudyGroupController {
         return response;
     }
 
+    @RequestMapping("/recruitReadForm")
+    public String getRecruitReadForm(@RequestParam("studyIdx") Long studyIdx, Model model, HttpSession session) {
+        Users user = (Users) session.getAttribute("userVo");
+        Long userIdx = user.getUserIdx();
+
+        StudyGroup study = studyGroupMapper.getStudyById(studyIdx);
+        boolean isMember = studyGroupMapper.isMember(studyIdx, userIdx);
+
+        model.addAttribute("study", study);
+        model.addAttribute("isMember", isMember);
+
+        return "studyRecruit/recruitReadForm";
+    }
+
+    @PostMapping("/updateStudyGroup")
+    public String updateStudyGroup(@ModelAttribute StudyGroup studyGroup) {
+        studyGroupMapper.updateStudy(studyGroup);
+
+        // 수정된 내용 콘솔에 출력
+        System.out.println("Updated Study Group:");
+        System.out.println("Description Title: " + studyGroup.getDescriptionTitle());
+        System.out.println("Description: " + studyGroup.getDescription());
+        System.out.println("Category: " + studyGroup.getCategory());
+        System.out.println("Age: " + studyGroup.getAge());
+        System.out.println("Gender: " + studyGroup.getGender());
+        System.out.println("Study Online: " + studyGroup.isStudyOnline());
+
+        return "redirect:/studyGroup/studyGroupManagerInfo?studyIdx=" + studyGroup.getStudyIdx();
+    }
 }
