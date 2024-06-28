@@ -103,7 +103,7 @@
 
                         }
                         alarmList.html(msg);
-                        $("#alarm").css(background-color, "red");
+                        $("#alarm").css("color", "red");
 
                     } else {
                         alarmList.html(`<li style='margin-left:20px;'>알람이 없습니다.</li>`);

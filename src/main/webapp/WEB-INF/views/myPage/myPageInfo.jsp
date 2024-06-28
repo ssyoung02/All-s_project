@@ -185,9 +185,9 @@
                             <p class="activity-title">좋아요한 게시글</p>
                             <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
                         </button>
-                        <button class="secondary-default flex-between">
+                        <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikeStudy?userIdx=${userVo.userIdx}'">
                             <p class="activity-title">좋아요한 스터디</p>
-                            <p>5개</p>
+                            <p>${likedStudies[0].TOTALCOUNT}개</p>
                         </button>
                     </div>
                     <%--차트영역--%>

@@ -43,5 +43,6 @@ public interface StudyRecruitMapper {
 
     List<StudyMembers> getMembersByStudyIdx(Long studyIdx);
 
+    List<StudyGroup> getUserLikedStudies(@Param("userIdx") long userId);
 
 }

@@ -1,17 +1,12 @@
 package bit.naver.controller;
 
-import bit.naver.entity.LikeReferencesEntity;
-import bit.naver.entity.ResumesEntity;
-import bit.naver.entity.StudyReferencesEntity;
-import bit.naver.entity.Users;
+import bit.naver.entity.*;
+import bit.naver.mapper.StudyRecruitMapper;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +42,9 @@ public class MyPageController {
     @Autowired
     private MyPageService myPageService;
 
+    @Autowired
+    private StudyRecruitMapper studyMapper;
+
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     @RequestMapping("/myPageInfo")
@@ -67,6 +65,13 @@ public class MyPageController {
         model.addAttribute("resumesEntity", resumesEntity);
         model.addAttribute("user", user);
         session.setAttribute("userVo", user);
+
+        long userIdx = user.getUserIdx();
+
+        List<StudyGroup> likedStudies = studyMapper.getUserLikedStudies(userIdx);
+        model.addAttribute("likedStudies", likedStudies);
+
+
         return "/myPage/myPageInfo";
     }
 
@@ -165,5 +170,12 @@ public class MyPageController {
     public String deleteResume(@RequestParam("resumeIdx") String resumeIdx) {
         System.out.println("resumeIdx: " + resumeIdx);
         return myPageService.deleteResume(resumeIdx);
+    }
+
+    @RequestMapping("/myPageLikeStudy")
+    public String getUserLikedStudies(@RequestParam("userIdx") long userIdx, Model model) {
+        List<StudyGroup> likedStudies = studyMapper.getUserLikedStudies(userIdx);
+        model.addAttribute("likedStudies", likedStudies);
+        return "/myPage/myPageLikeStudy";
     }
 }
