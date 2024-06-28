@@ -46,7 +46,6 @@
         VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
     </insert>
 
-
 <!--내 스터디 리스트-->
     <select id="getMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
         SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description_title AS descriptionTitle, s.description
@@ -56,10 +55,22 @@
     </select>
 
     <select id="getAllMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
-        SELECT sm.study_idx AS studyIdx, sm.role, sm.status, s.study_title AS studyTitle, s.description_title AS descriptionTitle, s.description
+        SELECT sm.study_idx AS studyIdx, sm.role, sm.status, s.study_title AS studyTitle, s.description
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
-        WHERE sm.user_idx = #{userIdx}
+        <where>
+            sm.user_idx  = #{userIdx}
+            <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
+                AND study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+
+        </where>
     </select>
 
     <select id="getStudyById" parameterType="Long" resultType="bit.naver.entity.StudyGroup">
@@ -130,6 +141,10 @@
 
     <select id="isMember" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'ACCEPTED')
+    </select>
+
+    <select id="getStudyLeaderIdx" parameterType="Long" resultType="Long">
+        select study_leader_idx from Studies where study_idx = #{studyIdx}
     </select>
 
 </mapper>

@@ -46,7 +46,7 @@ public interface StudyGroupMapper {
     // 추가된 메서드: 승인된 스터디 목록 가져오기
     List<StudyList> getApprovedStudies(Long userIdx);
 
-    List<StudyList> getAllMyStudies(Long userIdx);
+    List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 
@@ -61,4 +61,7 @@ public interface StudyGroupMapper {
 
     @Update("UPDATE Studies SET description_title = #{descriptionTitle}, description = #{description}, category = #{category}, age = #{age}, gender = #{gender}, study_online = #{studyOnline} WHERE study_idx = #{studyIdx}")
     void updateStudy(StudyGroup studyGroup);
+
+    Long getStudyLeaderIdx(Long studyIdx);
+
 }

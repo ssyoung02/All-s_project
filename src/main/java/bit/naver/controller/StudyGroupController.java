@@ -1,6 +1,7 @@
 package bit.naver.controller;
 
 import bit.naver.entity.*;
+import bit.naver.mapper.NotificationMapper;
 import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyRecruitMapper;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ public class StudyGroupController {
     @Autowired
     private StudyRecruitMapper studyRecruitMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     private static final Logger logger = LoggerFactory.getLogger(StudyGroupController.class);
 
     // 스터디 관리 페이지로 이동
@@ -46,17 +50,22 @@ public class StudyGroupController {
         return "studyGroup/studyGroupManagerInfo";
     }
 
-
     // 스터디 리스트 조회 페이지로 이동
     @RequestMapping("/studyGroupList")
-    public String getMyStudies(Model model, HttpSession session) {
+    public String getMyStudies(Model model, HttpSession session,
+                               @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                               @RequestParam(value = "searchOption", required = false) String searchOption) {
         // 세션에서 현재 사용자 정보 가져오기 (예: 로그인한 사용자 정보)
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
         // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
-        List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
+        List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx, searchKeyword, searchOption);
 
+        // 모델에 검색어와 검색 옵션을 추가
+        model.addAttribute("searchKeyword", searchKeyword);
+        model.addAttribute("searchOption", searchOption);
+        model.addAttribute("userIdx",userIdx );
         // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
@@ -88,7 +97,7 @@ public class StudyGroupController {
 
         model.addAttribute("study", study);
         model.addAttribute("members", members);
-        return "studyGroup/studyGroupMain";
+        return "studyGroup/studyGroupMain"; // 스터디 상세 정보를 보여줄 JSP 페이지
     }
 
     // 스터디 생성을 위한 POST 요청 처리
@@ -101,6 +110,8 @@ public class StudyGroupController {
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
 
+        // 여기서 studyLeaderIdx를 user의 username에서 가져오는 로직
+        // 예시로 구현하면 아래와 같이 userRepository.findByUsername(user.getUsername()).getUserIdx()를 호출
         study.setStudyLeaderIdx(userIdx);
         study.setStartDate(new Date());
         study.setEndDate(new Date());
@@ -126,6 +137,7 @@ public class StudyGroupController {
     // 채팅
     @RequestMapping("/chat")
     public String chat(HttpSession session, Principal principal) {
+
         Users user = (Users) session.getAttribute("userVo");
         System.out.println(user.toString());
         return "studyGroup/chat";
@@ -261,5 +273,17 @@ public class StudyGroupController {
         System.out.println("Study Online: " + studyGroup.isStudyOnline());
 
         return "redirect:/studyGroup/studyGroupManagerInfo?studyIdx=" + studyGroup.getStudyIdx();
+    }
+
+    // 알림 정보
+    @ResponseBody
+    @PostMapping("getAlarmInfo")
+    public List<NotificationEntity> getAlarmInfo(HttpSession session) {
+        Users user = (Users) session.getAttribute("userVo");
+
+
+        List<NotificationEntity> data = notificationMapper.getAlarmInfo(user.getUserIdx());
+
+        return data;
     }
 }

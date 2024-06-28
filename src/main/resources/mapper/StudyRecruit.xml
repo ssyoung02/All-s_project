@@ -91,8 +91,21 @@
                 LEFT JOIN LikeStudy lr
                           ON sg.study_idx = lr.study_idx
                               AND lr.user_idx = #{userIdx}
-        WHERE
+        <where>
             sg.status = 'RECRUITING'
+            <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
+                AND study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'writer-post' and searchKeyword != null and searchKeyword != ''">
+                AND name LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+        </where>
     </select>
 
     <select id="getStudyById" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyGroup">

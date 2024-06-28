@@ -1,7 +1,9 @@
 package bit.naver.controller;
 
+import bit.naver.entity.NotificationEntity;
 import bit.naver.entity.StudyGroup;
 import bit.naver.entity.Users;
+import bit.naver.mapper.NotificationMapper;
 import bit.naver.mapper.StudyRecruitMapper;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
@@ -30,6 +32,9 @@ public class MainController {
 
     @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
     private String kakaoMapApiKey;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
 
 
     @RequestMapping("/main")
@@ -82,7 +87,12 @@ public class MainController {
         Users user = usersMapper.findByUsername(username);
         model.addAttribute("user", user);
         session.setAttribute("userVo", user);
-        return "/include/header";}
+
+        Long userIdx = user.getUserIdx();
+
+
+        return "/include/header";
+        }
     }
 
     @RequestMapping("/include/footer")
