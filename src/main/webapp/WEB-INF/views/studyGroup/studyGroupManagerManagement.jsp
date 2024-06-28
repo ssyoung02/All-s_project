@@ -100,15 +100,6 @@
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
-                        <dt>공개여부</dt>
-                        <dd>
-                            <input type="radio" id="public" name="public">
-                            <label for="public">공개</label>
-                            <input type="radio" id="private" name="public">
-                            <label for="private">비공개</label>
-                        </dd>
-                    </div>
-                    <div class="webInfo-itemfull">
                         <dt>스터디 삭제</dt>
                         <dd>
                             <a id="studyGroupDelete" href="#" onclick="deleteStudyGroup()">스터디 삭제하기</a>
