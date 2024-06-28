@@ -45,7 +45,6 @@ public class StudyRecruitController {
         Users users = usersMapper.findByUsername(username);
         Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
 
-
         // Get studies with userIdx as a parameter
         List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption);
         model.addAttribute("searchKeyword", searchKeyword);
@@ -63,24 +62,22 @@ public class StudyRecruitController {
     // 신청가입리스트?
     @GetMapping("/recruitReadForm")
     public String getStudyDetail(@RequestParam("studyIdx") Long studyIdx, Model model, HttpSession session, Principal principal) {
-
         String username = principal.getName();
         Users users = usersMapper.findByUsername(username);
         long userIdx = users != null ? users.getUserIdx() : 59;
 
         // 스터디 상세 정보 조회
         StudyGroup study = studyMapper.getStudyById(studyIdx, userIdx);
-//        StudyGroup study = studyMapper.getStudyById(studyIdx);
         List<StudyMembers> members = studyMapper.getStudyMembersByStudyId(studyIdx);
+
+        boolean isMember = studyMapper.isMember(studyIdx, userIdx);
+
         model.addAttribute("study", study);
         model.addAttribute("members", members);
+        model.addAttribute("isMember", isMember);
 
         return "studyRecruit/recruitReadForm";
     }
-
-//    // 스터디 등록 insert
-//    @RequestMapping("/recruitReadForm")
-//    public String registerStudyMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("joinReason") String joinReason, HttpSession session, Principal principal) {
 
     // 스터디 가입 신청서 제출
     @PostMapping("/apply")
@@ -141,7 +138,6 @@ public class StudyRecruitController {
         return studyService.updateReport(entity);
     }
 
-
     // 멤버 목록 가져오기
     @GetMapping("/studyGroupManagerMember")
     public String getStudyMembers(@RequestParam("studyIdx") Long studyIdx, Model model) {
@@ -151,6 +147,14 @@ public class StudyRecruitController {
         }
         model.addAttribute("members", members);
         return "studyGroup/studyGroupManagerMember";
+    }
+
+    // 스터디 정보 업데이트
+    @PostMapping("/updateStudyGroup")
+    public String updateStudyGroup(@ModelAttribute StudyGroup study, Model model) {
+        studyMapper.updateStudyGroup(study);
+        model.addAttribute("message", "수정이 완료되었습니다.");
+        return "redirect:/studyRecruit/recruitReadForm?studyIdx=" + study.getStudyIdx();
     }
 
 }

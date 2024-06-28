@@ -53,7 +53,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -100,15 +99,6 @@
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
-                        <dt>공개여부</dt>
-                        <dd>
-                            <input type="radio" id="public" name="public">
-                            <label for="public">공개</label>
-                            <input type="radio" id="private" name="public">
-                            <label for="private">비공개</label>
-                        </dd>
-                    </div>
-                    <div class="webInfo-itemfull">
                         <dt>스터디 삭제</dt>
                         <dd>
                             <a id="studyGroupDelete" href="#" onclick="deleteStudyGroup()">스터디 삭제하기</a>
@@ -124,8 +114,6 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
     <%-- 오류 메세지 모달 --%>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay">
@@ -145,5 +133,8 @@
         </div>
     </div>
 </div>
+<!--푸터-->
+<jsp:include page="../include/timer.jsp" />
+<jsp:include page="../include/footer.jsp" />
 </body>
 </html>

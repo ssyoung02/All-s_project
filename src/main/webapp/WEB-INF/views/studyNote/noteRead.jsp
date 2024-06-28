@@ -8,6 +8,7 @@
 <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 <html>
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -179,7 +180,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -311,8 +311,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

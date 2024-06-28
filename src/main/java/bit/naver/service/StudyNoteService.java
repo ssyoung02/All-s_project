@@ -69,45 +69,9 @@ public class StudyNoteService {
         return  studyNoteMapper.updateReport(entity);
     }
 
-    public Long writePost(StudyReferencesEntity entity, MultipartFile uploadFile) {
-
-        try {
-            // 파일이 있을경우에만
-            if (!uploadFile.isEmpty()) {
-                //일반적인 저장소 파일업로드방식 주석처리
-
-                String fileName = uploadFile.getOriginalFilename();
-//				String uploadPath = "c:\\uploadPath"; //파일이 저장될경로, 나중에 config로 전역변수로 빼면될듯 UUID는 따로 처리안하였음.
-//				String originFilename = uploadFile.getOriginalFilename();
-//				long size = uploadFile.getSize();
-//
-//				File file = new File(uploadPath, uploadFile.getOriginalFilename());
-//				uploadFile.transferTo(file);
-//
-//				entity.setFilename(originFilename);
-//				entity.setUploadPath(file.getAbsolutePath());
-                //이미지 파일만 저장 가능
-//				if(fileName.toLowerCase().endsWith(".png") ||
-//			            fileName.toLowerCase().endsWith(".jpg") ||
-//			            fileName.toLowerCase().endsWith(".jpeg")) {
-//					return 11L;
-//				}
-
-                byte[] fileBytes = uploadFile.getBytes();
-                entity.setFileAttachments(fileBytes);
-                entity.setFileName(fileName);
-
-            }
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    public Long writePost(StudyReferencesEntity entity) {
         int result = studyNoteMapper.writePost(entity);
-
-        return entity.getReferenceIdx();
+        return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환
     }
 
 
@@ -118,7 +82,9 @@ public class StudyNoteService {
         return studyNoteMapper.deletePost(referenceIdx);
     }
 
-    public int updatePost(StudyReferencesEntity entity){
-        return studyNoteMapper.updatePost(entity);
+    public Long updatePost(StudyReferencesEntity entity) {
+        int result = studyNoteMapper.updatePost(entity);
+        return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환ㅍ
     }
+
 }

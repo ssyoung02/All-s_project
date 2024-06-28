@@ -52,8 +52,11 @@ public class UsersUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("사용자ID를 찾을 수 없습니다.");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // 예시 권한
-        return new UsersUser(user);
+        List<String> roles = usersMapper.findAuthoritiesByUsername(username);
+        for (String role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return new UsersUser(user, authorities);
         // UsersUser 객체를 생성하여 반환합니다.
         // UsersUser는 UserDetails 인터페이스를 구현한 클래스로,
         // Spring Security에서 사용자 정보를 다루는 데 필요한 정보를 제공합니다.

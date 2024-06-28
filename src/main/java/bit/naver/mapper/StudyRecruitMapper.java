@@ -1,6 +1,8 @@
 package bit.naver.mapper;
 
-import bit.naver.entity.*;
+import bit.naver.entity.LikeStudyEntity;
+import bit.naver.entity.StudyGroup;
+import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,6 +44,12 @@ public interface StudyRecruitMapper {
     List<StudyMembers> getStudyMembersByStudyId(Long studyIdx);
 
     List<StudyMembers> getMembersByStudyIdx(Long studyIdx);
+
+    // 사용자 스터디 멤버 여부 확인
+    boolean isMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
+
+    // 스터디 업데이트
+    void updateStudyGroup(StudyGroup studyGroup);
 
     List<StudyGroup> getUserLikedStudies(@Param("userIdx") long userId);
 

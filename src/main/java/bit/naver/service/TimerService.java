@@ -47,6 +47,10 @@ public class TimerService {
     }
 
     public List<TimerEntity> getWeeklyStudyTime(Long userIdx, LocalDate startDate, LocalDate endDate) {
+        System.out.println(userIdx);
+        System.out.println(startDate);
+        System.out.println(endDate);
+
         return timerMapper.getStudyTimeBetweenDates(userIdx, startDate, endDate);
     }
 

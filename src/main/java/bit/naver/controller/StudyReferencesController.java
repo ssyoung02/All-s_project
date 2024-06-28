@@ -1,14 +1,13 @@
 package bit.naver.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -132,26 +131,39 @@ public class StudyReferencesController {
 
 	@PostMapping("/referencesWrite")
 	@ResponseBody
-	public Long submitPost(@ModelAttribute StudyReferencesEntity entity, MultipartFile uploadFile, HttpSession session,
-			HttpServletResponse response) {
+	public Long submitPost(@ModelAttribute StudyReferencesEntity entity, @RequestParam(required = false) MultipartFile uploadFile, HttpSession session, HttpServletResponse response) {
 		Users user = (Users) session.getAttribute("userVo");
 		Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
 		entity.setUserIdx(userIdx);
 
-		if (uploadFile.getSize() > MAX_FILE_SIZE) {
+		// 파일 크기 검사
+		if (uploadFile != null && uploadFile.getSize() > MAX_FILE_SIZE) {
 			return 10L;
 		}
 
 		try {
-			entity.setFileName(URLEncoder.encode(uploadFile.getOriginalFilename(), "UTF-8").replaceAll("\\+", "%20"));
-			entity.setFileAttachments(uploadFile.getBytes());
+			// 파일이 있는 경우 처리
+			if (uploadFile != null && !uploadFile.isEmpty()) {
+				String fileName = uploadFile.getOriginalFilename();
+				if (fileName.length() > 100) { // 최대 길이 제한
+					fileName = fileName.substring(0, 100);
+				}
+				entity.setFileName(fileName);
+				entity.setFileAttachments(uploadFile.getBytes());
+			} else {
+				entity.setFileName(null);
+				entity.setFileAttachments(null);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			return -1L;
 		}
 
-		return studyReferencesService.writePost(entity, uploadFile);
+		// 파일 여부와 관계없이 글 작성 처리
+		return studyReferencesService.writePost(entity);
 	}
+
+
 
 	@RequestMapping("/deletePost")
 	@ResponseBody
@@ -171,11 +183,45 @@ public class StudyReferencesController {
 		return "/studyReferences/referencesModify";
 	}
 
-	@RequestMapping("/updatePost")
+	@PostMapping("/updatePost")
 	@ResponseBody
-	public int updatePost(@ModelAttribute StudyReferencesEntity entity) {
+	public Long updatePost(@ModelAttribute StudyReferencesEntity entity,
+						   @RequestParam("referenceIdx") Long referenceIdx,
+						   @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile,
+						   HttpSession session, HttpServletResponse response) {
+		Users user = (Users) session.getAttribute("userVo");
+		Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
+		entity.setUserIdx(userIdx);
+		entity.setReferenceIdx(referenceIdx); //전달받은 IDX값 저장
+
+		// 파일 크기 검사
+		if (uploadFile != null && uploadFile.getSize() > MAX_FILE_SIZE) {
+			return 10L;
+		}
+
+		try {
+			// 파일이 있는 경우 처리
+			if (uploadFile != null && !uploadFile.isEmpty()) {
+				String fileName = uploadFile.getOriginalFilename();
+				if (fileName.length() > 100) { // 최대 길이 제한
+					fileName = fileName.substring(0, 100);
+				}
+				entity.setFileName(fileName);
+				entity.setFileAttachments(uploadFile.getBytes());
+			} else {
+				// 파일이 없으면 null로 설정
+				entity.setFileName(null);
+				entity.setFileAttachments(null);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return -1L;
+		}
+
+		// 파일 여부와 관계없이 글 수정 처리
 		return studyReferencesService.updatePost(entity);
 	}
+
 
 	@GetMapping("/referencesSite")
 	public String referencesSite(@ModelAttribute StudyReferencesEntity entity) {
@@ -184,7 +230,7 @@ public class StudyReferencesController {
 
 	@GetMapping(value = "/download")
 	public void fileDownload(@RequestParam("referenceIdx") Long referenceIdx, HttpSession session,
-			HttpServletResponse response) {
+							 HttpServletResponse response) {
 		Users user = (Users) session.getAttribute("userVo");
 		String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
 		StudyReferencesEntity entity = studyReferencesService.getStudyReferenceById(referenceIdx, userIdx);
@@ -197,10 +243,25 @@ public class StudyReferencesController {
 		}
 
 		response.setContentType(mimeType);
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + entity.getFileName() + "\"");
+
+		// 파일 이름 인코딩 처리
+		String encodedFileName;
+		try {
+			String userAgent = response.getHeader("User-Agent");
+			if (userAgent != null && (userAgent.contains("MSIE") || userAgent.contains("Trident") || userAgent.contains("Edge"))) {
+				encodedFileName = URLEncoder.encode(entity.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+			} else {
+				encodedFileName = new String(entity.getFileName().getBytes("UTF-8"), "ISO-8859-1");
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			encodedFileName = entity.getFileName();
+		}
+
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
 
 		try (InputStream inputStream = new ByteArrayInputStream(entity.getFileAttachments());
-				OutputStream outputStream = response.getOutputStream()) {
+			 OutputStream outputStream = response.getOutputStream()) {
 
 			byte[] buffer = new byte[1024];
 			int bytesRead;
@@ -212,4 +273,5 @@ public class StudyReferencesController {
 			e.printStackTrace();
 		}
 	}
+
 }

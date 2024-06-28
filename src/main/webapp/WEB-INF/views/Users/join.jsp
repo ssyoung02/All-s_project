@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
@@ -6,6 +6,7 @@
 <c:set var="googleUserInfo" value="${googleUserInfo}"/>
 <c:set var="kakaoUserInfo" value="${kakaoUserInfo}"/>
 <c:set var="naverUserInfo" value="${naverUserInfo}"/>
+<c:set var="error" value="${requestScope.error}"/>
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 
@@ -33,20 +34,23 @@
     </div>
 
     <form method="POST" action="${root }/Users/UsersRegister" id="registerForm">
-        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
         <c:if test="${not empty kakaoUserInfo.name}">
-            <input type="hidden" name="profileImage" value="${kakaoUserInfo.profileImage}" alt="https://www.talktobiz.co.kr/resources/images/ico/ico_kakao_chat.png">
+            <input type="hidden" name="profileImage" value="${kakaoUserInfo.profileImage}"
+                   alt="https://www.talktobiz.co.kr/resources/images/ico/ico_kakao_chat.png">
             <input type="hidden" name="provider" value="kakao">
             <input type="hidden" name="socialLogin" value="true">
         </c:if>
         <c:if test="${not empty naverUserInfo.name}">
-            <input type="hidden" name="profileImage" value="${naverUserInfo.profileImage}" alt="https://clova-phinf.pstatic.net/MjAxODAzMjlfOTIg/MDAxNTIyMjg3MzM3OTAy.WkiZikYhauL1hnpLWmCUBJvKjr6xnkmzP99rZPFXVwgg.mNH66A47eL0Mf8G34mPlwBFKP0nZBf2ZJn5D4Rvs8Vwg.PNG/image.png">
+            <input type="hidden" name="profileImage" value="${naverUserInfo.profileImage}"
+                   alt="https://clova-phinf.pstatic.net/MjAxODAzMjlfOTIg/MDAxNTIyMjg3MzM3OTAy.WkiZikYhauL1hnpLWmCUBJvKjr6xnkmzP99rZPFXVwgg.mNH66A47eL0Mf8G34mPlwBFKP0nZBf2ZJn5D4Rvs8Vwg.PNG/image.png">
             <input type="hidden" name="provider" value="naver">
             <input type="hidden" name="socialLogin" value="true">
         </c:if>
         <c:if test="${not empty googleUserInfo.name}">
-            <input type="hidden" name="profileImage" value="${googleUserInfo.profileImage}" alt="https://www.google.com/url?sa=i&url=https%3A%2F%2Ficonscout.com%2Ficons%2Fgoogle&psig=AOvVaw0dbE76jSgtZP20FKYyxeEW&ust=1719040155908000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJi8yOCR7IYDFQAAAAAdAAAAABAI">
+            <input type="hidden" name="profileImage" value="${googleUserInfo.profileImage}"
+                   alt="https://www.google.com/url?sa=i&url=https%3A%2F%2Ficonscout.com%2Ficons%2Fgoogle&psig=AOvVaw0dbE76jSgtZP20FKYyxeEW&ust=1719040155908000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJi8yOCR7IYDFQAAAAAdAAAAABAI">
             <input type="hidden" name="provider" value="google">
             <input type="hidden" name="socialLogin" value="true">
         </c:if>
@@ -121,9 +125,9 @@
                 <c:otherwise>
                     <label for="password2">비밀번호 확인<span class="essential">*</span></label>
                     <input type="password" id="password2" name="password2" placeholder="비밀번호 확인을 입력해주세요" required>
-                    <span id="passwordCheckResult"></span>
                 </c:otherwise>
             </c:choose>
+            <span id="passwordCheckResult"></span>
         </div>
         <div class="inputbox">
             <label for="mobile">휴대전화<span class="essential">*</span></label>
@@ -156,19 +160,25 @@
             <div class="">
                 <c:choose>
                     <c:when test="${not empty kakaoUserInfo.gender}">
-                        <input id="male" class="gender" name="gender" type="radio" value="M" ${kakaoUserInfo.gender == 'M' ? 'checked' : ''} >
+                        <input id="male" class="gender" name="gender" type="radio"
+                               value="M" ${kakaoUserInfo.gender == 'M' ? 'checked' : ''} >
                         <label for="male">남자</label>
-                        <input id="female" class="gender" name="gender" type="radio" value="F" ${kakaoUserInfo.gender == 'F' ? 'checked' : ''} >
+                        <input id="female" class="gender" name="gender" type="radio"
+                               value="F" ${kakaoUserInfo.gender == 'F' ? 'checked' : ''} >
                         <label for="female">여자</label>
-                        <input id="other" class="gender" name="gender" type="radio" value="OTHER" ${kakaoUserInfo.gender == 'OTHER' ? 'checked' : ''}>
+                        <input id="other" class="gender" name="gender" type="radio"
+                               value="OTHER" ${kakaoUserInfo.gender == 'OTHER' ? 'checked' : ''}>
                         <label for="other">기타</label>
                     </c:when>
                     <c:when test="${not empty naverUserInfo.gender}">
-                        <input id="male" class="gender" name="gender" type="radio" value="M" ${naverUserInfo.gender == 'M' ? 'checked' : ''} readonly>
+                        <input id="male" class="gender" name="gender" type="radio"
+                               value="M" ${naverUserInfo.gender == 'M' ? 'checked' : ''} readonly>
                         <label for="male">남자</label>
-                        <input id="female" class="gender" name="gender" type="radio" value="F" ${naverUserInfo.gender == 'F' ? 'checked' : ''} readonly>
+                        <input id="female" class="gender" name="gender" type="radio"
+                               value="F" ${naverUserInfo.gender == 'F' ? 'checked' : ''} readonly>
                         <label for="female">여자</label>
-                        <input id="other" class="gender" name="gender" type="radio" value="OTHER" ${naverUserInfo.gender == 'OTHER' ? 'checked' : ''} readonly>
+                        <input id="other" class="gender" name="gender" type="radio"
+                               value="OTHER" ${naverUserInfo.gender == 'OTHER' ? 'checked' : ''} readonly>
                         <label for="other">기타</label>
                     </c:when>
                     <c:otherwise>
@@ -203,33 +213,34 @@
     </form>
 </div>
 
-    <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
+<%-- 오류 메세지 모달 --%>
+<div id="modal-container" class="modal unstaged">
+    <div class="modal-overlay">
+    </div>
+    <div class="modal-contents">
+        <div class="modal-text flex-between">
+            <h4>오류 메세지</h4>
+            <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
-                <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
-                    <i class="bi bi-x-lg"></i>
-                </button>            </div>
-            <div class="modal-center">
-                <%-- 메시지 내용이 여기에 표시됩니다. --%>
-                    <c:if test="${not empty error}">
-                        <p>${error}</p>
-                    </c:if>
-            </div>
-            <div class="modal-bottom">
-                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
-            </div>
+        <div class="modal-center">
+            <%-- 메시지 내용이 여기에 표시됩니다. --%>
+            <c:if test="${not empty param.error}">
+                <p>${requestScope.error}</p>
+            </c:if>
+        </div>
+        <div class="modal-bottom">
+            <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
         </div>
     </div>
+</div>
 </body>
 <script>
-    $(document).ready(function() {
-        // 회원가입 결과 메시지 처리 (모달 표시)
-        <c:if test="${not empty alertModal}">
-        $("#messageContent").text("${alertModal}");
+    $(document).ready(function () {
+// 회원가입 결과 메시지 처리 (모달 표시)
+        <c:if test="${not empty param.error}">
+        $("#messageContent").text("${requestScope.error}");
         $('#modal-container').toggleClass('opaque'); //모달 활성화
         $('#modal-container').toggleClass('unstaged');
         $('.modal-close-x').focus();
@@ -241,8 +252,8 @@
         $.ajax({
             url: "/Users/checkDuplicate",
             type: "POST",
-            data: { username: username },
-            success: function(response) {
+            data: {username: username},
+            success: function (response) {
                 if (response === 0) {
                     $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
                     $("#usernameCheckResult").removeClass("error").addClass("success");
@@ -252,7 +263,7 @@
                 }
 
             },
-            error: function() { // AJAX 요청 실패 시
+            error: function () { // AJAX 요청 실패 시
                 $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
                 $("#usernameCheckResult").removeClass("success").addClass("error");
             }

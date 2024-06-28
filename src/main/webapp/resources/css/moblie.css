@@ -8,20 +8,15 @@
     nav{
         display: none;
     }
-    main {
-        grid-column: 1 / 5;
-        grid-row: 1;
-    }
-    .mainContaner{
-        margin: 0 3em;
+    .mainContainer{
+        display: block;
     }
     .m-menu-area{
         display: none;
         position: absolute;
-        right: 8%;
-        top: 11em;
+        right: 5%;
         width: 300px;
-        z-index: 1;
+        z-index: 4;
     }
     .m-size-nav{
         display: flex;
@@ -38,12 +33,16 @@
     .timestart{
         display: none;
     }
-    #m-timestart{
+    .m-timestart{
         display: inline-block;
         width: 100%;
         padding: 0.8em;
         width: 20em;
     }
+    .time-area p{
+        font-size: 90px;
+    }
+
     .lnb-open{
         display: inline-block;
         background-color: white;
@@ -54,6 +53,25 @@
     }
     .lnb-open ul{
         padding: 0;
+    }
+
+    /*메인 모바일*/
+    .loginMain{
+        display: block;
+    }
+    .loginUserInfoLeft{
+        width: 100%;
+    }
+    .loginUserInfoRight{
+        display: flex;
+        gap: 1em;
+    }
+    #studyTimeChart{
+        max-width: 700px;
+        max-height: 300px;
+    }
+    .userStudyGroup{
+        width: 350px;
     }
 
     /*회원정보 수정 모바일*/
@@ -84,6 +102,12 @@
         font-size: 4em;
     }
 }
+
+@media (max-width: 1050px) {
+    #studyTimeChart{
+        max-width: 600px;
+    }
+}
 @media (max-width: 850px) {
     /*메인*/
     .loginMain{
@@ -100,5 +124,9 @@
 
     .time-area{
         font-size: 3em;
+    }
+
+    #studyTimeChart{
+        max-width: 500px;
     }
 }

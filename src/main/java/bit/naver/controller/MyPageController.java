@@ -15,11 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -133,33 +131,35 @@ public class MyPageController {
 
     @GetMapping(value = "/download")
     public void fileDownload(@RequestParam("resumeIdx") Long resumeIdx, HttpSession session,
-                             HttpServletResponse response) {
+                             HttpServletResponse response) throws UnsupportedEncodingException {
         Users user = (Users) session.getAttribute("userVo");
-
-        String userIdx = String.valueOf(user.getUserIdx()); // 사용자 ID 가져오기
+        String userIdx = String.valueOf(user.getUserIdx());
         ResumesEntity entity = myPageService.getMyPageById(resumeIdx);
-        System.out.println(entity.toString());
-
+        String fileName = entity.getFileName();
         String mimeType = "application/octet-stream";
+
         try {
-            Path filePath = Paths.get(entity.getFileName());
+            Path filePath = Paths.get("path/to/files/" + fileName); // 실제 파일 경로로 변경
             mimeType = Files.probeContentType(filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         response.setContentType(mimeType);
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + entity.getFileName() + "\"");
+
+        // 파일 이름에 한글이 포함된 경우를 대비해 인코딩 처리
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
+
+        // Content-Disposition 헤더 수정
+        response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
 
         try (InputStream inputStream = new ByteArrayInputStream(entity.getResumePath());
              OutputStream outputStream = response.getOutputStream()) {
-
             byte[] buffer = new byte[1024];
             int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, bytesRead);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -46,11 +46,10 @@
 
         function submitPost(event) {
             event.preventDefault(); // 폼 제출을 막음
-            console.log("submitPost 함수 호출됨");
-
             oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
-            let content = document.getElementById("editorTxt").value;
+
             let title = document.querySelector('.title-post').value;
+            let content = document.getElementById("editorTxt").value;
             let isPrivate = document.getElementsByName("isPrivate")[0].checked;
 
             if (title.trim() === '') {
@@ -65,10 +64,14 @@
                 return false;
             }
 
-            var $frm = $("#writeForm")[0];
-            var formData = new FormData($frm);
+            let $frm = $("#writeForm")[0];
+            let formData = new FormData($frm);
             formData.append("content", formData.get("editorTxt"));
-            formData.append("uploadFile", $("#file")[0].files[0]);
+
+            let fileInput = $("#file")[0];
+            if (fileInput.files.length > 0) {
+                formData.append("uploadFile", fileInput.files[0]);
+            } // 파일이 없는 경우 formData에 추가하지 않음
             formData.append("isPrivate", isPrivate);
 
             // AJAX를 사용하여 폼 데이터를 서버로 전송
@@ -79,22 +82,18 @@
                 processData : false,
                 contentType : false,
                 beforeSend : function(xhr) {
-                    xhr.setRequestHeader($("meta[name='_csrf_header']")
-                        .attr("content"), $("meta[name='_csrf']").attr(
-                        "content"));
+                    xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                 },
                 success : function(response) {
                     if(response === 10){
-
                         alert("파일 용량은 5MB를 초과할 수 없습니다.");
-                        return false
-                    }else if(response === 11){
-
+                        return false;
+                    } else if(response === 11){
                         alert("이미지 파일만 저장할 수 있습니다.");
-                        return false
-                    }else{
+                        return false;
+                    } else {
                         alert("글 작성이 완료되었습니다.");
-                        location.href = "${root}/studyNote/noteRead?referenceIdx=" + response
+                        location.href = "${root}/studyNote/noteRead?referenceIdx=" + response;
                     }
                 },
                 error : function() {
@@ -102,10 +101,22 @@
                 }
             });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('removeFileButton').addEventListener('click', function() {
+                console.log("파일 삭제");
+
+                let fileInput = document.getElementById('file');
+                fileInput.value = ''; // 파일 입력 요소 초기화
+
+                let uploadFileInput = document.getElementById('uploadFile');
+                uploadFileInput.value = '첨부파일'; // 표시되는 텍스트 초기화
+            });
+        });
+
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -155,6 +166,7 @@
                                 <p class="tag-title">첨부파일</p>
                                 <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
                                 <label for="file">파일찾기</label> <input type="file" id="file">
+                                <button type="button" class="secondary-default" id="removeFileButton">파일삭제</button>
                             </li>
                         </ul>
 
@@ -166,8 +178,9 @@
                 </form>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

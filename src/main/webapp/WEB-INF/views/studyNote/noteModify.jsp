@@ -44,15 +44,16 @@
         });
 
         function isContentEmpty(content) {
-            // 실제 텍스트가 비어있는지 검사
             return $('<div>').html(content).text().trim() === '';
         }
 
         function updatePost(event, idx) {
+            console.log("updatePost 함수 호출됨");
+
             event.preventDefault(); // 폼 제출을 막음
             oEditors.getById["editorTxt"].exec("UPDATE_CONTENTS_FIELD", []); // 스마트 에디터의 내용을 업데이트
 
-            let title = document.getElementById('title-post').value;
+            let title = document.querySelector('.title-post').value;
             let content = document.getElementById('editorTxt').value;
             let isPrivate = document.getElementsByName("isPrivate")[0].checked;
 
@@ -68,17 +69,33 @@
                 return false;
             }
 
+            let $frm = $("#writeForm")[0];
+            let formData = new FormData($frm);
+            formData.append("content", formData.get("editorTxt"));
+            formData.append("uploadFile", $("#file")[0].files[0]);
+            formData.append("isPrivate", isPrivate);
+            formData.append("referenceIdx", idx);
+
             $.ajax({
                 url: '/studyNote/updatePost',
                 type: 'POST',
-                data: {referenceIdx: idx, title: title, content: content, isPrivate: isPrivate},
+                data: formData,
+                processData: false,
+                contentType: false,
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
                 },
-
                 success: function(response) {
-                    alert("글 수정이 완료되었습니다.");
-                    location.href ="${root}/studyNote/noteRead?referenceIdx="+idx
+                    if(response === 10){
+                        alert("파일 용량은 5MB를 초과할 수 없습니다.");
+                        return false;
+                    } else if(response === 11){
+                        alert("이미지 파일만 저장할 수 있습니다.");
+                        return false;
+                    } else {
+                        alert("글 수정이 완료되었습니다.");
+                        location.href = "${root}/studyNote/noteRead?referenceIdx=" + idx;
+                    }
                 },
                 error: function() {
                     alert("글 수정에 실패하였습니다.");
@@ -86,19 +103,21 @@
             });
         }
 
-        $(document).ready(function() {
-            let isPrivate = "${studyReferencesEntity.isPrivate}";
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('removeFileButton').addEventListener('click', function() {
+                console.log("파일 삭제");
 
-            console.log("isPrivate value:", isPrivate);
-            if (isPrivate === "true") {
-                $("#public").prop("checked", true);
-                console.log("Checkbox should be checked now.");
-            }
+                let fileInput = document.getElementById('file');
+                fileInput.value = ''; // 파일 입력 요소 초기화
+
+                let uploadFileInput = document.getElementById('uploadFile');
+                uploadFileInput.value = '첨부파일'; // 표시되는 텍스트 초기화
+            });
         });
+
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -120,36 +139,64 @@
             <h4 class="s-header">글수정</h4>
 
             <form id="writeForm" onsubmit="updatePost(event, ${studyReferencesEntity.referenceIdx});">
+                <!-- form 태그의 onsubmit 이벤트를 통해 updatePost 함수가 호출됩니다. -->
                 <div class="post-area">
                     <input type="text" id="title-post" class="title-post" name="title" value="${studyReferencesEntity.title}">
 
                     <ul class="todolist">
-                        <!-- 태그 항목 -->
                         <li>
-                            <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
-                            <label for="public" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                                비밀글
-                                <span class="private-mark"><i class=""></i></span>
-                            </label>
+                            <c:if test="${studyReferencesEntity.isPrivate}">
+                                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate" checked="checked">
+                                <label for="public" class="todo-label">
+                                    <span class="checkmark"><i class="bi bi-check-square"></i></span>
+                                    비밀글
+                                    <span class="private-mark"><i class="bi bi-lock-fill"></i></span>
+                                </label>
+                            </c:if>
+                            <c:if test="${not studyReferencesEntity.isPrivate}">
+                                <input type="checkbox" id="public" class="todo-checkbox" name="isPrivate">
+                                <label for="public" class="todo-label">
+                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                    비밀글
+                                    <span class="private-mark"><i class=""></i></span>
+                                </label>
+                            </c:if>
                         </li>
                     </ul>
 
                     <!-- naver smart editor api -->
                     <div id="smarteditor">
-                        <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;"
-                        >${studyReferencesEntity.content}</textarea>
+                        <textarea name="editorTxt" id="editorTxt" style="width: 100%; height: 30em;">${studyReferencesEntity.content}</textarea>
                     </div>
+
+                    <ul class="taglist">
+                        <!-- 태그 항목 -->
+                        <li>
+                            <p class="tag-title">첨부파일</p>
+                            <c:if test="${not empty studyReferencesEntity.fileName}">
+                                <input id="uploadFile" class="upload-name" value="${studyReferencesEntity.fileName}" name="uploadFile" readonly>
+                            </c:if>
+                            <c:if test="${empty studyReferencesEntity.fileName}">
+                                <input id="uploadFile" class="upload-name" value="첨부파일" placeholder="첨부파일" name="uploadFile" readonly>
+                            </c:if>
+                            <label for="file">파일찾기</label>
+                            <input type="file" id="file" name="uploadFile">
+                            <button type="button" class="secondary-default" id="removeFileButton">파일삭제</button>
+                        </li>
+                    </ul>
+
                     <div class="buttonBox">
                         <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyNote/noteList'">취소</button>
-                        <button type="submit" class="updatebutton primary-default" onclick="updatePost(${studyReferencesEntity.referenceIdx})">수정</button>
+                        <button type="submit" class="updatebutton primary-default">수정</button>
+                        <!-- submit 버튼의 onclick 속성을 제거하고, type="submit"을 설정하여 폼 제출을 트리거합니다. -->
                     </div>
                 </div>
             </form>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>
