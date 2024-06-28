@@ -99,17 +99,15 @@
                         class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
-                <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <form id="joinForm" method="post" action="${root}/studyRecruit/recruitReadForm">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요
+                    <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요">
 예)
 거주지(또는 직장):
 성별:
 나이:
 신청이유:
-"></textarea>
+</textarea>
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}">
                 </form>
             </div>
