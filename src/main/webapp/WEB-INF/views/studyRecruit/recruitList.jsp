@@ -20,7 +20,6 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -178,14 +177,7 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
 </div>
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script src="${root}/resources/js/slider.js"></script>
-</body>
-</html>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const statusElements = document.querySelectorAll('.recruit-status');
@@ -266,3 +258,9 @@
         });
     });
 </script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="${root}/resources/js/slider.js"></script>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
+</body>
+</html>

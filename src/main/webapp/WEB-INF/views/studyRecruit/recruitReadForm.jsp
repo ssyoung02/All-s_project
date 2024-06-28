@@ -263,16 +263,14 @@
             <%-- 수정 폼 영역 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
-
     <%-- 가입 신청 모달 --%>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay"></div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h3>${study.studyTitle}</h3>
-                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
+                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="madalClose()"><i
+                        class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
@@ -283,7 +281,7 @@
 성별:
 나이:
 신청이유:
-"></textarea>
+</textarea>
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}">
                 </form>
             </div>
@@ -295,8 +293,6 @@
     </div>
 
 </div>
-<jsp:include page="../include/timer.jsp"/>
-
 <script>
     function modalOpen() {
         document.getElementById('modal-container').classList.remove('unstaged');
@@ -412,6 +408,8 @@
         }
     }
 </script>
-
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>
