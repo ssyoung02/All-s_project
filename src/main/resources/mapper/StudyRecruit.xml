@@ -183,12 +183,28 @@
             sm.status AS status,
             sm.join_reason AS joinReason,
             sm.created_at AS createdAt
-#             sm.study_time AS studyTime
         FROM
             StudyMembers sm
                 JOIN Users u ON sm.user_idx = u.user_idx
         WHERE
             sm.study_idx = #{studyIdx}
     </select>
+
+    <select id="isMember" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'ACCEPTED')
+    </select>
+
+    <update id="updateStudyGroup" parameterType="bit.naver.entity.StudyGroup">
+        UPDATE Studies
+        SET study_title = #{studyTitle},
+            description = #{description},
+            category = #{category},
+            study_online = #{studyOnline},
+            age = #{age},
+            gender = #{gender},
+            image = #{image}
+        WHERE study_idx = #{studyIdx}
+    </update>
+
 </mapper>
 

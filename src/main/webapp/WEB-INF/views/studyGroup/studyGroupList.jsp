@@ -131,7 +131,7 @@
                                                     <img src="${root}/img/logo.png">
                                                 </div>
                                                 <div class="board-item flex-columleft">
-                                                    <p class="board-title">${study.studyTitle}</p>
+                                                    <p class="board-title">${study.descriptionTitle}</p>
                                                     <p class="board-content">${study.description}</p>
                                                 </div>
                                             </div>
