@@ -44,7 +44,7 @@ public interface StudyGroupMapper {
     // 추가된 메서드: 승인된 스터디 목록 가져오기
     List<StudyList> getApprovedStudies(Long userIdx);
 
-    List<StudyList> getAllMyStudies(Long userIdx);
+    List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 
@@ -53,4 +53,6 @@ public interface StudyGroupMapper {
 
     @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude FROM Studies") // 필요한 정보만 조회
     List<StudyGroup> findAllStudies();
+
+    Long getStudyLeaderIdx(Long studyIdx);
 }

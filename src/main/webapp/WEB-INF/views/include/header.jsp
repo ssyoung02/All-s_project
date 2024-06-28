@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="userVo" value="${sessionScope.userVo}"/>
@@ -14,81 +14,94 @@
     </div>
     <div class="logoarea">
         <!-- 로고 이미지 -->
-        <a href="${root}/main"><img class="logo" src="${root}/resources/images/logo.png" style="width:100%" alt="all's 로고"/></a>
+        <a href="${root}/main"><img class="logo" src="${root}/resources/images/logo.png" style="width:100%"
+                                    alt="all's 로고"/></a>
     </div>
 
-        <div class="r-header">
-            <div id="topmenu">
-                <%-- 로그인한 사용자에게만 정보 표시 --%>
-                <sec:authorize access="isAuthenticated()">
+    <div class="r-header">
+        <div id="topmenu">
+            <%-- 로그인한 사용자에게만 정보 표시 --%>
+            <sec:authorize access="isAuthenticated()">
                 <!-- 관리자 페이지 링크 -->
-                    <a class="manager-page" href="#"><i class="bi bi-gear"></i>관리자</a>
-                </sec:authorize>
-                <!-- 날씨 정보 링크 -->
-                <a class="weather" href="#"><i class="bi bi-cloud-moon"></i>강남구 25°C</a>
-                <%-- 로그인한 사용자에게만 정보 표시 --%>
-                <sec:authorize access="isAuthenticated()">
-                    <!-- 프로필 링크 -->
-                    <a class="profile" href="#">
-                        <div class="profile-img">
-                            <img src="${root}/resources/profileImages/${userVo.profileImage}" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
-                        </div>
-                        <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
-                    </a>
-                    <!-- 알림 영역 -->
-                    <div class="alarm flex-colum hidden">
-                        <div>
-                            <div class="profile-img">
-                                <img src="${root}/resources/profileImages/${userVo.profileImage}" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
-                            </div>
-                            <p class="profile-username">${userVo.name}</p>
-                        </div>
-                        <div class="alarmList">
-                            <h3>알림 내역</h3>
-                            <ul>
-                                <li>
-                                    <a href="#">
-                                        <i class="bi bi-person-plus"></i>
-                                        1건의 가입신청이 존재합니다
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="bi bi-bell"></i>
-                                        회원 등급이 상승했습니다
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="bi bi-filter-square"></i>
-                                        댓글이 달렸습니다
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="bi bi-filter-square"></i>
-                                        좋아요가 눌렸습니다
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- 로그아웃 버튼 -->
-                        <form method="POST" action="${root}/Users/logout">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                            <button class="secondary-default" type="submit">로그아웃</button>
-                        </form>
+                <a class="manager-page" href="#"><i class="bi bi-gear"></i>관리자</a>
+            </sec:authorize>
+            <!-- 날씨 정보 링크 -->
+            <a class="weather" href="#"><i class="bi bi-cloud-moon"></i>강남구 25°C</a>
+            <%-- 로그인한 사용자에게만 정보 표시 --%>
+            <sec:authorize access="isAuthenticated()">
+                <!-- 프로필 링크 -->
+                <a class="profile" href="#">
+                    <div class="profile-img">
+                        <img src="${root}/resources/profileImages/${userVo.profileImage}"
+                             onerror="this.onerror=null; this.src='${userVo.profileImage}';">
                     </div>
-                </sec:authorize>
-            </div>
-            <!-- 모바일 사이즈 메뉴 -->
-            <div class="m-size-nav">
-                <button class="secondary-default menu-open">
-                    <i class="bi bi-list"></i>
-                    <span class="hide">메뉴 열기</span>
-                </button>
-                <!-- 공부 시작 버튼 -->
-                <button id="m-timestart" class="primary-default" onclick="timerOpen()">공부 시작</button>
-            </div>
+                    <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
+                </a>
+                <!-- 알림 영역 -->
+                <div class="alarm flex-colum hidden">
+                    <div>
+                        <div class="profile-img">
+                            <img src="${root}/resources/profileImages/${userVo.profileImage}"
+                                 onerror="this.onerror=null; this.src='${userVo.profileImage}';">
+                        </div>
+                        <p class="profile-username">${userVo.name}</p>
+                    </div>
+                    <div class="alarmList">
+                        <h3>알림 내역</h3>
+                        <ul id="alarmList">
+                            <!-- 여기에서 알림 항목이 동적으로 추가될 것입니다 -->
+                        </ul>
+                    </div>
+                    <!-- 로그아웃 버튼 -->
+                    <form method="POST" action="${root}/Users/logout">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <button class="secondary-default" type="submit">로그아웃</button>
+                    </form>
+                </div>
+            </sec:authorize>
         </div>
-    </header>
+        <!-- 모바일 사이즈 메뉴 -->
+        <div class="m-size-nav">
+            <button class="secondary-default menu-open">
+                <i class="bi bi-list"></i>
+                <span class="hide">메뉴 열기</span>
+            </button>
+            <!-- 공부 시작 버튼 -->
+            <button id="m-timestart" class="primary-default" onclick="timerOpen()">공부 시작</button>
+        </div>
+    </div>
+</header>
+<script>
+    // 페이지 로드 시 및 매 3초마다 알림을 가져옴
+    getAlarm();
+    setInterval(() => {
+        getAlarm();
+    }, 3000);
 
+    function getAlarm() {
+        $.ajax({
+            type: "post",
+            url: "/studyGroup/getAlarmInfo",
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                var alarmList = $("#alarmList");
+                alarmList.empty();  // 기존 알림 목록 비우기
+
+                if (res.length > 0) {
+                    var msg = "";
+                    for (var i = 0; i < res.length; i++) {
+                        msg += `<li><a class='dropdown-item' id='${res[i].notificationIdx}' href='studyhome'>${res[i].alarmMessage}<br>${res[i].createdAt}</a></li>`;
+                    }
+                    alarmList.html(msg);
+                    $("#alarm").css("color", "red");
+                } else {
+                    alarmList.html(`<li style='margin-left:20px;'>알람이 없습니다.</li>`);
+                    $("#alarm").css("color", "");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("알림을 가져오는 동안 오류가 발생했습니다: ", error);
+            }
+        });
+    }
+</script>

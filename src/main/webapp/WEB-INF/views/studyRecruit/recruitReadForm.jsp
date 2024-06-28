@@ -104,8 +104,6 @@
             <div class="modal-center">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                <form id="joinForm" method="post" action="${root}/studyRecruit/recruitReadForm">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요
 예)
 거주지(또는 직장):
