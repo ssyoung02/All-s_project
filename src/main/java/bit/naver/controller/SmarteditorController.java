@@ -1,20 +1,33 @@
 package bit.naver.controller;
 
+import com.nimbusds.oauth2.sdk.util.StringUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 @Controller
+@AllArgsConstructor
 public class SmarteditorController {
 
-    @RequestMapping(value = "/smarteditorMultiImageUpload")
+    private final ServletContext application;
+
+    @RequestMapping(value="/multiImageUpload")
     public void smarteditorMultiImageUpload(HttpServletRequest request, HttpServletResponse response){
-        System.out.println("컨트롤러 호출확인테스트");
+
+        String web_path = "/resources/upload/";
+        String path = application.getRealPath(web_path);
+
+//        String rootPath = request.getSession().getServletContext().getRealPath("/");
+//        String path = rootPath +"/image/";
         try {
             //파일정보
             String sFileInfo = "";
@@ -46,8 +59,10 @@ public class SmarteditorController {
                 //디렉토리 설정 및 업로드
 
                 //파일경로
-                String filePath = "/Users/yujung/file";
+                String filePath = path;
                 File file = new File(filePath);
+
+
 
                 if(!file.exists()) {
                     file.mkdirs();
@@ -56,8 +71,12 @@ public class SmarteditorController {
                 String sRealFileNm = "";
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
                 String today= formatter.format(new java.util.Date());
-                sRealFileNm = today+ UUID.randomUUID().toString() + sFilename.substring(sFilename.lastIndexOf("."));
+                sRealFileNm = today+UUID.randomUUID().toString() + sFilename.substring(sFilename.lastIndexOf("."));
                 String rlFileNm = filePath + sRealFileNm;
+
+                System.out.println("파일의 실제경로");
+                System.out.println(file.getAbsolutePath());
+                System.out.println(file.getPath());
 
                 ///////////////// 서버에 파일쓰기 /////////////////
                 InputStream inputStream = request.getInputStream();
@@ -78,7 +97,7 @@ public class SmarteditorController {
                 sFileInfo += "&bNewLine=true";
                 // img 태그의 title 속성을 원본파일명으로 적용시켜주기 위함
                 sFileInfo += "&sFileName="+ sFilename;
-                sFileInfo += "&sFileURL="+filePath+sRealFileNm;
+                sFileInfo += "&sFileURL="+web_path+sRealFileNm;
                 PrintWriter printWriter = response.getWriter();
                 printWriter.print(sFileInfo);
                 printWriter.flush();
