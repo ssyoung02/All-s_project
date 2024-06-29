@@ -147,4 +147,11 @@
         select study_leader_idx from Studies where study_idx = #{studyIdx}
     </select>
 
+    <select id="findNearestStudies" resultMap="studyResultMap" >
+        SELECT *,
+               (6371 * acos(cos(radians(#{userLatitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(#{userLongitude})) + sin(radians(#{userLatitude})) * sin(radians(latitude)))) AS distance
+        FROM Studies
+        ORDER BY distance ASC
+        LIMIT #{limit}
+    </select>
 </mapper>

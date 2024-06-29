@@ -4,7 +4,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
-<c:set var="error" value="${requestScope.error}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -63,6 +62,18 @@
             z-index: 2;
         }
 
+        #studyListContainer {
+            margin-top: 10px;
+        }
+
+        #studyListhHi {
+            list-style: none;
+            padding: 0;
+        }
+
+        #studyListHi li {
+            margin-bottom: 5px;
+        }
 
     </style>
     <script>
@@ -290,7 +301,7 @@
                             </div>
                         </div>
                         <div class="loginUserInfoRight">
-                            <%--공부시간 차트--%>
+                                <%--공부시간 차트--%>
                             <canvas id="studyTimeChart"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
@@ -338,15 +349,18 @@
                             </div>
                         </div>
                     </div>
-
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
                     <div id="map-authenticated"
                          style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> <%-- 로그인 후 지도 컨테이너 --%>
                         <div class="map-search-container">
-                            <button id="cafeSearchButton" class="toggle-button-map">주변 카페 보기</button>
+                            <button id="cafeSearchButton" class="toggle-button-map">주변 카페 보기☕</button>
                         </div>
                     </div>
+                    <div id="studyListContainer" style="display: block;"> <%-- display: block 추가 --%>
+                        <h3>주변 스터디 목록 (3순위까지)</h3>
+                        <ul id="studyListHi"></ul>
+                    </div> <%-- 스터디 목록 컨테이너 추가 --%>
                 </sec:authorize>
 
                 <!--슬라이드 배너-->
@@ -404,24 +418,6 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-
-    <%-- 로그인 성공 모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
-        </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
-                <h4>알림</h4>
-                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
-            </div>
-            <div id="messageContent" class="modal-center">
-                <%-- 메시지 내용이 여기에 표시됩니다. --%>
-            </div>
-            <div class="modal-bottom">
-                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
 
 </div>
 <script>
@@ -507,7 +503,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function (context) {
+                                label: function(context) {
                                     const label = context.dataset.label || '';
                                     const value = context.raw;
                                     return label + ': ' + formatTime(value);
@@ -523,23 +519,23 @@
         });
 
 </script>
-<script>
-    $(document).ready(function () {
-        if (${param.error}) {
-            $("#messageContent").text("${error}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
+<%--<script>--%>
+<%--    $(document).ready(function () {--%>
+<%--        if (${param.error}) {--%>
+<%--            $("#messageContent").text("${error}");--%>
+<%--            $('#modal-container').toggleClass('opaque'); //모달 활성화--%>
+<%--            $('#modal-container').toggleClass('unstaged');--%>
+<%--            $('#modal-close').focus();--%>
+<%--        }--%>
 
-        if ("${msg}" !== "") {
-            $("#messageContent").text("${msg}");
-            $('#modal-container').toggleClass('opaque'); //모달 활성화
-            $('#modal-container').toggleClass('unstaged');
-            $('#modal-close').focus();
-        }
-    });
-</script>
+<%--        if ("${msg}" !== "") {--%>
+<%--            $("#messageContent").text("${msg}");--%>
+<%--            $('#modal-container').toggleClass('opaque'); //모달 활성화--%>
+<%--            $('#modal-container').toggleClass('unstaged');--%>
+<%--            $('#modal-close').focus();--%>
+<%--        }--%>
+<%--    });--%>
+<%--</script>--%>
 <script>
     var mapAnonymous;
     var mapAuthenticated;
@@ -731,6 +727,11 @@
     // 스터디 마커 표시 함수
     function displayStudyMarkers(map, studyData) {
         var markers = []; // 마커들을 담을 배열
+        // 스터디 목록 초기화
+        const studyList = document.getElementById('studyList');
+        if (studyList) { // studyList가 null인지 확인
+            studyList.innerHTML = ''; // 기존 목록 내용 지우기
+        }
 
         for (var i = 0; i < studyData.length; i++) {
             var study = studyData[i];
@@ -863,13 +864,64 @@
 
     // 페이지 로드 시 지도 초기화 및 위치 정보 가져오기
     $(document).ready(function () {
+        // 스터디 목록 조회 및 표시 함수
+        function getStudyListAndDisplay() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+
+                    $.ajax({
+                        url: '/studies/nearestStudies',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {latitude: lat, longitude: lon},
+                        success: function (studyData) {
+                            // 스터디 목록 초기화
+                            const studyListHi = document.getElementById('studyListHi');
+                            if (studyListHi) {
+                                studyListHi.innerHTML = ''; // 기존 목록 내용 지우기
+                            } else {
+                                console.error('studyListHi 요소를 찾을 수 없습니다.');
+                                return; // 함수 종료
+                            }
+
+                            // 스터디 데이터 거리순으로 정렬
+                            studyData.sort((a, b) => a.distance - b.distance);
+
+                            // 가까운 스터디 3개만 목록에 추가
+                            for (let i = 0; i < Math.min(studyData.length, 3); i++) {
+                                const study = studyData[i];
+                                const listItem = document.createElement('li');
+                                const link = document.createElement('a');
+                                link.href = '/studyRecruit/recruitReadForm?studyIdx=' + study.studyIdx;
+                                link.textContent = study.studyTitle;
+                                listItem.appendChild(link);
+                                studyListHi.appendChild(listItem);
+                            }
+
+                            // 스터디 마커 표시 (전체 스터디)
+                            displayStudyMarkers(mapAuthenticated, studyData);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('스터디 정보를 가져오는 중 오류가 발생했습니다.', error);
+                        }
+                    });
+                }, function (error) {
+                    console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
+                });
+            } else {
+                // Geolocation을 사용할 수 없을 때 처리 로직
+            }
+        }
 
         <sec:authorize access="isAuthenticated()">
 
 
         initializeMapAuthenticated();
         getLocationAndDisplayOnMap();
-
+// 초기 스터디 목록 조회 및 표시
+        getStudyListAndDisplay();
         $.ajax({
             url: '/studies/listOnMap',
             type: 'GET',
@@ -917,7 +969,7 @@
                     // 카페 검색 실행
                     ps.keywordSearch('카페', function (data, status, pagination) {
                         if (status === kakao.maps.services.Status.OK) {
-                            displayCafeMarkers(map, data.slice(0, 10)); // 최대 10개만 표시
+                            displayCafeMarkers(map, data.slice(0, 15)); // 최대 15개만 표시
                         } else {
                             console.error('카페 검색 실패:', status);
                         }
@@ -930,52 +982,58 @@
 
 
         function displayCafeMarkers(map, cafes) {
-            // 기존 마커 제거
+            // 기존 마커 및 인포윈도우 제거
             clusterer.clear();
-
-            // 기존 인포윈도우 닫기
-            infowindows.forEach(function (iw) {
-                iw.close();
-            });
+            if (infowindows) {
+                infowindows.forEach(function(iw) {
+                    iw.close();
+                });
+            }
+            infowindows = []; // 인포윈도우 배열 초기화
+            // 카페 마커 이미지 설정 (스프라이트 이미지 사용)
+            var imageSrc = '${root}/resources/images/icons8-커피-이동합니다-64.png';
+            var imageSize = new kakao.maps.Size(50, 50);
+            var cafeMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
             // 카페 마커 생성 및 표시
             for (let i = 0; i < cafes.length; i++) {
-                var cafe = cafes[i];
-                var position = new kakao.maps.LatLng(cafe.y, cafe.x);
-                var Removeable = true;
-                var marker = new kakao.maps.Marker({
+                const cafe = cafes[i];
+                const position = new kakao.maps.LatLng(cafe.y, cafe.x);
+
+                const marker = new kakao.maps.Marker({
                     map: map,
                     position: position,
-                    title: cafe.place_name
+                    title: cafe.place_name,
+                    image: cafeMarkerImage
                 });
 
-                // 즉시 실행 함수 (IIFE) 사용
-                (function (marker, cafe) {
-                    // 인포윈도우 생성 및 내용 설정
-                    var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div style="width:160px;text-align:center;padding:10px 0;border-radius: 20px;">' +
-                            '<h4>' + cafe.place_name + '</h4>' +
-                            '<p>' + cafe.address_name + '</p>' +
-                            '<p>' + cafe.phone + '</p>' +
-                            '<a href="' + cafe.place_url + '" target="_blank" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">상세 정보</a>' +
-                            '</div>',
-                        removable: Removeable,
-                        yAnchor: 1 // 인포윈도우를 마커 아래쪽으로 이동
-                    });
+                // 각 마커에 대한 인포윈도우 생성
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: '<div style="width:160px;text-align:center;padding:10px 0;border-radius: 20px;">' +
+                        '<h4>' + cafe.place_name + '</h4>' +
+                        '<p>' + cafe.address_name + '</p>' +
+                        '<p>' + cafe.phone + '</p>' +
+                        '<a href="' + cafe.place_url + '" target="_blank" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">상세 정보</a>' +
+                        '</div>',
+                    removable: true,
+                    yAnchor: 1 // 인포윈도우를 마커 아래쪽으로 이동
+                });
 
-                    // 마커 클릭 이벤트 리스너 등록
+                // 마커 클릭 이벤트 리스너 등록 (클로저 활용)
+                (function (marker, infowindow) {
                     kakao.maps.event.addListener(marker, 'click', function () {
-                        // 다른 인포윈도우 닫기
+                        // 모든 인포윈도우 닫기
                         infowindows.forEach(function (iw) {
                             iw.close();
                         });
                         // 클릭된 마커에 해당하는 인포윈도우 열기
                         infowindow.open(map, marker);
                     });
-                })(marker, cafe); // marker와 cafe를 즉시 실행 함수에 전달
+                })(marker, infowindow); // marker와 infowindow를 즉시 실행 함수에 전달
 
-                // 마커를 클러스터러에 추가
+                // 마커와 인포윈도우를 배열에 추가
                 clusterer.addMarker(marker);
+                infowindows.push(infowindow);
             }
         }
 
@@ -984,8 +1042,12 @@
         // 토글 버튼 클릭 이벤트 처리
         cafeSearchButton.addEventListener('click', function () {
             var mapContainer = document.getElementById('map-authenticated');
-            if (cafeSearchButton.textContent == '주변 카페 보기') {
+            if (cafeSearchButton.textContent == '주변 카페 보기☕') {
                 getLocationAndDisplayOnMap(); // 현재 위치로 지도 중심 이동
+                getStudyListAndDisplay(); // 스터디 목록 다시 조회 및 표시
+                infowindows.forEach(function (iw) {
+                    iw.close();
+                });
                 searchCafesNearMapCenter(mapAuthenticated);
                 mapAuthenticated.setLevel(3); // 지도 확대 레벨 설정
                 mapContainer.style.width = '100%';
@@ -1005,11 +1067,14 @@
                     }, 500); // 0.5초 후에 실행 (딜레이 시간 조절 가능)
                 }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
 
-                cafeSearchButton.textContent = '주변 스터디 보기';
-            } else if (cafeSearchButton.textContent == '주변 스터디 보기') {
+                cafeSearchButton.textContent = '주변 스터디 보기📗';
+            } else if (cafeSearchButton.textContent == '주변 스터디 보기📗') {
                 clusterer.clear();
+                infowindows.forEach(function (iw) {
+                    iw.close();
+                });
                 getLocationAndDisplayOnMap(); // 현재 위치로 지도 중심 이동
-
+                getStudyListAndDisplay(); // 스터디 목록 다시 조회 및 표시
                 $.ajax({
                     url: '/studies/listOnMap',
                     type: 'GET',
@@ -1026,11 +1091,9 @@
                 mapContainer.style.width = '100%';
 
                 mapAuthenticated.relayout();
-                cafeSearchButton.textContent = '주변 카페 보기';
+                cafeSearchButton.textContent = '주변 카페 보기☕';
             }
         });
-
-
         </sec:authorize>
     });
     <%session.removeAttribute("error");%> <%-- 오류 메시지 제거 --%>

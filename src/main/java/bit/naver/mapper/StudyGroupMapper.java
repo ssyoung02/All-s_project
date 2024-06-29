@@ -64,4 +64,5 @@ public interface StudyGroupMapper {
 
     Long getStudyLeaderIdx(Long studyIdx);
 
+    List<StudyGroup> findNearestStudies(@Param("userLatitude") double userLatitude, @Param("userLongitude") double userLongitude, @Param("limit") int limit);
 }

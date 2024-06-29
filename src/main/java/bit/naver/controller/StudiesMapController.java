@@ -3,11 +3,13 @@ package bit.naver.controller;
 
 import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyMembers;
+import bit.naver.entity.Users;
 import bit.naver.mapper.StudyGroupMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController // @Controller -> @RestController 로 변경
@@ -37,5 +39,14 @@ public class StudiesMapController {
         model.addAttribute("studyGroup", studyGroup);
         model.addAttribute("studyMembers", studyMembers);
         return "studies/studyDetail"; // 스터디 상세 페이지 뷰 이름
+    }
+
+    @GetMapping("/nearestStudies")
+    public List<StudyGroup> getNearestStudies(HttpSession session) {
+        Users user = (Users) session.getAttribute("userVo");
+        double userLatitude = user.getLatitude();
+        double userLongitude = user.getLongitude();
+
+        return studiesMapMapper.findNearestStudies(userLatitude, userLongitude, 3); // 3개 조회
     }
 }
