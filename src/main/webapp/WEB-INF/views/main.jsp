@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
+<c:set var="error" value="${requestScope.error}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -170,7 +171,6 @@
 
 <body>
 <!-- 중앙 컨테이너 -->
-<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <%-- 로그인 성공 모달 --%>
 <div id="modal-container-main" class="modal unstaged" style="z-index: 100">
@@ -290,8 +290,8 @@
                             </div>
                         </div>
                         <div class="loginUserInfoRight">
-                                <%--공부시간 차트--%>
-                            <canvas id="studyTimeChart" style="max-width: 200px; max-height: 150px;"></canvas>
+                            <%--공부시간 차트--%>
+                            <canvas id="studyTimeChart"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
@@ -405,10 +405,25 @@
         </main>
     </section>
 
+    <%-- 로그인 성공 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>알림</h4>
+                <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div id="messageContent" class="modal-center">
+                <%-- 메시지 내용이 여기에 표시됩니다. --%>
+            </div>
+            <div class="modal-bottom">
+                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+
 </div>
-<jsp:include page="include/footer.jsp"/>
-
-
 <script>
     //주간 그래프
     fetch('/include/study-time?userIdx=${userVo.userIdx}') // Adjust the userIdx as needed
@@ -506,6 +521,24 @@
         .catch(error => {
             console.error('Fetch error:', error);
         });
+
+</script>
+<script>
+    $(document).ready(function () {
+        if (${param.error}) {
+            $("#messageContent").text("${error}");
+            $('#modal-container').toggleClass('opaque'); //모달 활성화
+            $('#modal-container').toggleClass('unstaged');
+            $('#modal-close').focus();
+        }
+
+        if ("${msg}" !== "") {
+            $("#messageContent").text("${msg}");
+            $('#modal-container').toggleClass('opaque'); //모달 활성화
+            $('#modal-container').toggleClass('unstaged');
+            $('#modal-close').focus();
+        }
+    });
 </script>
 <script>
     var mapAnonymous;
@@ -565,7 +598,6 @@
             averageCenter: true,
             minLevel: 8
         });
-
     }
 
     // 지도 생성 및 초기화 (로그인 후)
@@ -616,7 +648,7 @@
         }
 
         // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function () {
+        setTimeout(function() {
             mapAnonymous.relayout();
             // 딜레이 후 화면 중심을 지도 중심으로 이동
             setTimeout(function () {
@@ -647,7 +679,7 @@
                 <sec:authorize access="isAuthenticated()">
                 sendLocationToServer(lat, lon);
                 </sec:authorize>
-            }, function (error) {
+            }, function(error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -838,7 +870,6 @@
         initializeMapAuthenticated();
         getLocationAndDisplayOnMap();
 
-
         $.ajax({
             url: '/studies/listOnMap',
             type: 'GET',
@@ -850,7 +881,6 @@
                 console.error('스터디 정보를 가져오는 중 오류가 발생했습니다.', error);
             }
         });
-
 
         // 1초마다 위치 정보 업데이트
         setInterval(getLocationAndDisplayOnMap, 1000);
@@ -1009,5 +1039,7 @@
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
+<jsp:include page="include/footer.jsp"/>
+<jsp:include page="include/timer.jsp"/>
 </body>
 </html>

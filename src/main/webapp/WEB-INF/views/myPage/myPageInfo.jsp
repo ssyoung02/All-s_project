@@ -133,20 +133,19 @@
 
 </head>
 <body>
-<jsp:include page="${root}/WEB-INF/views/include/timer.jsp"/>
-<jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
-            <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
+            <jsp:include page="../include/navbar.jsp"/>
         </nav>
         <!-- 본문 영역 -->
         <main>
             <!--모바일 메뉴 영역-->
             <div class="m-menu-area" style="display: none;">
-                <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
+                <jsp:include page="../include/navbar.jsp"/>
             </div>
             <div id="content">
                 <h1>${userVo.name} 님의 회원 정보</h1>
@@ -213,9 +212,9 @@
                             <p class="activity-title">좋아요한 게시글</p>
                             <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
                         </button>
-                        <button class="secondary-default flex-between">
+                        <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikeStudy?userIdx=${userVo.userIdx}'">
                             <p class="activity-title">좋아요한 스터디</p>
-                            <p>5개</p>
+                            <p>${likedStudies[0].TOTALCOUNT}개</p>
                         </button>
                     </div>
                     <%--차트영역--%>
@@ -261,10 +260,6 @@
             </div>
         </main>
     </section>
-
-
-    <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
-    <jsp:include page="../include/timer.jsp" />
 </div>
 <sec:authorize access="isAuthenticated()">
     <script>
@@ -389,6 +384,7 @@
     });
 
 </script>
-
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

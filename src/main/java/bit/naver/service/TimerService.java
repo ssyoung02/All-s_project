@@ -47,6 +47,10 @@ public class TimerService {
     }
 
     public List<TimerEntity> getWeeklyStudyTime(Long userIdx, LocalDate startDate, LocalDate endDate) {
+        System.out.println(userIdx);
+        System.out.println(startDate);
+        System.out.println(endDate);
+
         return timerMapper.getStudyTimeBetweenDates(userIdx, startDate, endDate);
     }
 
@@ -68,9 +72,6 @@ public class TimerService {
         Map<String, List<TimerEntity>> result = new HashMap<>();
         result.put("currentWeek", currentWeek);
         result.put("previousWeek", previousWeek);
-
-        System.out.println("currentWeek: " + currentWeek);
-        System.out.println("previousWeek: " + previousWeek);
 
         return result;
     }

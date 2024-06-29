@@ -4,9 +4,9 @@ import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyList;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -42,13 +42,11 @@ public interface StudyGroupMapper {
 
     void updateMemberStatus(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx, @Param("status") String status);
 
-    //void approveMember(Long studyIdx, Long userIdx);
-
     int countAllStudies();
     // 추가된 메서드: 승인된 스터디 목록 가져오기
     List<StudyList> getApprovedStudies(Long userIdx);
 
-    List<StudyList> getAllMyStudies(Long userIdx);
+    List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 
@@ -57,4 +55,13 @@ public interface StudyGroupMapper {
 
     @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude,likes_count AS likesCount, currentParticipants, capacity FROM Studies") // 필요한 정보만 조회
     List<StudyGroup> findAllStudies();
+
+    boolean isMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
+
+
+    @Update("UPDATE Studies SET description_title = #{descriptionTitle}, description = #{description}, category = #{category}, age = #{age}, gender = #{gender}, study_online = #{studyOnline} WHERE study_idx = #{studyIdx}")
+    void updateStudy(StudyGroup studyGroup);
+
+    Long getStudyLeaderIdx(Long studyIdx);
+
 }
