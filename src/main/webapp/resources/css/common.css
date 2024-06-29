@@ -27,3 +27,6 @@
 
 /*스케쥴러*/
 @import url(scheduler.css);
+
+/*카카오지도*/
+@import url(map.css);

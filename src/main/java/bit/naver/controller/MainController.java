@@ -93,7 +93,7 @@ public class MainController {
         session.setAttribute("userVo", user);
         return "/include/footer";
     }
-    @RequestMapping("/include/navbar")
+    @RequestMapping("/include/navbar/")
     public String navbar(Model model,HttpSession session, Principal principal) {
         String username = principal.getName();
         Users user = usersMapper.findByUsername(username);
@@ -109,8 +109,6 @@ public class MainController {
         session.setAttribute("userVo", user);
         return "/include/timer";
     }
-
-
-
+    
 }
 

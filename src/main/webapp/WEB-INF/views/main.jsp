@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
@@ -13,7 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer,services"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!--차트-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -29,6 +30,40 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
+    <style>
+        .cafe-info-window {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 200px;
+        }
+
+        .map-search-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 2; /* 지도 위에 표시되도록 설정 */
+        }
+
+        .map-search-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        .map-search-container button {
+            padding: 8px 12px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+
+    </style>
     <script>
 
 
@@ -41,6 +76,7 @@
             </c:if>
 
         });
+
         function MainModalOpen() {
             let mainModalContainer = document.getElementById('modal-container-main');
             mainModalContainer.classList.toggle('opaque'); // 모달 활성화
@@ -87,7 +123,7 @@
                             customButtons: { // 버튼 추가
                                 calendarLink: {
                                     text: '캘린더 바로가기',
-                                    click: function() {
+                                    click: function () {
                                         location.href = "${root}/calendar"; // 페이지 이동
                                     }
                                 }
@@ -143,7 +179,8 @@
     <div class="modal-contents">
         <div class="modal-text flex-between">
             <h4>알림</h4>
-            <button id="modal-close" class="modal-close" aria-label="닫기" onclick="MainModalClose()"><i class="bi bi-x-lg"></i></button>
+            <button id="modal-close" class="modal-close" aria-label="닫기" onclick="MainModalClose()"><i
+                    class="bi bi-x-lg"></i></button>
         </div>
         <div id="messageContent-main" class="modal-center">
             <%-- 메시지 내용이 여기에 표시됩니다. --%>
@@ -175,7 +212,8 @@
                             <div class="service-info-left">
                                 <h3>서비스</h3>
                                 <h2>혼자 공부하기 힘든 분들을 위한 스터디 서비스!</h2>
-                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을 제공합니다</p>
+                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을
+                                    제공합니다</p>
                             </div>
                             <div class="service-info-right flex-colum">
                                 <button class="secondary-default">공부노트<i class="bi bi-arrow-right"></i></button>
@@ -198,7 +236,7 @@
                              style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 전 지도 컨테이너 --%>
                     </sec:authorize>
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
 
                             initializeMapAnonymous();
                             getLocationAndDisplayOnAnonymousMap();
@@ -220,7 +258,7 @@
                             <%--                            </c:if>--%>
 
                             // 10초마다 위치 정보 업데이트
-                            setInterval(getLocationAndDisplayOnAnonymousMap, 1500);
+                            setInterval(getLocationAndDisplayOnAnonymousMap, 1000);
 
                             // 토글 버튼 생성 및 추가
                             var toggleButtonAnonymous = document.createElement('button');
@@ -231,6 +269,7 @@
 
                             // 토글 버튼 클릭 이벤트 리스너 등록
                             toggleButtonAnonymous.addEventListener('click', toggleAnonymousMapView);
+
 
                         });
                     </script>
@@ -251,7 +290,7 @@
                             </div>
                         </div>
                         <div class="loginUserInfoRight">
-                            <%--공부시간 차트--%>
+                                <%--공부시간 차트--%>
                             <canvas id="studyTimeChart" style="max-width: 200px; max-height: 150px;"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
@@ -302,7 +341,12 @@
 
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
-                    <div id="map-authenticated" style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> </div> <%-- 로그인 후 지도 컨테이너 --%>
+                    <div id="map-authenticated"
+                         style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> <%-- 로그인 후 지도 컨테이너 --%>
+                        <div class="map-search-container">
+                            <button id="cafeSearchButton" class="toggle-button-map">주변 카페 보기</button>
+                        </div>
+                    </div>
                 </sec:authorize>
 
                 <!--슬라이드 배너-->
@@ -362,7 +406,7 @@
     </section>
 
 </div>
-    <jsp:include page="include/footer.jsp"/>
+<jsp:include page="include/footer.jsp"/>
 
 
 <script>
@@ -448,7 +492,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     const label = context.dataset.label || '';
                                     const value = context.raw;
                                     return label + ': ' + formatTime(value);
@@ -470,6 +514,7 @@
     var markerAnonymous;
     var zoomLevel = 6;
     var isWideView = false;
+
     // 인포윈도우 객체 배열 (로그인 안 한 상태)
     var infowindowAnonymouses = [];
 
@@ -520,6 +565,7 @@
             averageCenter: true,
             minLevel: 8
         });
+
     }
 
     // 지도 생성 및 초기화 (로그인 후)
@@ -551,34 +597,6 @@
     }
 
 
-    // 지도 확대/축소 토글 함수
-    function toggleMapView() {
-        var mapContainer = document.getElementById('map-authenticated');
-        var toggleButton = document.getElementById('toggleButton');
-
-        if (isWideView) {
-            // 현재 확대 상태이면 축소
-            getLocationAndDisplayOnMap();
-            mapContainer.style.width = '100%';
-            mapContainer.style.height = '250px';
-            toggleButton.textContent = '창 확대';
-        } else {
-            // 현재 축소 상태이면 확대
-            getLocationAndDisplayOnMap();
-            mapContainer.style.width = '100%';
-            mapContainer.style.height = '800px';
-            toggleButton.textContent = '창 축소';
-        }
-
-
-        // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function() {
-            mapAuthenticated.relayout();
-        }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
-
-        isWideView = !isWideView; // 확대 상태 반전
-    }
-
     function toggleAnonymousMapView() {
         var mapContainer = document.getElementById('map-anonymous');
         var toggleButton = document.getElementById('toggleButtonAnonymous');
@@ -598,8 +616,16 @@
         }
 
         // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
-        setTimeout(function() {
+        setTimeout(function () {
             mapAnonymous.relayout();
+            // 딜레이 후 화면 중심을 지도 중심으로 이동
+            setTimeout(function () {
+                window.scrollTo({
+                    top: mapContainer.offsetTop - (window.innerHeight - mapContainer.offsetHeight) / 2,
+                    left: mapContainer.offsetLeft - (window.innerWidth - mapContainer.offsetWidth) / 2,
+                    behavior: 'smooth'
+                });
+            }, 500); // 0.5초 후에 실행 (딜레이 시간 조절 가능)
         }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
 
         isWideView = !isWideView; // 확대 상태 반전
@@ -609,7 +635,7 @@
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnMap() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
@@ -621,7 +647,7 @@
                 <sec:authorize access="isAuthenticated()">
                 sendLocationToServer(lat, lon);
                 </sec:authorize>
-            }, function(error) {
+            }, function (error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -632,7 +658,7 @@
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnAnonymousMap() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 var lat = position.coords.latitude;
                 var lon = position.coords.longitude;
 
@@ -641,7 +667,7 @@
 
                 mapAnonymous.setCenter(locPosition);
 
-            }, function(error) {
+            }, function (error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
             });
         } else {
@@ -652,20 +678,20 @@
     // 위치 정보 서버 전송 함수
     function sendLocationToServer(latitude, longitude) {
         // 로그인 여부 확인
-            $.ajax({
-                url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
-                type: 'POST',
-                data: {latitude: latitude, longitude: longitude},
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-                },
-                success: function (response) {
-                    console.log('위치 정보 업데이트 성공:', response);
-                },
-                error: function (xhr, status, error) {
-                    console.error('위치 정보 업데이트 실패:', error);
-                }
-            });
+        $.ajax({
+            url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
+            type: 'POST',
+            data: {latitude: latitude, longitude: longitude},
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+            },
+            success: function (response) {
+                console.log('위치 정보 업데이트 성공:', response);
+            },
+            error: function (xhr, status, error) {
+                console.error('위치 정보 업데이트 실패:', error);
+            }
+        });
 
     }
 
@@ -695,7 +721,7 @@
                     '<h4>' + study.studyTitle + '</h4>' +
                     '<p>' + study.category + '</p>' +
                     '<p>' + "💚 likes : " + study.likesCount + '</p>' +
-                    '<p>' + "모집 :" + study.currentParticipants + '/' + study.capacity + '</p>' +
+                    '<p>' + "모집 :" + study.currentParticipants + '/' + study.capacity + '</p>' + '<br>' +
                     '<a href="${root}/studyRecruit/recruitReadForm?studyIdx=' + study.studyIdx + '" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">더보기</a>' + // 상세보기 버튼 추가
                     '</div>',
                 removable: Removeable,
@@ -744,7 +770,7 @@
                     '<h4>' + studys.studyTitle + '</h4>' +
                     '<p>' + studys.category + '</p>' +
                     '<p>' + "💚 likes : " + studys.likesCount + '</p>' +
-                    '<p>' + "모집 :" + studys.currentParticipants + '/' + studys.capacity + '</p>' +
+                    '<p>' + "모집 :" + studys.currentParticipants + '/' + studys.capacity + '</p>' + '<br>' +
                     '<a href="${root}/studyRecruit/recruitReadForm?studyIdx=' + studys.studyIdx + '" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">더보기</a>' + // 상세보기 버튼 추가추가
                     '</div>',
                 removable: Removeable,
@@ -766,12 +792,52 @@
         clustererAnonymous.addMarkers(markers); // 클러스터러에 마커 추가
     }
 
+
+    // 지도 확대/축소 토글 함수
+    function toggleMapView() {
+        var mapContainer = document.getElementById('map-authenticated');
+        var toggleButton = document.getElementById('toggleButton');
+
+        if (isWideView) {
+            // 현재 확대 상태이면 축소
+            getLocationAndDisplayOnMap();
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '250px';
+            toggleButton.textContent = '창 확대';
+
+        } else {
+            // 현재 축소 상태이면 확대
+            getLocationAndDisplayOnMap();
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '800px';
+            toggleButton.textContent = '창 축소';
+        }
+        // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
+        setTimeout(function () {
+            mapAuthenticated.relayout();
+            // 딜레이 후 화면 중심을 지도 중심으로 이동
+            setTimeout(function () {
+                window.scrollTo({
+                    top: mapContainer.offsetTop - (window.innerHeight - mapContainer.offsetHeight) / 2,
+                    left: mapContainer.offsetLeft - (window.innerWidth - mapContainer.offsetWidth) / 2,
+                    behavior: 'smooth'
+                });
+            }, 500); // 0.5초 후에 실행 (딜레이 시간 조절 가능)
+        }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
+
+        isWideView = !isWideView; // 확대 상태 반전
+    }
+
+
     // 페이지 로드 시 지도 초기화 및 위치 정보 가져오기
     $(document).ready(function () {
 
         <sec:authorize access="isAuthenticated()">
+
+
         initializeMapAuthenticated();
         getLocationAndDisplayOnMap();
+
 
         $.ajax({
             url: '/studies/listOnMap',
@@ -785,18 +851,156 @@
             }
         });
 
-        // 1초마다 위치 정보 업데이트
-        setInterval(getLocationAndDisplayOnMap, 1500);
 
-        // 토글 버튼 생성 및 추가
+        // 1초마다 위치 정보 업데이트
+        setInterval(getLocationAndDisplayOnMap, 1000);
+
+
+        // 토글 버튼 1 생성 및 추가 (지도 확대/축소)
         var toggleButton = document.createElement('button');
         toggleButton.id = 'toggleButton';
-        toggleButton.textContent = '지도 확대';
-        toggleButton.className = 'toggle-button';
+        toggleButton.textContent = "창 확대";
+        toggleButton.className = 'toggle-button-map';
         document.getElementById('map-authenticated').appendChild(toggleButton);
 
         // 토글 버튼 클릭 이벤트 리스너 등록
         toggleButton.addEventListener('click', toggleMapView);
+
+
+        function searchCafesNearMapCenter(map) {
+            // 현재 위치 정보 가져오기
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    var locPosition = new kakao.maps.LatLng(lat, lon);
+
+                    // 카페 검색 객체 생성 및 옵션 설정 (2km 반경 제한 추가)
+                    var ps = new kakao.maps.services.Places(map);
+                    var options = {
+                        location: locPosition,
+                        radius: 2000, // 2km 반경
+                        category_group_code: 'CE7',
+                        sort: kakao.maps.services.SortBy.DISTANCE
+                    };
+
+                    // 카페 검색 실행
+                    ps.keywordSearch('카페', function (data, status, pagination) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            displayCafeMarkers(map, data.slice(0, 10)); // 최대 10개만 표시
+                        } else {
+                            console.error('카페 검색 실패:', status);
+                        }
+                    }, options);
+                });
+            } else {
+                console.error("Geolocation is not available.");
+            }
+        }
+
+
+        function displayCafeMarkers(map, cafes) {
+            // 기존 마커 제거
+            clusterer.clear();
+
+            // 기존 인포윈도우 닫기
+            infowindows.forEach(function (iw) {
+                iw.close();
+            });
+
+            // 카페 마커 생성 및 표시
+            for (let i = 0; i < cafes.length; i++) {
+                var cafe = cafes[i];
+                var position = new kakao.maps.LatLng(cafe.y, cafe.x);
+                var Removeable = true;
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: position,
+                    title: cafe.place_name
+                });
+
+                // 즉시 실행 함수 (IIFE) 사용
+                (function (marker, cafe) {
+                    // 인포윈도우 생성 및 내용 설정
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: '<div style="width:160px;text-align:center;padding:10px 0;border-radius: 20px;">' +
+                            '<h4>' + cafe.place_name + '</h4>' +
+                            '<p>' + cafe.address_name + '</p>' +
+                            '<p>' + cafe.phone + '</p>' +
+                            '<a href="' + cafe.place_url + '" target="_blank" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">상세 정보</a>' +
+                            '</div>',
+                        removable: Removeable,
+                        yAnchor: 1 // 인포윈도우를 마커 아래쪽으로 이동
+                    });
+
+                    // 마커 클릭 이벤트 리스너 등록
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        // 다른 인포윈도우 닫기
+                        infowindows.forEach(function (iw) {
+                            iw.close();
+                        });
+                        // 클릭된 마커에 해당하는 인포윈도우 열기
+                        infowindow.open(map, marker);
+                    });
+                })(marker, cafe); // marker와 cafe를 즉시 실행 함수에 전달
+
+                // 마커를 클러스터러에 추가
+                clusterer.addMarker(marker);
+            }
+        }
+
+// 카페 검색 버튼 클릭 이벤트 처리
+        let cafeSearchButton = document.getElementById('cafeSearchButton');
+        // 토글 버튼 클릭 이벤트 처리
+        cafeSearchButton.addEventListener('click', function () {
+            var mapContainer = document.getElementById('map-authenticated');
+            if (cafeSearchButton.textContent == '주변 카페 보기') {
+                getLocationAndDisplayOnMap(); // 현재 위치로 지도 중심 이동
+                searchCafesNearMapCenter(mapAuthenticated);
+                mapAuthenticated.setLevel(3); // 지도 확대 레벨 설정
+                mapContainer.style.width = '100%';
+                mapContainer.style.height = '800px';
+                toggleButton.textContent = '창 축소';
+
+                // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
+                setTimeout(function () {
+                    mapAuthenticated.relayout();
+                    // 딜레이 후 화면 중심을 지도 중심으로 이동
+                    setTimeout(function () {
+                        window.scrollTo({
+                            top: mapContainer.offsetTop - (window.innerHeight - mapContainer.offsetHeight) / 2,
+                            left: mapContainer.offsetLeft - (window.innerWidth - mapContainer.offsetWidth) / 2,
+                            behavior: 'smooth'
+                        });
+                    }, 500); // 0.5초 후에 실행 (딜레이 시간 조절 가능)
+                }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
+
+                cafeSearchButton.textContent = '주변 스터디 보기';
+            } else if (cafeSearchButton.textContent == '주변 스터디 보기') {
+                clusterer.clear();
+                getLocationAndDisplayOnMap(); // 현재 위치로 지도 중심 이동
+
+                $.ajax({
+                    url: '/studies/listOnMap',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (studyData) {
+                        displayStudyMarkers(mapAuthenticated, studyData);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('스터디 정보를 가져오는 중 오류가 발생했습니다.', error);
+                    }
+                });
+                mapAuthenticated.setLevel(zoomLevel); // 기본 확대 레벨로 복원
+
+                mapContainer.style.width = '100%';
+
+                mapAuthenticated.relayout();
+                cafeSearchButton.textContent = '주변 카페 보기';
+            }
+        });
+
+
         </sec:authorize>
     });
     <%session.removeAttribute("error");%> <%-- 오류 메시지 제거 --%>

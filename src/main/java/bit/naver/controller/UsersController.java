@@ -312,16 +312,10 @@ public class UsersController {
 
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         if (auth != null) {
-
-            Users user = (Users) session.getAttribute("userVo"); // 세션에서 사용자 정보 가져오기
-
-            if (user != null) {
-                user.setActivityStatus(Users.ActivityStatus.NOT_LOGGED_IN); // activityStatus 변경
-                usersMapper.updateActivityStatus(user.getUserIdx(), user.getActivityStatus()); // 데이터베이스 업데이트
-            }
 
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
