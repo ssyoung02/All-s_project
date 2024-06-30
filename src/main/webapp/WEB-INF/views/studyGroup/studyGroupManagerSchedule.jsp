@@ -7,85 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-            font-size: 14px;
-        }
-
-        #calendar {
-            max-width: 1100px;
-            margin: 40px auto;
-        }
-
-        /* 모달 스타일 */
-        #scheduleModal, #viewScheduleModal {
-            display: none; /* 기본적으로 숨김 */
-            position: fixed; /* 화면에 고정 */
-            z-index: 100; /* z-index 값을 높임 */
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        #scheduleModal.opaque, #viewScheduleModal.opaque {
-            display: block;
-        }
-
-        .modal-contents {
-            background-color: #fefefe;
-            padding: 20px;
-            width: 450px; /* 모달 너비 500px로 변경 */
-            border: 1px solid #888;
-            overflow: auto; /* 내용이 넘칠 경우 스크롤바 추가 */
-            left: 50%; /* 화면 왼쪽에서 50% 위치 */
-            top: 50%; /* 화면 위쪽에서 50% 위치 */
-            transform: translate(-50%, -50%); /* 자신의 크기만큼 왼쪽, 위쪽으로 이동하여 정중앙 배치 */
-        }
-
-        /* 모달 제목 스타일 */
-        .modal-text h3 {
-            text-align: center; /* 텍스트 가운데 정렬 */
-        }
-
-        /* 색상 선택 버튼 스타일 */
-        .color-button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: none;
-            margin: 5px;
-            cursor: pointer;
-        }
-
-        .color-button.selected { /* 선택된 버튼 스타일 */
-            border: 2px solid gray; /* 테두리 추가 */
-        }
-
-        #btnMonth { /* 월 버튼에 기본적으로 선택된 스타일 적용 */
-            background-color: #3B593F; /* 녹색 배경 */
-            color: white;
-            border: 1px solid #A2B18A;
-        }
-        /* 커스텀 버튼 스타일 */
-        #calendar-header .fc-button {
-            margin: 0 5px; /* 버튼 간 간격 조절 */
-            border: 1px solid #A2B18A; /* 버튼 테두리 추가 */
-        }
-
-        #calendar-header .fc-button.fc-button-active { /* 선택된 버튼 스타일 */
-            background-color: #3B593F; /* 녹색 배경 */
-            color: white;
-        }
-        .fc .fc-toolbar-chunk .fc-prev-button, .fc .fc-toolbar-chunk .fc-next-button {
-            background-color: #f0f0f0 !important;
-            border: none !important; /* 테두리 제거 */
-        }
-
-        .fc .fc-toolbar-chunk .fc-prev-button.fc-button, .fc .fc-toolbar-chunk .fc-next-button.fc-button {
-            border: none !important; /* 테두리 제거 */
-        }
-    </style>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -389,7 +310,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -554,7 +474,8 @@
                 </div>
         </main>
     </section>
-    <jsp:include page="../include/footer.jsp"/>
 </div>
+<jsp:include page="../include/timer.jsp" />
+<jsp:include page="../include/footer.jsp"/>
 </body>
 </html>

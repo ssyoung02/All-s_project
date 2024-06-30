@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 
 import lombok.Data;
 
+import lombok.Data;
+
 @Data
 public class StudyReferencesEntity {
 

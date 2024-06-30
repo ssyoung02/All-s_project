@@ -92,7 +92,15 @@
                     <span class="hide">메뉴 열기</span>
                 </button>
                 <!-- 공부 시작 버튼 -->
-                <button id="m-timestart" class="primary-default" onclick="timerOpen()">공부 시작</button>
+                <!-- 로그인하지 않은 경우 -->
+                <sec:authorize access="isAnonymous()">
+                    <button class="m-timestart button-disabled timestart" onclick="alert('로그인 후 이용해주세요')">공부 시작</button>
+                </sec:authorize>
+                <!-- 로그인한 경우 -->
+                <sec:authorize access="isAuthenticated()">
+                    <button class="m-timestart primary-default" onclick="timerOpen()">공부 시작</button>
+                </sec:authorize>
+
             </div>
         </div>
     <meta name="_csrf" content="${_csrf.token}">
@@ -103,42 +111,42 @@
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
-        // 페이지 로드 시 및 매 3초마다 알림을 가져옴
-        getAlarm();
-        setInterval(() => {
-            getAlarm();
-        }, 3000);
-        function getAlarm() {
-            $.ajax({
-                type: "POST",
-                url: "/studyGroup/getAlarmInfo",
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader(csrfHeader, csrfToken);
-                },
-                success: function (res) {
-                    console.log("알림 정보 가져오기 성공:", res); // 디버깅 로그 추가
-                    var alarmList = $("#alarmList");
-                    alarmList.empty();  // 기존 알림 목록 비우기
-
-                    if (res && res.length > 0) {
-                        var msg = "";
-                        for (var i = 0; i < res.length; i++) {
-                            msg += "<li><a class='dropdown-item' id='" + res[i].notificationIdx + "' href='/studyGroup/studyGroupManagerMember?studyIdx=" + res[i].studyIdx + "'>" + res[i].alarmMessage + "</a></li>";
-
-                        }
-                        alarmList.html(msg);
-                        $("#alarm").css(background-color, "red");
-
-                    } else {
-                        alarmList.html(`<li style='margin-left:20px;'>알람이 없습니다.</li>`);
-                        $("#alarm").css("background-color", "");
-
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("알림을 가져오는 동안 오류가 발생했습니다: ", error);
-                }
-            });
-        }
+        // // 페이지 로드 시 및 매 3초마다 알림을 가져옴
+        // getAlarm();
+        // setInterval(() => {
+        //     getAlarm();
+        // }, 3000);
+        // function getAlarm() {
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/studyGroup/getAlarmInfo",
+        //         beforeSend: function(xhr) {
+        //             xhr.setRequestHeader(csrfHeader, csrfToken);
+        //         },
+        //         success: function (res) {
+        //             console.log("알림 정보 가져오기 성공:", res); // 디버깅 로그 추가
+        //             var alarmList = $("#alarmList");
+        //             alarmList.empty();  // 기존 알림 목록 비우기
+        //
+        //             if (res && res.length > 0) {
+        //                 var msg = "";
+        //                 for (var i = 0; i < res.length; i++) {
+        //                     msg += "<li><a class='dropdown-item' id='" + res[i].notificationIdx + "' href='/studyGroup/studyGroupManagerMember?studyIdx=" + res[i].studyIdx + "'>" + res[i].alarmMessage + "</a></li>";
+        //
+        //                 }
+        //                 alarmList.html(msg);
+        //                 $("#alarm").css("color", "red");
+        //
+        //             } else {
+        //                 alarmList.html(`<li style='margin-left:20px;'>알람이 없습니다.</li>`);
+        //                 $("#alarm").css("background-color", "");
+        //
+        //             }
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error("알림을 가져오는 동안 오류가 발생했습니다: ", error);
+        //         }
+        //     });
+        // }
     });
 </script>

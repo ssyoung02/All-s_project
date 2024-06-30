@@ -59,6 +59,7 @@ public class StudyGroup {
     private String leaderName;
 
     private Integer isLike;
+    private String TOTALCOUNT;
 
     private Long userIdx;
 

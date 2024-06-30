@@ -78,6 +78,12 @@ public class StudyReferencesService {
 		return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환
 	}
 
+	@Transactional // 3가지 모두 에러가 나지 않고 실행 되었을때만, 데이터베이스 변경이 반영이 되는것
+	public int deletePost(int referenceIdx) {
+		studyReferencesMapper.deleteLikeRef(referenceIdx);
+		studyReferencesMapper.deleteCommentRef(referenceIdx);
+		return studyReferencesMapper.deletePost(referenceIdx);
+	}
 
 	@Transactional // 3가지 모두 에러가 나지 않고 실행 되었을때만, 데이터베이스 변경이 반영이 되는것
 	public int deletePost(int referenceIdx) {

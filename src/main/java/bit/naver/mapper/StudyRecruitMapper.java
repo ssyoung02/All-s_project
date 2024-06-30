@@ -50,4 +50,7 @@ public interface StudyRecruitMapper {
 
     // 스터디 업데이트
     void updateStudyGroup(StudyGroup studyGroup);
+
+    List<StudyGroup> getUserLikedStudies(@Param("userIdx") long userId);
+
 }
