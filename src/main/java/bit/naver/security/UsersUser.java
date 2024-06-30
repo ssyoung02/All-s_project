@@ -26,16 +26,17 @@ import org.springframework.security.core.userdetails.UserDetails; // 사용자 �
 
 import java.util.Collection; // 컬렉션 인터페이스
 import java.util.Collections; // 컬렉션 관련 유틸리티 클래스
+import java.util.List;
 
 // Spring Security의 UserDetails 인터페이스를 구현한 클래스입니다.
 public class UsersUser implements UserDetails {
 
     private final Users user;
+    private final List<GrantedAuthority> authorities;
 
-    // Users 엔티티 객체를 저장하는 멤버 변수입니다.
-    // 생성자를 통해 Users 객체를 받아 초기화합니다.
-    public UsersUser(Users user) {
+    public UsersUser(Users user, List<GrantedAuthority> authorities) {
         this.user = user;
+        this.authorities = authorities;
     }
 
     public Users getUsers() { // Users 객체를 반환하는 메서드
@@ -44,7 +45,7 @@ public class UsersUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        return authorities;
     }
 
     // 사용자의 권한 목록을 반환합니다.

@@ -22,6 +22,44 @@
         <result property="createdAt" column="created_at" />
     </resultMap>
 
+    <select id="getAllStudy_9" resultType="bit.naver.entity.StudyGroup">
+        SELECT
+            sg.study_idx AS studyIdx,
+            sg.study_leader_idx AS studyLeaderIdx,
+            sg.study_title AS studyTitle,
+            sg.description_title AS descriptionTitle,
+            sg.likes_count AS likesCount,
+            sg.report_count AS reportCount,
+            sg.description AS description,
+            sg.category AS category,
+            sg.study_online AS studyOnline,
+            sg.meeting_time AS meetingTime,
+            sg.latitude AS latitude,
+            sg.longitude AS longitude,
+            sg.age AS age,
+            sg.capacity AS capacity,
+            sg.gender AS gender,
+            sg.start_date AS startDate,
+            sg.end_date AS endDate,
+            sg.image AS image,
+            sg.status AS status,
+            sg.created_at AS createdAt,
+            u.name AS leaderName,
+            IFNULL(lr.study_idx, 0) AS isLike
+        FROM
+            Studies sg
+                LEFT JOIN Users u
+                          ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN LikeStudy lr
+                          ON sg.study_idx = lr.study_idx
+                              AND lr.user_idx = #{userIdx}
+        WHERE
+            sg.status = 'RECRUITING'
+        ORDER BY
+            RAND()
+        LIMIT 9
+    </select>
+
     <select id="getAllStudies" resultType="bit.naver.entity.StudyGroup">
         SELECT
             sg.study_idx AS studyIdx,
@@ -44,12 +82,30 @@
             sg.image AS image,
             sg.status AS status,
             sg.created_at AS createdAt,
-            u.name AS leaderName
+            u.name AS leaderName,
+            IFNULL(lr.study_idx, 0) AS isLike
         FROM
             Studies sg
-                JOIN Users u ON sg.study_leader_idx = u.user_idx
-        WHERE
+              LEFT JOIN Users u
+                  ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN LikeStudy lr
+                          ON sg.study_idx = lr.study_idx
+                              AND lr.user_idx = #{userIdx}
+        <where>
             sg.status = 'RECRUITING'
+            <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
+                AND study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'writer-post' and searchKeyword != null and searchKeyword != ''">
+                AND name LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+        </where>
     </select>
 
     <select id="getStudyById" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyGroup">
@@ -74,11 +130,17 @@
             sg.image AS image,
             sg.status AS status,
             sg.created_at AS createdAt,
-            u.name AS leaderName
+            u.name AS leaderName,
+            IFNULL(lr.study_idx, 0) AS isLike
         FROM
             Studies sg
-                JOIN Users u ON sg.study_leader_idx = u.user_idx
-        WHERE study_idx = #{studyIdx}
+                LEFT JOIN Users u
+                          ON sg.study_leader_idx = u.user_idx
+                LEFT JOIN LikeStudy lr
+                          ON sg.study_idx = lr.study_idx
+                              AND lr.user_idx = #{userIdx}
+        WHERE sg.study_idx = #{studyIdx}
+
     </select>
 
     <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers">
@@ -86,6 +148,106 @@
         VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
     </insert>
 
+    <update id="updateStudyMemberStatus" parameterType="map">
+        UPDATE StudyMembers
+        SET status = #{status}, updated_at = NOW()
+        WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx}
+    </update>
 
+    <select id="getStudyMembersByStudyId" resultType="bit.naver.entity.StudyMembers" parameterType="java.lang.Long">
+        SELECT * FROM StudyMembers WHERE study_idx = #{studyIdx}
+    </select>
+
+    <insert id="insertLike" parameterType="bit.naver.entity.LikeStudyEntity">
+        INSERT INTO LikeStudy (user_idx, study_idx, created_at)
+        VALUES (#{userIdx}, #{studyIdx}, NOW())
+    </insert>
+
+    <update id="plusLike">
+        UPDATE Studies
+        SET likes_count = likes_count + 1
+        WHERE study_idx = #{studyIdx}
+    </update>
+
+    <delete id="deleteLike">
+        DELETE FROM LikeStudy
+        WHERE study_idx = #{studyIdx}
+          AND user_idx = #{userIdx}
+    </delete>
+
+    <update id="minusLike">
+        UPDATE Studies
+        SET likes_count = likes_count - 1
+        WHERE study_idx = #{studyIdx}
+    </update>
+
+    <insert id="updateReport">
+        UPDATE Studies
+        SET report_count = report_count + 1
+        WHERE study_idx = #{studyIdx}
+    </insert>
+
+
+    <select id="getMembersByStudyIdx" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyMembers">
+        SELECT
+            sm.user_idx AS userIdx,
+            u.name AS userName,
+            sm.role AS role,
+            sm.status AS status,
+            sm.join_reason AS joinReason,
+            sm.created_at AS createdAt
+        FROM
+            StudyMembers sm
+                JOIN Users u ON sm.user_idx = u.user_idx
+        WHERE
+            sm.study_idx = #{studyIdx}
+    </select>
+
+    <select id="isMember" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'ACCEPTED')
+    </select>
+
+    <update id="updateStudyGroup" parameterType="bit.naver.entity.StudyGroup">
+        UPDATE Studies
+        SET study_title = #{studyTitle},
+            description = #{description},
+            category = #{category},
+            study_online = #{studyOnline},
+            age = #{age},
+            gender = #{gender},
+            image = #{image}
+        WHERE study_idx = #{studyIdx}
+    </update>
+
+
+    <select id="getUserLikedStudies" resultType="bit.naver.entity.StudyGroup">
+        SELECT sg.study_idx AS studyIdx,
+            sg.study_leader_idx AS studyLeaderIdx,
+            sg.study_title AS studyTitle,
+            sg.description_title AS descriptionTitle,
+            sg.likes_count AS likesCount,
+            sg.report_count AS reportCount,
+            sg.description AS description,
+            sg.category AS category,
+            sg.study_online AS studyOnline,
+            sg.meeting_time AS meetingTime,
+            sg.latitude AS latitude,
+            sg.longitude AS longitude,
+            sg.age AS age,
+            sg.capacity AS capacity,
+            sg.gender AS gender,
+            sg.start_date AS startDate,
+            sg.end_date AS endDate,
+            sg.image AS image,
+            sg.status AS status,
+            sg.created_at AS createdAt,
+               u.name AS leaderName,
+            COUNT(*) OVER () AS TOTALCOUNT
+        FROM Studies sg
+                 INNER JOIN LikeStudy ls ON sg.study_idx = ls.study_idx
+                 LEFT JOIN Users u
+                           ON sg.study_leader_idx = u.user_idx
+        WHERE ls.user_idx = #{userIdx}
+    </select>
 </mapper>
 

@@ -22,9 +22,9 @@ package bit.naver.mapper;
 
 import bit.naver.entity.Users; // Users 엔티티 클래스 임포트
 import org.apache.ibatis.annotations.*; // MyBatis 어노테이션 임포트
-import org.mybatis.spring.annotation.MapperScan;
 
 import java.util.List; // List 인터페이스 임포트
+import java.util.Map;
 
 @Mapper // MyBatis Mapper 인터페이스임을 나타내는 어노테이션
 public interface UsersMapper {
@@ -48,16 +48,60 @@ public interface UsersMapper {
     // 자동 생성된 키(user_idx)를 Users 객체에 설정합니다.
     void insertUser(Users user);
 
+    void insertUserAuthority(@Param("username") String username);
+
     // 기존 사용자 정보를 업데이트합니다.
    // @Update("UPDATE Users SET username = #{username}, password = #{password}, email = #{email}, name = #{name}, birthdate = #{birthdate}, profile_image = #{profileImage}, enabled = #{enabled}, grade_idx = #{gradeIdx}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, created_at = #{createdAt}, updated_at = #{updatedAt} " +
     //        "WHERE user_idx = #{userIdx}")
     void updateUser(Users user);
 
-    // user_idx를 이용하여 사용자 정보를 삭제합니다.
-  //  @Delete("DELETE FROM Users WHERE user_idx = #{userIdx}")
-    void deleteUser(Long userIdx);
 
     boolean findByEmail(String email);
 
     Users findUserByEmail(String email); // 이메일로 사용자 정보 가져오기
+
+    void deleteUserByUsername(String username);
+
+    void deleteUserAuthorities(@Param("username") String username);
+
+    void deleteUserCalendars(@Param("userId") Long userId);
+
+    void deleteUserOAuth2Logins(@Param("userId") Long userId);
+
+    void deleteUserPersonalStatements(@Param("userId") Long userId);
+
+    void deleteUserResumes(@Param("userId") Long userId);
+
+    void deleteUserStudyMembers(@Param("userId") Long userId);
+
+    void deleteUserChats(@Param("userId") Long userId);
+
+    void deleteUserLikeStudies(@Param("userId") Long userId);
+
+    void deleteUserNotifications(@Param("userId") Long userId);
+
+    void deleteUserStudyRecords(@Param("userId") Long userId);
+
+    void deleteUserStudyReferences(@Param("userId") Long userId);
+
+    void deleteUserComments(@Param("userId") Long userId);
+
+    void deleteUserLikeReferences(@Param("userId") Long userId);
+
+    void deleteUserTodos(@Param("userId") Long userId);
+
+    void deleteUser(@Param("userId") Long userId);
+
+
+    Long findUserIdByUsername(@Param("username") String username);
+
+    boolean isAdmin(@Param("username") String username);
+
+    List<String> findAuthoritiesByUsername(@Param("username") String username);
+
+    int countAllUsers();
+
+    int countAllUsersWithAuthorities();
+
+    List<Users> findAllUsersWithAuthoritiesPaged(@Param("offset") int offset, @Param("limit") int limit);
 }

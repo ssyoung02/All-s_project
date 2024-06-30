@@ -4,11 +4,12 @@ import bit.naver.entity.CommentsEntity;
 import bit.naver.entity.LikeReferencesEntity;
 import bit.naver.entity.StudyReferencesEntity;
 import bit.naver.mapper.StudyNoteMapper;
-import bit.naver.mapper.StudyReferencesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -68,13 +69,11 @@ public class StudyNoteService {
         return  studyNoteMapper.updateReport(entity);
     }
 
-    public Long writePost(StudyReferencesEntity entity){
+    public Long writePost(StudyReferencesEntity entity) {
         int result = studyNoteMapper.writePost(entity);
-
-        System.out.println(entity.toString());
-
-        return entity.getReferenceIdx();
+        return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환
     }
+
 
     @Transactional //3가지 모두 에러가 나지 않고 실행 되었을때만, 데이터베이스 변경이 반영이 되는것
     public int deletePost(int referenceIdx){
@@ -83,7 +82,9 @@ public class StudyNoteService {
         return studyNoteMapper.deletePost(referenceIdx);
     }
 
-    public int updatePost(StudyReferencesEntity entity){
-        return studyNoteMapper.updatePost(entity);
+    public Long updatePost(StudyReferencesEntity entity) {
+        int result = studyNoteMapper.updatePost(entity);
+        return entity.getReferenceIdx(); // 성공적으로 업데이트되면 참조 인덱스를 반환ㅍ
     }
+
 }

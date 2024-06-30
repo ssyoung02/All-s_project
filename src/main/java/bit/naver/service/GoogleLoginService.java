@@ -11,6 +11,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 @Service
 @PropertySource("classpath:application.properties")
 public class GoogleLoginService {
@@ -77,4 +79,10 @@ public class GoogleLoginService {
         ResponseEntity<JsonNode> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, entity, JsonNode.class);
         return response.getBody();
     }
+
+    public String getAccessTokenFromAttributes(Map<String, Object> attributes) {
+        return (String) attributes.get("access_token");
+    }
+
+
 }

@@ -151,14 +151,39 @@
             location.href ="${root}/studyNote/noteModify?referenceIdx=" + idx;
         }
 
+        //다운로드
+        function download(referenceIdx){
+            /*    $.ajax({
+                   method: 'GET',
+                   url: '/studyReferences/download',
+                   data: {referenceIdx: referenceIdx},
+                   beforeSend: function(xhr) {
+                       xhr.setRequestHeader($("meta[name='_csrf_header']").attr("content"), $("meta[name='_csrf']").attr("content"));
+                   },
+               }).done(function(data) {
+                   var blob = new Blob([data], { type: 'application/octet-stream' });
+                   var url = window.URL.createObjectURL(blob);
+                   var a = document.createElement('a');
+                   a.href = url;
+                   a.download = 'Hi.PNG'; // 다운로드 받을 파일 이름과 확장자 지정
+                   document.body.appendChild(a);
+                   a.click();
+                   document.body.removeChild(a);
+                   window.URL.revokeObjectURL(url);
+               }).fail(function(jqXHR, textStatus, errorThrown) {
+                   console.error('파일 다운로드 실패:', textStatus, errorThrown);
+               }); */
+
+            window.location.href = '/studyReferences/download?referenceIdx=' + referenceIdx;
+        }
+
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -216,6 +241,22 @@
                         <div class="post-content">
                             ${studyReferencesEntity.content}
                         </div>
+
+                        <ul class="taglist">
+                            <!-- 태그 항목 -->
+                            <li>
+                                <p class="tag-title">첨부파일</p>
+                                <c:choose>
+                                    <c:when test="${studyReferencesEntity.fileName ne null and studyReferencesEntity.fileName ne ''}">
+                                        <a href="javascript:download('${studyReferencesEntity.referenceIdx}')">${studyReferencesEntity.fileName}</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        없음
+                                    </c:otherwise>
+                                </c:choose>
+                            </li>
+                        </ul>
+
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
@@ -270,8 +311,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

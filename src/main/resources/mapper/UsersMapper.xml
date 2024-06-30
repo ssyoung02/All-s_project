@@ -5,22 +5,25 @@
 <mapper namespace="bit.naver.mapper.UsersMapper">
 
     <resultMap id="UsersResultMap" type="bit.naver.entity.Users">
-        <id property="userIdx" column="user_idx" />
-        <result property="username" column="username" />
-        <result property="password" column="password" />
-        <result property="email" column="email" />
-        <result property="name" column="name" />
-        <result property="birthdate" column="birthdate" />
-        <result property="profileImage" column="profile_image" />
-        <result property="enabled" column="enabled" />
-        <result property="gradeIdx" column="grade_idx" />
-        <result property="provider" column="provider" />
-        <result property="latitude" column="latitude" />
-        <result property="longitude" column="longitude" />
-        <result property="gender" column="gender" />
-        <result property="socialLogin" column="social_login" />
-        <result property="createdAt" column="created_at" />
-        <result property="updatedAt" column="updated_at" />
+        <id column="user_idx" property="userIdx"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="name" property="name"/>
+        <result column="birthdate" property="birthdate"/>
+        <result column="profile_image" property="profileImage"/>
+        <result column="enabled" property="enabled"/>
+        <result column="grade_idx" property="gradeIdx"/>
+        <result column="provider" property="provider"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
+        <result column="gender" property="gender"/>
+        <result column="mobile" property="mobile"/>
+        <result column="social_login" property="socialLogin"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="total_study_time" property="totalStudyTime"/>
+        <result column="today_study_time" property="todayStudyTime"/>
     </resultMap>
 
     <select id="findById" resultMap="UsersResultMap">
@@ -36,20 +39,20 @@
     </select>
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userIdx">
-        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at)
+        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at, mobile)
         VALUES (#{username}, #{password}, #{email}, #{name}, #{birthdate}, #{profileImage},
                 #{enabled}, #{gradeIdx}, #{provider}, #{latitude}, #{longitude}, #{gender},
-                #{socialLogin}, #{createdAt}, #{updatedAt})
+                #{socialLogin}, #{createdAt}, #{updatedAt}, #{mobile})
     </insert>
 
     <update id="updateUser">
         UPDATE Users
-        SET password = #{password}, email = #{email}, profile_image = #{profileImage}, enabled = #{enabled}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, updated_at = #{updatedAt}
+        SET password = #{password}, email = #{email}, profile_image = #{profileImage}, enabled = #{enabled}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, updated_at = #{updatedAt}, mobile = #{mobile}
         WHERE username = #{username}
     </update>
 
-    <delete id="deleteUser">
-        DELETE FROM Users WHERE user_idx = #{userIdx}
+    <delete id="deleteUserByUsername">
+        DELETE FROM Users WHERE username = #{username}
     </delete>
 
     <select id="findByEmail" parameterType="String" resultType="boolean">
@@ -62,5 +65,109 @@
 
     <select id="findUserByEmail" parameterType="String" resultMap="UsersResultMap">
         SELECT * FROM Users WHERE email = #{email}
+    </select>
+
+
+    <select id="findUserIdByUsername" parameterType="String" resultType="Long">
+        SELECT user_idx
+        FROM Users
+        WHERE username = #{username}
+    </select>
+
+    <delete id="deleteUserAuthorities" parameterType="String">
+        DELETE FROM Authorities WHERE username = #{username}
+    </delete>
+
+    <delete id="deleteUserCalendars" parameterType="Long">
+        DELETE FROM Calendars WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserOAuth2Logins" parameterType="Long">
+        DELETE FROM OAuth2Logins WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteUserPersonalStatements" parameterType="Long">
+        DELETE FROM PersonalStatement WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserResumes" parameterType="Long">
+        DELETE FROM Resumes WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserStudyMembers" parameterType="Long">
+        DELETE FROM StudyMembers WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserChats" parameterType="Long">
+        DELETE FROM Chat WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserLikeStudies" parameterType="Long">
+        DELETE FROM LikeStudy WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserNotifications" parameterType="Long">
+        DELETE FROM Notifications WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserStudyRecords" parameterType="Long">
+        DELETE FROM StudyRecords WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserStudyReferences" parameterType="Long">
+        DELETE FROM StudyReferences WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserComments" parameterType="Long">
+        DELETE FROM Comments WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserLikeReferences" parameterType="Long">
+        DELETE FROM LikeReferences WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUserTodos" parameterType="Long">
+        DELETE FROM Todo WHERE user_idx = #{userId}
+    </delete>
+
+    <delete id="deleteUser" parameterType="Long">
+        DELETE FROM Users WHERE user_idx = #{userId}
+    </delete>
+
+    <insert id="insertUserAuthority" parameterType="String">
+        INSERT INTO Authorities (username, authority_name, description)
+        VALUES (#{username}, 'ROLE_USER', '일반 회원 가입 시 부여되는 기본 권한')
+    </insert>
+
+    <select id="isAdmin" parameterType="String" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM Authorities
+        WHERE username = #{username} AND authority_name = 'ROLE_ADMIN'
+    </select>
+
+    <select id="findAuthoritiesByUsername" parameterType="String" resultType="String">
+        SELECT authority_name
+        FROM Authorities
+        WHERE username = #{username}
+    </select>
+
+    <select id="countAllUsers" resultType="int">
+        SELECT COUNT(*) FROM Users
+    </select>
+
+    <!-- Authorities 테이블을 기준으로 총 사용자 수 조회 -->
+    <select id="countAllUsersWithAuthorities" resultType="int">
+        SELECT COUNT(*)
+        FROM Users u
+        INNER JOIN Authorities a ON u.username = a.username
+    </select>
+
+    <!-- 모든 회원 정보와 권한 정보를 조인하여 조회 -->
+    <select id="findAllUsersWithAuthoritiesPaged" resultType="bit.naver.entity.Users">
+        SELECT u.user_idx as userIdx, u.username, a.authority_name as authorityName, u.created_at as createdAt, u.total_study_time as totalStudyTime
+        FROM Users u, Authorities a
+        WHERE u.username = a.username
+        ORDER BY u.user_idx
+        LIMIT ${limit} OFFSET ${offset}
     </select>
 </mapper>

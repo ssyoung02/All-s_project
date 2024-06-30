@@ -27,11 +27,10 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="${root}/WEB-INF/views/include/timer.jsp"/>
-<jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="${root}/WEB-INF/views/include/navbar.jsp"/>
@@ -46,17 +45,10 @@
                 <h1>${userVo.name} 님의 회원 정보</h1>
                 <%-- 로그인한 사용자에게만 정보 표시 --%>
                 <sec:authorize access="isAuthenticated()">
-                    <c:if test="${not empty error}">
-                        <p>${error}</p>
-                    </c:if>
-                    <c:if test="${not empty msg1}">
-                        <p>${msg1}: ${msg2}</p>
-                    </c:if>
-
                     <div class="userinfo">
                         <div class="userprofile">
                             <div class="profile-img">
-                                <img src="${root}/resources/images/${userVo.profileImage}" alt="내 프로필">
+                                <img src="${root}/resources/profileImages/${userVo.profileImage}" alt="Profile Image" onerror="this.onerror=null; this.src='${userVo.profileImage}';">
                             </div>
                             <h3>${userVo.username}</h3>
                         </div>
@@ -151,13 +143,7 @@
             </div>
         </main>
     </section>
-
-
-
-    <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
-    <jsp:include page="../include/timer.jsp" />
 </div>
-
 <%-- 모달 --%>
 <div id="modal-container" class="modal unstaged">
     <div class="modal-overlay">
@@ -195,6 +181,7 @@
         }
     });
 </script>
-
+<jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

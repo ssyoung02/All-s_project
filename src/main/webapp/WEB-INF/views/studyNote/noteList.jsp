@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>내 공부노트 > 공부 > All's</title>
@@ -84,11 +83,10 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -180,8 +178,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

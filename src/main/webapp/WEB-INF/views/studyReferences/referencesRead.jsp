@@ -176,13 +176,13 @@
         }
 
     </script>
+
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContaner">
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -300,8 +300,8 @@
                             <button class="secondary-default" onclick="deletePost(${studyReferencesEntity.referenceIdx})">삭제</button>
                             <button class="secondary-default" onclick="modifyPost(${studyReferencesEntity.referenceIdx})">수정</button>
                         </c:if>
-<%--                        <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesList'">목록</button>--%>
-                        <button class="primary-default" onclick="history.back();">목록</button>
+                        <button class="primary-default" onclick="location.href='${root}/studyReferences/referencesList'">목록</button>
+<%--                        <button class="primary-default" onclick="history.back();">목록</button>--%>
                     </div>
                 </div>
 
@@ -309,8 +309,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

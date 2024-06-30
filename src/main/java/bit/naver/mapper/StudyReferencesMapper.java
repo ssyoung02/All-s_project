@@ -41,4 +41,12 @@ public interface StudyReferencesMapper {
     int deleteCommentRef(int referenceIdx);
 
     int updatePost(StudyReferencesEntity entity);
+
+    int countAllPosts();
+
+    // 신고된 게시글 목록 조회
+    List<StudyReferencesEntity> getReportedStudyReferences(@Param("offset") int offset, @Param("limit") int limit);
+
+    // 신고된 게시글 개수 조회
+    int countReportedStudyReferences();
 }

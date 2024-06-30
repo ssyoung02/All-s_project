@@ -1,0 +1,187 @@
+.loginUserInfoLeft {
+    width: 77%;
+    margin-right: 20px;
+    display: flex; /* 내부 요소들을 flexbox로 배치 */
+}
+.scheduler-area {
+    display: flex;
+    width: 100%; /* scheduler-area가 loginUserInfoLeft의 전체 너비를 차지하도록 설정 */
+}
+.scheduler { /* 월별 캘린더 */
+    width: 67%;
+    margin-right: 10px;  /*일별 캘린더와의 간격 */
+}
+
+.todo { /* 일별 캘린더 */
+    width: 33%;
+    border: 1px solid #dad8cc;
+}
+.fc-list-event-time{
+    width: 80px; !important;
+    overflow: hidden; !important;
+    text-overflow: ellipsis; !important;
+    white-space: wrap; !important;
+}
+
+.fc-calendarLink-button {
+    background-color: #717171 !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* 일별 캘린더 제목 숨기기 */
+#dayCalendar .fc-toolbar {
+    display: none;
+}
+
+/* 토글 버튼 스타일 */
+.toggle-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10;
+}
+#map-authenticated {
+    transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
+}
+#map-anonymous {
+    transition: width 0.5s ease, height 0.5s ease; /* 너비와 높이 변경에 0.5초 동안 ease 효과 적용 */
+}
+.fc .fc-list-table tr > *{
+    border: 0;
+}
+.fc-theme-standard .fc-list {
+    border: 0;
+}
+.fc .fc-toolbar-title{
+    font-size: 1.5em;
+}
+#dayCalendar .fc-list-event-time{
+    
+}
+
+/*css 병합 작업*/
+.group-calender {
+    display: flex; /* flexbox 사용 */
+    flex-direction: column; /* 세로 배치 */
+}
+
+#calendar-header{
+    margin-bottom: 2em;
+}
+
+.fc .fc-toolbar-chunk .fc-prev-button, .fc .fc-toolbar-chunk .fc-next-button {
+    background-color: transparent !important;
+    border: none !important; /* 테두리 제거 */
+}
+
+.fc .fc-toolbar-chunk .fc-prev-button.fc-button, .fc .fc-toolbar-chunk .fc-next-button.fc-button {
+    border: none !important; /* 테두리 제거 */
+}
+
+/* 모달 스타일 */
+#scheduleModal, #viewScheduleModal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 화면에 고정 */
+    z-index: 100; /* z-index 값을 높임 */
+    background-color: rgba(0, 0, 0, 0.4);
+}
+#addScheduleForm{
+    margin-bottom: 1em;
+}
+#addScheduleForm +button{
+    width: 100%;
+}
+#scheduleModal.opaque, #viewScheduleModal.opaque {
+    display: block;
+}
+
+.modal-contents {
+    background-color: #fefefe;
+    padding: 20px;
+    width: 450px; /* 모달 너비 500px로 변경 */
+    border: 1px solid #888;
+    overflow: auto; /* 내용이 넘칠 경우 스크롤바 추가 */
+    left: 50%; /* 화면 왼쪽에서 50% 위치 */
+    top: 50%; /* 화면 위쪽에서 50% 위치 */
+    transform: translate(-50%, -50%); /* 자신의 크기만큼 왼쪽, 위쪽으로 이동하여 정중앙 배치 */
+}
+
+/* 모달 제목 스타일 */
+.modal-text h3 {
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+/* 색상 선택 버튼 스타일 */
+.color-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.color-button.selected { /* 선택된 버튼 스타일 */
+    border: 2px solid gray; /* 테두리 추가 */
+}
+
+#btnMonth { /* 월 버튼에 기본적으로 선택된 스타일 적용 */
+    background-color: #3B593F; /* 녹색 배경 */
+    color: white;
+    border: 1px solid #A2B18A;
+}
+
+/*모달 입력서식*/
+.modal-inputbox{
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.modal-label{
+    float: left;
+    width: 100px;
+}
+.modal-input input[type="text"], .modal-input input[type="datetime-local"]{
+    width: 100%;
+}
+.modal-inputbox textarea{
+    width: 108%;
+    height: 40px;
+}
+.modal-input{
+    width: 70%;
+}
+.color-picker{
+    float: right;
+    width: 300px;
+}
+/* 커스텀 버튼 스타일 */
+#calendar-header .fc-button {
+    margin: 0 5px; /* 버튼 간 간격 조절 */
+    border: 1px solid #A2B18A; /* 버튼 테두리 추가 */
+}
+
+#calendar-header .fc-button.fc-button-active { /* 선택된 버튼 스타일 */
+    background-color: #3B593F; /* 녹색 배경 */
+    color: white;
+}
+
+/*스터디 그룹 메인*/
+.study-group-calender{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 1em;
+}
+.study-group-mon{
+    grid-column: 1 / 4;
+}
+.study-group-day{
+    grid-column: 4 / 6;
+}

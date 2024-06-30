@@ -5,7 +5,7 @@
 <mapper namespace="bit.naver.mapper.CalendarMapper">
 
     <insert id="insertCalendar" parameterType="bit.naver.entity.Calendar">
-        INSERT INTO Calendars (cal_idx, user_idx, title, description, start, end, allday, location, reminder, background_color)
+        INSERT INTO Calendars (cal_idx, user_idx, title, description, start, end, allDay, location, reminder, background_color)
         VALUES (#{calIdx}, #{userIdx}, #{title}, #{description}, #{start}, #{end}, #{allDay}, #{location}, #{reminder}, #{backgroundColor})
     </insert>
 
@@ -17,7 +17,7 @@
                description,
                start,
                end,
-               allday
+               allDay,
                location,
                reminder,
                background_color AS backgroundColor
@@ -25,4 +25,38 @@
         WHERE user_idx = #{userIdx}
     </select>
 
+    <select id="selectCalendarByIdx" parameterType="Long" resultType="bit.naver.entity.Calendar">
+        SELECT schedule_idx AS scheduleIdx,
+               cal_idx AS calIdx,
+               user_idx AS userIdx,
+               title,
+               description,
+               start,
+               end,
+               allDay,
+               location,
+               reminder,
+               background_color AS backgroundColor
+        FROM Calendars
+        WHERE schedule_idx = #{scheduleIdx}
+    </select>
+
+    <update id="updateCalendar" parameterType="bit.naver.entity.Calendar">
+        UPDATE Calendars
+        SET title = #{title},
+        description = #{description},
+        start = #{start},
+        end = #{end},
+        allDay = #{allDay},
+        location = #{location},
+        reminder = #{reminder},
+        background_color = #{backgroundColor}
+        WHERE schedule_idx = #{scheduleIdx}
+    </update>
+
+    <delete id="deleteCalendar" parameterType="Long">
+        DELETE FROM Calendars
+        WHERE schedule_idx = #{scheduleIdx}
+    </delete>
 </mapper>
+

@@ -335,7 +335,7 @@
     		sUploadURL;
     	
     	// sUploadURL= 'file_uploader_html5.php'; 	//upload URL
-    	sUploadURL = '/smarteditorMultiImageUpload';
+    	sUploadURL = '/multiImageUpload';
 
     	//파일을 하나씩 보내고, 결과를 받음.
     	for(var j=0, k=0; j < nImageInfoCnt; j++) {
@@ -350,11 +350,35 @@
     		tempFile = null;
     	}
 	}
+	function getXsrfTokenFromCookie() {
+		var cookies = document.cookie.split(';'); // 모든 쿠키를 가져와 배열로 분리
+		var xsrfToken = null;
+
+		// 모든 쿠키를 순회하면서 XSRF-TOKEN을 찾음
+		for (var i = 0; i < cookies.length; i++) {
+			var cookie = cookies[i].trim();
+
+			// XSRF-TOKEN 쿠키를 찾으면 값을 추출하여 반환
+			if (cookie.startsWith('XSRF-TOKEN=')) {
+				xsrfToken = cookie.substring('XSRF-TOKEN='.length, cookie.length);
+				break;
+			}
+		}
+
+		return xsrfToken;
+	}
     
     function callAjaxForHTML5 (tempFile, sUploadURL){
+
+		// XSRF-TOKEN 값 가져오기
+		var xsrfToken = getXsrfTokenFromCookie();
+
     	var oAjax = jindo.$Ajax(sUploadURL, {
 			type: 'xhr',
 			method : "post",
+			headers:{
+				'X-CSRF-TOKEN': xsrfToken
+			},
 			onload : function(res){ // 요청이 완료되면 실행될 콜백 함수
 				var sResString = res._response.responseText;
 				if (res.readyState() == 4) {
@@ -374,7 +398,7 @@
 		oAjax.header("file-name",encodeURIComponent(tempFile.name));
 		oAjax.header("file-size",tempFile.size);
 		oAjax.header("file-Type",tempFile.type);
-		oAjax.header("file-X-CSRF-TOKEN",$("meta[name='_csrf']").attr("content"));
+		oAjax.header("X-XSRF-TOKEN",xsrfToken);
 		oAjax.request(tempFile);
     }
     
@@ -480,8 +504,8 @@
  	 */
  	function callFileUploader (){
  		oFileUploader = new jindo.FileUploader(jindo.$("uploadInputBox"),{
- 			sUrl  : location.href.replace(/\/[^\/]*$/, '') + '/file_uploader.php',	//샘플 URL입니다.
- 	        sCallback : location.href.replace(/\/[^\/]*$/, '') + '/callback.html',	//업로드 이후에 iframe이 redirect될 콜백페이지의 주소
+ 			sUrl  : '/singleImageUpload',	//샘플 URL입니다.
+ 	        sCallback : '/smarteditor/sample/photo_uploader/callback.html',	//업로드 이후에 iframe이 redirect될 콜백페이지의 주소
  	    	sFiletype : "*.jpg;*.png;*.bmp;*.gif",						//허용할 파일의 형식. ex) "*", "*.*", "*.jpg", 구분자(;)	
  	    	sMsgNotAllowedExt : 'JPG, GIF, PNG, BMP 확장자만 가능합니다',	//허용할 파일의 형식이 아닌경우에 띄워주는 경고창의 문구
  	    	bAutoUpload : false,									 	//파일이 선택됨과 동시에 자동으로 업로드를 수행할지 여부 (upload 메소드 수행)

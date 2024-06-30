@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bit.naver.mapper.TeamCalendarMapper">
+
+    <insert id="insertTeamCalendar" parameterType="bit.naver.entity.TeamCalendar">
+        INSERT INTO TeamCalendars (team_cal_idx, study_idx, title, description, start, end, allDay, location, reminder, background_color)
+        VALUES (#{teamCalIdx}, #{studyIdx}, #{title}, #{description}, #{start}, #{end}, #{allDay}, #{location}, #{reminder}, #{backgroundColor})
+    </insert>
+
+    <select id="selectAllTeamCalendarsByStudyIdx" parameterType="Long" resultType="bit.naver.entity.TeamCalendar">
+        SELECT team_schedule_idx AS teamScheduleIdx,
+               team_cal_idx AS teamCalIdx,
+               study_idx AS studyIdx,
+               title,
+               description,
+               start,
+               end,
+               allDay,
+               location,
+               reminder,
+               background_color AS backgroundColor
+        FROM TeamCalendars
+        WHERE study_idx = #{studyIdx}
+    </select>
+
+    <select id="selectTeamCalendarByIdx" parameterType="Long" resultType="bit.naver.entity.TeamCalendar">
+        SELECT team_schedule_idx AS teamScheduleIdx,
+               team_cal_idx AS teamCalIdx,
+               study_idx AS studyIdx,
+               title,
+               description,
+               start,
+               end,
+               allDay,
+               location,
+               reminder,
+               background_color AS backgroundColor
+        FROM TeamCalendars
+        WHERE team_schedule_idx = #{teamScheduleIdx}
+    </select>
+
+    <update id="updateTeamCalendar" parameterType="bit.naver.entity.TeamCalendar">
+        UPDATE TeamCalendars
+        SET title = #{title},
+        description = #{description},
+        start = #{start},
+        end = #{end},
+        allDay = #{allDay},
+        location = #{location},
+        reminder = #{reminder},
+        background_color = #{backgroundColor}
+        WHERE team_schedule_idx = #{teamScheduleIdx}
+    </update>
+
+    <delete id="deleteTeamCalendar" parameterType="Long">
+        DELETE FROM TeamCalendars
+        WHERE team_schedule_idx = #{teamScheduleIdx}
+    </delete>
+</mapper>
+

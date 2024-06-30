@@ -2,7 +2,6 @@
 
 package bit.naver.controller;
 
-import bit.naver.dto.KakaoUsersInfo;
 import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUser;
@@ -12,13 +11,19 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @PropertySource("classpath:application.properties")
 @Controller
@@ -34,7 +39,7 @@ public class KakaoLoginController {
     private IKakaoLoginService iKakaoS;
 
     // 카카오 로그인 리다이렉트 및 사용자 인증 처리
-    @RequestMapping(value = "/kakao/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/kakao/login/alls", method = RequestMethod.GET)
     public ModelAndView kakaoLogin(@RequestParam(value = "code", required = false) String code) throws Throwable {
         System.out.println("Code: " + code);
 
@@ -52,25 +57,29 @@ public class KakaoLoginController {
         String userEmail = (String) userInfo.get("email");
 
         // 3. DB에서 사용자 정보 확인
-        boolean userExists = usersMapper.findByEmail(userEmail);
+        Users existingUser = usersMapper.findUserByEmail(userEmail);
 
-        if (userExists) {
+
+        if (existingUser != null) {
             // 사용자가 존재하는 경우
-            Users existingUser = usersMapper.findUserByEmail(userEmail);
+            List<String> authorities = usersMapper.findAuthoritiesByUsername(existingUser.getUsername());
 
-            // 4. Spring Security 인증 처리
-            UserDetails userDetails = new UsersUser(existingUser);
+            List<GrantedAuthority> grantedAuthorities = authorities.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
+            UserDetails userDetails = new UsersUser(existingUser, grantedAuthorities);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // 5. 메인 페이지로 리다이렉트
+            // 4. 메인 페이지로 리다이렉트
             return new ModelAndView("redirect:/main");
         } else {
             // 사용자가 존재하지 않는 경우, 회원가입 페이지로 이동
             ModelAndView modelAndView = new ModelAndView("Users/join");
-            modelAndView.addObject("KakaoUserInfo", userInfo);
+            modelAndView.addObject("kakaoUserInfo", userInfo);
             return modelAndView;
         }
     }
