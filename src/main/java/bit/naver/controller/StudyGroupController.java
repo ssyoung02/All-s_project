@@ -106,6 +106,9 @@ public class StudyGroupController {
         if (result.hasErrors()) {
             return "studyGroup/studyGroupCreate";
         }
+// 현재 위치 정보 가져오기 (JavaScript에서 받아온 값 사용)
+        double latitude = Double.parseDouble(request.getParameter("latitude"));
+        double longitude = Double.parseDouble(request.getParameter("longitude"));
 
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
@@ -115,6 +118,8 @@ public class StudyGroupController {
         study.setEndDate(new Date());
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
+        study.setLatitude(latitude);
+        study.setLongitude(longitude);
 
         // 프로필 이미지 처리
         if (profileImage != null && !profileImage.isEmpty()) {

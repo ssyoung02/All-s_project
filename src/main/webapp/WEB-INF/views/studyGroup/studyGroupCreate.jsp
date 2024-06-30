@@ -24,6 +24,32 @@
             };
             reader.readAsDataURL(event.target.files[0]);
         }
+
+        // 사용자 위치 가져오기
+        $(document).ready(function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+
+                    // 폼에 hidden input 추가
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'latitude',
+                        value: lat
+                    }).appendTo('#writeForm');
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'longitude',
+                        value: lon
+                    }).appendTo('#writeForm');
+                }, function(error) {
+                    console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
+                });
+            }
+        });
+
+
     </script>
 </head>
 <body>
