@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
         web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**",
                 "/studies/listOnAnonymousMap","/detail/{studyIdx}",
-                "/Users/checkDuplicate","/Users/UsersImageUpdate", "/studyGroup/studyGroupCreate", "/studyGroup/updateStudyGroup");
+                "/Users/checkDuplicate","/Users/UsersImageUpdate", "/studyGroup/studyGroupCreate", "/studyGroup/updateStudyGroup","/studyRecruit/updateStudyGroup");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
-                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/include/start", "/include/pause", "/include/updateTime", "/include/updateMemo", "/calendar/**","/Users/UsersImageUpdate", "/studyGroup/studyGroupCreate", "/studyGroup/updateStudyGroup")
+                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/include/start", "/include/pause", "/include/updateTime", "/include/updateMemo", "/calendar/**","/Users/UsersImageUpdate", "/studyGroup/studyGroupCreate", "/studyGroup/updateStudyGroup", "/studyRecruit/updateStudyGroup")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
 //                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성

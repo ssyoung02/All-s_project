@@ -67,7 +67,8 @@
             s.study_title AS studyTitle,
             s.description_title AS descriptionTitle,
             s.description,
-            s.image
+            s.image,
+            s.currentParticipants AS currentParticipants
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
         WHERE sm.user_idx = #{userIdx}

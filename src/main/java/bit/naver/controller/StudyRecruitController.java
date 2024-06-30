@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -142,10 +145,44 @@ public class StudyRecruitController {
 
     // 스터디 정보 업데이트
     @PostMapping("/updateStudyGroup")
-    public String updateStudyGroup(@ModelAttribute StudyGroup study, Model model) {
-        studyMapper.updateStudyGroup(study);
-        model.addAttribute("message", "수정이 완료되었습니다.");
-        return "redirect:/studyRecruit/recruitReadForm?studyIdx=" + study.getStudyIdx();
-    }
+    public String updateStudyGroup(@RequestParam("studyIdx") Long studyIdx,
+                                   @RequestParam("studyTitle") String studyTitle,
+                                   @RequestParam("description") String description,
+                                   @RequestParam("category") String category,
+                                   @RequestParam("age") String age,
+                                   @RequestParam("gender") String gender,
+                                   @RequestParam("studyOnline") boolean studyOnline,
+                                   @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+                                   HttpSession session,
+                                   Model model) {
+        try {
+            StudyGroup studyGroup = new StudyGroup();
+            studyGroup.setStudyIdx(studyIdx);
+            studyGroup.setStudyTitle(studyTitle);
+            studyGroup.setDescription(description);
+            studyGroup.setCategory(category);
+            studyGroup.setAge(age);
+            studyGroup.setGender(gender);
+            studyGroup.setStudyOnline(studyOnline);
 
+            if (profileImage != null && !profileImage.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + profileImage.getOriginalFilename();
+                String savePath = session.getServletContext().getRealPath("/resources/uploads/");
+                File directory = new File(savePath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+                File uploadFile = new File(savePath + "/" + fileName);
+                profileImage.transferTo(uploadFile);
+                studyGroup.setImage("/resources/uploads/" + fileName);
+            }
+
+            studyMapper.updateStudyGroup(studyGroup);
+            model.addAttribute("message", "수정이 완료되었습니다.");
+        } catch (IOException e) {
+            model.addAttribute("message", "수정 중 오류가 발생했습니다: " + e.getMessage());
+        }
+        return "redirect:/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
+    }
 }
+

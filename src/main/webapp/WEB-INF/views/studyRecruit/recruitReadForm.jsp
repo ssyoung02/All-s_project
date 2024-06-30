@@ -101,7 +101,7 @@
             </div>
             <%-- 수정 폼 영역 --%>
             <div id="editFormContainer" style="display:none;">
-                <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post">
+                <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post" enctype="multipart/form-data">
                     <sec:csrfInput /> <%-- CSRF 토큰 추가 --%>
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}" />
                     <div class="tabInfo">
@@ -119,10 +119,10 @@
                             <dt>프로필</dt>
                             <dd class="profile-chage">
                                 <form action="" class="group-imgChange">
-                                    <input type="file" id="imageChange">
+                                    <input type="file" id="imageChange" name="profileImage" accept="image/*" onchange="previewImage(event)">
                                     <label for="imageChange" class="imgbox">
                                         <i class="bi bi-plus-lg"></i>
-                                        <img src="${study.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
+                                        <img id="profilePreview" src="${study.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
                                     </label>
                                 </form>
                                 <div class="profile-change">
@@ -298,6 +298,18 @@
 <jsp:include page="../include/timer.jsp"/>
 
 <script>
+
+    function previewImage(event) {
+        const preview = document.getElementById('profilePreview');
+        if (event.target.files && event.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
     function modalOpen() {
         document.getElementById('modal-container').classList.remove('unstaged');
     }
