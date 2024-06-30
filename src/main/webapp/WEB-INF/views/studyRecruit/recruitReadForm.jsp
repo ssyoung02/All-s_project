@@ -106,8 +106,8 @@
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}" />
                     <div class="tabInfo">
                         <div class="webInfo-itemfull">
-                            <dt>스터디명</dt>
-                            <dd><input class="manager-studyName" name="studyTitle" value="${study.studyTitle}" title="스터디명"></dd>
+                            <dt>모집글 제목</dt>
+                            <dd><input class="manager-studyName" name="studyTitle" value="${study.studyTitle}" title="모집글 제목"></dd>
                         </div>
                         <div class="webInfo-itemfull">
                             <dt>설 명</dt>

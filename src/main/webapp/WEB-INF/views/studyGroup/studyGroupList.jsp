@@ -127,11 +127,17 @@
                                         <div class="studygroup-item flex-between">
                                             <!-- 스터디 목록 -->
                                             <div class="imgtitle flex-row">
-                                                <div class="studygroup-profile-s">
-                                                    <img src="${root}/img/logo.png">
-                                                </div>
+                                                <c:if test="${study.image != null}">
+                                                    <div class="studygroup-profile-s">
+                                                        <img src="${root}${study.image}">  </div>
+                                                </c:if>
+                                                <c:if test="${study.image == null}">
+                                                    <div class="studygroup-profile-s">
+                                                        <img src="${root}/images/logo.png">
+                                                    </div>
+                                                </c:if>
                                                 <div class="board-item flex-columleft">
-                                                    <p class="board-title">${study.descriptionTitle}</p>
+                                                    <p class="board-title">${study.studyTitle}</p>
                                                     <p class="board-content">${study.description}</p>
                                                 </div>
                                             </div>

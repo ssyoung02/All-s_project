@@ -61,4 +61,9 @@ public interface StudyGroupMapper {
 
     @Update("UPDATE Studies SET description_title = #{descriptionTitle}, description = #{description}, category = #{category}, age = #{age}, gender = #{gender}, study_online = #{studyOnline} WHERE study_idx = #{studyIdx}")
     void updateStudy(StudyGroup studyGroup);
+
+    void updateStudyGroup(StudyGroup studyGroup);
+
+
+    void updateStudyGroupInfo(StudyGroup studyGroup);
 }

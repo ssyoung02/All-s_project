@@ -16,4 +16,6 @@ public class StudyList {
     private String description;
 
     private String status;
+
+    private String image;
 }
