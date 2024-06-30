@@ -66,4 +66,13 @@ public interface StudyGroupMapper {
 
 
     void updateStudyGroupInfo(StudyGroup studyGroup);
+
+    // 멤버 수 증가
+    @Update("UPDATE Studies SET currentParticipants = currentParticipants + 1 WHERE study_idx = #{studyIdx}")
+    void incrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
+
+    // 멤버 수 감소
+    @Update("UPDATE Studies SET currentParticipants = currentParticipants - 1 WHERE study_idx = #{studyIdx}")
+    void decrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
+
 }

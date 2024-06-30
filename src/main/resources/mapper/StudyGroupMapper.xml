@@ -26,12 +26,12 @@
         INSERT INTO Studies (
             study_leader_idx, study_title, description_title, description, category, study_online,
             meeting_time, latitude, longitude, age, capacity, gender,
-            start_date, end_date, status, created_at, image
+            start_date, end_date, status, created_at, image, currentParticipants
         )
         VALUES (
                    #{studyLeaderIdx}, #{studyTitle}, #{descriptionTitle}, #{description}, #{category}, #{studyOnline},
                    #{meetingTime}, #{latitude}, #{longitude}, #{age}, #{capacity}, #{gender},
-                   #{startDate}, #{endDate}, #{status}, #{createdAt}, #{image}
+                   #{startDate}, #{endDate}, #{status}, #{createdAt}, #{image}, #{currentParticipants}
                )
     </insert>
 
@@ -163,4 +163,5 @@
             description = #{description}
         WHERE study_idx = #{studyIdx}
     </update>
+
 </mapper>

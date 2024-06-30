@@ -181,6 +181,10 @@
                                         <label for="offline">오프라인</label>
                                     </div>
                                 </li>
+                                <li>
+                                    <p class="tag-title">모집 인원</p>
+                                    <input type="number" name="capacity" value="2" min="2" required> <%-- Default to 2, at least 2 including the leader --%>
+                                </li>
                             </ul>
                         </article>
 

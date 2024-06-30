@@ -18,6 +18,11 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <style>
+        .recruit-status.closed {
+            color: gray;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp"/>
@@ -95,7 +100,7 @@
                                         </div>
                                         <div class="banner-item-top">
                                             <div class="banner-img">
-                                                <img src="${root}/resources/images/${study.image}" alt="스터디 그룹 로고"/>
+                                                <img src="${root}${study.image}" alt="프로필 사진"/>
                                             </div>
                                             <div class="banner-title">
                                                 <p class="banner-main-title">${study.studyTitle}</p>
@@ -113,9 +118,6 @@
                             </c:forEach>
                         </div>
 
-
-                        <!-- 다른 슬라이드들 추가 가능 -->
-
                         <!-- 페이지 네이션 -->
                         <div class="swiper-pagination"></div>
 
@@ -126,43 +128,53 @@
                     </div>
                     <%--슬라이더 끝--%>
 
-                    <div class="list-title flex-between">
-                        <h3>전체 글(${studies.size()})</h3>
+                    <div>
+                        <a href="#" onclick="filterStudies('RECRUITING')">모집 중</a> /
+                        <a href="#" onclick="filterStudies('CLOSED')">모집 마감</a>
                     </div>
 
                     <div class="recruitList">
-                        <%-- 동적으로 생성된 게시판 글 --%>
                         <c:forEach var="study" items="${studies}">
-                            <div class="recruitItem">
+                            <div class="recruitItem" data-status="${study.status}">
                                 <div class="studygroup-item flex-between">
                                     <button class="imgtitle link-button"
                                             onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="board-item flex-columleft">
-                                            <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
-                                                <span class="department">${study.category}</span>
-                                                <span class="study-tagItem">#${study.gender}</span>
-                                                <span class="study-tagItem">#${study.age}</span>
-                                                <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
-                                            </p>
-                                            <h3 class="board-title">${study.studyTitle}</h3>
+                                            <div class="flex-row">
+                                                <img src="${root}${study.image}" alt="스터디 그룹 로고" style="width: 50px; height: 50px; margin-right: 10px;">
+                                                <div>
+                                                    <p class="study-tag">
+                                                        <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
+                                                                ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
+                                                        </span>
+                                                        <span class="department">${study.category}</span>
+                                                        <span class="study-tagItem">#${study.gender}</span>
+                                                        <span class="study-tagItem">#${study.age}</span>
+                                                        <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
+                                                    </p>
+                                                    <h3 class="board-title">${study.studyTitle}</h3>
+                                                </div>
+                                            </div>
                                         </div>
                                     </button>
-                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
-                                    <c:choose>
-                                        <c:when test="${study.isLike != 0}">
-                                            <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
-                                                <i class="bi bi-heart-fill"></i>
-                                                <p class="info-post">좋아요  </p>
-                                            </button>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
-                                                <i class="bi bi-heart"></i>
-                                                <p class="info-post">좋아요</p>
-                                            </button>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <div class="flex-row">
+                                        <p class="info-post">${study.currentParticipants}/${study.capacity}</p>
+                                        <!-- 좋아요 버튼 -->
+                                        <c:choose>
+                                            <c:when test="${study.isLike != 0}">
+                                                <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
+                                                    <i class="bi bi-heart-fill"></i>
+                                                    <p class="info-post">좋아요</p>
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
+                                                    <i class="bi bi-heart"></i>
+                                                    <p class="info-post">좋아요</p>
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                 </div>
                                 <button class="board-content link-button" onclick="location.href='recruitReadForm.jsp'">
                                         ${study.description}
@@ -181,23 +193,19 @@
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-</body>
-</html>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const statusElements = document.querySelectorAll('.recruit-status');
-
-        statusElements.forEach(element => {
-            const status = element.innerText;
-
-            if (status === 'RECRUITING') {
-                element.innerText = '모집중';
-            } else if (status === 'CLOSED') {
-                element.innerText = '마감';
+    function filterStudies(status) {
+        const studyItems = document.querySelectorAll('.recruitItem');
+        studyItems.forEach(item => {
+            if (status === 'RECRUITING' && item.getAttribute('data-status') !== 'RECRUITING') {
+                item.style.display = 'none';
+            } else if (status === 'CLOSED' && item.getAttribute('data-status') !== 'CLOSED') {
+                item.style.display = 'none';
+            } else {
+                item.style.display = 'block';
             }
         });
-    });
+    }
 
     function redirectToStudyDetail(studyIdx) {
         var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
@@ -247,3 +255,5 @@
         }
     }
 </script>
+</body>
+</html>

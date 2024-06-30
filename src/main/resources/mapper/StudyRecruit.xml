@@ -82,6 +82,7 @@
             sg.image AS image,
             sg.status AS status,
             sg.created_at AS createdAt,
+            sg.currentParticipants As currcurrentParticipants,
             u.name AS leaderName,
             IFNULL(lr.study_idx, 0) AS isLike
         FROM

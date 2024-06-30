@@ -40,10 +40,18 @@ public class StudyRecruitController {
 
         // Get studies with userIdx as a parameter
         List<StudyGroup> studies = studyMapper.getAllStudies(userIdx);
+        for (StudyGroup study : studies) {
+            study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
+            studyMapper.closeStudyIfFull(study.getStudyIdx()); // Close the study if it's full
+        }
         model.addAttribute("userIdx", userIdx);
         model.addAttribute("studies", studies);
 
         List<StudyGroup> study_18 = studyMapper.getAllStudy_9(userIdx);
+        for (StudyGroup study : study_18) {
+            study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
+            studyMapper.closeStudyIfFull(study.getStudyIdx()); // Close the study if it's full
+        }
         model.addAttribute("userIdx", userIdx);
         model.addAttribute("study_18", study_18);
 

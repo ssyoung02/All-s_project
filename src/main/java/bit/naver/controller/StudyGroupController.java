@@ -83,6 +83,9 @@ public class StudyGroupController {
 
         StudyGroup study = studyGroupMapper.getStudyById(studyIdx);
         List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+        int currentParticipants = members.size();
+
+        study.setCurrentParticipants(currentParticipants);
 
         // studyGroup의 role 설정
         for (StudyMembers member : members) {
@@ -197,6 +200,7 @@ public class StudyGroupController {
         Map<String, Object> response = new HashMap<>();
         try {
             studyGroupMapper.removeMember(studyIdx, userIdx);
+            studyGroupMapper.decrementCurrentParticipants(studyIdx);  // 멤버 탈퇴 시 현재 참가자 수 감소
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
@@ -211,6 +215,7 @@ public class StudyGroupController {
         Map<String, Object> response = new HashMap<>();
         try {
             studyGroupMapper.approveMember(studyIdx, userIdx);
+            studyGroupMapper.incrementCurrentParticipants(studyIdx);  // 멤버 승인 시 현재 참가자 수 증가
             response.put("success", true);
             response.put("message", "가입 승인이 완료되었습니다.");
         } catch (Exception e) {

@@ -5,6 +5,8 @@ import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -50,4 +52,15 @@ public interface StudyRecruitMapper {
 
     // 스터디 업데이트
     void updateStudyGroup(StudyGroup studyGroup);
+
+    // 모집인원
+    @Select("SELECT currentParticipants FROM Studies WHERE study_idx = #{studyIdx}")
+    int getCurrentParticipants(Long studyIdx);
+
+    //모집인원 마감되면
+    @Update("UPDATE Studies SET status = 'CLOSED' WHERE study_idx = #{studyIdx} AND currentParticipants >= capacity")
+    void closeStudyIfFull(Long studyIdx);
+
+
+
 }
