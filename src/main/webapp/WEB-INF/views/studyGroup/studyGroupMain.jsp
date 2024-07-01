@@ -109,7 +109,7 @@
                 <div class="maxcontent">
                     <section class="group-header flex-between">
                         <div class="profile-header">
-                            <img src="" alt="">
+                            <img src="${root}${study.image}">
                             <div class="group-title">
                                 <h2>${study.descriptionTitle}</h2>
                                 <p>${study.description}</p>

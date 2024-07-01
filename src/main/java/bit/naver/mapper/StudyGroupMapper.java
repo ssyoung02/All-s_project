@@ -44,12 +44,12 @@ public interface StudyGroupMapper {
 
     void updateMemberStatus(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx, @Param("status") String status);
 
-
     int countAllStudies();
     // 추가된 메서드: 승인된 스터디 목록 가져오기
     List<StudyList> getApprovedStudies(Long userIdx);
 
     List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
+//    List<StudyList> getAllMyStudies(Long userIdx);
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 
@@ -70,6 +70,19 @@ public interface StudyGroupMapper {
 
     @Update("UPDATE Studies SET description_title = #{descriptionTitle}, description = #{description}, category = #{category}, age = #{age}, gender = #{gender}, study_online = #{studyOnline} WHERE study_idx = #{studyIdx}")
     void updateStudy(StudyGroup studyGroup);
+
+    void updateStudyGroup(StudyGroup studyGroup);
+
+
+    void updateStudyGroupInfo(StudyGroup studyGroup);
+
+    // 멤버 수 증가
+    @Update("UPDATE Studies SET currentParticipants = currentParticipants + 1 WHERE study_idx = #{studyIdx}")
+    void incrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
+
+    // 멤버 수 감소
+    @Update("UPDATE Studies SET currentParticipants = currentParticipants - 1 WHERE study_idx = #{studyIdx}")
+    void decrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
 
     Long getStudyLeaderIdx(Long studyIdx);
 }

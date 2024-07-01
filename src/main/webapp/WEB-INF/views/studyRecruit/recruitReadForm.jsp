@@ -89,12 +89,19 @@
                     </div>
                     <div class="post-content">${study.description}</div>
                     <div class="buttonBox">
-                        <c:if test="${!isMember}">
-                            <button class="primary-default" onclick="modalOpen()">가입 신청</button>
-                        </c:if>
-                        <c:if test="${isMember}">
-                            <p>이미 가입한 스터디 입니다.</p>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${study.status eq 'CLOSED'}">
+                                <p>모집 마감했습니다.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${!isMember}">
+                                    <button class="primary-default" onclick="modalOpen()">가입 신청</button>
+                                </c:if>
+                                <c:if test="${isMember}">
+                                    <p>이미 가입한 스터디 입니다.</p>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
                 <div class="board-bottom">
@@ -107,13 +114,14 @@
             </div>
             <%-- 수정 폼 영역 --%>
             <div id="editFormContainer" style="display:none;">
-                <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post">
-                    <sec:csrfInput /> <%-- CSRF 토큰 추가 --%>
+                <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> <%-- CSRF 토큰 추가 --%>
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}" />
+                    <input type="hidden" name="currentImage" value="${study.image}" />
                     <div class="tabInfo">
                         <div class="webInfo-itemfull">
-                            <dt>스터디명</dt>
-                            <dd><input class="manager-studyName" name="studyTitle" value="${study.studyTitle}" title="스터디명"></dd>
+                            <dt>모집글 제목</dt>
+                            <dd><input class="manager-studyName" name="studyTitle" value="${study.studyTitle}" title="모집글 제목"></dd>
                         </div>
                         <div class="webInfo-itemfull">
                             <dt>설 명</dt>
@@ -125,10 +133,10 @@
                             <dt>프로필</dt>
                             <dd class="profile-chage">
                                 <form action="" class="group-imgChange">
-                                    <input type="file" id="imageChange">
+                                    <input type="file" id="imageChange" name="profileImage" accept="image/*" onchange="previewImage(event)">
                                     <label for="imageChange" class="imgbox">
                                         <i class="bi bi-plus-lg"></i>
-                                        <img src="${study.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
+                                        <img id="profilePreview" src="${study.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
                                     </label>
                                 </form>
                                 <div class="profile-change">
@@ -299,6 +307,18 @@
 
 </div>
 <script>
+
+    function previewImage(event) {
+        const preview = document.getElementById('profilePreview');
+        if (event.target.files && event.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
     function modalOpen() {
         document.getElementById('modal-container').classList.remove('unstaged');
     }
@@ -325,8 +345,17 @@
 
     function submitUpdateForm() {
         if (confirm('수정하시겠습니까?')) {
+            const imageChangeInput = document.getElementById('imageChange');
+            if (!imageChangeInput.value) { // Check if new image is not provided
+                const currentImageInput = document.createElement('input'); // Create new hidden input
+                currentImageInput.type = 'hidden';
+                currentImageInput.name = 'profileImage';
+                currentImageInput.value = document.getElementsByName('currentImage')[0].value; // Use current image value
+                document.getElementById('updateForm').appendChild(currentImageInput); // Append hidden input to form
+            }
             document.getElementById('updateForm').submit();
         }
+
     }
 
     //좋아요 버튼

@@ -5,8 +5,8 @@
 }
 .swiper-slide {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;  /* Align items to the top of the slide */
+    justify-content: flex-start; /* Align items to the left of the slide */
     font-size: 20px;
     text-align: center;
 }
@@ -79,6 +79,9 @@
 .banner-content{
     text-align: left;
     height: 45px;
+    overflow: hidden; /* Hide overflow if text is too long */
+    text-overflow: ellipsis; /* Add ellipsis (...) to indicate overflow */
+    white-space: nowrap;  /* Prevent text from wrapping to multiple lines */
 }
 .control-button{
     position: absolute;

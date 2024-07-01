@@ -17,10 +17,59 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <script>
+        function modalOpen() {
+            document.getElementById('modal-container').classList.remove('unstaged');
+        }
+
+        function modalClose() {
+            document.getElementById('modal-container').classList.add('unstaged');
+        }
+        // 이미지 미리보기 함수 추가
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('profilePreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
         function updateStudyGroup() {
-            if (confirm('수정하시겠습니까?')) {
-                document.getElementById('updateForm').submit();
+            var formData = new FormData();
+            formData.append('studyIdx', ${studyGroup.studyIdx});
+            formData.append('descriptionTitle', document.getElementsByName('descriptionTitle')[0].value);
+            formData.append('description', document.getElementsByName('description')[0].value);
+            formData.append('category', document.querySelector('input[name="category"]:checked').value);
+            formData.append('age', document.querySelector('input[name="age"]:checked').value);
+            formData.append('gender', document.querySelector('input[name="gender"]:checked').value);
+            formData.append('studyOnline', document.querySelector('input[name="studyOnline"]:checked').value);
+
+            var imageFile = document.getElementById('imageChange').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
             }
+
+            $.ajax({
+                url: '${root}/studyGroup/updateStudyGroup',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('스터디가 수정되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('스터디 수정에 실패했습니다: ' + response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error updating study group:', errorThrown);
+                    alert('스터디 수정 중 오류가 발생했습니다.');
+                }
+            });
         }
     </script>
 </head>
@@ -59,13 +108,12 @@
                 </div>
                 <%--탭 메뉴 끝--%>
                 <%--탭 상세--%>
-                <form id="updateForm" action="${root}/studyGroup/updateStudyGroup" method="post">
-                    <sec:csrfInput /> <%-- CSRF 토큰 추가 --%>
+                <div id="updateForm">
                     <input type="hidden" name="studyIdx" value="${studyGroup.studyIdx}" />
                     <div class="tabInfo">
                         <div class="webInfo-itemfull">
                             <dt>스터디명</dt>
-                            <dd><input class="manager-studyName" name="descriptionTitle" value="${studyGroup.descriptionTitle}" title="스터디명"></dd>
+                            <dd><input class="manager-studyName" name="descriptionTitle" value="${studyGroup.descriptionTitle}" title="스터디명" disabled></dd>
                         </div>
                         <div class="webInfo-itemfull">
                             <dt>설 명</dt>
@@ -76,13 +124,11 @@
                         <div class="webInfo-itemfull">
                             <dt>프로필</dt>
                             <dd class="profile-chage">
-                                <form action="" class="group-imgChange">
-                                    <input type="file" id="imageChange">
-                                    <label for="imageChange" class="imgbox">
-                                        <i class="bi bi-plus-lg"></i>
-                                        <img src="${studyGroup.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
-                                    </label>
-                                </form>
+                                <input type="file" id="imageChange" onchange="previewImage(event)">
+                                <label for="imageChange" class="imgbox">
+                                    <i class="bi bi-plus-lg"></i>
+                                    <img id="profilePreview" src="${studyGroup.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
+                                </label>
                                 <div class="profile-change">
                                     <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
                                     <p>(300px X 300px / 500kb 미만)</p>
@@ -221,16 +267,34 @@
                     </div>
                     <div class="board-bottom">
                         <button type="button" class="secondary-default" onclick="location.href='${root}/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
-                        <button type="button" class="primary-default" onclick="updateStudyGroup()">수정</button>
+                        <button type="button" class="primary-default" onclick="modalOpen()">수정</button>
                     </div>
-                </form>
+                </div>
             </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>
+    <!--푸터-->
+    <jsp:include page="../include/footer.jsp" />
+    <jsp:include page="../include/timer.jsp" />
+    <%-- 오류 메세지 모달 --%>
+    <div id="modal-container" class="modal unstaged">
+        <div class="modal-overlay">
+        </div>
+        <div class="modal-contents">
+            <div class="modal-text flex-between">
+                <h4>확인 메세지</h4>
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="modal-center">
+                스터디 관리 정보를 변경하겠습니까?
+            </div>
+            <div class="modal-bottom">
+                <button class="secondary-default" onclick="modalClose()">취소</button>
+                <button type="button" class="modal-close" data-dismiss="modal" onclick="updateStudyGroup()">확인</button>
+            </div>
+        </div>
+    </div>
 </div>
-<!--푸터-->
-<jsp:include page="../include/timer.jsp" />
-<jsp:include page="../include/footer.jsp" />
 </body>
 </html>

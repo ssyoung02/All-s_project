@@ -12,12 +12,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.io.File;
 
 @Controller
 @RequestMapping("/studyGroup")
@@ -63,6 +69,7 @@ public class StudyGroupController {
 
         // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
         List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx, searchKeyword, searchOption);
+       // List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
 
         // 모델에 검색어와 검색 옵션을 추가
         model.addAttribute("searchKeyword", searchKeyword);
@@ -88,6 +95,9 @@ public class StudyGroupController {
 
         StudyGroup study = studyGroupMapper.getStudyById(studyIdx);
         List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+        int currentParticipants = members.size();
+
+        study.setCurrentParticipants(currentParticipants);
 
         // studyGroup의 role 설정
         for (StudyMembers member : members) {
@@ -104,10 +114,16 @@ public class StudyGroupController {
 
     // 스터디 생성을 위한 POST 요청 처리
     @PostMapping("/studyGroupCreate")
-    public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study, BindingResult result, HttpSession session, Principal principal) {
+    public String insertCreateStudyGroup(@ModelAttribute("studyGroup") StudyGroup study,
+                                         @RequestParam("profileImage") MultipartFile profileImage,
+                                         BindingResult result, HttpSession session,
+                                         HttpServletRequest request) throws Exception {
         if (result.hasErrors()) {
             return "studyGroup/studyGroupCreate";
         }
+// 현재 위치 정보 가져오기 (JavaScript에서 받아온 값 사용)
+        double latitude = Double.parseDouble(request.getParameter("latitude"));
+        double longitude = Double.parseDouble(request.getParameter("longitude"));
 
         Users user = (Users) session.getAttribute("userVo");
         Long userIdx = user.getUserIdx();
@@ -119,6 +135,33 @@ public class StudyGroupController {
         study.setEndDate(new Date());
         study.setStatus(StudyStatus.RECRUITING);
         study.setCreatedAt(new Date());
+        study.setLatitude(latitude);
+        study.setLongitude(longitude);
+
+        // 프로필 이미지 처리
+        if (profileImage != null && !profileImage.isEmpty()) {
+            String fileName = profileImage.getOriginalFilename();
+            String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toUpperCase();
+
+            // 이미지 파일 확장자 검사
+            if (ext.equals("PNG") || ext.equals("GIF") || ext.equals("JPG") || ext.equals("JPEG")) {
+                String savePath = request.getServletContext().getRealPath("/resources/studyGroupImages");
+
+                // 디렉토리 존재 여부 확인 및 생성
+                File directory = new File(savePath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                File uploadFile = new File(savePath + "/" + fileName);
+                profileImage.transferTo(uploadFile); // 파일 저장
+
+                study.setImage("/resources/studyGroupImages/" + fileName); // 이미지 경로 설정
+            } else {
+                session.setAttribute("error", "이미지 파일만 업로드할 수 있습니다.");
+                return "studyGroup/studyGroupCreate";
+            }
+        }
 
         studyGroupMapper.insertStudy(study);
 
@@ -141,6 +184,7 @@ public class StudyGroupController {
     public String chat(HttpSession session, Principal principal) {
 
         Users user = (Users) session.getAttribute("userVo");
+        System.out.println(user.toString());
         return "studyGroup/chat";
     }
 
@@ -171,6 +215,7 @@ public class StudyGroupController {
         Map<String, Object> response = new HashMap<>();
         try {
             studyGroupMapper.removeMember(studyIdx, userIdx);
+            studyGroupMapper.decrementCurrentParticipants(studyIdx);  // 멤버 탈퇴 시 현재 참가자 수 감소
             response.put("success", true);
         } catch (Exception e) {
             response.put("success", false);
@@ -185,6 +230,7 @@ public class StudyGroupController {
         Map<String, Object> response = new HashMap<>();
         try {
             studyGroupMapper.approveMember(studyIdx, userIdx);
+            studyGroupMapper.incrementCurrentParticipants(studyIdx);  // 멤버 승인 시 현재 참가자 수 증가
             response.put("success", true);
             response.put("message", "가입 승인이 완료되었습니다.");
         } catch (Exception e) {
@@ -260,22 +306,79 @@ public class StudyGroupController {
         return "studyRecruit/recruitReadForm";
     }
 
+    // 스터디 업데이트
     @PostMapping("/updateStudyGroup")
-    public String updateStudyGroup(@ModelAttribute StudyGroup studyGroup) {
-        studyGroupMapper.updateStudy(studyGroup);
+    @ResponseBody
+    public Map<String, Object> updateStudyGroup(@RequestParam("studyIdx") Long studyIdx,
+                                                @RequestParam("descriptionTitle") String descriptionTitle,
+                                                @RequestParam("description") String description,
+                                                @RequestParam("category") String category,
+                                                @RequestParam("age") String age,
+                                                @RequestParam("gender") String gender,
+                                                @RequestParam("studyOnline") boolean studyOnline,
+                                                @RequestParam(value = "image", required = false) MultipartFile image,
+                                                HttpSession session, HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+            studyGroup.setStudyIdx(studyIdx);
+            studyGroup.setDescriptionTitle(descriptionTitle);
+            studyGroup.setDescription(description);
+            studyGroup.setCategory(category);
+            studyGroup.setAge(age);
+            studyGroup.setGender(gender);
+            studyGroup.setStudyOnline(studyOnline);
 
-        // 수정된 내용 콘솔에 출력
-        System.out.println("Updated Study Group:");
-        System.out.println("Description Title: " + studyGroup.getDescriptionTitle());
-        System.out.println("Description: " + studyGroup.getDescription());
-        System.out.println("Category: " + studyGroup.getCategory());
-        System.out.println("Age: " + studyGroup.getAge());
-        System.out.println("Gender: " + studyGroup.getGender());
-        System.out.println("Study Online: " + studyGroup.isStudyOnline());
+            if (image != null && !image.isEmpty()) {
+                String savePath = request.getServletContext().getRealPath("/resources/studyGroupImages");
+                File directory = new File(savePath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+                String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+                File uploadFile = new File(savePath + "/" + fileName);
+                image.transferTo(uploadFile); // 파일 저장
+                studyGroup.setImage("/resources/studyGroupImages/" + fileName); // 이미지 경로 설정
+            }
 
-        return "redirect:/studyGroup/studyGroupManagerInfo?studyIdx=" + studyGroup.getStudyIdx();
+            studyGroupMapper.updateStudyGroup(studyGroup);
+            response.put("success", true);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return response;
     }
 
+    private String saveImage(MultipartFile image, HttpSession session) {
+        // 이미지 저장 로직 구현 (파일 시스템 또는 클라우드 스토리지 사용)
+        // 예: 파일 시스템에 저장 후 URL 반환
+        String imagePath = "/images/" + image.getOriginalFilename();
+        // 실제 파일 저장 코드 필요
+        return imagePath;
+    }
+
+    @PostMapping("/updateStudyGroupInfo")
+    @ResponseBody
+    public Map<String, Object> updateStudyGroupInfo(@RequestParam("studyIdx") Long studyIdx,
+                                                @RequestParam("studyTitle") String studyTitle,
+                                                @RequestParam("description") String description) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
+            studyGroup.setStudyTitle(studyTitle);
+            studyGroup.setDescription(description);
+
+            studyGroupMapper.updateStudyGroupInfo(studyGroup);
+            response.put("success", true);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return response;
+    }
     // 알림 정보
     @ResponseBody
     @PostMapping("/getAlarmInfo")
