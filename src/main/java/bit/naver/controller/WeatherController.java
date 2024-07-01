@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ public class WeatherController {
     private WeatherService weatherService;
 
     @GetMapping("/weather")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, Object>> getWeather(
             @RequestParam(value = "lat", required = false) Double lat,
             @RequestParam(value = "lon", required = false) Double lon,
@@ -48,4 +50,5 @@ public class WeatherController {
 
         return ResponseEntity.ok(weatherData);
     }
+
 }

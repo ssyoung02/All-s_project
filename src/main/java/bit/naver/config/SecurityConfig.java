@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                         "/webapp/resources/js/**", "/", "/main", "/about", "/weather", "/include/**").permitAll()
                 .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                         "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
-                        , "/access-denied").permitAll()
+                        , "/access-denied", "User/userLocation").permitAll()
                     .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
                     .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용

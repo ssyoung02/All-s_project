@@ -3,6 +3,7 @@ package bit.naver.service;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -17,7 +18,8 @@ import java.net.HttpURLConnection;
 @Service
 public class WeatherService {
 
-    private static final String API_KEY = "f459549b7410cbc4f022951538091643"; // OpenWeatherMap API 키
+    @Value("${openweathermap.api.key}")
+    private String apiKey;
 
     public Map<String, Object> getCurrentWeather(String location) {
         return fetchWeatherData("q=" + location);
@@ -31,9 +33,10 @@ public class WeatherService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            String apiUrl = "https://api.openweathermap.org/data/2.5/weather?" + query + "&appid=" + API_KEY + "&units=metric&lang=kr";
+            String apiUrl = "https://api.openweathermap.org/data/2.5/weather?" + query + "&appid=" + apiKey + "&units=metric&lang=kr";
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("x-api-key", apiKey);
             conn.setRequestMethod("GET");
 
             // API 응답 읽기
@@ -58,7 +61,7 @@ public class WeatherService {
             String locationName = (String) jsonObject.get("name");   // 지역 정보 추출
 
             result.put("temperature", temperature);
-            result.put("location", locationName);
+            //result.put("location", locationName);
             result.put("icon", getWeatherIconUrl(iconCode)); // 아이콘 URL 추가
         } catch (Exception e) {
             e.printStackTrace();

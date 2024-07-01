@@ -33,6 +33,9 @@ public class MainController {
     @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
     private String kakaoMapApiKey;
 
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
+
     @Autowired
     private NotificationMapper notificationMapper;
 
@@ -90,7 +93,7 @@ public class MainController {
 
             Long userIdx = user.getUserIdx();
         }
-        //model.addAttribute("kakaoMapApiKey", kakaoMapApiKey);
+        model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "/include/header";
     }
 
