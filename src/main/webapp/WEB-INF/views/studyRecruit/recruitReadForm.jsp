@@ -16,6 +16,12 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <style>
+        .modal-contents{
+            left: 24%;
+            top: 25%;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
@@ -280,9 +286,8 @@
 거주지(또는 직장):
 성별:
 나이:
-신청이유:
-</textarea>
-                    <input type="hidden" name="studyIdx" value="${study.studyIdx}">
+신청이유:"></textarea>
+                    <input type= "hidden" name="studyIdx" value="${study.studyIdx}">
                 </form>
             </div>
             <div class="modal-bottom">

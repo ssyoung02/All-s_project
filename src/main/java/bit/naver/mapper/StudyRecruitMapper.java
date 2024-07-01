@@ -12,9 +12,9 @@ import java.util.List;
 public interface StudyRecruitMapper {
 
     // 스터디 모집 리스트
-    List<StudyGroup> getAllStudies(@Param("userIdx") long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
+    List<StudyGroup> getAllStudies(@Param("userIdx") long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption, @Param("limits") int limits);
 
-    // 18개 리밋
+    // 9개 리밋
 //    List<StudyGroup> getAllStudy_9();   ///// ??????????????
     List<StudyGroup> getAllStudy_9(@Param("userIdx") long userIdx);
 

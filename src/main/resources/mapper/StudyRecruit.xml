@@ -66,6 +66,7 @@
             sg.study_leader_idx AS studyLeaderIdx,
             sg.study_title AS studyTitle,
             sg.description_title AS descriptionTitle,
+            #{limits}   AS limits,
             sg.likes_count AS likesCount,
             sg.report_count AS reportCount,
             sg.description AS description,
@@ -83,7 +84,9 @@
             sg.status AS status,
             sg.created_at AS createdAt,
             u.name AS leaderName,
-            IFNULL(lr.study_idx, 0) AS isLike
+            IFNULL(lr.study_idx, 0) AS isLike,
+            COUNT(*) OVER () AS TOTALCOUNT
+
         FROM
             Studies sg
               LEFT JOIN Users u
@@ -106,6 +109,8 @@
                 AND name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
         </where>
+        ORDER BY createdAt DESC
+        LIMIT 0, ${limits}
     </select>
 
     <select id="getStudyById" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyGroup">
