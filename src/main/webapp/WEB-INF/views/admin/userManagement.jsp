@@ -89,7 +89,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -193,7 +192,7 @@
     </section>
     <!--푸터-->
     <jsp:include page="../include/footer.jsp" />
-
+    <jsp:include page="../include/timer.jsp" />
 </div>
 </body>
 </html>

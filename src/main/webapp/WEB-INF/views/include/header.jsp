@@ -1,10 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="userVo" value="${sessionScope.userVo}"/>
 <c:set var="userVoUpdatedProfile" value="${sessionScope.userVoUpdated}"/>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
-
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <!-- 헤더 영역 -->
@@ -69,6 +68,36 @@
         }
     </script>
 
+    <style>
+        /* Delete button style */
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 1px 1px; /* 패딩 조정 */
+            margin-left: 5px; /* 좌측 여백 줄임 */
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .delete-btn i {
+            margin-right: 3px; /* 아이콘과 텍스트 사이 간격 줄임 */
+        }
+
+        .new-mark {
+            transition: color 0.3s ease;
+            color: initial; /* 기본 색상 */
+        }
+
+        .new-mark.alert {
+            color: red !important; /* 경고 시 색상 */
+        }
+    </style>
+
     <!--스킵 내비게이션-->
     <div id="skipnav">
         <a href="#content">본문 바로가기</a>
@@ -121,7 +150,7 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
+                    <span class="new-mark"  id="newMark"><i class="bi bi-circle-fill"></i></span>
                 </a>
                 <!-- 알림 영역 -->
                 <div class="alarm flex-colum hidden">
@@ -143,31 +172,8 @@
                     </div>
                     <div class="alarmList">
                         <h3>알림 내역</h3>
-                        <ul>
-                            <li>
-                                <a href="#">
-                                    <i class="bi bi-person-plus"></i>
-                                    1건의 가입신청이 존재합니다
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="bi bi-bell"></i>
-                                    회원 등급이 상승했습니다
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="bi bi-filter-square"></i>
-                                    댓글이 달렸습니다
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="bi bi-filter-square"></i>
-                                    좋아요가 눌렸습니다
-                                </a>
-                            </li>
+                        <ul id="alarmList">
+                            <!-- 여기에서 알림 항목이 동적으로 추가될 것입니다 -->
                         </ul>
                     </div>
                     <!-- 로그아웃 버튼 -->
@@ -185,7 +191,106 @@
                 <span class="hide">메뉴 열기</span>
             </button>
             <!-- 공부 시작 버튼 -->
-            <button id="m-timestart" class="primary-default" onclick="timerOpen()">공부 시작</button>
+            <!-- 로그인하지 않은 경우 -->
+            <sec:authorize access="isAnonymous()">
+                <button class="m-timestart button-disabled timestart" onclick="alert('로그인 후 이용해주세요')">공부 시작</button>
+            </sec:authorize>
+            <!-- 로그인한 경우 -->
+            <sec:authorize access="isAuthenticated()">
+                <button class="m-timestart primary-default" onclick="timerOpen()">공부 시작</button>
+            </sec:authorize>
         </div>
     </div>
+    <meta name="_csrf" content="${_csrf.token}">
+    <meta name="_csrf_header" content="${_csrf.headerName}">
 </header>
+<script>
+    $(document).ready(function () {
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        // 페이지 로드 시 및 매 3초마다 알림을 가져옴
+        getAlarm();
+        setInterval(() => {
+            getAlarm();
+        }, 3000);
+
+        function getAlarm() {
+            $.ajax({
+                type: "POST",
+                url: "/studyGroup/getAlarmInfo",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (res) {
+                    console.log(res); // 응답 데이터 출력
+                    var alarmList = $("#alarmList");
+                    alarmList.empty();  // 기존 알림 목록 비우기
+
+                    if (res && res.length > 0) {
+                        var msg = "";
+                        for (var i = 0; i < res.length; i++) {
+                            var link = '';
+                            var text = res[i].alarmMessage;
+                            if (res[i].notifyType === 'STUDY_INVITE') {
+                                link = '/studyGroup/studyGroupManagerMember?studyIdx=' + res[i].studyIdx;
+                            } else if (res[i].notifyType === 'NEW_COMMENT') {
+                                link = '/studyReferences/referencesRead?referenceIdx=' + res[i].referenceIdx;
+                            }
+                            msg += '<li>' +
+                                '<a class="dropdown-item" id="' + res[i].notificationIdx + '" href="' + link + '">' + text + '</a>' +
+                                '<button class="delete-btn" data-notification-idx="' + res[i].notificationIdx + '">삭제</button>' +
+                                '</li>';
+                        }
+                        alarmList.html(msg);
+
+                        changeNewMarkColor(true); // 알림이 있을 때 색 변경
+
+                        // 삭제 버튼 클릭 이벤트 핸들러
+                        $(".delete-btn").on("click", function (e) {
+                            e.preventDefault();
+                            var notificationIdx = $(this).data("notification-idx");
+                            deleteNotification(notificationIdx);
+                        });
+
+                    } else {
+                        alarmList.html("<li style='margin-left:20px;'>알람이 없습니다.</li>");
+                        changeNewMarkColor(false); // 알림이 없을 때 기본 색상으로 변경
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("알림을 가져오는 동안 오류가 발생했습니다: ", error);
+                }
+            });
+        }
+
+        function deleteNotification(notificationIdx) {
+            $.ajax({
+                type: "POST",
+                url: "/studyGroup/deleteNotification/" + notificationIdx,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // 성공적으로 삭제된 경우 알림 다시 가져오기
+                        getAlarm();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("알림 삭제 중 오류가 발생했습니다: ", error);
+                }
+            });
+        }
+
+        function changeNewMarkColor(hasAlarm) {
+            var newMark = document.getElementById('newMark');
+
+            if (hasAlarm) {
+                newMark.classList.add('alert');
+            } else {
+                newMark.classList.remove('alert');
+            }
+        }
+    });
+</script>

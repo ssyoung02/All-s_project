@@ -60,9 +60,10 @@ public class StudyGroup {
 
     private Integer isLike;
 
+    private String TOTALCOUNT;
+
     private Long userIdx;
 
 
-
-
+    public String role;
 }

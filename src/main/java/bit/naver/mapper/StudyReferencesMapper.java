@@ -53,4 +53,6 @@ public interface StudyReferencesMapper {
     // 개별 게시글 삭제
     void deleteStudyReference(@Param("referenceIdx") Long referenceIdx);
 
+    Long getStudyReferenceByUserIdx(@Param("referenceIdx") Long referenceIdx);
+
 }
