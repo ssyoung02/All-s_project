@@ -6,9 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -23,6 +26,7 @@ public class SmarteditorController {
     @RequestMapping(value="/multiImageUpload")
     public void smarteditorMultiImageUpload(HttpServletRequest request, HttpServletResponse response){
 
+        //파일이 저장되는 경로
         String web_path = "/resources/upload/";
         String path = application.getRealPath(web_path);
 
@@ -92,6 +96,10 @@ public class SmarteditorController {
                 outputStream.flush();
                 outputStream.close();
 
+
+                // 이미지 리사이징
+                resizeImage(rlFileNm, rlFileNm, 700, 500);
+
                 ///////////////// 이미지 /////////////////
                 // 정보 출력
                 sFileInfo += "&bNewLine=true";
@@ -106,5 +114,39 @@ public class SmarteditorController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void resizeImage(String inputImagePath, String outputImagePath, int maxWidth, int maxHeight) throws IOException {
+        // 원본 이미지 읽기
+        File inputFile = new File(inputImagePath);
+        BufferedImage originalImage = ImageIO.read(inputFile);
+
+        // 원본 이미지 크기
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+
+        // 새로운 이미지 크기 계산
+        int newWidth = originalWidth;
+        int newHeight = originalHeight;
+
+        if (originalWidth > maxWidth) {
+            newWidth = maxWidth;
+            newHeight = (newWidth * originalHeight) / originalWidth;
+        }
+
+        if (newHeight > maxHeight) {
+            newHeight = maxHeight;
+            newWidth = (newHeight * originalWidth) / originalHeight;
+        }
+
+        // 새로운 이미지 만들기
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        graphics2D.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+        graphics2D.dispose();
+
+        // 새로운 이미지 파일로 저장
+        String formatName = outputImagePath.substring(outputImagePath.lastIndexOf(".") + 1);
+        ImageIO.write(resizedImage, formatName, new File(outputImagePath));
     }
 }
