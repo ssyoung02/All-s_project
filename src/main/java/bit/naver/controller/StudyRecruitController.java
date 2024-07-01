@@ -100,7 +100,6 @@ public class StudyRecruitController {
 
         Long leaderIdx = groupMapper.getStudyLeaderIdx(studyIdx);
 
-        System.out.println(leaderIdx);
         NotificationEntity notification = new NotificationEntity();
         notification.setStudyIdx(studyIdx);
         notification.setLeaderIdx(leaderIdx);

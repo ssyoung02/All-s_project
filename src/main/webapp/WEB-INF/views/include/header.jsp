@@ -9,6 +9,36 @@
 
 <!-- 헤더 영역 -->
 <header>
+    <style>
+        /* Delete button style */
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 1px 1px; /* 패딩 조정 */
+            margin-left: 5px; /* 좌측 여백 줄임 */
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .delete-btn i {
+            margin-right: 3px; /* 아이콘과 텍스트 사이 간격 줄임 */
+        }
+
+        .new-mark {
+            transition: color 0.3s ease;
+            color: initial; /* 기본 색상 */
+        }
+
+        .new-mark.alert {
+            color: red !important; /* 경고 시 색상 */
+        }
+    </style>
+
     <!--스킵 내비게이션-->
     <div id="skipnav">
         <a href="#content">본문 바로가기</a>
@@ -55,57 +85,57 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <span class="new-mark"><i class="bi bi-circle-fill"></i></span>
+                    <span class="new-mark" id="newMark"><i class="bi bi-circle-fill"></i></span>
                 </a>
-                    <!-- 알림 영역 -->
-                    <div class="alarm flex-colum hidden">
-                        <div>
-                            <div class="profile-img">
-                                <c:choose>
-                                    <c:when test="${not empty userVoUpdatedProfile}">
-                                        <img src="${userVoUpdatedProfile}?t=${System.currentTimeMillis()}" alt="Profile Image">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="${userVo.profileImage}?t=${System.currentTimeMillis()}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';" alt="Profile Image">
-                                    </c:otherwise>
-                                </c:choose>                            </div>
-                            <p class="profile-username">${userVo.name}</p>
+                <!-- 알림 영역 -->
+                <div class="alarm flex-colum hidden">
+                    <div>
+                        <div class="profile-img">
+                            <c:choose>
+                                <c:when test="${not empty userVoUpdatedProfile}">
+                                    <img src="${userVoUpdatedProfile}?t=${System.currentTimeMillis()}" alt="Profile Image">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${userVo.profileImage}?t=${System.currentTimeMillis()}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';" alt="Profile Image">
+                                </c:otherwise>
+                            </c:choose>
                         </div>
-                        <div class="alarmList">
-                            <h3>알림 내역</h3>
-                            <ul id="alarmList">
-                                <!-- 여기에서 알림 항목이 동적으로 추가될 것입니다 -->
-                            </ul>
-                        </div>
-                        <!-- 로그아웃 버튼 -->
-                        <form method="POST" action="${root}/Users/logout">
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                            <button class="secondary-default" type="submit">로그아웃</button>
-                        </form>
+                        <p class="profile-username">${userVo.name}</p>
                     </div>
-                </sec:authorize>
-            </div>
-            <!-- 모바일 사이즈 메뉴 -->
-            <div class="m-size-nav">
-                <button class="secondary-default menu-open">
-                    <i class="bi bi-list"></i>
-                    <span class="hide">메뉴 열기</span>
-                </button>
-                <!-- 공부 시작 버튼 -->
-                <!-- 로그인하지 않은 경우 -->
-                <sec:authorize access="isAnonymous()">
-                    <button class="m-timestart button-disabled timestart" onclick="alert('로그인 후 이용해주세요')">공부 시작</button>
-                </sec:authorize>
-                <!-- 로그인한 경우 -->
-                <sec:authorize access="isAuthenticated()">
-                    <button class="m-timestart primary-default" onclick="timerOpen()">공부 시작</button>
-                </sec:authorize>
-
-            </div>
+                    <div class="alarmList">
+                        <h3>알림 내역</h3>
+                        <ul id="alarmList">
+                            <!-- 여기에서 알림 항목이 동적으로 추가될 것입니다 -->
+                        </ul>
+                    </div>
+                    <!-- 로그아웃 버튼 -->
+                    <form method="POST" action="${root}/Users/logout">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                        <button class="secondary-default" type="submit">로그아웃</button>
+                    </form>
+                </div>
+            </sec:authorize>
         </div>
+        <!-- 모바일 사이즈 메뉴 -->
+        <div class="m-size-nav">
+            <button class="secondary-default menu-open">
+                <i class="bi bi-list"></i>
+                <span class="hide">메뉴 열기</span>
+            </button>
+            <!-- 공부 시작 버튼 -->
+            <!-- 로그인하지 않은 경우 -->
+            <sec:authorize access="isAnonymous()">
+                <button class="m-timestart button-disabled timestart" onclick="alert('로그인 후 이용해주세요')">공부 시작</button>
+            </sec:authorize>
+            <!-- 로그인한 경우 -->
+            <sec:authorize access="isAuthenticated()">
+                <button class="m-timestart primary-default" onclick="timerOpen()">공부 시작</button>
+            </sec:authorize>
+        </div>
+    </div>
     <meta name="_csrf" content="${_csrf.token}">
     <meta name="_csrf_header" content="${_csrf.headerName}">
-    </header>
+</header>
 <script>
     $(document).ready(function () {
         const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -116,37 +146,83 @@
         setInterval(() => {
             getAlarm();
         }, 3000);
+
         function getAlarm() {
             $.ajax({
                 type: "POST",
                 url: "/studyGroup/getAlarmInfo",
-                beforeSend: function(xhr) {
+                beforeSend: function (xhr) {
                     xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function (res) {
-                    console.log("알림 정보 가져오기 성공:", res); // 디버깅 로그 추가
+                    console.log(res); // 응답 데이터 출력
                     var alarmList = $("#alarmList");
                     alarmList.empty();  // 기존 알림 목록 비우기
 
                     if (res && res.length > 0) {
                         var msg = "";
                         for (var i = 0; i < res.length; i++) {
-                            msg += "<li><a class='dropdown-item' id='" + res[i].notificationIdx + "' href='/studyGroup/studyGroupManagerMember?studyIdx=" + res[i].studyIdx + "'>" + res[i].alarmMessage + "</a></li>";
-
+                            var link = '';
+                            var text = res[i].alarmMessage;
+                            if (res[i].notifyType === 'STUDY_INVITE') {
+                                link = '/studyGroup/studyGroupManagerMember?studyIdx=' + res[i].studyIdx;
+                            } else if (res[i].notifyType === 'NEW_COMMENT') {
+                                link = '/studyReferences/referencesRead?referenceIdx=' + res[i].referenceIdx;
+                            }
+                            msg += '<li>' +
+                                '<a class="dropdown-item" id="' + res[i].notificationIdx + '" href="' + link + '">' + text + '</a>' +
+                                '<button class="delete-btn" data-notification-idx="' + res[i].notificationIdx + '">삭제</button>' +
+                                '</li>';
                         }
                         alarmList.html(msg);
-                        $("#alarm").css("color", "red");
+
+                        changeNewMarkColor(true); // 알림이 있을 때 색 변경
+
+                        // 삭제 버튼 클릭 이벤트 핸들러
+                        $(".delete-btn").on("click", function (e) {
+                            e.preventDefault();
+                            var notificationIdx = $(this).data("notification-idx");
+                            deleteNotification(notificationIdx);
+                        });
 
                     } else {
-                        alarmList.html(`<li style='margin-left:20px;'>알람이 없습니다.</li>`);
-                        $("#alarm").css("background-color", "");
-
+                        alarmList.html("<li style='margin-left:20px;'>알람이 없습니다.</li>");
+                        changeNewMarkColor(false); // 알림이 없을 때 기본 색상으로 변경
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error("알림을 가져오는 동안 오류가 발생했습니다: ", error);
                 }
             });
+        }
+
+        function deleteNotification(notificationIdx) {
+            $.ajax({
+                type: "POST",
+                url: "/studyGroup/deleteNotification/" + notificationIdx,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // 성공적으로 삭제된 경우 알림 다시 가져오기
+                        getAlarm();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("알림 삭제 중 오류가 발생했습니다: ", error);
+                }
+            });
+        }
+
+        function changeNewMarkColor(hasAlarm) {
+            var newMark = document.getElementById('newMark');
+
+            if (hasAlarm) {
+                newMark.classList.add('alert');
+            } else {
+                newMark.classList.remove('alert');
+            }
         }
     });
 </script>

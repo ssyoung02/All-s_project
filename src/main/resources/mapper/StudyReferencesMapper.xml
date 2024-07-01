@@ -211,4 +211,12 @@
     <select id="countReportedStudyReferences" resultType="int">
         SELECT COUNT(*) FROM StudyReferences WHERE report_count > 0
     </select>
+
+
+    <select id="getStudyReferenceByUserIdx" resultType="Long">
+        SELECT
+               user_idx              AS userIdx
+        FROM StudyReferences
+        WHERE reference_idx = #{referenceIdx}
+    </select>
 </mapper>

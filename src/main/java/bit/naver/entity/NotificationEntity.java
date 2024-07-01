@@ -15,6 +15,8 @@ public class NotificationEntity {
 
     private Long studyIdx;
 
+    private Long referenceIdx;
+
     private NotifyType notifyType;
 
     private LocalDateTime createdAt;

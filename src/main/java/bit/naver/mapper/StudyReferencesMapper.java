@@ -49,4 +49,7 @@ public interface StudyReferencesMapper {
 
     // 신고된 게시글 개수 조회
     int countReportedStudyReferences();
+
+    Long getStudyReferenceByUserIdx(@Param("referenceIdx") Long referenceIdx);
+
 }
