@@ -81,18 +81,17 @@ public class MainController {
             Users userVo = (Users) session.getAttribute("userVo");
             System.out.println(userVo);
             session.setAttribute("userVo", userVo);
-            return "/include/header";
-        }else{
-        String username = principal.getName();
-        Users user = usersMapper.findByUsername(username);
-        model.addAttribute("user", user);
-        session.setAttribute("userVo", user);
 
-        Long userIdx = user.getUserIdx();
+        }else {
+            String username = principal.getName();
+            Users user = usersMapper.findByUsername(username);
+            model.addAttribute("user", user);
+            session.setAttribute("userVo", user);
 
-
-        return "/include/header";
+            Long userIdx = user.getUserIdx();
         }
+        //model.addAttribute("kakaoMapApiKey", kakaoMapApiKey);
+        return "/include/header";
     }
 
     @RequestMapping("/include/footer")

@@ -280,9 +280,8 @@
 거주지(또는 직장):
 성별:
 나이:
-신청이유:
-</textarea>
-                    <input type="hidden" name="studyIdx" value="${study.studyIdx}">
+신청이유:"></textarea>
+                    <input type= "hidden" name="studyIdx" value="${study.studyIdx}">
                 </form>
             </div>
             <div class="modal-bottom">

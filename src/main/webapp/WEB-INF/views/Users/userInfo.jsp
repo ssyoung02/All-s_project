@@ -75,7 +75,7 @@
                             </ul>
                             <ul class="userItem">
                                 <li><b>등급</b></li>
-                                <li>${userVo.gradeIdx}</li>
+                                <li>${userVo.gradeName}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>SNS 연동</b></li>

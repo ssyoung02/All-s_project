@@ -40,13 +40,15 @@
                     <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required >
                 </div>
             </div>
-            <%--<div class="idpwsearch">
+<%--
+            <div class="idpwsearch">
                 <a href="#">아이디/비밀번호 찾기</a>
             </div>
             <div class="remember-me">
                 <input type="checkbox" id="remember-me" name="remember-me">
                 <label for="remember-me">로그인 상태 유지</label> &lt;%&ndash; Remember-Me 체크박스 추가 &ndash;%&gt;
-            </div>--%>
+            </div>
+--%>
             <button class="loginbutton primary-default" type="submit">로그인</button>
             <div class="orline flex-row">
                 <hr>

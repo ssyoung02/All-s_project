@@ -109,6 +109,7 @@
 
 <body>
 <!-- 중앙 컨테이너 -->
+<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
     <section class="mainContainer">
@@ -336,6 +337,8 @@
         </div>
     </div>
 
+    <jsp:include page="include/footer.jsp"/>
+
 </div>
 <script>
     //주간 그래프
@@ -436,6 +439,7 @@
         });
 
 </script>
+
 <script>
     $(document).ready(function () {
         if (${param.error}) {
@@ -795,7 +799,5 @@
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-<jsp:include page="include/footer.jsp"/>
-<jsp:include page="include/timer.jsp"/>
 </body>
 </html>

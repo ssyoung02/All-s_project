@@ -7,10 +7,12 @@ import bit.naver.mapper.StudyRecruitMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
@@ -66,7 +68,7 @@ public class StudyGroupController {
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("searchOption", searchOption);
         model.addAttribute("userIdx",userIdx );
-        // 모델에 사용자 스터디 목록 추가
+
         model.addAttribute("myStudies", myStudies);
 
         return "studyGroup/studyGroupList";
@@ -139,7 +141,6 @@ public class StudyGroupController {
     public String chat(HttpSession session, Principal principal) {
 
         Users user = (Users) session.getAttribute("userVo");
-        System.out.println(user.toString());
         return "studyGroup/chat";
     }
 
@@ -277,13 +278,24 @@ public class StudyGroupController {
 
     // 알림 정보
     @ResponseBody
-    @PostMapping("getAlarmInfo")
+    @PostMapping("/getAlarmInfo")
     public List<NotificationEntity> getAlarmInfo(HttpSession session) {
         Users user = (Users) session.getAttribute("userVo");
 
-
         List<NotificationEntity> data = notificationMapper.getAlarmInfo(user.getUserIdx());
-
         return data;
+    }
+
+    // 알림 삭제 처리
+    @PostMapping("/deleteNotification/{notificationIdx}")
+    @ResponseBody
+    public String deleteNotification(@PathVariable("notificationIdx") Long notificationIdx) {
+        try {
+            notificationMapper.deleteNotification(notificationIdx);
+            return "알림이 성공적으로 삭제되었습니다.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "알림 삭제 중 오류가 발생했습니다.";
+        }
     }
 }

@@ -39,16 +39,18 @@ public class StudyRecruitController {
     @RequestMapping("/recruitList")
     public String getAllStudies(Model model, HttpSession session, Principal principal,
                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                                @RequestParam(value = "searchOption", required = false) String searchOption) {
+                                @RequestParam(value = "searchOption", required = false) String searchOption,
+                                @RequestParam(value = "limits", required = false, defaultValue = "5") int limits) {
         Users user = (Users) session.getAttribute("userVo");
         String username = principal.getName();
         Users users = usersMapper.findByUsername(username);
         Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
 
         // Get studies with userIdx as a parameter
-        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption);
+        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption, limits);
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("searchOption", searchOption);
+        model.addAttribute("limits", limits);
         model.addAttribute("userIdx", userIdx);
         model.addAttribute("studies", studies);
 
@@ -100,7 +102,6 @@ public class StudyRecruitController {
 
         Long leaderIdx = groupMapper.getStudyLeaderIdx(studyIdx);
 
-        System.out.println(leaderIdx);
         NotificationEntity notification = new NotificationEntity();
         notification.setStudyIdx(studyIdx);
         notification.setLeaderIdx(leaderIdx);
