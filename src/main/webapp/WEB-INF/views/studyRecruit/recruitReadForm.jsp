@@ -111,6 +111,7 @@
                 <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post" enctype="multipart/form-data">
                     <sec:csrfInput /> <%-- CSRF 토큰 추가 --%>
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}" />
+                    <input type="hidden" name="currentImage" value="${study.image}" />
                     <div class="tabInfo">
                         <div class="webInfo-itemfull">
                             <dt>모집글 제목</dt>
@@ -343,8 +344,17 @@
 
     function submitUpdateForm() {
         if (confirm('수정하시겠습니까?')) {
+            const imageChangeInput = document.getElementById('imageChange');
+            if (!imageChangeInput.value) { // Check if new image is not provided
+                const currentImageInput = document.createElement('input'); // Create new hidden input
+                currentImageInput.type = 'hidden';
+                currentImageInput.name = 'profileImage';
+                currentImageInput.value = document.getElementsByName('currentImage')[0].value; // Use current image value
+                document.getElementById('updateForm').appendChild(currentImageInput); // Append hidden input to form
+            }
             document.getElementById('updateForm').submit();
         }
+
     }
 
     //좋아요 버튼

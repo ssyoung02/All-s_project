@@ -35,20 +35,41 @@ public class StudyRecruitController {
 
     // 모집글 리스트
     @RequestMapping("/recruitList")
-    public String getAllStudies(Model model, HttpSession session, Principal principal) {
+    public String getAllStudies(@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "RECRUITING") String status,
+                                Model model,
+                                HttpSession session,
+                                Principal principal) {
+
         Users user = (Users) session.getAttribute("userVo");
         String username = principal.getName();
         Users users = usersMapper.findByUsername(username);
         Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
 
+        int pageSize = 10; // 페이지당 스터디 수
+        int offset = (page - 1) * pageSize;
+
         // Get studies with userIdx as a parameter
-        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx);
+        List<StudyGroup> studies = studyMapper.getStudiesPaged(userIdx, status, offset, pageSize);
         for (StudyGroup study : studies) {
             study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
             studyMapper.closeStudyIfFull(study.getStudyIdx()); // Close the study if it's full
         }
+
+        int totalStudies = studyMapper.countAllStudies(userIdx, status);
+        int totalPages = (int) Math.ceil((double) totalStudies / pageSize);
+
+        // 페이지 네비게이션 처리
+        int startPage = Math.max(1, page - 5);
+        int endPage = Math.min(startPage + 9, totalPages);
+
         model.addAttribute("userIdx", userIdx);
         model.addAttribute("studies", studies);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("status", status);
 
         List<StudyGroup> study_18 = studyMapper.getAllStudy_9(userIdx);
         for (StudyGroup study : study_18) {

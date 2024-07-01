@@ -11,6 +11,7 @@
     <title>스터디 모집 > 스터디 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <link rel="stylesheet" href="${root}/resources/css/pagenation.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -124,8 +125,8 @@
                     <%--슬라이더 끝--%>
 
                     <div>
-                        <a href="#" onclick="filterStudies('RECRUITING')">모집 중</a> /
-                        <a href="#" onclick="filterStudies('CLOSED')">모집 마감</a>
+                        <a href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a> /
+                        <a href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
                     </div>
 
                     <div class="recruitList">
@@ -177,6 +178,53 @@
                             </div>
                         </c:forEach>
                     </div>
+
+                    <!-- 페이지네이션 바 시작 -->
+                    <div class="pagination">
+                        <ul>
+                            <c:if test="${status == 'RECRUITING'}">
+                                <c:if test="${startPage > 1}">
+                                    <li><a href="?page=1&status=RECRUITING">&lt;&lt;</a></li>
+                                </c:if>
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href="?page=${currentPage - 1}&status=RECRUITING">&lt;</a></li>
+                                </c:if>
+                                <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                                    <li class="${pageNum == currentPage ? 'active' : ''}">
+                                        <a href="?page=${pageNum}&status=RECRUITING">${pageNum}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${currentPage < totalPages}">
+                                    <li><a href="?page=${currentPage + 1}&status=RECRUITING">&gt;</a></li>
+                                </c:if>
+                                <c:if test="${endPage < totalPages}">
+                                    <li><a href="?page=${totalPages}&status=RECRUITING">&gt;&gt;</a></li>
+                                </c:if>
+                            </c:if>
+
+                            <c:if test="${status == 'CLOSED'}">
+                                <c:if test="${startPage > 1}">
+                                    <li><a href="?page=1&status=CLOSED">&lt;&lt;</a></li>
+                                </c:if>
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href="?page=${currentPage - 1}&status=CLOSED">&lt;</a></li>
+                                </c:if>
+                                <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                                    <li class="${pageNum == currentPage ? 'active' : ''}">
+                                        <a href="?page=${pageNum}&status=CLOSED">${pageNum}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${currentPage < totalPages}">
+                                    <li><a href="?page=${currentPage + 1}&status=CLOSED">&gt;</a></li>
+                                </c:if>
+                                <c:if test="${endPage < totalPages}">
+                                    <li><a href="?page=${totalPages}&status=CLOSED">&gt;&gt;</a></li>
+                                </c:if>
+                            </c:if>
+                        </ul>
+                    </div>
+                    <!-- 페이지네이션 바 끝 -->
+
                 </div>
                 <%--본문 콘텐츠 끝--%>
             </div>
@@ -189,39 +237,11 @@
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
 <script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const statusElements = document.querySelectorAll('.recruit-status');
-
-        statusElements.forEach(element => {
-            const status = element.innerText;
-
-            if (status === 'RECRUITING') {
-                element.innerText = '모집중';
-            } else if (status === 'CLOSED') {
-                element.innerText = '모집마감';
-            }
-        });
+    // 페이지 로드 시 모집 중인 스터디만 표시
+    $(document).ready(function() {
+        filterStudies('RECRUITING');
     });
-
-    function filterStudies(status) {
-        const studyItems = document.querySelectorAll('.recruitItem');
-        studyItems.forEach(item => {
-            if (status === 'RECRUITING' && item.getAttribute('data-status') !== 'RECRUITING') {
-                item.style.display = 'none';
-            } else if (status === 'CLOSED' && item.getAttribute('data-status') !== 'CLOSED') {
-                item.style.display = 'none';
-            } else {
-                item.style.display = 'block';
-            }
-        });
-    }
-
-    function redirectToStudyDetail(studyIdx) {
-        var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
-        window.location.href = url;
-    }
-
+    // 좋아요 토글 기능
     function toggleLike(element, idx) {
         const icon = element.querySelector('i');
         const isLiked = !element.classList.contains('liked');
@@ -264,12 +284,6 @@
             });
         }
     }
-
-    // 페이지 로드 시 기본적으로 모집 중인 스터디만 표시
-    $(document).ready(function() {
-        filterStudies('RECRUITING');
-    });
-
 </script>
 </body>
 </html>

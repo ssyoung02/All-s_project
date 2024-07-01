@@ -61,6 +61,12 @@ public interface StudyRecruitMapper {
     @Update("UPDATE Studies SET status = 'CLOSED' WHERE study_idx = #{studyIdx} AND currentParticipants >= capacity")
     void closeStudyIfFull(Long studyIdx);
 
+    // 스터디 모집 리스트 페이징 및 필터링 처리
+    List<StudyGroup> getStudiesPaged(@Param("userIdx") long userIdx,
+                                     @Param("status") String status,
+                                     @Param("offset") int offset,
+                                     @Param("limit") int limit);
 
-
+    // 전체 스터디 수
+    int countAllStudies(@Param("userIdx") long userIdx, @Param("status") String status);
 }
