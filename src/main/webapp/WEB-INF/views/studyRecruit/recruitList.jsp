@@ -57,7 +57,6 @@
                             </select>
                             <p class="search-field">
                                 <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
                                 <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
@@ -130,7 +129,6 @@
                         <a href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a> /
                         <a href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
                     <div class="list-title flex-between">
-                        <h3>전체 글(${studies[0].TOTALCOUNT})</h3>
                     </div>
 
                     <div class="recruitList">

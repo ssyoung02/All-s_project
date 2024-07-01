@@ -43,7 +43,7 @@ public class StudyRecruitController {
     public String getAllStudies(Model model, HttpSession session, Principal principal,
                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                 @RequestParam(value = "searchOption", required = false) String searchOption,
-        (@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "1") int page,
                                 @RequestParam(defaultValue = "RECRUITING") String status){
         Users user = (Users) session.getAttribute("userVo");
         String username = principal.getName();
@@ -224,4 +224,3 @@ public class StudyRecruitController {
     }
 }
 
-}
