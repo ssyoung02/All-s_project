@@ -93,7 +93,7 @@
                           ON sg.study_idx = lr.study_idx
                               AND lr.user_idx = #{userIdx}
         WHERE
-            sg.status = 'RECRUITING'
+            sg.status IN ('RECRUITING', 'CLOSED')
     </select>
 
     <select id="getStudyById" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyGroup">

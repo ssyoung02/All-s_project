@@ -305,7 +305,7 @@ public class StudyGroupController {
                                                 HttpSession session, HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
-            StudyGroup studyGroup = new StudyGroup();
+            StudyGroup studyGroup = studyGroupMapper.getStudyById(studyIdx);
             studyGroup.setStudyIdx(studyIdx);
             studyGroup.setDescriptionTitle(descriptionTitle);
             studyGroup.setDescription(description);

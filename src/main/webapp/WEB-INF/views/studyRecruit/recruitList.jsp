@@ -18,11 +18,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
-    <style>
-        .recruit-status.closed {
-            color: gray;
-        }
-    </style>
 </head>
 <body>
 <jsp:include page="../include/timer.jsp"/>
@@ -78,7 +73,7 @@
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="banner-bottom flex-between">
                                             <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">${study.status}</span>
                                                 <span class="department">${study.category}</span>
                                             </p>
                                             <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
@@ -194,6 +189,21 @@
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const statusElements = document.querySelectorAll('.recruit-status');
+
+        statusElements.forEach(element => {
+            const status = element.innerText;
+
+            if (status === 'RECRUITING') {
+                element.innerText = '모집중';
+            } else if (status === 'CLOSED') {
+                element.innerText = '모집마감';
+            }
+        });
+    });
+
     function filterStudies(status) {
         const studyItems = document.querySelectorAll('.recruitItem');
         studyItems.forEach(item => {
@@ -254,6 +264,12 @@
             });
         }
     }
+
+    // 페이지 로드 시 기본적으로 모집 중인 스터디만 표시
+    $(document).ready(function() {
+        filterStudies('RECRUITING');
+    });
+
 </script>
 </body>
 </html>

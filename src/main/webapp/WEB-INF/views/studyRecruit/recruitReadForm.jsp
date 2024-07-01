@@ -83,12 +83,19 @@
                     </div>
                     <div class="post-content">${study.description}</div>
                     <div class="buttonBox">
-                        <c:if test="${!isMember}">
-                            <button class="primary-default" onclick="modalOpen()">가입 신청</button>
-                        </c:if>
-                        <c:if test="${isMember}">
-                            <p>이미 가입한 스터디 입니다.</p>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${study.status eq 'CLOSED'}">
+                                <p>모집 마감했습니다.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${!isMember}">
+                                    <button class="primary-default" onclick="modalOpen()">가입 신청</button>
+                                </c:if>
+                                <c:if test="${isMember}">
+                                    <p>이미 가입한 스터디 입니다.</p>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
                 <div class="board-bottom">
