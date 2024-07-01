@@ -209,7 +209,7 @@
                         </div>
                         <div class="loginUserInfoRight">
                             <%--공부시간 차트--%>
-                            <canvas id="studyTimeChart"></canvas>
+                            <canvas id="studyTimeChart" style="max-height: 300px"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
@@ -336,6 +336,8 @@
         </div>
     </div>
 
+    <jsp:include page="include/footer.jsp"/>
+    <jsp:include page="include/timer.jsp"/>
 </div>
 <script>
     //주간 그래프
@@ -436,6 +438,7 @@
         });
 
 </script>
+
 <script>
     $(document).ready(function () {
         if (${param.error}) {
@@ -795,7 +798,5 @@
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-<jsp:include page="include/footer.jsp"/>
-<jsp:include page="include/timer.jsp"/>
 </body>
 </html>

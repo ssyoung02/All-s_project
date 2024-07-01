@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bit.naver.mapper.UsersMapper">
+
+    <resultMap id="UsersResultMap" type="bit.naver.entity.Users">
+        <id property="userIdx" column="user_idx" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="email" column="email" />
+        <result property="name" column="name" />
+        <result property="birthdate" column="birthdate" />
+        <result property="profileImage" column="profile_image" />
+        <result property="enabled" column="enabled" />
+        <result property="gradeIdx" column="grade_idx" />
+        <result property="provider" column="provider" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="gender" column="gender" />
+        <result property="socialLogin" column="social_login" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+    </resultMap>
+
+    <select id="findById" resultMap="UsersResultMap">
+        SELECT * FROM Users WHERE user_idx = #{userIdx}
+    </select>
+
+    <select id="findByUsername" resultMap="UsersResultMap">
+        SELECT * FROM Users WHERE username = #{username}
+    </select>
+
+    <select id="findAll" resultMap="UsersResultMap">
+        SELECT * FROM Users
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userIdx">
+        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at)
+        VALUES (#{username}, #{password}, #{email}, #{name}, #{birthdate}, #{profileImage},
+                #{enabled}, #{gradeIdx}, #{provider}, #{latitude}, #{longitude}, #{gender},
+                #{socialLogin}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="updateUser">
+        UPDATE Users
+        SET username = #{username}, password = #{password}, email = #{email}, name = #{name}, birthdate = #{birthdate}, profile_image = #{profileImage}, enabled = #{enabled}, grade_idx = #{gradeIdx}, provider = #{provider}, latitude = #{latitude}, longitude = #{longitude}, gender = #{gender}, social_login = #{socialLogin}, created_at = #{createdAt}, updated_at = #{updatedAt}
+        WHERE user_idx = #{userIdx}
+    </update>
+
+    <delete id="deleteUser">
+        DELETE FROM Users WHERE user_idx = #{userIdx}
+    </delete>
+
+    <select id="findByEmail" parameterType="String" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM Users
+            WHERE email = #{email}
+        )
+    </select>
+
+</mapper>

@@ -94,6 +94,14 @@
 .topmenu i{
     margin-right: 0.3em;
 }
+#weatherInfo{
+    display: flex;
+    align-items: center;
+}
+#weatherInfo img{
+    width: 60px;
+}
+
 /*프로필 이미지*/
 .profile{
     display: flex;

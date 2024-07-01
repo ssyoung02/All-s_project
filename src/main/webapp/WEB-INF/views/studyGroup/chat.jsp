@@ -131,16 +131,11 @@
                         sendMessage();
                     });
 
-                    // 한 번만 이벤트 리스너 등록
-                    var messageEventRegistered = false;
+                    // 이벤트 리스너 등록
                     socket.on("send_msg", function (data) {
-                        if (!messageEventRegistered) {
-                            messageEventRegistered = true;
-                            console.log(data); // 메시지를 로그로 출력하여 확인
-                            addMessageToChat(data);
-                        }
+                        console.log(data); // 메시지를 로그로 출력하여 확인
+                        addMessageToChat(data);
                     });
-
                 });
             </script>
         </main>

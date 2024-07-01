@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head><sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-
     <title>접근 거부</title>
 </head>
 <body>

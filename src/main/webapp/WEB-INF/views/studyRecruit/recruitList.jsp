@@ -56,6 +56,7 @@
                             </select>
                             <p class="search-field">
                                 <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
+                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
                                 <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
@@ -128,7 +129,7 @@
                     <%--슬라이더 끝--%>
 
                     <div class="list-title flex-between">
-                        <h3>전체 글(${studies.size()})</h3>
+                        <h3>전체 글(${studies[0].TOTALCOUNT})</h3>
                     </div>
 
                     <div class="recruitList">
@@ -170,6 +171,9 @@
                                 </button>
                             </div>
                         </c:forEach>
+                    </div>
+                    <div class="flex-row">
+                        <button class="secondary-default" onclick="loadMore()">목록 더보기</button>
                     </div>
                 </div>
                 <%--본문 콘텐츠 끝--%>
@@ -248,6 +252,22 @@
             });
         }
     }
+
+    function loadMore() {
+        let searchKeyword = document.getElementById('searchInput').value;
+        let searchOption = document.getElementById('searchOption').value;
+        let limits = Number(document.getElementById('limits').value) ;
+
+        let totalCount = '${studies[0].TOTALCOUNT}'
+        if(limits >= Number(totalCount)){
+            alert('더이상 조회할 게시물이 없습니다.');
+
+        }else{
+            limits += 5;
+            location.href="${root}/studyRecruit/recruitList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         var searchInput = document.getElementById("searchInput");
         searchInput.addEventListener("keypress", function (event) {

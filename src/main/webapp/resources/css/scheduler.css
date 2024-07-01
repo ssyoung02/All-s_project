@@ -16,12 +16,6 @@
     width: 33%;
     border: 1px solid #dad8cc;
 }
-.fc-list-event-time{
-    width: 80px; !important;
-    overflow: hidden; !important;
-    text-overflow: ellipsis; !important;
-    white-space: wrap; !important;
-}
 
 .fc-calendarLink-button {
     background-color: #717171 !important;
@@ -61,8 +55,9 @@
 .fc .fc-toolbar-title{
     font-size: 1.5em;
 }
-#dayCalendar .fc-list-event-time{
-    
+.fc .fc-list-event-time{
+    white-space: normal !important;
+    width: 45% !important; /* 또는 원하는 너비 값 */
 }
 
 /*css 병합 작업*/
