@@ -272,7 +272,7 @@
                 <button id="modal-close" class="modal-close" aria-label="닫기" onclick="madalClose()"><i
                         class="bi bi-x-lg"></i></button>
             </div>
-            <div class="modal-center">
+            <div class="modal-center" style="width: 100%">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요

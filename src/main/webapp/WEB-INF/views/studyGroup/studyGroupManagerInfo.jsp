@@ -76,13 +76,11 @@
                         <div class="webInfo-itemfull">
                             <dt>프로필</dt>
                             <dd class="profile-chage">
-                                <form action="" class="group-imgChange">
-                                    <input type="file" id="imageChange">
-                                    <label for="imageChange" class="imgbox">
-                                        <i class="bi bi-plus-lg"></i>
-                                        <img src="${studyGroup.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
-                                    </label>
-                                </form>
+                                <input type="file" id="imageChange">
+                                <label for="imageChange" class="imgbox">
+                                    <i class="bi bi-plus-lg"></i>
+                                    <img src="${studyGroup.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
+                                </label>
                                 <div class="profile-change">
                                     <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
                                     <p>(300px X 300px / 500kb 미만)</p>

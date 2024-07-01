@@ -14,6 +14,8 @@ public interface TimerMapper {
     @Options(useGeneratedKeys = true, keyProperty = "record_idx", keyColumn = "record_idx")
     void insertStartTime(TimerEntity timerEntity);
 
+    int totalStudyTime(int userIdx);
+
     int updateEndTime(TimerEntity timer);
     int updateMemo(TimerEntity timer);
 
@@ -24,4 +26,6 @@ public interface TimerMapper {
     List<TimerEntity> getMonthlyStudyTime(@Param("userIdx") Long userIdx,
                                           @Param("startOfMonth") LocalDate startOfMonth,
                                           @Param("endOfMonth") LocalDate endOfMonth);
+
+    String getGradeIconByTotalStudyTime(int userIdx);
 }

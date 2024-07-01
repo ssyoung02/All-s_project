@@ -260,7 +260,7 @@
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
-                        <div class="flex-between">
+                        <div class="comment-area">
                             <input id="input-comment" type="text" title="댓글입력" placeholder="댓글을 입력해주세요">
                             <button class="primary-default" onclick="submitComment()">댓글 입력</button>
                         </div>

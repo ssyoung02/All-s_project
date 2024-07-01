@@ -68,8 +68,12 @@
                                     <c:otherwise>
                                         <img src="${userVo.profileImage}?t=${System.currentTimeMillis()}" onerror="this.onerror=null; this.src='${root}/resources/profileImages/${userVo.profileImage}';" alt="Profile Image">
                                     </c:otherwise>
-                                </c:choose>                            </div>
-                            <p class="profile-username">${userVo.name}</p>
+                                </c:choose>
+                            </div>
+                            <p class="profile-username">
+                                    ${userVo.name}
+                                <img id="user-grade-icon" src="" style="width: 15px; height: 15px">
+                            </p>
                         </div>
                         <div class="alarmList">
                             <h3>알림 내역</h3>
@@ -149,4 +153,26 @@
             });
         }
     });
+</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        fetchUserGradeIcon();
+    });
+
+        function fetchUserGradeIcon() {
+        const userIdx = ${userVo.userIdx}; // 여기서 userVo.userIdx가 정확히 렌더링되고 있는지 확인합니다.
+        fetch(`/include/userGrades?user_idx=${userVo.userIdx}`)
+        .then(response => {
+        if (response.ok) {
+        return response.text();
+    } else {
+        throw new Error('Network response was not ok.');
+    }
+    })
+        .then(gradeIcon => {
+        console.log('Received gradeIcon:', gradeIcon); // 응답 데이터를 로그에 출력합니다.
+        document.getElementById('user-grade-icon').src = gradeIcon+".png";
+    })
+        .catch(error => console.error('Error fetching user grade icon:', error));
+    }
 </script>

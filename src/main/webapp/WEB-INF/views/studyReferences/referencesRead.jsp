@@ -242,6 +242,7 @@
                         </div>
 
 						<ul class="taglist">
+                            <hr>
 							<!-- 태그 항목 -->
 							<li>
 								<p class="tag-title">첨부파일</p> 

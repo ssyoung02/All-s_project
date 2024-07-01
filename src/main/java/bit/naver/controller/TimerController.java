@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -116,6 +117,12 @@ public class TimerController {
         return response;
     }
 
-
+    @GetMapping("/userGrades")
+    @ResponseBody
+    public String getUserGradeIcon(@RequestParam("user_idx") int userIdx) {
+        String gradeIcon = timerService.getGradeIconByUserIdx(userIdx);
+        System.out.println("gradeIcon : "+gradeIcon);
+        return gradeIcon;
+    }
 
 }

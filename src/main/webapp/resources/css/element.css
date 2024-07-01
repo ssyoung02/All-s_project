@@ -26,6 +26,7 @@ button{
     padding: 0;
     font-size: 1em;
     color: #263238;
+    background: transparent;
 }
 
 input, select{
