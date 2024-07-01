@@ -19,7 +19,6 @@
 
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -47,7 +46,7 @@
                             <div class="studyTagLine">
                                 <label for="studyName"><p class="studyTag-title">스터디명</p></label>
                                 <input type="text" id="studyName" name="descriptionTitle" placeholder="스터디명을 입력해주세요" required>
-                                <button class="duplicate-study">중복체크</button>
+                                <button type="button" class="duplicate-study">중복체크</button>
                             </div>
                             <div class="studyTagLine">
                                 <p class="studyTag-title">프로필</p>
@@ -69,7 +68,7 @@
                                 <li>
                                     <p class="tag-title">지역</p>
                                     <input type="text" placeholder="위치를 선택해주세요" id="locationTag" readonly required>
-                                    <label for="locationTag"><button class="studyTagLocation">지도선택</button></label>
+                                    <label for="locationTag"><button type="button" class="studyTagLocation">지도선택</button></label>
                                 </li>
                                 <li>
                                     <p class="tag-title">모집분야</p>
@@ -161,8 +160,8 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

@@ -5,6 +5,9 @@ body {
     height: 100vh;
     margin: 0;
 }
+#container{
+    min-height: calc(100% - 416px);
+}
 .mainContainer{
     display: grid;
     grid-template-columns: repeat(5, 1fr);

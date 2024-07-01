@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All's</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!--차트-->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -29,8 +30,6 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
-
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=clusterer"></script>
     <script>
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
@@ -91,8 +90,7 @@
                             selectable: false,
                             eventClick: false,
                             locale: 'ko',
-                            height: 'auto', // 높이를 자동으로 조절
-
+                            height: 'auto' // 높이를 자동으로 조절
                         }).render();
                     }
 
@@ -111,7 +109,6 @@
 
 <body>
 <!-- 중앙 컨테이너 -->
-<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
     <section class="mainContainer">
@@ -211,8 +208,8 @@
                             </div>
                         </div>
                         <div class="loginUserInfoRight">
-                                <%--공부시간 차트--%>
-                            <canvas id="studyTimeChart" style="max-width: 200px; max-height: 150px;"></canvas>
+                            <%--공부시간 차트--%>
+                            <canvas id="studyTimeChart" style="max-height: 300px"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
@@ -340,6 +337,7 @@
     </div>
 
     <jsp:include page="include/footer.jsp"/>
+    <jsp:include page="include/timer.jsp"/>
 </div>
 <script>
     //주간 그래프
@@ -439,8 +437,9 @@
             console.error('Fetch error:', error);
         });
 
+</script>
 
-
+<script>
     $(document).ready(function () {
         if (${param.error}) {
             $("#messageContent").text("${error}");
@@ -646,20 +645,20 @@
     // 위치 정보 서버 전송 함수
     function sendLocationToServer(latitude, longitude) {
         // 로그인 여부 확인
-        $.ajax({
-            url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
-            type: 'POST',
-            data: {latitude: latitude, longitude: longitude},
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-            },
-            success: function (response) {
-                console.log('위치 정보 업데이트 성공:', response);
-            },
-            error: function (xhr, status, error) {
-                console.error('위치 정보 업데이트 실패:', error);
-            }
-        });
+            $.ajax({
+                url: '/Users/updateLocation',  // 위치 정보 업데이트 요청을 처리할 컨트롤러 URL
+                type: 'POST',
+                data: {latitude: latitude, longitude: longitude},
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+                },
+                success: function (response) {
+                    console.log('위치 정보 업데이트 성공:', response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('위치 정보 업데이트 실패:', error);
+                }
+            });
 
     }
 
