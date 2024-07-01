@@ -212,7 +212,7 @@
                             <canvas id="studyTimeChart"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
-                                    <h3>공부하는 42조</h3>
+                                    <h4>공부하는 42조</h4>
                                     <div class="slide-button-group">
                                         <button class="slide-button" title="이전">
                                             <i class="bi bi-caret-left-fill"></i>
