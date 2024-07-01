@@ -109,7 +109,7 @@
             <%-- 수정 폼 영역 --%>
             <div id="editFormContainer" style="display:none;">
                 <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post" enctype="multipart/form-data">
-                    <sec:csrfInput /> <%-- CSRF 토큰 추가 --%>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> <%-- CSRF 토큰 추가 --%>
                     <input type="hidden" name="studyIdx" value="${study.studyIdx}" />
                     <input type="hidden" name="currentImage" value="${study.image}" />
                     <div class="tabInfo">
