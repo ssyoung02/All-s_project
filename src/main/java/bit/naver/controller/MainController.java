@@ -76,14 +76,17 @@ public class MainController {
             Users userVo = (Users) session.getAttribute("userVo");
             System.out.println(userVo);
             session.setAttribute("userVo", userVo);
-            return "/include/header";
-        }else{
-        String username = principal.getName();
-        Users user = usersMapper.findByUsername(username);
-        model.addAttribute("user", user);
-        session.setAttribute("userVo", user);
-        return "/include/header";}
+
+        }else {
+            String username = principal.getName();
+            Users user = usersMapper.findByUsername(username);
+            model.addAttribute("user", user);
+            session.setAttribute("userVo", user);
+        }
+        //model.addAttribute("kakaoMapApiKey", kakaoMapApiKey);
+        return "/include/header";
     }
+
 
     @RequestMapping("/include/footer")
     public String footer(Model model,HttpSession session, Principal principal) {

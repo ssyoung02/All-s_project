@@ -17,7 +17,7 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 	<script type="text/javascript" src="/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
-<script>
+	<script>
 	let oEditors = [];
 	function smartEditor() {
 		console.log("Naver Smart Editor 초기화");

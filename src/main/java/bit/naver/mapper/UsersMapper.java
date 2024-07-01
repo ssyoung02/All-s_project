@@ -35,7 +35,7 @@ public interface UsersMapper {
 
     // username을 이용하여 사용자 정보를 조회합니다.
 //    @Select("SELECT * FROM Users WHERE username = #{username}")
-    Users findByUsername(String username);
+    Users findByUsername(@Param("username") String username);
 
     // 모든 사용자 정보를 조회합니다.
     //@Select("SELECT * FROM Users")

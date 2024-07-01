@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 제한
                 .antMatchers("/resources/**","/webapp/resources/css/**",
-                        "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
+                        "/webapp/resources/js/**", "/", "/main", "/about", "/weather", "/include/**").permitAll()
                 .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                         "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
                         , "/access-denied").permitAll()
@@ -113,7 +113,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
-                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/calendar/**", "/admin/**", "/include/start", "/include/pause", "/include/updateTime", "/include/updateMemo", "/Users/UsersImageUpdate")
+                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/calendar/**", "/admin/**", "/include/start", "/include/pause", "/include/updateTime", "/include/updateMemo", "/Users/UsersImageUpdate", "/weather")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
 //                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성

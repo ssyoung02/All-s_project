@@ -53,7 +53,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>

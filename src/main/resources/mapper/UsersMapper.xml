@@ -13,7 +13,6 @@
         <result column="birthdate" property="birthdate"/>
         <result column="profile_image" property="profileImage"/>
         <result column="enabled" property="enabled"/>
-        <result column="grade_idx" property="gradeIdx"/>
         <result column="provider" property="provider"/>
         <result column="latitude" property="latitude"/>
         <result column="longitude" property="longitude"/>
@@ -24,14 +23,18 @@
         <result column="updated_at" property="updatedAt"/>
         <result column="total_study_time" property="totalStudyTime"/>
         <result column="today_study_time" property="todayStudyTime"/>
+        <result column="gradeName" property="gradeName"/>
     </resultMap>
 
     <select id="findById" resultMap="UsersResultMap">
         SELECT * FROM Users WHERE user_idx = #{userIdx}
     </select>
 
-    <select id="findByUsername" resultMap="UsersResultMap">
-        SELECT * FROM Users WHERE username = #{username}
+    <select id="findByUsername" resultMap="UsersResultMap" flushCache="true">
+        SELECT u.*, g.grade_name as gradeName
+        FROM Users u
+        LEFT JOIN Grades g ON u.total_study_time BETWEEN g.grade_min_time AND g.grade_max_time
+        WHERE u.username = #{username}
     </select>
 
     <select id="findAll" resultMap="UsersResultMap">
@@ -39,9 +42,9 @@
     </select>
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userIdx">
-        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at, mobile)
+        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, provider, latitude, longitude, gender, social_login, created_at, updated_at, mobile)
         VALUES (#{username}, #{password}, #{email}, #{name}, #{birthdate}, #{profileImage},
-                #{enabled}, #{gradeIdx}, #{provider}, #{latitude}, #{longitude}, #{gender},
+                #{enabled}, #{provider}, #{latitude}, #{longitude}, #{gender},
                 #{socialLogin}, #{createdAt}, #{updatedAt}, #{mobile})
     </insert>
 

@@ -100,6 +100,7 @@
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/timegrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
+
     <script>
         // 전역 변수
         let currentModalId = null;

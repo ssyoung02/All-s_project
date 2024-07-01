@@ -55,6 +55,7 @@
 .fc .fc-toolbar-title{
     font-size: 1.75em;
 }
-#dayCalendar .fc-list-event-time{
-    
+.fc .fc-list-event-time{
+    white-space: normal !important;
+    width: 45% !important; /* 또는 원하는 너비 값 */
 }
