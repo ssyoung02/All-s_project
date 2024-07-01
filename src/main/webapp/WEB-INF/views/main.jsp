@@ -109,6 +109,7 @@
 
 <body>
 <!-- 중앙 컨테이너 -->
+<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <div id="container">
     <section class="mainContainer">
@@ -209,7 +210,7 @@
                         </div>
                         <div class="loginUserInfoRight">
                             <%--공부시간 차트--%>
-                            <canvas id="studyTimeChart" style="max-height: 300px"></canvas>
+                            <canvas id="studyTimeChart"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
@@ -337,7 +338,7 @@
     </div>
 
     <jsp:include page="include/footer.jsp"/>
-    <jsp:include page="include/timer.jsp"/>
+
 </div>
 <script>
     //주간 그래프

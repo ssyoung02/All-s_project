@@ -185,6 +185,7 @@ footer {
     justify-content: center;
     flex-wrap: wrap;
     gap: 6%;
+    margin-bottom: 1em;
 }
 
 footer p{
@@ -232,7 +233,7 @@ footer p{
 }
 .time-area p{
     margin: 0 0.4em;
-    font-size: 130px;
+    font-size: 100px;
 }
 .time-button{
     width: 100%;

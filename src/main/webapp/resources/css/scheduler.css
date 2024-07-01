@@ -57,7 +57,8 @@
 }
 .fc .fc-list-event-time{
     white-space: normal !important;
-    width: 45% !important; /* 또는 원하는 너비 값 */
+    width: 41% !important; /* 또는 원하는 너비 값 */
+    font-size: 13px;
 }
 
 /*css 병합 작업*/
