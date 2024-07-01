@@ -12,29 +12,35 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <script>
         $(document).ready(function () {
-            getLocationAndDisplayWeather();
+            // 서버에서 사용자 정보 가져오기
+            $.ajax({
+                url: "${root}/Users/userLocation",
+                type: "GET",
+                headers: {
+                    "${_csrf.headerName}": "${_csrf.token}"
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (userData) {
+                    console.log(userData);
+                    var lat = userData.latitude;
+                    var lon = userData.longitude;
+                    console.log("latitude:", lat, "longitude:", lon);
+                    fetchWeather(lat, lon);
+                },
+                error: function () {
+                    console.error("사용자 정보를 가져오는 데 실패했습니다.");
+                    fetchWeather(); // 기본 위치로 날씨 정보 가져오기 (서울)
+                }
+            });
         });
-
-        function getLocationAndDisplayWeather() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        fetchWeather(position.coords.latitude, position.coords.longitude);
-                    },
-                    function (error) {
-                        console.error("Geolocation error:", error.message); // 에러 메시지 출력
-                        fetchWeather(37.5665, 126.9780); // 서울의 위도 경도 (기본값)
-                    }
-                );
-            } else {
-                console.error("Geolocation is not supported.");
-                fetchWeather(37.5665, 126.9780); // 서울의 위도 경도 (기본값)
-            }
-        }
 
         function fetchWeather(lat, lon) {
             var url = "${root}/weather";
-            if (lat && lon) {
+            if (lat && lon && lat !== 0 && lon !== 0) { // 위도 경도 값이 0이 아닌 경우에만 사용
+                lat = Number(lat.toFixed(6)); // 숫자형으로 변환
+                lon = Number(lon.toFixed(6)); // 숫자형으로 변환
                 url += "?lat=" + lat + "&lon=" + lon;
             } else {
                 url += "?lat=37.5665&lon=126.9780"; // 서울의 위도 경도 (기본값)
@@ -48,20 +54,18 @@
                 xhrFields: {
                     withCredentials: true
                 },
+                beforeSend: function (xhr) {
+                    console.log("Weather API Request URL:", url); // 요청 URL 출력
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
                 success: function (response) {
-                    if (response.status === 200) {
-                        //var data = response.body;
-                        var iconUrl = data.icon;
-                        var locationName = data.location;
-                        var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + locationName + " " + Math.round(data.temperature) + "°C";
-                        $("#weatherInfo").html(weatherInfo);
-                    } else {
-                        console.error("Weather API Error: Invalid response data:", response); // 에러 메시지 출력
-                        $("#weatherInfo").text("날씨 정보를 가져오지 못했습니다.");
-                    }
+                    var iconUrl = response.icon;
+                    var locationName = response.location;
+                    var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + " " + Math.round(response.temperature) + "°C";
+                    $("#weatherInfo").html(weatherInfo);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.error("AJAX Error:", textStatus, errorThrown); // 에러 메시지 출력
+                    console.error("AJAX Error:", textStatus, errorThrown);
                     $("#weatherInfo").text("날씨 정보를 가져오지 못했습니다.");
                 }
             });
