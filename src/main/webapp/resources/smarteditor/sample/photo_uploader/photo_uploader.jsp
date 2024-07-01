@@ -1,6 +1,13 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="ko">
 <head>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta http-equiv="Content-Style-Type" content="text/css">
@@ -196,6 +203,7 @@
         <!-- content -->
         <form id="editor_upimage" name="editor_upimage" action="FileUploader.php" method="post"
               enctype="multipart/form-data" onSubmit="return false;">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
             <div id="pop_content2">
                 <input type="file" class="upload" id="uploadInputBox" name="Filedata">
                 <p class="dsc" id="info"><strong>10MB</strong>이하의 이미지 파일만 등록할 수 있습니다.<br>(JPG, GIF, PNG, BMP)</p>
@@ -235,6 +243,5 @@
 <script type="text/javascript" src="jindo.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="jindo.fileuploader.js" charset="utf-8"></script>
 <script type="text/javascript" src="attach_photo.js" charset="utf-8"></script>
-
 </body>
 </html>

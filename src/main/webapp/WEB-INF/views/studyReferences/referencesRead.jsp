@@ -240,7 +240,6 @@
                         <div class="post-content">
                             ${studyReferencesEntity.content}
                         </div>
-
 						<ul class="taglist">
 							<!-- 태그 항목 -->
 							<li>
@@ -255,7 +254,6 @@
 								</c:choose>
 							</li>
 						</ul>
-
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
