@@ -209,7 +209,7 @@
                         </div>
                         <div class="loginUserInfoRight">
                             <%--공부시간 차트--%>
-                            <canvas id="studyTimeChart"></canvas>
+                            <canvas id="studyTimeChart" style="max-height: 300px"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
@@ -438,6 +438,7 @@
         });
 
 </script>
+
 <script>
     $(document).ready(function () {
         if (${param.error}) {
