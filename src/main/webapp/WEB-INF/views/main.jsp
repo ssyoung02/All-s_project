@@ -210,7 +210,7 @@
                         </div>
                         <div class="loginUserInfoRight">
                             <%--공부시간 차트--%>
-                            <canvas id="studyTimeChart" style="max-width: 200px; max-height: 150px;"></canvas>
+                            <canvas id="studyTimeChart"></canvas>
                             <div class="userStudyGroup">
                                 <div class="userStudyGroupTitle">
                                     <h3>공부하는 42조</h3>
@@ -338,6 +338,7 @@
     </div>
 
     <jsp:include page="include/footer.jsp"/>
+
 </div>
 <script>
     //주간 그래프
@@ -437,8 +438,9 @@
             console.error('Fetch error:', error);
         });
 
+</script>
 
-
+<script>
     $(document).ready(function () {
         if (${param.error}) {
             $("#messageContent").text("${error}");

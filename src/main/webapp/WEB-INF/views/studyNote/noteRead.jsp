@@ -18,7 +18,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-
     <script>
 
         const profilePicUrl = "/mnt/data/image.png"; // URL to the profile picture
@@ -180,7 +179,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -261,7 +259,7 @@
                     </div>
                     <div class="comment">
                         <h4 class="s-header">댓글(${studyRefencesComment[0].TOTALCOUNT})</h4>
-                        <div class="flex-between">
+                        <div class="comment-area">
                             <input id="input-comment" type="text" title="댓글입력" placeholder="댓글을 입력해주세요">
                             <button class="primary-default" onclick="submitComment()">댓글 입력</button>
                         </div>
@@ -312,8 +310,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

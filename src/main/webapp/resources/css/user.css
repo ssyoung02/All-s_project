@@ -42,7 +42,7 @@
     text-align: left;
 }
 .activity-title + p {
-    width: 4em;
+    /*width: 4em;*/
     text-align: right;
 }
 /*내정보 - 이력서*/
@@ -101,6 +101,9 @@
     margin: 0 auto;
     padding: 2em;
 }
+.updateForm h3{
+    margin: 10px 0;
+}
 .buttonBox{
     display: flex;
     flex-direction: row;
@@ -127,7 +130,7 @@
 .userinputbox label, .userinputbox dt{
     margin-bottom: 0.5em;
     margin-right: 1em;
-    width: 10em;
+    width: 11em;
 }
 .userinputbox input[type="text"], .userinputbox input[type="password"], .userinputbox input[type="email"]{
     width: 100%;

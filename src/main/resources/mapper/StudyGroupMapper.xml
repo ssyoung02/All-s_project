@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bit.naver.mapper.StudyGroupMapper">
 
     <resultMap id="studyResultMap" type="bit.naver.entity.StudyGroup">
@@ -71,7 +72,19 @@
             s.currentParticipants AS currentParticipants
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
-        WHERE sm.user_idx = #{userIdx}
+        <where>
+            sm.user_idx  = #{userIdx}
+            <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
+                AND study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+
+        </where>
     </select>
 
     <select id="getStudyById" parameterType="Long" resultType="bit.naver.entity.StudyGroup">
@@ -140,6 +153,22 @@
         DELETE FROM StudyMembers WHERE study_idx = #{studyIdx}
     </delete>
 
+    <select id="getReportedStudies" resultType="bit.naver.entity.StudyGroup">
+        SELECT s.study_idx AS studyIdx, u.username AS leaderName,
+               s.study_title AS studyTitle,
+               DATE_FORMAT(s.created_at, '%Y-%m-%d %H:%i') AS createdAtString,
+               s.report_count AS reportCount
+        FROM Studies s
+        JOIN Users u ON s.study_leader_idx = u.user_idx
+        WHERE s.report_count > 0
+        LIMIT #{offset}, #{limit}
+    </select>
+
+
+    <select id="countReportedStudies" resultType="int">
+        SELECT COUNT(*) FROM Studies WHERE report_count > 0
+    </select>
+
     <select id="isMember" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'ACCEPTED')
     </select>
@@ -164,5 +193,9 @@
             description = #{description}
         WHERE study_idx = #{studyIdx}
     </update>
+
+    <select id="getStudyLeaderIdx" parameterType="Long" resultType="Long">
+        select study_leader_idx from Studies where study_idx = #{studyIdx}
+    </select>
 
 </mapper>

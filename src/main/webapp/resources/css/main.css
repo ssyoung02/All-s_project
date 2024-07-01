@@ -102,6 +102,11 @@
     opacity: 0;
 }
 
+#studyTimeChart{
+    max-width: 200px;
+    max-height: 150px;
+}
+
 /*스터디 그룹 메인*/
 /*스터디 메인*/
 .maxcontent section{
@@ -147,7 +152,7 @@
     grid-column: 1 / 1;
     grid-row: 1;
 }
-.group-content h3{
+.group-content h2{
     margin-bottom: 1em;
 }
 /*랭킹*/

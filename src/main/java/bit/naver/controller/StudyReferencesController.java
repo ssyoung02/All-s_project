@@ -6,12 +6,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import bit.naver.entity.*;
+import bit.naver.mapper.NotificationMapper;
+import bit.naver.mapper.StudyGroupMapper;
+import bit.naver.mapper.StudyReferencesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -24,10 +29,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import bit.naver.entity.CommentsEntity;
-import bit.naver.entity.LikeReferencesEntity;
-import bit.naver.entity.StudyReferencesEntity;
-import bit.naver.entity.Users;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.StudyReferencesService;
@@ -48,6 +49,12 @@ public class StudyReferencesController {
 
 	@Autowired
 	private StudyReferencesService studyReferencesService;
+
+	@Autowired
+	private StudyReferencesMapper referencesMapper;
+
+	@Autowired
+	private NotificationMapper notificationMapper;
 
 	private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -102,6 +109,19 @@ public class StudyReferencesController {
 		Users user = (Users) session.getAttribute("userVo");
 		Long userIdx = user.getUserIdx(); // 사용자 ID 가져오기
 		content.setUserIdx(userIdx); // 임의로 userIdx값 줌
+
+		Long studyReference = referencesMapper.getStudyReferenceByUserIdx(content.getReferenceIdx());
+
+		NotificationEntity notification = new NotificationEntity();
+		notification.setLeaderIdx(studyReference);
+		notification.setReferenceIdx(content.getReferenceIdx());
+		notification.setNotifyType(NotificationEntity.NotifyType.valueOf("NEW_COMMENT"));
+		notification.setCreatedAt(LocalDateTime.now());
+
+		notificationMapper.createReferenceNotification(notification);
+
+		System.out.println(notification.toString());
+
 		return studyReferencesService.insertComment(content);
 	}
 

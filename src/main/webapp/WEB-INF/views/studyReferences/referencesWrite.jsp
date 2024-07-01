@@ -17,7 +17,7 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 	<script type="text/javascript" src="/resources/smarteditor/js/HuskyEZCreator.js" charset="utf-8"></script>
-<script>
+	<script>
 	let oEditors = [];
 	function smartEditor() {
 		console.log("Naver Smart Editor 초기화");
@@ -117,7 +117,6 @@
 </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -160,6 +159,7 @@
 						</div>
 
 						<ul class="taglist">
+							<hr>
 							<!-- 태그 항목 -->
 							<li>
 								<p class="tag-title">첨부파일</p>
@@ -177,8 +177,9 @@
 				</form>
 			</main>
 		</section>
-		<!--푸터-->
-		<jsp:include page="../include/footer.jsp" />
-	</div>
+</div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

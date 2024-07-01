@@ -27,8 +27,7 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="${root}/WEB-INF/views/include/timer.jsp"/>
-<jsp:include page="${root}/WEB-INF/views/include/header.jsp"/>
+<jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
     <section class="mainContainer">
@@ -76,7 +75,7 @@
                             </ul>
                             <ul class="userItem">
                                 <li><b>등급</b></li>
-                                <li>${userVo.gradeIdx}</li>
+                                <li>${userVo.gradeName}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>SNS 연동</b></li>
@@ -144,13 +143,7 @@
             </div>
         </main>
     </section>
-
-
-
-    <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
-    <jsp:include page="../include/timer.jsp" />
 </div>
-
 <%-- 모달 --%>
 <div id="modal-container" class="modal unstaged">
     <div class="modal-overlay">
@@ -188,6 +181,7 @@
         }
     });
 </script>
-
+<jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

@@ -271,18 +271,16 @@
             <%-- 수정 폼 영역 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp"/>
-
     <%-- 가입 신청 모달 --%>
     <div id="modal-container" class="modal unstaged">
         <div class="modal-overlay"></div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h3>${study.studyTitle}</h3>
-                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
+                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="madalClose()"><i
+                        class="bi bi-x-lg"></i></button>
             </div>
-            <div class="modal-center">
+            <div class="modal-center" style="width: 100%">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <textarea name="joinReason" id="joinReasonTextarea" class="board-textarea" placeholder="신청서를 작성해주세요
@@ -290,9 +288,8 @@
 거주지(또는 직장):
 성별:
 나이:
-신청이유:
-"></textarea>
-                    <input type="hidden" name="studyIdx" value="${study.studyIdx}">
+신청이유:"></textarea>
+                    <input type= "hidden" name="studyIdx" value="${study.studyIdx}">
                 </form>
             </div>
             <div class="modal-bottom">
@@ -303,8 +300,6 @@
     </div>
 
 </div>
-<jsp:include page="../include/timer.jsp"/>
-
 <script>
 
     function previewImage(event) {
@@ -441,6 +436,8 @@
         }
     }
 </script>
-
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

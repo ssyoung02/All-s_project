@@ -16,7 +16,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-
     <script>
         //좋아요 버튼
         function toggleLike(element, idx) {
@@ -66,9 +65,29 @@
             });
         });
     </script>
+
+    <style>
+        .link-button p{
+            max-height: 10vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .link-button img {
+            display: none;
+        }
+
+        /* 첫 번째 이미지 보이기 */
+        .link-button img:first-of-type:not(p img), .link-button p:first-of-type img{
+            display: block;
+            max-width: 100%; /* 부모 요소의 너비를 넘지 않도록 */
+            height: auto; /* 원본 비율 유지 */
+            max-height: 10vw; /* 최대 높이를 15vw로 제한 */
+            width: auto; /* 원본 비율 유지 */
+        }
+    </style>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -159,9 +178,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>
 

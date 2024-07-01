@@ -1,9 +1,8 @@
 package bit.naver.controller;
 
-import bit.naver.entity.LikeStudyEntity;
-import bit.naver.entity.StudyGroup;
-import bit.naver.entity.StudyMembers;
-import bit.naver.entity.Users;
+import bit.naver.entity.*;
+import bit.naver.mapper.NotificationMapper;
+import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyRecruitMapper;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.service.StudyRecruitService;
@@ -33,14 +32,19 @@ public class StudyRecruitController {
     @Autowired
     private UsersMapper usersMapper;
 
+    @Autowired
+    private StudyGroupMapper groupMapper;
+
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     // 모집글 리스트
     @RequestMapping("/recruitList")
-    public String getAllStudies(@RequestParam(defaultValue = "1") int page,
-                                @RequestParam(defaultValue = "RECRUITING") String status,
-                                Model model,
-                                HttpSession session,
-                                Principal principal) {
-
+    public String getAllStudies(Model model, HttpSession session, Principal principal,
+                                @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                @RequestParam(value = "searchOption", required = false) String searchOption,
+        (@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "RECRUITING") String status){
         Users user = (Users) session.getAttribute("userVo");
         String username = principal.getName();
         Users users = usersMapper.findByUsername(username);
@@ -50,6 +54,9 @@ public class StudyRecruitController {
         int offset = (page - 1) * pageSize;
 
         // Get studies with userIdx as a parameter
+//        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption, limits);
+//        model.addAttribute("searchKeyword", searchKeyword);
+//        model.addAttribute("searchOption", searchOption);
         List<StudyGroup> studies = studyMapper.getStudiesPaged(userIdx, status, offset, pageSize);
         for (StudyGroup study : studies) {
             study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
@@ -120,6 +127,16 @@ public class StudyRecruitController {
         studyMember.setUpdatedAt(LocalDateTime.now());
 
         studyMapper.insertStudyMember(studyMember);
+
+        Long leaderIdx = groupMapper.getStudyLeaderIdx(studyIdx);
+
+        NotificationEntity notification = new NotificationEntity();
+        notification.setStudyIdx(studyIdx);
+        notification.setLeaderIdx(leaderIdx);
+        notification.setNotifyType(NotificationEntity.NotifyType.valueOf("STUDY_INVITE"));
+        notification.setCreatedAt(LocalDateTime.now());
+
+        notificationMapper.createNotification(notification);
 
         return "redirect:/studyRecruit/recruitList";
     }
@@ -207,3 +224,4 @@ public class StudyRecruitController {
     }
 }
 
+}

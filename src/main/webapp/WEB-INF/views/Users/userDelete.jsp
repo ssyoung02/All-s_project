@@ -23,7 +23,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -53,9 +52,9 @@
                             <div>
                                 <img src="${root}/resources/images/userDelete.png" style="width: 100%; height: 90%; object-fit: contain;">
                                 <ul>
-                                    <li><h3>서로에게 도움이 되는 네트워크</h3>: 여러분이 겪는 어려움을 함께 나누고 해결할 수 있는 든든한 동료들이 있습니다.</li>
-                                    <li><h3>고유한 학습 자원</h3>: 우리 커뮤니티만의 특별한 자료와 정보를 공유받을 수 있습니다.</li>
-                                    <li><h3>동기 부여</h3>: 서로의 성과를 통해 더욱 강력한 동기부여를 얻을 수 있습니다.</li><br>
+                                    <li><h3>서로에게 도움이 되는 네트워크</h3>여러분이 겪는 어려움을 함께 나누고 해결할 수 있는 든든한 동료들이 있습니다.</li>
+                                    <li><h3>고유한 학습 자원</h3>우리 커뮤니티만의 특별한 자료와 정보를 공유받을 수 있습니다.</li>
+                                    <li><h3>동기 부여</h3>서로의 성과를 통해 더욱 강력한 동기부여를 얻을 수 있습니다.</li><br>
                                     <li><h2>지금의 노력이 쌓여 큰 성과로 돌아옵니다. 이곳에서 계속 함께 성장해 나가요!</h2></li><br>
                                 </ul>
                             </div>
@@ -86,10 +85,6 @@
             </div>
         </main>
     </section>
-    <!--푸터-->
-
-    <jsp:include page="${root}/WEB-INF/views/include/footer.jsp"/>
-    <jsp:include page="../include/timer.jsp" />
 </div>
 <%-- 모달 --%>
 <div id="modal-container" class="modal unstaged">
@@ -108,8 +103,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
     $(document).ready(function () {
         if ("${error}" !== "") {
@@ -127,5 +120,8 @@
         }
     });
 </script>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

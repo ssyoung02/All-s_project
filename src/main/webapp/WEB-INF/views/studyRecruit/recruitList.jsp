@@ -21,7 +21,6 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -50,13 +49,16 @@
                             <input type="button" id="studyLocation" class="studyLocation" value="지도 선택">
                         </div>
                         <fieldset class="search-box flex-row">
-                            <select name="searchCnd" title="검색 조건 선택">
-                                <option value="제목">제목</option>
-                                <option value="글내용">글내용</option>
+                            <select id="searchOption" name="searchCnd" title="검색 조건 선택">
+                                <option value="all-post">전체</option>
+                                <option value="title-post">제목</option>
+                                <option value="title-content">제목+내용</option>
+                                <option value="writer-post">작성자</option>
                             </select>
                             <p class="search-field">
-                                <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                                <button type="submit">
+                                <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
+                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
+                                <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -74,7 +76,7 @@
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="banner-bottom flex-between">
                                             <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">${study.status}</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
                                                 <span class="department">${study.category}</span>
                                             </p>
                                             <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
@@ -127,9 +129,12 @@
                     <div>
                         <a href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a> /
                         <a href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
+                    <div class="list-title flex-between">
+                        <h3>전체 글(${studies[0].TOTALCOUNT})</h3>
                     </div>
 
                     <div class="recruitList">
+                        <%-- 동적으로 생성된 게시판 글 --%>
                         <c:forEach var="study" items="${studies}">
                             <div class="recruitItem" data-status="${study.status}">
                                 <div class="studygroup-item flex-between">
@@ -236,12 +241,39 @@
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
+
 <script>
-    // 페이지 로드 시 모집 중인 스터디만 표시
-    $(document).ready(function() {
-        filterStudies('RECRUITING');
-    });
-    // 좋아요 토글 기능
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const statusElements = document.querySelectorAll('.recruit-status');
+    //
+    //     statusElements.forEach(element => {
+    //         const status = element.innerText;
+    //
+    //         if (status === 'RECRUITING') {
+    //             element.innerText = '모집중';
+    //         } else if (status === 'CLOSED') {
+    //             element.innerText = '마감';
+    //         }
+    //     });
+
+        // 페이지 로드 시 모집 중인 스터디만 표시
+        $(document).ready(function() {
+            filterStudies('RECRUITING');
+        });
+
+    //검색 버튼
+    function searchPosts() {
+        let searchKeyword = document.getElementById('searchInput').value;
+        let searchOption = document.getElementById('searchOption').value;
+
+        location.href="${root}/studyRecruit/recruitList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
+    }
+
+    function redirectToStudyDetail(studyIdx) {
+        var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
+        window.location.href = url;
+    }
+
     function toggleLike(element, idx) {
         const icon = element.querySelector('i');
         const isLiked = !element.classList.contains('liked');
@@ -284,6 +316,36 @@
             });
         }
     }
+
+    function loadMore() {
+        let searchKeyword = document.getElementById('searchInput').value;
+        let searchOption = document.getElementById('searchOption').value;
+        let limits = Number(document.getElementById('limits').value) ;
+
+        let totalCount = '${studies[0].TOTALCOUNT}'
+        if(limits >= Number(totalCount)){
+            alert('더이상 조회할 게시물이 없습니다.');
+
+        }else{
+            limits += 5;
+            location.href="${root}/studyRecruit/recruitList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchPosts();
+            }
+        });
+    });
 </script>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="${root}/resources/js/slider.js"></script>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

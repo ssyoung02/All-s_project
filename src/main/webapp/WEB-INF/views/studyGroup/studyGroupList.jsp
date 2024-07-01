@@ -14,41 +14,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <style>
-        .pending {
-            color: #3C578C;
-            font-style: italic;
-        }
-
-        .rejected {
-            color: darkred;
-            font-style: italic;
-        }
-
-        .no-studies {
-            text-align: center;
-            color: gray;
-            font-style: italic;
-            margin-top: 20px;
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .board-item {
-            flex-grow: 1;
-        }
-
-        .status-text {
-            margin-left: auto;
-            margin-right: 20px;
-            text-align: right;
-        }
-    </style>
-
     <script>
 
         //검색 버튼
@@ -56,7 +21,7 @@
             let searchKeyword = document.getElementById('searchInput').value;
             let searchOption = document.getElementById('searchOption').value;
 
-            location.href = "${root}/studyReferences/referencesList?searchKeyword=" + searchKeyword + "&searchOption=" + searchOption;
+            location.href = "${root}/studyGroup/studyGroupList?searchKeyword=" + searchKeyword + "&searchOption=" + searchOption;
         }
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -64,14 +29,15 @@
             searchInput.addEventListener("keypress", function (event) {
                 if (event.key === "Enter") {
                     event.preventDefault();
-                    searchPosts();
+                    searchPosts(); // 검색 함수 호출
                 }
             });
         });
+
+
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -95,13 +61,13 @@
                     <div class="list-title flex-between">
                         <h3>가입 스터디(<c:out value="${myStudies.size()}"/>)</h3>
                         <fieldset class="search-box flex-row">
-                            <select name="searchCnd" title="검색 조건 선택">
-                                <option value="제목">제목</option>
-                                <option value="글내용">글내용</option>
+                            <select id="searchOption" name="searchCnd" title="검색 조건 선택">
+                                <option value="all-post">전체</option>
+                                <option value="title-post">제목</option>
+                                <option value="title-content">제목+내용</option>
                             </select>
                             <p class="search-field">
                                 <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
                                 <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
@@ -124,7 +90,7 @@
                                                 onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}'"
                                             </c:if>
                                     >
-                                        <div class="studygroup-item flex-between">
+                                        <div class="studygroup-item">
                                             <!-- 스터디 목록 -->
                                             <div class="imgtitle flex-row">
                                                 <c:if test="${study.image != null}">
@@ -177,8 +143,8 @@
                 <%--본문 콘텐츠 끝--%>
         </main>
     </section>
-    <%--푸터--%>
-    <jsp:include page="../include/footer.jsp"/>
 </div>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>
