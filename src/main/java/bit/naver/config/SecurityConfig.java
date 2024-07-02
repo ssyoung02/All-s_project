@@ -25,11 +25,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
+import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 
@@ -79,9 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                         "/webapp/resources/js/**", "/", "/main", "/about", "/weather", "/include/**").permitAll()
                 .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                         "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
-                        , "/access-denied").permitAll()
-                .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
-                .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
+                        , "/access-denied", "User/userLocation").permitAll()
+                    .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
                 .antMatchers("/calendar/**").authenticated()
                 .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
@@ -94,11 +98,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/Users/UsersLoginForm")
-                .loginProcessingUrl("/Users/Login")
-                .defaultSuccessUrl("/main")
-                .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
-                .permitAll()
+                    .loginPage("/Users/UsersLoginForm")
+                    .loginProcessingUrl("/Users/Login")
+                    .defaultSuccessUrl("/main")
+                    .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/Users/logout")

@@ -3,6 +3,9 @@ package bit.naver.service;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -17,10 +20,12 @@ import java.net.HttpURLConnection;
 @Service
 public class WeatherService {
 
-    private static final String API_KEY = "f459549b7410cbc4f022951538091643"; // OpenWeatherMap API 키
+    @Value("${openweathermap.api.key}")
+    private String apiKey;
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherService.class); // Logger 초기화
     public Map<String, Object> getCurrentWeather(String location) {
-        return fetchWeatherData("q=" + location);
+        return fetchWeatherData(location);
     }
 
     public Map<String, Object> getCurrentWeatherByCoordinates(double lat, double lon) {
@@ -31,9 +36,11 @@ public class WeatherService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            String apiUrl = "https://api.openweathermap.org/data/2.5/weather?" + query + "&appid=" + API_KEY + "&units=metric&lang=kr";
+            String apiUrl = "https://api.openweathermap.org/data/2.5/weather?" + query + "&appid=" + apiKey + "&units=metric&lang=kr";
+            logger.info("Weather API Request URL: {}", apiUrl);
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("x-api-key", apiKey);
             conn.setRequestMethod("GET");
 
             // API 응답 읽기
