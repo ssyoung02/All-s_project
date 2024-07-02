@@ -69,6 +69,7 @@
                 $(document).ready(function () {
                     var socket = io("http://localhost:82");
                     var messageContainer = document.getElementById('chatMessages');
+                    var enterPressed = false; // 플래그 추가
 
                     function addMessageToChat(message) {
                         var newMessageHTML = '<div class="message ' + (message.userName === '${userVo.name}' ? 'right' : 'left')
@@ -120,14 +121,21 @@
                         });
                     }
 
-                    $("#messageInput").keydown(function (event) {
+                    $("#messageInput").off('keydown').on('keydown', function (event) {
                         if (event.key === 'Enter' && !event.shiftKey) {
                             event.preventDefault();
-                            sendMessage();
+                            if (!enterPressed) { // Enter 키가 여러 번 눌리지 않도록
+                                enterPressed = true;
+                                sendMessage();
+                            }
+                        }
+                    }).on('keyup', function (event) {
+                        if (event.key === 'Enter' && !event.shiftKey) {
+                            enterPressed = false; // Enter 키가 떼어졌을 때 플래그 초기화
                         }
                     });
 
-                    $(".send-button").click(function () {
+                    $(".send-button").off('click').on('click', function () {
                         sendMessage();
                     });
 
@@ -143,3 +151,4 @@
 </div>
 </body>
 </html>
+

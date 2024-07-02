@@ -51,7 +51,7 @@ public class StudyRecruitController {
         Users user = (Users) session.getAttribute("userVo");
         String username = principal.getName();
         Users users = usersMapper.findByUsername(username);
-        Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
+        long userIdx = users != null ? users.getUserIdx() : 59;
 
         int pageSize = 10; // 페이지당 스터디 수
         int offset = (page - 1) * pageSize;
@@ -60,10 +60,7 @@ public class StudyRecruitController {
 //        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption);
 //        model.addAttribute("searchKeyword", searchKeyword);
 //        model.addAttribute("searchOption", searchOption);
-
-
-        // Get studies with userIdx as a parameter
-        List<StudyGroup> studies = studyMapper.getStudiesPaged(userIdx, status, offset, pageSize);
+        List<StudyGroup> studies = studyMapper.getStudiesPaged(userIdx, status, offset, pageSize, searchKeyword, searchOption);
         for (StudyGroup study : studies) {
             study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
             studyMapper.closeStudyIfFull(study.getStudyIdx()); // Close the study if it's full
@@ -77,13 +74,19 @@ public class StudyRecruitController {
         int endPage = Math.min(startPage + 9, totalPages);
 
         model.addAttribute("userIdx", userIdx);
-        model.addAttribute("studies", studies);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("status", status);
+        model.addAttribute("searchKeyword", searchKeyword);
+        model.addAttribute("searchOption", searchOption);
+        model.addAttribute("studies", studies);
 
+        System.out.println("searchKeyword: "+searchKeyword);
+        System.out.println("searchOption: "+searchOption);
+
+        // 슬라이드
         List<StudyGroup> study_18 = studyMapper.getAllStudy_9(userIdx);
         for (StudyGroup study : study_18) {
             study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
@@ -226,5 +229,5 @@ public class StudyRecruitController {
         }
         return "redirect:/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;
     }
-}
 
+}
