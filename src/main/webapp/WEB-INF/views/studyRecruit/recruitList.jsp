@@ -57,6 +57,7 @@
                             </select>
                             <p class="search-field">
                                 <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
+                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
                                 <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
@@ -75,7 +76,7 @@
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="banner-bottom flex-between">
                                             <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">${study.status}</span>
                                                 <span class="department">${study.category}</span>
                                             </p>
                                             <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
@@ -97,7 +98,7 @@
                                         </div>
                                         <div class="banner-item-top">
                                             <div class="banner-img">
-                                                <img src="${root}${study.image}" alt="프로필 사진"/>
+                                                <img src="${root}${study.image}" alt="스터디 그룹 프로필"/>
                                             </div>
                                             <div class="banner-title">
                                                 <p class="banner-main-title">${study.studyTitle}</p>
@@ -128,11 +129,10 @@
                     <div>
                         <a href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a> /
                         <a href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
-                    <div class="list-title flex-between">
                     </div>
 
                     <div class="recruitList">
-                        <%-- 동적으로 생성된 게시판 글 --%>
+                        <%-- 게시판 글 --%>
                         <c:forEach var="study" items="${studies}">
                             <div class="recruitItem" data-status="${study.status}">
                                 <div class="studygroup-item flex-between">
@@ -156,23 +156,24 @@
                                             </div>
                                         </div>
                                     </button>
+                                    <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
                                     <div class="flex-row">
                                         <p class="info-post">${study.currentParticipants}/${study.capacity}</p>
                                         <!-- 좋아요 버튼 -->
-                                        <c:choose>
-                                            <c:when test="${study.isLike != 0}">
-                                                <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
-                                                    <i class="bi bi-heart-fill"></i>
-                                                    <p class="info-post">좋아요</p>
-                                                </button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
-                                                    <i class="bi bi-heart"></i>
-                                                    <p class="info-post">좋아요</p>
-                                                </button>
-                                            </c:otherwise>
-                                        </c:choose>
+                                    <c:choose>
+                                        <c:when test="${study.isLike != 0}">
+                                            <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
+                                                <i class="bi bi-heart-fill"></i>
+                                                <p class="info-post">좋아요  </p>
+                                            </button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button class="flex-row" onclick="toggleLike(this, ${study.studyIdx})">
+                                                <i class="bi bi-heart"></i>
+                                                <p class="info-post">좋아요</p>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
                                     </div>
                                 </div>
                                 <button class="board-content link-button" onclick="location.href='recruitReadForm.jsp'">
@@ -181,6 +182,12 @@
                             </div>
                         </c:forEach>
                     </div>
+
+
+<%--                    <div class="flex-row">--%>
+<%--                        <button class="secondary-default" onclick="loadMore()">목록 더보기</button>--%>
+<%--                    </div>--%>
+
 
                     <!-- 페이지네이션 바 시작 -->
                     <div class="pagination">
@@ -241,6 +248,24 @@
 <script src="${root}/resources/js/slider.js"></script>
 
 <script>
+    // 페이지 로드 시 모집 중인 스터디만 표시
+    $(document).ready(function() {
+        filterStudies('RECRUITING');
+    });
+
+    //검색 버튼
+    function searchPosts() {
+        let searchKeyword = document.getElementById('searchInput').value;
+        let searchOption = document.getElementById('searchOption').value;
+
+        location.href="${root}/studyRecruit/recruitList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
+    }
+
+    <%--function redirectToStudyDetail(studyIdx) {--%>
+    <%--    var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;--%>
+    <%--    window.location.href = url;--%>
+    <%--}--%>
+
     // document.addEventListener("DOMContentLoaded", function () {
     //     const statusElements = document.querySelectorAll('.recruit-status');
     //
@@ -250,7 +275,7 @@
     //         if (status === 'RECRUITING') {
     //             element.innerText = '모집중';
     //         } else if (status === 'CLOSED') {
-    //             element.innerText = '마감';
+    //             element.innerText = '모집마감';
     //         }
     //     });
 

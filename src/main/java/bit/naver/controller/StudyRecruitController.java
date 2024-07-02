@@ -40,11 +40,14 @@ public class StudyRecruitController {
 
     // 모집글 리스트
     @RequestMapping("/recruitList")
-    public String getAllStudies(Model model, HttpSession session, Principal principal,
+    public String getAllStudies(@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "RECRUITING") String status,
                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                 @RequestParam(value = "searchOption", required = false) String searchOption,
-                                @RequestParam(defaultValue = "1") int page,
-                                @RequestParam(defaultValue = "RECRUITING") String status){
+                                Model model,
+                                HttpSession session,
+                                Principal principal) {
+
         Users user = (Users) session.getAttribute("userVo");
         String username = principal.getName();
         Users users = usersMapper.findByUsername(username);
@@ -54,9 +57,12 @@ public class StudyRecruitController {
         int offset = (page - 1) * pageSize;
 
         // Get studies with userIdx as a parameter
-//        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption, limits);
-//        model.addAttribute("searchKeyword", searchKeyword);
-//        model.addAttribute("searchOption", searchOption);
+        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption);
+        model.addAttribute("searchKeyword", searchKeyword);
+        model.addAttribute("searchOption", searchOption);
+
+
+        // Get studies with userIdx as a parameter
         List<StudyGroup> studies = studyMapper.getStudiesPaged(userIdx, status, offset, pageSize);
         for (StudyGroup study : studies) {
             study.setCurrentParticipants(studyMapper.getCurrentParticipants(study.getStudyIdx()));
@@ -151,14 +157,12 @@ public class StudyRecruitController {
     @RequestMapping("/insertLike")
     @ResponseBody
     public int insertLike(@ModelAttribute LikeStudyEntity entity) {
-        System.out.println("ENTITY >>>" + entity.toString());
         return studyService.insertLike(entity);
     }
 
     @RequestMapping("/deleteLike")
     @ResponseBody
     public int deleteLike(@ModelAttribute LikeStudyEntity entity) {
-        System.out.println("ENTITY >>>" + entity.toString());
 
         return studyService.deleteLike(entity);
     }
@@ -166,7 +170,6 @@ public class StudyRecruitController {
     @RequestMapping("/updateReport")
     @ResponseBody
     public int updateReport(@ModelAttribute StudyGroup entity) {
-        System.out.println(entity.toString());
         return studyService.updateReport(entity);
     }
 

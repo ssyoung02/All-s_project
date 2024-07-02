@@ -69,6 +69,7 @@ public class StudyGroupController {
 
         // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
         List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx, searchKeyword, searchOption);
+       // List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
 
         // 모델에 검색어와 검색 옵션을 추가
         model.addAttribute("searchKeyword", searchKeyword);
@@ -377,7 +378,6 @@ public class StudyGroupController {
         }
         return response;
     }
-
     // 알림 정보
     @ResponseBody
     @PostMapping("/getAlarmInfo")

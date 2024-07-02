@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bit.naver.mapper.StudyGroupMapper">
 
     <resultMap id="studyResultMap" type="bit.naver.entity.StudyGroup">
@@ -22,7 +21,7 @@
         <result property="createdAt" column="created_at" />
     </resultMap>
 
-    <!--스터디 모집 테이블 데이터 삽입-->
+<!--스터디 모집 테이블 데이터 삽입-->
     <insert id="insertStudy" parameterType="bit.naver.entity.StudyGroup">
         INSERT INTO Studies (
             study_leader_idx, study_title, description_title, description, category, study_online,

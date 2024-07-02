@@ -14,6 +14,7 @@ import java.util.List;
 public interface StudyRecruitMapper {
 
     // 스터디 모집 리스트
+//    List<StudyGroup> getAllStudies(@Param("userIdx") long userIdx);
     List<StudyGroup> getAllStudies(@Param("userIdx") long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption, @Param("limits") int limits);
 
     // 9개 리밋
@@ -71,5 +72,4 @@ public interface StudyRecruitMapper {
     int countAllStudies(@Param("userIdx") long userIdx, @Param("status") String status);
 
     List<StudyGroup> getUserLikedStudies(@Param("userIdx") long userId);
-
 }

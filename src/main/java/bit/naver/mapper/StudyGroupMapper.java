@@ -44,13 +44,13 @@ public interface StudyGroupMapper {
 
     void updateMemberStatus(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx, @Param("status") String status);
 
-
     int countAllStudies();
     // 추가된 메서드: 승인된 스터디 목록 가져오기
     List<StudyList> getApprovedStudies(Long userIdx);
 
     // List<StudyList> getAllMyStudies(Long userIdx);
     List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
+//    List<StudyList> getAllMyStudies(Long userIdx);
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 
