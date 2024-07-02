@@ -32,121 +32,7 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
-    <style>
-        .cafe-info-window {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            width: 200px;
-        }
-
-        .map-search-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 2; /* 지도 위에 표시되도록 설정 */
-        }
-
-        .map-search-container input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            z-index: 2;
-        }
-
-        .map-search-container button {
-            padding: 8px 12px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        #studyListContainer {
-            margin-top: 10px;
-        }
-
-        #studyListHi {
-            list-style: none;
-            padding: 5px;
-        }
-
-        #studyListHi li {
-            margin-bottom: 5px;
-        }
-
-        /* 추가 스타일 */
-        .study-status.ACTIVE { /* 활동중 */
-            background-color: lawngreen;
-        }
-        .study-status.STUDYING { /* 공부중 */
-            background-color: orange;
-        }
-        .study-status.RESTING { /* 쉬는중 */
-            background-color: blue;
-        }
-        .study-status.NOT_LOGGED_IN { /* 미로그인 */
-            background-color: gray;
-        }
-        /* ... (기존 스타일) */
-
-        .userStudyGroup { /* 슬라이더 컨테이너 스타일 */
-            width: 80%; /* 너비 */
-            height: 335px; /* 높이 (원하는 값으로 조절) */
-            overflow: hidden; /* 슬라이더 넘침 방지 */
-            vertical-align: middle ;
-        }
-        #studyGroup_.userStudyGroup {
-            height: 300px; /* 높이 (원하는 값으로 조절) */
-            width: 200px; /* 너비 */
-            padding: 10px ;
-            top: 30px;
-            vertical-align: middle;
-        }
-
-        .userStudyGroup .swiper-wrapper { /* 슬라이드 래퍼 스타일 */
-            display: flex; /* flexbox 적용 */
-            width: inherit; /* 너비 자동 조절 */
-            height: 240px;
-        }
-
-        .userStudyGroup .swiper-slide { /* 슬라이드 스타일 */
-            width: 100%; /* 슬라이드 너비 100% */
-
-            /* 필요에 따라 슬라이드 스타일 추가 */
-        }
-        .userStudyGroup .swiper-pagination { /* 페이지네이션 스타일 */
-            bottom: 10px; /* 아래쪽 여백 */
-            text-align: center; /* 가운데 정렬 */
-        }
-
-        .userStudyGroupMember{
-            width: 180px; /* ��비 */
-            height: 80%; /* ���이 */
-            margin-right: 10px; /* 오른��� 여�� */
-        }
-
-        /* 추가 스타일 */
-        .loginUserInfoRight {
-            overflow: hidden; /* 슬라이더 컨테이너 넘침 방지 */
-        }
-
-
-        /* 또는 슬라이드 개수 제한 */
-        .userStudyGroupMember.member-swiper-container {
-            width: 100%;
-            height: 80%
-        }
-
-        .member-swiper-container.swiper-slide {
-            width: 180px; /* 각 슬라이드 너비 설정 */
-        }
-    </style>
     <script>
-
-
         $(document).ready(function () {
             <c:if test="${not empty sessionScope.error}">
             $("#messageContent-main").text("${sessionScope.error}");
@@ -370,17 +256,16 @@
                         </div>
                         <div class="loginUserInfoRight">
                                 <%--공부시간 차트--%>
-                                    <canvas id="studyTimeChart"></canvas>
-                                    <div class="userStudyGroup">
-                                        <div class="userStudyGroupTitle">
-                                            <h4>스터디 멤버</h4>
-                                        </div>
-                                        <br>
-                                        <div class="userStudyGroupMember member-swiper-container"> <%-- Swiper 컨테이너 클래스명 변경 --%>
-                                            <div class="swiper-wrapper"></div> <%-- 슬라이드 컨테이너 --%>
-                                            <div class="swiper-pagination member-swiper-pagination"></div> <%-- 페이지네이션 클래스명 변경 --%>
-                                        </div>
-                                    </div>
+                            <canvas id="studyTimeChart"></canvas>
+                            <div class="userStudyGroup">
+                                <div class="userStudyGroupTitle">
+                                    <h4>스터디 멤버</h4>
+                                </div>
+                                <div class="userStudyGroupList member-swiper-container"> <%-- Swiper 컨테이너 클래스명 변경 --%>
+                                    <div class="swiper-wrapper"></div> <%-- 슬라이드 컨테이너 --%>
+                                    <div class="swiper-pagination member-swiper-pagination"></div> <%-- 페이지네이션 클래스명 변경 --%>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </sec:authorize>
@@ -1010,7 +895,7 @@
     }
 
     // 슬라이더 컨테이너 swiperWrapper 변수를 전역 변수로 선언
-    let swiperWrapper = $('<div class="swiper-wrapper"></div>');
+    //let swiperWrapper = $('<div class="swiper-wrapper"></div>');
 
 
     // 페이지 로드 시 지도 초기화 및 위치 정보 가져오기
@@ -1019,25 +904,28 @@
         $(document).ajaxSend(function(e, xhr, options) {
             xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
         });
-        var memberswiper = new Swiper('.userStudyGroupMember', {
+        var memberswiper = new Swiper('.userStudyGroupList', {
             direction: 'horizontal', // 슬라이드 방향을 가로로 변경
             slidesPerView: 'auto',
             spaceBetween: 10,
             allowTouchMove: true, // 드래그 허용
             pagination: {
                 el: '.member-swiper-pagination',
-                type: 'bullets'
-            }
+                type: 'bullets',
+                clickable: true,
+            },
         });// Swiper 객체를 저장할 변수
-        var studyIndices = [];
-        var swiperWrapper = $('<div class="swiper-wrapper"></div>');
+        //var studyIndices = [];
+        const swiperWrapper = $('<div class="swiper-wrapper"></div>');
 
         // 스터디 멤버 정보 표시 함수
         function displayMyStudies(studyData) {
-            const studyGroupMemberContainer = $(".userStudyGroupMember .swiper-wrapper");
+            //const studyGroupMemberContainer = $(".userStudyGroupMember");
+            //studyGroupMemberContainer.empty();
+            const studyGroupMemberContainer = $(".userStudyGroupList .swiper-wrapper");
             studyGroupMemberContainer.empty(); // 기존 내용 삭제
             // 슬라이더 컨테이너 생성
-            swiperWrapper.empty();
+            //swiperWrapper.empty();
             // 스터디 정보가 없을 경우 빈 슬라이드 추가
             if (studyData.length === 0) {
                 const emptySlide = $('<div class="swiper-slide"></div>');
@@ -1047,27 +935,30 @@
                     location.href = '${root}/studyRecruit/recruitList';
                 });
                 emptySlide.append(emptyMessage, joinButton);
-                swiperWrapper.append(emptySlide);
+                //swiperWrapper.append(emptySlide);
+                studyGroupMemberContainer.append(emptySlide);
             }
 
             studyData.forEach(study => {
                 // 슬라이드 아이템 생성
                 const swiperSlide = $('<div class="swiper-slide"></div>');
-                const studyGroupDiv = $(`<div class="userStudyGroup" id="studyGroup_${study.studyIdx}"></div>`);
-                const studyTitle = $("<h5></h5>").text(study.studyTitle);
-                const memberItemDiv = $("<div class='userStudyGroupMember'></div>");
+                const studyGroupDiv = $(`<div class="userStudyGroupDetail" id="studyGroup_${study.studyIdx}"></div>`);
+                const studyTitle = $("<p class='studyGroupTitle'></p>").text(study.studyTitle);
+                const memberItemDiv = $("<div class='userStudyGroupMemerList'></div>");
 
                 studyGroupDiv.append(studyTitle, memberItemDiv);
                 swiperSlide.append(studyGroupDiv);
-                swiperWrapper.append(swiperSlide);
-// 스터디 멤버 정보 AJAX 요청
+                //swiperWrapper.append(swiperSlide);
+                studyGroupMemberContainer.append(swiperSlide);
+
+            // 스터디 멤버 정보 AJAX 요청
                 $.ajax({
                     url: '/studyGroup/studyGroupMain/members/' + study.studyIdx,
                     type: 'GET',
                     dataType: 'json',
                     success: function (members) {
-                    members.forEach(member => {
-                    const memberItem = $(`
+                        members.forEach(member => {
+                            const memberItem = $(`
                         <div class="memberItem">
                             <input type="hidden" value="`+ member.userIdx + `">
                             <div class="studyMemberProfile">
@@ -1081,12 +972,13 @@
                             <div class="study-status ` + member.activityStatus +` "> <span class="status"> `+ member.activityStatus +` </span> </div>
                         </div>
                           `);
-                        memberItemDiv.append(memberItem);
-                    });
-                        studyGroupMemberContainer.append(swiperWrapper);
+                            memberItemDiv.append(memberItem);
+                        });
+                        //studyGroupMemberContainer.append(swiperWrapper);
 
 
 
+/*
                         // Swiper 초기화 (처음 한 번만 실행)
                         if (!memberswiper) {
                             memberswiper = new Swiper('.userStudyGroupMember .member-swiper-container', {
@@ -1103,6 +995,7 @@
                             // 기존 Swiper 객체 업데이트
                             memberswiper.update();
                         }
+*/                      memberswiper.update();
                     },
                     error: function (xhr, status, error) {
                         console.error('스터디 멤버 정보 조회 실패 (studyIdx: ' + study.studyIdx + '):', error);
@@ -1110,7 +1003,7 @@
                 });
             });
         }
-// 스터디 멤버 상태 업데이트 함수
+        // 스터디 멤버 상태 업데이트 함수
         function updateStudyMemberStatus() {
             $.ajax({
                 url: '/studies/getMyStudies',
@@ -1300,7 +1193,7 @@
             }
         }
 
-// 카페 검색 버튼 클릭 이벤트 처리
+        // 카페 검색 버튼 클릭 이벤트 처리
         let cafeSearchButton = document.getElementById('cafeSearchButton');
         // 토글 버튼 클릭 이벤트 처리
         cafeSearchButton.addEventListener('click', function () {
