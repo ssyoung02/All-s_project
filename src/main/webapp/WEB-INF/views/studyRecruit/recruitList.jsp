@@ -131,9 +131,9 @@
                     </div>
                     <%--슬라이더 끝--%>
 
-                    <div>
-                        <a href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a> /
-                        <a href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
+                    <div class="recruitmentStatus">
+                        <a class="recruitmentStatusSelect" href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a>
+                        <a class="" href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
                     </div>
 
                     <div class="recruitList">
@@ -157,6 +157,7 @@
                                                     <p class="study-tag">
                                                         <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
                                                                 ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
+                                                                <span class="recruitNum">(${study.currentParticipants}/${study.capacity})&nbsp;</span>
                                                         </span>
                                                         <span class="department">${study.category}</span>
                                                         <span class="study-tagItem">#${study.gender}</span>
@@ -170,7 +171,6 @@
                                     </button>
                                     <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
                                     <div class="flex-row">
-                                        <p class="info-post">${study.currentParticipants}/${study.capacity}</p>
                                         <!-- 좋아요 버튼 -->
                                     <c:choose>
                                         <c:when test="${study.isLike != 0}">
