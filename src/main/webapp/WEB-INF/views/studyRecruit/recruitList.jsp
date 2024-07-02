@@ -21,6 +21,7 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
+<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -248,23 +249,6 @@
 <script src="${root}/resources/js/slider.js"></script>
 
 <script>
-    // 페이지 로드 시 모집 중인 스터디만 표시
-    $(document).ready(function() {
-        filterStudies('RECRUITING');
-    });
-
-    //검색 버튼
-    function searchPosts() {
-        let searchKeyword = document.getElementById('searchInput').value;
-        let searchOption = document.getElementById('searchOption').value;
-
-        location.href="${root}/studyRecruit/recruitList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption;
-    }
-
-    <%--function redirectToStudyDetail(studyIdx) {--%>
-    <%--    var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;--%>
-    <%--    window.location.href = url;--%>
-    <%--}--%>
 
     // document.addEventListener("DOMContentLoaded", function () {
     //     const statusElements = document.querySelectorAll('.recruit-status');
@@ -278,7 +262,40 @@
     //             element.innerText = '모집마감';
     //         }
     //     });
+    // });
 
+    // 페이지 로드 시 모집 중인 스터디만 표시
+    $(document).ready(function() {
+        filterStudies('RECRUITING');
+    });
+
+    <%--function redirectToStudyDetail(studyIdx) {--%>
+    <%--    var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;--%>
+    <%--    window.location.href = url;--%>
+    <%--}--%>
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchPosts();
+            }
+        });
+
+        const statusElements = document.querySelectorAll('.recruit-status');
+
+            statusElements.forEach(element => {
+                const status = element.innerText;
+
+                if (status === 'RECRUITING') {
+                    element.innerText = '모집중';
+                } else if (status === 'CLOSED') {
+                    element.innerText = '모집마감';
+                }
+            });
+    });
         // 페이지 로드 시 모집 중인 스터디만 표시
         $(document).ready(function() {
             filterStudies('RECRUITING');
@@ -355,20 +372,10 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        var searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchPosts();
-            }
-        });
-    });
+
 </script>
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-<jsp:include page="../include/footer.jsp"/>
-<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

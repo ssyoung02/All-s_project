@@ -56,10 +56,10 @@ public class StudyRecruitController {
         int pageSize = 10; // 페이지당 스터디 수
         int offset = (page - 1) * pageSize;
 
-        // Get studies with userIdx as a parameter
-        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption);
-        model.addAttribute("searchKeyword", searchKeyword);
-        model.addAttribute("searchOption", searchOption);
+//        // Get studies with userIdx as a parameter
+//        List<StudyGroup> studies = studyMapper.getAllStudies(userIdx,searchKeyword, searchOption);
+//        model.addAttribute("searchKeyword", searchKeyword);
+//        model.addAttribute("searchOption", searchOption);
 
 
         // Get studies with userIdx as a parameter
