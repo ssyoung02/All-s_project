@@ -10,4 +10,5 @@ public class StudyMemberStatus {
     private String name;
     private String activityStatus;
     private String profile_image;
+    private String status;
 }
