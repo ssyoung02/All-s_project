@@ -66,6 +66,7 @@
                     //("#weatherInfo").html(weatherInfo);
                     var temperature = Math.round(response.temperature);
                     var googleMapsApiKey = response.googleMapsApiKey;
+
                     // Reverse Geocoding API 호출
                     // URL 객체 생성
                     var url = new URL("https://maps.googleapis.com/maps/api/geocode/json?");
@@ -75,7 +76,6 @@
                     $.ajax({
                         url: url.toString(),
                         success: function (geocodingResponse) {
-                            var locationName = response.name; // OpenWeatherMap API 응답의 name 값을 기본으로 사용
 
                             if (geocodingResponse.status === "OK" && geocodingResponse.results.length > 1) {
                                 var addressComponents = geocodingResponse.results[1].address_components;

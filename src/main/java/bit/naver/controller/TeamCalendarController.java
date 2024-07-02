@@ -94,21 +94,24 @@ public class TeamCalendarController {
     }
 
     // 팀 일정 삭제
-    @DeleteMapping("/deleteTeamSchedule/{teamScheduleIdx}")
+    @PostMapping("/deleteTeamSchedule/{teamScheduleIdx}")
     @ResponseBody
     public Map<String, String> deleteTeamSchedule(@PathVariable Long teamScheduleIdx) {
-        Map<String, String> response = new HashMap<>();
 
         try {
             teamCalendarService.deleteCalendar(teamScheduleIdx); // 팀 캘린더 삭제
+
+            Map<String, String> response = new HashMap<>();
             response.put("result", "success");
             response.put("refetch", "true"); // 캘린더 다시 불러오도록 설정
+            return response;
+
         } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
             response.put("result", "fail");
             response.put("error", "일정 삭제 중 오류가 발생했습니다.");
             e.printStackTrace();
+            return response;
         }
-
-        return response;
     }
 }
