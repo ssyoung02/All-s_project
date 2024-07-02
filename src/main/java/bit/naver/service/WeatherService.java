@@ -3,6 +3,8 @@ package bit.naver.service;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +23,9 @@ public class WeatherService {
     @Value("${openweathermap.api.key}")
     private String apiKey;
 
+    private static final Logger logger = LoggerFactory.getLogger(WeatherService.class); // Logger 초기화
     public Map<String, Object> getCurrentWeather(String location) {
-        return fetchWeatherData("q=" + location);
+        return fetchWeatherData(location);
     }
 
     public Map<String, Object> getCurrentWeatherByCoordinates(double lat, double lon) {
@@ -34,6 +37,7 @@ public class WeatherService {
 
         try {
             String apiUrl = "https://api.openweathermap.org/data/2.5/weather?" + query + "&appid=" + apiKey + "&units=metric&lang=kr";
+            logger.info("Weather API Request URL: {}", apiUrl);
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("x-api-key", apiKey);
@@ -61,7 +65,7 @@ public class WeatherService {
             String locationName = (String) jsonObject.get("name");   // 지역 정보 추출
 
             result.put("temperature", temperature);
-            //result.put("location", locationName);
+            result.put("location", locationName);
             result.put("icon", getWeatherIconUrl(iconCode)); // 아이콘 URL 추가
         } catch (Exception e) {
             e.printStackTrace();

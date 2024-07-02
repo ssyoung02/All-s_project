@@ -11,6 +11,7 @@
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <script>
+
         $(document).ready(function () {
             // 서버에서 사용자 정보 가져오기
             $.ajax({
@@ -60,9 +61,48 @@
                 },
                 success: function (response) {
                     var iconUrl = response.icon;
-                    var locationName = response.location;
-                    var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + " " + Math.round(response.temperature) + "°C";
-                    $("#weatherInfo").html(weatherInfo);
+                    //var locationName = response.location;
+                    //var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> '+ locationName + " "+ Math.round(response.temperature) + "°C";
+                    //("#weatherInfo").html(weatherInfo);
+                    var temperature = Math.round(response.temperature);
+                    var googleMapsApiKey = response.googleMapsApiKey;
+                    // Reverse Geocoding API 호출
+                    // URL 객체 생성
+                    var url = new URL("https://maps.googleapis.com/maps/api/geocode/json?");
+                    url.searchParams.append("latlng", lat + "," + lon);
+                    url.searchParams.append("key", googleMapsApiKey);
+
+                    $.ajax({
+                        url: url.toString(),
+                        success: function (geocodingResponse) {
+                            console.log("Geocoding Response:", geocodingResponse);  // Geocoding 응답 콘솔 출력
+
+                            var locationName = response.name; // OpenWeatherMap API 응답의 name 값을 기본으로 사용
+
+                            if (geocodingResponse.status === "OK" && geocodingResponse.results.length > 1) {
+                                var addressComponents = geocodingResponse.results[1].address_components;
+
+                                // "sublocality_level_1" 타입 사용 (동 이름)
+                                var localityComponent = addressComponents.find(component => component.types.includes("sublocality_level_2"));
+
+                                if (localityComponent) {
+                                    locationName = localityComponent.long_name; // 동 이름으로 업데이트
+                                }
+                            } else {
+                                console.error("Geocoding failed:", geocodingResponse.status);
+                            }
+
+                            var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + locationName + " " + temperature + "°C";
+                            $("#weatherInfo").html(weatherInfo);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Geocoding AJAX Error:", textStatus, errorThrown);
+
+                            // Geocoding API 호출 실패 시에도 OpenWeatherMap API 응답의 name 값 사용
+                            var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + response.name + " " + temperature + "°C";
+                            $("#weatherInfo").html(weatherInfo);
+                        }
+                    });
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error("AJAX Error:", textStatus, errorThrown);
