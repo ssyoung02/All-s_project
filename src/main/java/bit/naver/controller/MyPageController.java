@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -59,9 +61,15 @@ public class MyPageController {
         List<StudyReferencesEntity> studyReferencesEntity = myPageService.getStudyReferencesList(entity);
         List<ResumesEntity> resumesEntity = myPageService.getResumesList(entity2);
 
+
         model.addAttribute("studyReferencesEntity", studyReferencesEntity);
         model.addAttribute("resumesEntity", resumesEntity);
         model.addAttribute("user", user);
+
+        LocalDateTime createdAtDateTime = user.getCreatedAt(); // 예시: Users 엔티티에 getCreatedAt() 메서드가 있어야 함
+        String formattedCreatedAt = createdAtDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        model.addAttribute("formattedCreatedAt", formattedCreatedAt); // 변환된 createdAt을 모델에 추가
+
         session.setAttribute("userVo", user);
 
         long userIdx = user.getUserIdx();
@@ -168,7 +176,6 @@ public class MyPageController {
     @RequestMapping("/deleteResume")
     @ResponseBody
     public String deleteResume(@RequestParam("resumeIdx") String resumeIdx) {
-        System.out.println("resumeIdx: " + resumeIdx);
         return myPageService.deleteResume(resumeIdx);
     }
 

@@ -32,11 +32,32 @@
     </select>
 
     <select id="findByUsername" resultMap="UsersResultMap" flushCache="true">
-        SELECT u.*, g.grade_name as gradeName
+        SELECT
+            u.user_idx,
+            u.username,
+            u.password,
+            u.email,
+            u.name,
+            u.birthdate,
+            u.profile_image,
+            u.enabled,
+            u.provider,
+            u.latitude,
+            u.longitude,
+            u.gender,
+            u.mobile,
+            u.social_login,
+            u.created_at,
+            u.updated_at,
+            u.total_study_time,
+            u.today_study_time,
+            g.grade_name as gradeName
         FROM Users u
-        LEFT JOIN Grades g ON u.total_study_time BETWEEN g.grade_min_time AND g.grade_max_time
+                 LEFT JOIN Grades g
+                           ON u.total_study_time BETWEEN g.grade_min_time AND g.grade_max_time
         WHERE u.username = #{username}
     </select>
+
 
     <select id="findAll" resultMap="UsersResultMap">
         SELECT * FROM Users

@@ -1,3 +1,5 @@
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -128,8 +130,6 @@
         }
     </script>
 
-
-
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
@@ -170,8 +170,16 @@
                             </ul>
                             <ul class="userItem">
                                 <li><b>성별</b></li>
-                                <li>${userVo.gender}</li>
+                                <li>
+                                    <c:choose>
+                                        <c:when test="${userVo.gender == 'F'}">여자</c:when>
+                                        <c:when test="${userVo.gender == 'M'}">남자</c:when>
+                                        <c:when test="${userVo.gender == 'OTHER'}">기타</c:when>
+                                        <c:otherwise>알 수 없음</c:otherwise>
+                                    </c:choose>
+                                </li>
                             </ul>
+
                             <ul class="longUserItem">
                                 <li><b>이메일</b></li>
                                 <li>${userVo.email}</li>
@@ -181,25 +189,27 @@
                                 <li>${userVo.birthdate}</li>
                             </ul>
                             <ul class="userItem">
-                                <li><b>위치정보</b></li>
-                                <li>${userVo.latitude}, ${userVo.longitude}</li>
-                            </ul>
-                            <ul class="userItem">
                                 <li><b>등급</b></li>
                                 <li>${userVo.gradeName}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>SNS 연동</b></li>
-                                <li>${userVo.socialLogin}</li>
+                                <li>${userVo.socialLogin ? 'O' : 'X'}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>가입날짜</b></li>
-                                <li>${userVo.createdAt}</li>
+                                <li>${formattedCreatedAt}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>연락처</b></li>
-                                <li>${userVo.mobile}</li>
+                                <li>
+                                    <c:choose>
+                                        <c:when test="${empty userVo.mobile}">X</c:when>
+                                        <c:otherwise>${userVo.mobile}</c:otherwise>
+                                    </c:choose>
+                                </li>
                             </ul>
+
                         </div>
                     </div>
                     <div class="total-activity flex-between">
@@ -209,11 +219,11 @@
                         </button>
                         <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikePost'">
                             <p class="activity-title">좋아요한 게시글</p>
-                            <p>${studyReferencesEntity[0].TOTALCOUNT}개</p>
+                            <p>${empty studyReferencesEntity[0].TOTALCOUNT ? '0' : studyReferencesEntity[0].TOTALCOUNT}개</p>
                         </button>
                         <button class="secondary-default flex-between" onclick="location.href='${root}/myPage/myPageLikeStudy?userIdx=${userVo.userIdx}'">
                             <p class="activity-title">좋아요한 스터디</p>
-                            <p>${likedStudies[0].TOTALCOUNT}개</p>
+                            <p>${empty likedStudies[0].TOTALCOUNT ? '0' : likedStudies[0].TOTALCOUNT}개</p>
                         </button>
                     </div>
                     <%--차트영역--%>
