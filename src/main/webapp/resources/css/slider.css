@@ -99,7 +99,7 @@
 /*메인 스터디그룹 슬라이더*/
 
 .userStudyGroup{
- position: relative;
+    position: relative;
 }
 .loginUserInfoRight {
     overflow: hidden; /* 슬라이더 컨테이너 넘침 방지 */

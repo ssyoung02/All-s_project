@@ -99,7 +99,10 @@
                             } else {
                                 console.error("Geocoding failed:", geocodingResponse.status);
                             }
-
+                            // locationName이 undefined, null, 빈 문자열인 경우 "서초동"으로 설정
+                            if (typeof locationName === 'undefined' || locationName === null || locationName === '') {
+                                locationName = "서초동";
+                            }
                             var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + locationName + " " + temperature + "°C";
                             $("#weatherInfo").html(weatherInfo);
                         },
