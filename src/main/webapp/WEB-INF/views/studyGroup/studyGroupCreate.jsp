@@ -80,7 +80,6 @@
                             <div class="studyTagLine">
                                 <label for="studyName"><p class="studyTag-title">스터디명</p></label>
                                 <input type="text" id="studyName" name="descriptionTitle" placeholder="스터디명을 입력해주세요" required>
-                                <button type="button" class="duplicate-study">중복체크</button>
                             </div>
                             <div class="studyTagLine">
                                 <p class="studyTag-title">프로필</p>
