@@ -107,5 +107,8 @@ public interface UsersMapper {
 
     List<Users> findAllUsersWithAuthoritiesPaged(@Param("offset") int offset, @Param("limit") int limit);
 
+    @Update("UPDATE Users SET activity_status = #{activityStatus, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE user_idx = #{userIdx}")
+    void updateActivityStatus(@Param("userIdx") Long userIdx, @Param("activityStatus") Users.ActivityStatus activityStatus);
+
     String findUsernameByUserIdx(@Param("userIdx") Long userIdx);
 }

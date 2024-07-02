@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bit.naver.mapper.StudyGroupMapper">
 
     <resultMap id="studyResultMap" type="bit.naver.entity.StudyGroup">
@@ -20,19 +19,24 @@
         <result property="endDate" column="end_date" />
         <result property="status" column="status" />
         <result property="createdAt" column="created_at" />
+        <result property="distance" column="distance"/>
     </resultMap>
 
 <!--스터디 모집 테이블 데이터 삽입-->
     <insert id="insertStudy" parameterType="bit.naver.entity.StudyGroup">
-        INSERT INTO Studies (study_leader_idx, study_title, description_title, description, category, study_online,
-                             meeting_time, latitude, longitude, age, capacity, gender,
-                             start_date, end_date, status, created_at)
-        VALUES (#{studyLeaderIdx}, #{studyTitle}, #{descriptionTitle}, #{description}, #{category}, #{studyOnline},
-                #{meetingTime}, #{latitude}, #{longitude}, #{age}, #{capacity}, #{gender},
-                #{startDate}, #{endDate}, #{status}, #{createdAt})
+        INSERT INTO Studies (
+            study_leader_idx, study_title, description_title, description, category, study_online,
+            meeting_time, latitude, longitude, age, capacity, gender,
+            start_date, end_date, status, created_at, image, currentParticipants
+        )
+        VALUES (
+                   #{studyLeaderIdx}, #{studyTitle}, #{descriptionTitle}, #{description}, #{category}, #{studyOnline},
+                   #{meetingTime}, #{latitude}, #{longitude}, #{age}, #{capacity}, #{gender},
+                   #{startDate}, #{endDate}, #{status}, #{createdAt}, #{image}, #{currentParticipants}
+               )
     </insert>
 
-<!--Memebers 테이블에 데이터 삽입-->
+    <!--Memebers 테이블에 데이터 삽입-->
     <select id="findStudyIdx" parameterType="Long" resultType="Long">
         SELECT study_idx
         FROM Studies
@@ -41,23 +45,31 @@
         LIMIT 1
     </select>
 
-<!--studyIdx 최근에 생성된 것 찾기-->
+    <!--studyIdx 최근에 생성된 것 찾기-->
     <insert id="insertStudyMember" parameterType="bit.naver.entity.StudyMembers">
         INSERT INTO StudyMembers (study_idx, user_idx, role, status, join_reason, created_at, updated_at)
         VALUES (#{studyIdx}, #{userIdx}, #{role}, #{status}, #{joinReason}, #{createdAt}, #{updatedAt})
     </insert>
 
 
-<!--내 스터디 리스트-->
+    <!--내 스터디 리스트-->
     <select id="getMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
-        SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description_title AS descriptionTitle, s.description
+        SELECT sm.study_idx AS studyIdx, sm.role, s.study_title AS studyTitle, s.description_title AS descriptionTitle, s.description, s.image
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
         WHERE sm.user_idx = #{userIdx}
     </select>
 
     <select id="getAllMyStudies" parameterType="Long" resultType="bit.naver.entity.StudyList">
-        SELECT sm.study_idx AS studyIdx, sm.role, sm.status, s.study_title AS studyTitle, s.description
+        SELECT
+            sm.study_idx AS studyIdx,
+            sm.role,
+            sm.status,
+            s.study_title AS studyTitle,
+            s.description_title AS descriptionTitle,
+            s.description,
+            s.image,
+            s.currentParticipants AS currentParticipants
         FROM StudyMembers sm
                  JOIN Studies s ON sm.study_idx = s.study_idx
         <where>
@@ -79,7 +91,7 @@
         SELECT study_idx AS studyIdx, study_leader_idx AS studyLeaderIdx, study_title AS studyTitle,
                description_title AS descriptionTitle, description, category, age, gender,
                study_online AS studyOnline, meeting_time AS meetingTime, latitude, longitude,
-               capacity, start_date AS startDate, end_date AS endDate, status, created_at AS createdAt
+               capacity, start_date AS startDate, end_date AS endDate, status, created_at AS createdAt, image
         FROM Studies
         WHERE study_idx = #{studyIdx}
     </select>
@@ -93,7 +105,9 @@
             sm.join_reason AS joinReason,
             sm.created_at AS createdAt,
             sm.updated_at AS updatedAt,
-            u.name AS userName
+            u.name AS userName,
+            u.activity_status AS activityStatus  -- activity_status 컬럼 추가
+
         FROM
             StudyMembers sm
                 JOIN Users u ON sm.user_idx = u.user_idx
@@ -161,7 +175,60 @@
         SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'ACCEPTED')
     </select>
 
+    <update id="updateStudyGroup" parameterType="bit.naver.entity.StudyGroup">
+        UPDATE Studies
+        SET
+            description_title = #{descriptionTitle},
+            description = #{description},
+            category = #{category},
+            age = #{age},
+            gender = #{gender},
+            study_online = #{studyOnline},
+            image = #{image}
+        WHERE study_idx = #{studyIdx}
+    </update>
+
+    <update id="updateStudyGroupInfo" parameterType="bit.naver.entity.StudyGroup">
+        UPDATE Studies
+        SET
+            study_title = #{studyTitle},
+            description = #{description}
+        WHERE study_idx = #{studyIdx}
+    </update>
+
     <select id="getStudyLeaderIdx" parameterType="Long" resultType="Long">
         select study_leader_idx from Studies where study_idx = #{studyIdx}
     </select>
+
+    <select id="findNearestStudies" resultMap="studyResultMap" >
+        SELECT *,
+               (6371 * acos(cos(radians(#{userLatitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(#{userLongitude})) + sin(radians(#{userLatitude})) * sin(radians(latitude)))) AS distance
+        FROM Studies
+        ORDER BY distance ASC
+        LIMIT #{limit}
+    </select>
+
+    <select id="getAllStudies" resultMap="studyResultMap">
+        SELECT *,
+               (6371 * acos(cos(radians(#{userLatitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(#{userLongitude})) + sin(radians(#{userLatitude})) * sin(radians(latitude)))) AS distance
+        FROM Studies
+    </select>
+
+    <select id="getIStudies" parameterType="Long" resultMap="studyResultMap">
+        SELECT s.*
+        FROM StudyMembers sm
+                 JOIN Studies s ON sm.study_idx = s.study_idx
+        WHERE sm.user_idx = #{userIdx} AND sm.status = 'ACCEPTED'
+    </select>
+
+    <select id="getJoinedStudies" parameterType="map" resultMap="studyResultMap">
+        SELECT s.*,
+               (6371 * acos(cos(radians(#{userLatitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(#{userLongitude})) + sin(radians(#{userLatitude})) * sin(radians(latitude)))) AS distance
+        FROM Studies s
+                 JOIN StudyMembers sm ON s.study_idx = sm.study_idx
+        WHERE sm.user_idx = #{userIdx} AND sm.status = 'ACCEPTED'
+        ORDER BY distance ASC
+    </select>
+
+
 </mapper>

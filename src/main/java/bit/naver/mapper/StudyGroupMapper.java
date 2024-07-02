@@ -44,19 +44,20 @@ public interface StudyGroupMapper {
 
     void updateMemberStatus(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx, @Param("status") String status);
 
-
     int countAllStudies();
     // 추가된 메서드: 승인된 스터디 목록 가져오기
     List<StudyList> getApprovedStudies(Long userIdx);
 
+    // List<StudyList> getAllMyStudies(Long userIdx);
     List<StudyList> getAllMyStudies(@Param("userIdx")Long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption);
+//    List<StudyList> getAllMyStudies(Long userIdx);
 
     void deleteTeamCalendarsByStudyIdx(Long studyIdx);
 
     void deleteStudyMembersByStudyIdx(Long studyIdx);
 //    void approveMember(Long studyIdx, Long userIdx);
 
-    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude,likes_count AS likesCount, currentParticipants, capacity FROM Studies") // 필요한 정보만 조회
+    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude,likes_count AS likesCount, currentParticipants, capacity,distance FROM Studies") // 필요한 정보만 조회
     List<StudyGroup> findAllStudies();
 
     // 신고된 스터디 목록 조회
@@ -71,5 +72,24 @@ public interface StudyGroupMapper {
     @Update("UPDATE Studies SET description_title = #{descriptionTitle}, description = #{description}, category = #{category}, age = #{age}, gender = #{gender}, study_online = #{studyOnline} WHERE study_idx = #{studyIdx}")
     void updateStudy(StudyGroup studyGroup);
 
+    void updateStudyGroup(StudyGroup studyGroup);
+
+
+    void updateStudyGroupInfo(StudyGroup studyGroup);
+
+    // 멤버 수 증가
+    @Update("UPDATE Studies SET currentParticipants = currentParticipants + 1 WHERE study_idx = #{studyIdx}")
+    void incrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
+
+    // 멤버 수 감소
+    @Update("UPDATE Studies SET currentParticipants = currentParticipants - 1 WHERE study_idx = #{studyIdx}")
+    void decrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
+
     Long getStudyLeaderIdx(Long studyIdx);
+
+    List<StudyGroup> findNearestStudies(@Param("userLatitude") double userLatitude, @Param("userLongitude") double userLongitude, @Param("limit") int limit);
+    List<StudyGroup> getAllStudies(@Param("userLatitude") double userLatitude, @Param("userLongitude") double userLongitude);
+    List<StudyGroup> getIStudies(Long userIdx); // 사용자가 참여 중인 스터디 목록 조회 메서드 추가
+    List<StudyGroup> getJoinedStudies(@Param("userLatitude") Double userLatitude, @Param("userLongitude") Double userLongitude, @Param("userIdx") Long userIdx);
+
 }

@@ -1,6 +1,8 @@
 package bit.naver.controller;
 
+import bit.naver.entity.StudyGroup;
 import bit.naver.entity.Users;
+import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.CustomAccountDeletionService;
@@ -64,6 +66,8 @@ public class UsersController {
     @Autowired
     private CustomAccountDeletionService customAccountDeletionService;
 
+    @Autowired
+    private StudyGroupMapper studyGroupMapper;
 
     @PostMapping("/updateLocation")
     @ResponseBody
@@ -149,7 +153,7 @@ public class UsersController {
         }
 
         // 아이디 길이 검사
-        if (username.length() < 4 || username.length() > 12) {
+        if (username.length() < 4 ) {
             rttr.addFlashAttribute("error", "아이디는 4~12자 사이여야 합니다.");
             return "redirect:/Users/Join?error=true";
         }
@@ -259,7 +263,20 @@ public class UsersController {
         }
         if (principal != null && principal instanceof UsernamePasswordAuthenticationToken) {
             // 사용자가 이미 인증된 경우 (구글 로그인 등)
-            return "forward:/main";
+            session.setAttribute("error", "로그인에 성공했습니다");
+            String username = principal.getName();
+            Users users = usersMapper.findByUsername(username);
+            Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
+            List<StudyGroup> myStudies = studyGroupMapper.getJoinedStudies(user.getLatitude(), user.getLongitude(), userIdx);
+            session.setAttribute("myStudies", myStudies);
+
+
+            // 참여 중인 스터디가 있는 경우 첫 번째 스터디 정보를 세션에 추가
+            if (!myStudies.isEmpty()) {
+                StudyGroup currentStudy = myStudies.get(0);
+                session.setAttribute("study", currentStudy);
+            }
+            return "/main";
         }
         // 입력 값 유효성 검사
         if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
@@ -276,6 +293,10 @@ public class UsersController {
             // 로그인 성공 처리
             System.out.println("로그인 정보 확인 o");
 
+            // activityStatus 업데이트
+            userVo.setActivityStatus(Users.ActivityStatus.ACTIVE);
+            usersMapper.updateUser(userVo); // 업데이트된 사용자 정보 저장
+
             // 인증 정보 생성
             Authentication authentication = new UsernamePasswordAuthenticationToken(userVo.getUsername(), userVo.getPassword());
 
@@ -288,7 +309,19 @@ public class UsersController {
             session.setAttribute("userVo", userVo);
             session.setAttribute("error", "로그인에 성공했습니다");
             System.out.println("로그인 정보 확인 o");
-            return "forward:/main";
+
+            Long userIdx = Long.valueOf(userVo != null ? userVo.getUserIdx() : 59);
+            List<StudyGroup> myStudies = studyGroupMapper.getJoinedStudies(user.getLatitude(), user.getLongitude(), userIdx);
+            session.setAttribute("myStudies", myStudies);
+
+
+            // 참여 중인 스터디가 있는 경우 첫 번째 스터디 정보를 세션에 추가
+            if (!myStudies.isEmpty()) {
+                StudyGroup currentStudy = myStudies.get(0);
+                session.setAttribute("study", currentStudy);
+            }
+
+            return "/main";
         } else {
             System.out.println("회원 정보 없음");
             log.warn("로그인 실패: 아이디 또는 비밀번호가 일치하지 않습니다."); // 로그 추가
@@ -307,7 +340,9 @@ public class UsersController {
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         if (auth != null) {
+
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         return "redirect:/main"; // 로그아웃 후 메인 페이지로 이동
@@ -477,7 +512,8 @@ public class UsersController {
                 Users user = usersMapper.findByUsername(username);
                 user.setProfileImage("/resources/profileImages/" + fileName); // 이미지 경로 설정
                 usersMapper.updateUser(user);
-
+                Users userAfterUpdate = usersMapper.findByUsername(username);
+                session.setAttribute("userVoUpdated", userAfterUpdate.getProfileImage());
 
                 session.setAttribute("userVo", user);
                 session.setAttribute("error", "프로필 이미지가 업데이트되었습니다.");

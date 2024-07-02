@@ -27,6 +27,8 @@ public class StudyMembers {
     // DB에 없는 부분
     private String name;
 
+    private String activityStatus; // 활동 상태 필드 추가
+
     public String getStudyTime() {
 
         return "";

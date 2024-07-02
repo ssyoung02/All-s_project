@@ -96,13 +96,13 @@
         <div class="inputbox">
             <c:choose>
                 <c:when test="${not empty googleUserInfo.name}">
-                    <input type="hidden" id="password" name="password" value="socialAllsOnlyPw11구글로그인" readonly>
+                    <input type="hidden" id="password" name="password" value="socialAlls구글" readonly>
                 </c:when>
                 <c:when test="${not empty kakaoUserInfo.name}">
-                    <input type="hidden" id="password" name="password" value="socialAllsOnlyPw11카카오로그인" readonly>
+                    <input type="hidden" id="password" name="password" value="socialAlls카카오" readonly>
                 </c:when>
                 <c:when test="${not empty naverUserInfo.name}">
-                    <input type="hidden" id="password" name="password" value="socialAllsOnlyPw22네이버로그인" readonly>
+                    <input type="hidden" id="password" name="password" value="socialAlls네이버" readonly>
                 </c:when>
                 <c:otherwise>
                     <label for="password">비밀번호<span class="essential">*</span></label>
@@ -114,13 +114,13 @@
         <div class="inputbox">
             <c:choose>
                 <c:when test="${not empty googleUserInfo.name}">
-                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw11구글로그인" readonly>
+                    <input type="hidden" id="password2" name="password2" value="socialAlls구글" readonly>
                 </c:when>
                 <c:when test="${not empty kakaoUserInfo.name}">
-                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw11카카오로그인" readonly>
+                    <input type="hidden" id="password2" name="password2" value="socialAlls카카오" readonly>
                 </c:when>
                 <c:when test="${not empty naverUserInfo.name}">
-                    <input type="hidden" id="password2" name="password2" value="socialAllsOnlyPw22네이버로그인" readonly>
+                    <input type="hidden" id="password2" name="password2" value="socialAlls네이버" readonly>
                 </c:when>
                 <c:otherwise>
                     <label for="password2">비밀번호 확인<span class="essential">*</span></label>

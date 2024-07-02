@@ -51,14 +51,13 @@
     padding: 1em;
     border-radius: 5px;
     border: 1px solid #dad8cc;
-    margin-top: 1em;
     min-height: 280px;
 }
 .userStudyGroupTitle{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 .userStudyGroupTitle h3{
     width: 115px;
@@ -76,7 +75,6 @@
 }
 .memberItem{
     display: flex;
-    gap: 10px;
     align-items: center;
 }
 .study-profile-img{

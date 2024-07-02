@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
@@ -57,7 +58,7 @@ public class NaverLoginController {
     }
 
     @RequestMapping("/login/oauth2/code/naver")
-    public String handleNaverAuthCode(@RequestParam String code, @RequestParam String state, Model model) {
+    public String handleNaverAuthCode(@RequestParam String code, @RequestParam String state, Model model, HttpSession session) {
         try {
             NaverUsersInfo userInfo = naverLoginService.getUsersInfoFromNaver(code, state);
 
@@ -80,6 +81,7 @@ public class NaverLoginController {
                         userDetails, null, userDetails.getAuthorities()
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                session.setAttribute("error", "로그인에 성공했습니다");
 
                 return "redirect:/main";
             } else {
