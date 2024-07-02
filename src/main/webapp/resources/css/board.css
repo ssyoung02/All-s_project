@@ -89,6 +89,7 @@
 }
 .board-title{
     font-weight: bold;
+    text-align: left;
 }
 .operate{
     padding: 10px;
@@ -348,6 +349,19 @@
     margin-top: 1em;
     font-size: 13px;
 }
+.taglist-create{
+    margin: 0;
+}
+.taglist-create li{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 1em;
+    font-size: 13px;
+}
+.taglist-create +textarea{
+    margin: 1em 0;
+}
 .tag-title{
     width: 7em;
 }
@@ -402,6 +416,22 @@
 .bi-map{
     margin: 0;
 }
+.recruitmentStatus{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    gap: 10px;
+}
+.recruitmentStatus a{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #588159;
+}
+.recruitmentStatusSelect{
+    background: #588159;
+    color: white;
+}
 .recruitList{
     display: flex;
     flex-direction: column;
@@ -411,6 +441,11 @@
     padding: 1em;
     border: 1px solid #898989;
     border-radius: 5px;
+}
+.recruitListItem{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .study-tag{
     display: flex;
@@ -429,6 +464,9 @@
 .closed{
     background: #717171;
     color: #ffffff;
+}
+.recruitNum{
+    color: white;
 }
 .department{
     padding: 3px;
