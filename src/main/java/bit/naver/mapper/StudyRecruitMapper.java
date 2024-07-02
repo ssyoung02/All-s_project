@@ -5,6 +5,8 @@ import bit.naver.entity.StudyGroup;
 import bit.naver.entity.StudyMembers;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public interface StudyRecruitMapper {
 
     // 스터디 모집 리스트
+//    List<StudyGroup> getAllStudies(@Param("userIdx") long userIdx);
     List<StudyGroup> getAllStudies(@Param("userIdx") long userIdx, @Param("searchKeyword") String searchKeyword,@Param("searchOption") String searchOption, @Param("limits") int limits);
 
     // 9개 리밋
@@ -51,6 +54,22 @@ public interface StudyRecruitMapper {
     // 스터디 업데이트
     void updateStudyGroup(StudyGroup studyGroup);
 
-    List<StudyGroup> getUserLikedStudies(@Param("userIdx") long userId);
+    // 모집인원
+    @Select("SELECT currentParticipants FROM Studies WHERE study_idx = #{studyIdx}")
+    int getCurrentParticipants(Long studyIdx);
 
+    //모집인원 마감되면
+    @Update("UPDATE Studies SET status = 'CLOSED' WHERE study_idx = #{studyIdx} AND currentParticipants >= capacity")
+    void closeStudyIfFull(Long studyIdx);
+
+    // 스터디 모집 리스트 페이징 및 필터링 처리
+    List<StudyGroup> getStudiesPaged(@Param("userIdx") long userIdx,
+                                     @Param("status") String status,
+                                     @Param("offset") int offset,
+                                     @Param("limit") int limit);
+
+    // 전체 스터디 수
+    int countAllStudies(@Param("userIdx") long userIdx, @Param("status") String status);
+
+    List<StudyGroup> getUserLikedStudies(@Param("userIdx") long userId);
 }

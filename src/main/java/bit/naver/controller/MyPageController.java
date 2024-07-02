@@ -176,7 +176,6 @@ public class MyPageController {
     @RequestMapping("/deleteResume")
     @ResponseBody
     public String deleteResume(@RequestParam("resumeIdx") String resumeIdx) {
-        System.out.println("resumeIdx: " + resumeIdx);
         return myPageService.deleteResume(resumeIdx);
     }
 
