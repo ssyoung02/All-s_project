@@ -17,6 +17,7 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
+
     <script>
         function openChatWindow(studyIdx) {
             window.open('${root}/studyGroup/chat?studyIdx=' + studyIdx, 'ChatWindow', 'width=500,height=500,resizable=no');
@@ -136,35 +137,120 @@
                             <h2>이달의 스터디 왕</h2>
                             <div class="group-lank">
                                 <div class="lank-phase">
-                                    <c:forEach var="member" items="${rankedMembers}" varStatus="status">
-                                        <div class="lank-floor">
-                                            <div class="">
-                                                <div class="profile-img">
-                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                                </div>
-                                                <p class="memberId">
-                                                    <i class="bi bi-award"></i>
-                                                        ${member.userName}
-                                                </p>
+                                    <div class="lank-floor">
+                                        <div class="">
+                                            <div class="profile-img">
+                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
                                             </div>
-                                            <div class="records lank-${status.count}">
-                                                <p>${member.totalStudyTime}h</p>
-                                                <p class="lanking">${status.count}</p>
-                                            </div>
+                                            <p class="memberId">
+                                                <i class="bi bi-award"></i>
+                                                ${rankedMembers[1].userName}</p>
                                         </div>
-                                    </c:forEach>
+                                        <div class="records lank-second">
+                                            <p><c:set var="totalTime" value="${rankedMembers[1].totalStudyTime}"/>
+                                                <c:choose>
+                                                    <c:when test="${totalTime >= 3600}">
+                                                        <c:set var="hours" value="${totalTime / 3600}"/>
+                                                        ${hours}h
+                                                    </c:when>
+                                                    <c:when test="${totalTime >= 60}">
+                                                        <c:set var="minutes" value="${totalTime / 60}"/>
+                                                        ${minutes}m
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${totalTime}s
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                            <p class="lanking">2</p>
+                                        </div>
+                                    </div>
+                                    <div class="lank-floor">
+                                        <div class="">
+                                            <div class="profile-img">
+                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                            </div>
+                                            <p class="memberId">
+                                                <i class="bi bi-award"></i>
+                                                ${rankedMembers[0].userName}
+                                            </p>
+                                        </div>
+                                        <div class="records lank-first">
+                                            <p><c:set var="totalTime" value="${rankedMembers[0].totalStudyTime}"/>
+                                                <c:choose>
+                                                    <c:when test="${totalTime >= 3600}">
+                                                        <c:set var="hours" value="${totalTime / 3600}"/>
+                                                        ${hours}h
+                                                    </c:when>
+                                                    <c:when test="${totalTime >= 60}">
+                                                        <c:set var="minutes" value="${totalTime / 60}"/>
+                                                        ${minutes}m
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${totalTime}s
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                            <p class="lanking">1</p>
+                                        </div>
+                                    </div>
+                                    <div class="lank-floor">
+                                        <div class="">
+                                            <div class="profile-img">
+                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                            </div>
+                                            <p class="memberId">
+                                                <i class="bi bi-award"></i>
+                                                ${rankedMembers[2].userName}
+                                            </p>
+                                        </div>
+                                        <div class="records lank-third">
+                                            <p><c:set var="totalTime" value="${rankedMembers[2].totalStudyTime}"/>
+                                                <c:choose>
+                                                    <c:when test="${totalTime >= 3600}">
+                                                        <c:set var="hours" value="${totalTime / 3600}"/>
+                                                        ${hours}h
+                                                    </c:when>
+                                                    <c:when test="${totalTime >= 60}">
+                                                        <c:set var="minutes" value="${totalTime / 60}"/>
+                                                        ${minutes}m
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${totalTime}s
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                            <p class="lanking">3</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="lank-list">
                                     <c:forEach var="member" items="${rankedMembers}" varStatus="status">
-                                        <div class="lank-item">
-                                            <div class="lanking-circle">
-                                                <div class="circle-number ${status.count <= 3 ? 'top3' : ''}">
-                                                        ${status.count}
+                                        <c:if test="${status.count <= 5}">
+                                            <div class="lank-item">
+                                                <div class="lanking-circle">
+                                                    <div class="circle-number ${status.count <= 3 ? 'top3' : ''}">
+                                                            ${status.count}
+                                                    </div>
                                                 </div>
+                                                <p class="lank-id">${member.userName}</p>
+                                                <p class="lank-time"><c:set var="totalTime" value="${member.totalStudyTime}"/>
+                                                    <c:choose>
+                                                        <c:when test="${totalTime >= 3600}">
+                                                            <c:set var="hours" value="${totalTime / 3600}"/>
+                                                            ${hours}h
+                                                        </c:when>
+                                                        <c:when test="${totalTime >= 60}">
+                                                            <c:set var="minutes" value="${totalTime / 60}"/>
+                                                            ${minutes}m
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${totalTime}s
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </p>
                                             </div>
-                                            <p class="lank-id">${member.userName}</p>
-                                            <p class="lank-time">${member.totalStudyTime}h</p>
-                                        </div>
+                                        </c:if>
                                     </c:forEach>
                                 </div>
                             </div>
@@ -185,7 +271,7 @@
                                         <div class="group-memberItem">
                                             <div class="profile-imgGroup">
                                                 <div class="profile-img">
-                                                    <img src="${root}/resources/images/09.%20carrot.png" alt="프로필 이미지">
+                                                    <img src="${root}/resources/images/user.png" alt="프로필 이미지">
                                                 </div>
                                                 <div class="status"><span class="status">접속중</span></div>
                                             </div>
