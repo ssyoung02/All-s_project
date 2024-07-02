@@ -985,7 +985,7 @@
                             <div class="studyMemberProfile">
                                 <a class="profile" href="#">
                                     <div class="study-profile-img">
-                                        <img src="${root}/resources/profile슬라이드s/user.png" alt="내 프로필">
+                                        <img src="${root}/resources/profileImages/user.png" alt="내 프로필">
                                     </div>
                                 </a>
                             </div>
