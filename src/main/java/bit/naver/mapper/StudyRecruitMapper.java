@@ -51,6 +51,8 @@ public interface StudyRecruitMapper {
     // 사용자 스터디 멤버 여부 확인
     boolean isMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
 
+    boolean isPending(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
+
     // 스터디 업데이트
     void updateStudyGroup(StudyGroup studyGroup);
 

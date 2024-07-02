@@ -107,10 +107,13 @@ public class StudyRecruitController {
         List<StudyMembers> members = studyMapper.getStudyMembersByStudyId(studyIdx);
 
         boolean isMember = studyMapper.isMember(studyIdx, userIdx);
+        boolean isPending = studyMapper.isPending(studyIdx, userIdx);
 
         model.addAttribute("study", study);
         model.addAttribute("members", members);
         model.addAttribute("isMember", isMember);
+        model.addAttribute("isPending", isPending);
+
 
         return "studyRecruit/recruitReadForm";
     }

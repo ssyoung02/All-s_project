@@ -107,8 +107,14 @@ public class StudyGroupController {
             }
         }
 
+        // 스터디 회원들을 공부 시간 기준으로 정렬하여 조회
+        List<Map<String, Object>> rankedMembers = studyGroupMapper.getStudyMembersByStudyTime(studyIdx);
+
+
         model.addAttribute("study", study);
         model.addAttribute("members", members);
+        model.addAttribute("rankedMembers", rankedMembers);
+
         return "studyGroup/studyGroupMain"; // 스터디 상세 정보를 보여줄 JSP 페이지
     }
 

@@ -88,16 +88,23 @@
                                 <p>모집 마감했습니다.</p>
                             </c:when>
                             <c:otherwise>
-                                <c:if test="${!isMember}">
-                                    <button class="primary-default" onclick="modalOpen()">가입 신청</button>
-                                </c:if>
-                                <c:if test="${isMember}">
-                                    <p>이미 가입한 스터디 입니다.</p>
-                                </c:if>
+                                <c:choose>
+                                    <c:when test="${isPending}">
+                                        <p>신청 대기 중입니다.</p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:if test="${!isMember}">
+                                            <button class="primary-default" onclick="modalOpen()">가입 신청</button>
+                                        </c:if>
+                                        <c:if test="${isMember}">
+                                            <p>이미 가입한 스터디 입니다.</p>
+                                        </c:if>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
                     </div>
-                </div>
+
                 <div class="board-bottom">
                     <c:if test="${userVo.userIdx == study.studyLeaderIdx}">
                         <button class="secondary-default" onclick="showEditForm()">수정</button>

@@ -212,6 +212,10 @@
         SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'ACCEPTED')
     </select>
 
+    <select id="isPending" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM StudyMembers WHERE study_idx = #{studyIdx} AND user_idx = #{userIdx} AND status = 'PENDING')
+    </select>
+
     <update id="updateStudyGroup" parameterType="bit.naver.entity.StudyGroup">
         UPDATE Studies
         SET study_title = #{studyTitle},

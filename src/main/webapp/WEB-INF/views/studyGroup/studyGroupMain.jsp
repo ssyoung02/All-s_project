@@ -127,51 +127,38 @@
                             <h2>이달의 스터디 왕</h2>
                             <div class="group-lank">
                                 <div class="lank-phase">
-                                    <div class="lank-floor">
-                                        <div class="">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                    <c:forEach var="member" items="${rankedMembers}" varStatus="status">
+                                        <div class="lank-floor">
+                                            <div class="">
+                                                <div class="profile-img">
+                                                    <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                                </div>
+                                                <p class="memberId">
+                                                    <i class="bi bi-award"></i>
+                                                        ${member.userName}
+                                                </p>
                                             </div>
-                                            <p class="memberId">
-                                                <i class="bi bi-award"></i>
-                                                Jihyeon</p>
-                                        </div>
-                                        <div class="records lank-second">
-                                            <p>82h</p>
-                                            <p class="lanking">2</p>
-                                        </div>
-                                    </div>
-                                    <div class="lank-floor">
-                                        <div class="">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                            <div class="records lank-${status.count}">
+                                                <p>${member.totalStudyTime}h</p>
+                                                <p class="lanking">${status.count}</p>
                                             </div>
-                                            <p class="memberId">
-                                                <i class="bi bi-award"></i>
-                                                Jihyeon
-                                            </p>
                                         </div>
-                                        <div class="records lank-first">
-                                            <p>82h</p>
-                                            <p class="lanking">2</p>
-                                        </div>
-                                    </div>
-                                    <div class="lank-floor">
-                                        <div class="">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                            </div>
-                                            <p class="memberId">
-                                                <i class="bi bi-award"></i>
-                                                Jihyeon
-                                            </p>
-                                        </div>
-                                        <div class="records lank-third">
-                                            <p>82h</p>
-                                            <p class="lanking">2</p>
-                                        </div>
-                                    </div>
+                                    </c:forEach>
                                 </div>
+                                <div class="lank-list">
+                                    <c:forEach var="member" items="${rankedMembers}" varStatus="status">
+                                        <div class="lank-item">
+                                            <div class="lanking-circle">
+                                                <div class="circle-number ${status.count <= 3 ? 'top3' : ''}">
+                                                        ${status.count}
+                                                </div>
+                                            </div>
+                                            <p class="lank-id">${member.userName}</p>
+                                            <p class="lank-time">${member.totalStudyTime}h</p>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
                                 <div class="lank-list">
                                     <div class="lank-item">
                                         <div class="lanking-circle">
@@ -218,7 +205,7 @@
                                         <p class="lank-id">Jeayung</p>
                                         <p class="lank-time">7h</p>
                                     </div>
-                                </div>
+
                             </div>
                             <!--캘린더-->
                             <h2>스터디 일정</h2>

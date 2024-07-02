@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface StudyGroupMapper {
@@ -86,4 +87,12 @@ public interface StudyGroupMapper {
     void decrementCurrentParticipants(@Param("studyIdx") Long studyIdx);
 
     Long getStudyLeaderIdx(Long studyIdx);
+
+    // 스터디 그룹의 회원들을 공부 시간 기준으로 정렬하여 조회
+    @Select("SELECT u.user_idx as userIdx, u.name as userName, u.total_study_time as totalStudyTime " +
+            "FROM StudyMembers sm " +
+            "JOIN Users u ON sm.user_idx = u.user_idx " +
+            "WHERE sm.study_idx = #{studyIdx} AND sm.status = 'ACCEPTED' " +
+            "ORDER BY u.total_study_time DESC")
+    List<Map<String, Object>> getStudyMembersByStudyTime(@Param("studyIdx") Long studyIdx);
 }

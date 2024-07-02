@@ -197,4 +197,6 @@
         select study_leader_idx from Studies where study_idx = #{studyIdx}
     </select>
 
+
+
 </mapper>
