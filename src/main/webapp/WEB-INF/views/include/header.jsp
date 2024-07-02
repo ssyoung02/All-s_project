@@ -75,18 +75,26 @@
                     $.ajax({
                         url: url.toString(),
                         success: function (geocodingResponse) {
-                            console.log("Geocoding Response:", geocodingResponse);  // Geocoding 응답 콘솔 출력
-
                             var locationName = response.name; // OpenWeatherMap API 응답의 name 값을 기본으로 사용
 
                             if (geocodingResponse.status === "OK" && geocodingResponse.results.length > 1) {
                                 var addressComponents = geocodingResponse.results[1].address_components;
 
-                                // "sublocality_level_1" 타입 사용 (동 이름)
+                                // "sublocality_level_2" 타입 우선 검색 (동 이름)
                                 var localityComponent = addressComponents.find(component => component.types.includes("sublocality_level_2"));
 
+                                if (!localityComponent) {
+                                    // "sublocality_level_2" 타입이 없으면 "sublocality_level_1" 타입 검색 (구 이름)
+                                    localityComponent = addressComponents.find(component => component.types.includes("sublocality_level_1"));
+                                }
+
+                                if (!localityComponent) {
+                                    // "sublocality_level_1" 타입도 없으면 "sublocality" 타입 검색 (일반적인 지역 이름)
+                                    localityComponent = addressComponents.find(component => component.types.includes("sublocality"));
+                                }
+
                                 if (localityComponent) {
-                                    locationName = localityComponent.long_name; // 동 이름으로 업데이트
+                                    locationName = localityComponent.long_name; // 지역 이름으로 업데이트
                                 }
                             } else {
                                 console.error("Geocoding failed:", geocodingResponse.status);
