@@ -16,12 +16,6 @@
     width: 33%;
     border: 1px solid #dad8cc;
 }
-.fc-list-event-time{
-    width: 80px; !important;
-    overflow: hidden; !important;
-    text-overflow: ellipsis; !important;
-    white-space: wrap; !important;
-}
 
 .fc-calendarLink-button {
     background-color: #717171 !important;
@@ -73,8 +67,10 @@
 .fc .fc-toolbar-title{
     font-size: 1.5em;
 }
-#dayCalendar .fc-list-event-time{
-    
+.fc .fc-list-event-time{
+    white-space: normal !important;
+    width: 41% !important; /* 또는 원하는 너비 값 */
+    font-size: 13px;
 }
 
 /*css 병합 작업*/
@@ -105,6 +101,7 @@
 }
 #addScheduleForm{
     margin-bottom: 1em;
+    width: 90%;
 }
 #addScheduleForm +button{
     width: 100%;
@@ -116,7 +113,7 @@
 .modal-contents {
     background-color: #fefefe;
     padding: 20px;
-    width: 450px; /* 모달 너비 500px로 변경 */
+    width: 500px; /* 모달 너비 500px로 변경 */
     border: 1px solid #888;
     overflow: auto; /* 내용이 넘칠 경우 스크롤바 추가 */
     left: 50%; /* 화면 왼쪽에서 50% 위치 */
@@ -164,7 +161,7 @@
     width: 100%;
 }
 .modal-inputbox textarea{
-    width: 108%;
+    width: 107%;
     height: 40px;
 }
 .modal-input{

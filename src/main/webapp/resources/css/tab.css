@@ -79,13 +79,18 @@
 }
 
 .webInfo-itemfull textarea{
-    width: 50em;
+    width: 100%;
     height: 3em;
     padding: 10px;
     border: 1px solid #bbbbbb;
     border-radius: 5px;
     resize: none;
 }
+
+.manager-studyName{
+    width: 100%;
+}
+
 .profile-chage{
     display: flex;
     gap: 1em;

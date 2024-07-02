@@ -5,8 +5,8 @@
 }
 .swiper-slide {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;  /* Align items to the top of the slide */
+    justify-content: flex-start; /* Align items to the left of the slide */
     font-size: 20px;
     text-align: center;
 }
@@ -44,8 +44,8 @@
 }
 .banner-img{
     display: inline-block;
-    width: 3em;
-    height: 3em;
+    width: 2em;
+    height: 2em;
     border-radius: 50%;
     overflow: hidden;
 }
@@ -57,7 +57,7 @@
     display: flex;
     flex-direction:row;
     align-items: center;
-    gap: 1em;
+    gap: 10px;
 }
 .banner-title{
     margin-left: 5px;
@@ -79,6 +79,9 @@
 .banner-content{
     text-align: left;
     height: 45px;
+    overflow: hidden; /* Hide overflow if text is too long */
+    text-overflow: ellipsis; /* Add ellipsis (...) to indicate overflow */
+    white-space: nowrap;  /* Prevent text from wrapping to multiple lines */
 }
 .control-button{
     position: absolute;

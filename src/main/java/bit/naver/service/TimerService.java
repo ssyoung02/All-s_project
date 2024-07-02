@@ -80,5 +80,10 @@ public class TimerService {
         return timerMapper.getMonthlyStudyTime(userIdx, startOfMonth, endOfMonth);
     }
 
+    public String getGradeIconByUserIdx(int userIdx) {
+        String gradeIcon = timerMapper.getGradeIconByTotalStudyTime(userIdx);
+        System.out.println("gradeIcon: "+gradeIcon);
+        return gradeIcon;
+    }
 
 }

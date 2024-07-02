@@ -11,6 +11,7 @@
     <title>스터디 모집 > 스터디 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <link rel="stylesheet" href="${root}/resources/css/pagenation.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link rel="stylesheet" href="${root}/resources/css/slider.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -20,6 +21,7 @@
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
+<jsp:include page="../include/timer.jsp"/>
 <jsp:include page="../include/header.jsp"/>
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -56,6 +58,7 @@
                             </select>
                             <p class="search-field">
                                 <input id="searchInput" type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
+                                <input type="hidden" id="limits" class="search-bar" value="${limits}">
                                 <button onclick="searchPosts()">
                                     <span class="hide">검색</span>
                                     <i class="bi bi-search"></i>
@@ -74,7 +77,7 @@
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="banner-bottom flex-between">
                                             <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">${study.status}</span>
                                                 <span class="department">${study.category}</span>
                                             </p>
                                             <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
@@ -96,7 +99,7 @@
                                         </div>
                                         <div class="banner-item-top">
                                             <div class="banner-img">
-                                                <img src="${root}/resources/images/${study.image}" alt="스터디 그룹 로고"/>
+                                                <img src="${root}${study.image}" alt="스터디 그룹 프로필"/>
                                             </div>
                                             <div class="banner-title">
                                                 <p class="banner-main-title">${study.studyTitle}</p>
@@ -114,9 +117,6 @@
                             </c:forEach>
                         </div>
 
-
-                        <!-- 다른 슬라이드들 추가 가능 -->
-
                         <!-- 페이지 네이션 -->
                         <div class="swiper-pagination"></div>
 
@@ -127,29 +127,40 @@
                     </div>
                     <%--슬라이더 끝--%>
 
-                    <div class="list-title flex-between">
-                        <h3>전체 글(${studies.size()})</h3>
+                    <div>
+                        <a href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a> /
+                        <a href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
                     </div>
 
                     <div class="recruitList">
-                        <%-- 동적으로 생성된 게시판 글 --%>
+                        <%-- 게시판 글 --%>
                         <c:forEach var="study" items="${studies}">
-                            <div class="recruitItem">
+                            <div class="recruitItem" data-status="${study.status}">
                                 <div class="studygroup-item flex-between">
                                     <button class="imgtitle link-button"
                                             onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="board-item flex-columleft">
-                                            <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
-                                                <span class="department">${study.category}</span>
-                                                <span class="study-tagItem">#${study.gender}</span>
-                                                <span class="study-tagItem">#${study.age}</span>
-                                                <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
-                                            </p>
-                                            <h3 class="board-title">${study.studyTitle}</h3>
+                                            <div class="flex-row">
+                                                <img src="${root}${study.image}" alt="스터디 그룹 로고" style="width: 50px; height: 50px; margin-right: 10px;">
+                                                <div>
+                                                    <p class="study-tag">
+                                                        <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
+                                                                ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
+                                                        </span>
+                                                        <span class="department">${study.category}</span>
+                                                        <span class="study-tagItem">#${study.gender}</span>
+                                                        <span class="study-tagItem">#${study.age}</span>
+                                                        <span class="study-tagItem">#${study.studyOnline ? "온라인" : "오프라인"}</span>
+                                                    </p>
+                                                    <h3 class="board-title">${study.studyTitle}</h3>
+                                                </div>
+                                            </div>
                                         </div>
                                     </button>
                                     <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
+                                    <div class="flex-row">
+                                        <p class="info-post">${study.currentParticipants}/${study.capacity}</p>
+                                        <!-- 좋아요 버튼 -->
                                     <c:choose>
                                         <c:when test="${study.isLike != 0}">
                                             <button class="flex-row liked" onclick="toggleLike(this, ${study.studyIdx})">
@@ -164,6 +175,7 @@
                                             </button>
                                         </c:otherwise>
                                     </c:choose>
+                                    </div>
                                 </div>
                                 <button class="board-content link-button" onclick="location.href='recruitReadForm.jsp'">
                                         ${study.description}
@@ -171,27 +183,123 @@
                             </div>
                         </c:forEach>
                     </div>
+
+
+<%--                    <div class="flex-row">--%>
+<%--                        <button class="secondary-default" onclick="loadMore()">목록 더보기</button>--%>
+<%--                    </div>--%>
+
+
+                    <!-- 페이지네이션 바 시작 -->
+                    <div class="pagination">
+                        <ul>
+                            <c:if test="${status == 'RECRUITING'}">
+                                <c:if test="${startPage > 1}">
+                                    <li><a href="?page=1&status=RECRUITING">&lt;&lt;</a></li>
+                                </c:if>
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href="?page=${currentPage - 1}&status=RECRUITING">&lt;</a></li>
+                                </c:if>
+                                <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                                    <li class="${pageNum == currentPage ? 'active' : ''}">
+                                        <a href="?page=${pageNum}&status=RECRUITING">${pageNum}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${currentPage < totalPages}">
+                                    <li><a href="?page=${currentPage + 1}&status=RECRUITING">&gt;</a></li>
+                                </c:if>
+                                <c:if test="${endPage < totalPages}">
+                                    <li><a href="?page=${totalPages}&status=RECRUITING">&gt;&gt;</a></li>
+                                </c:if>
+                            </c:if>
+
+                            <c:if test="${status == 'CLOSED'}">
+                                <c:if test="${startPage > 1}">
+                                    <li><a href="?page=1&status=CLOSED">&lt;&lt;</a></li>
+                                </c:if>
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href="?page=${currentPage - 1}&status=CLOSED">&lt;</a></li>
+                                </c:if>
+                                <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                                    <li class="${pageNum == currentPage ? 'active' : ''}">
+                                        <a href="?page=${pageNum}&status=CLOSED">${pageNum}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:if test="${currentPage < totalPages}">
+                                    <li><a href="?page=${currentPage + 1}&status=CLOSED">&gt;</a></li>
+                                </c:if>
+                                <c:if test="${endPage < totalPages}">
+                                    <li><a href="?page=${totalPages}&status=CLOSED">&gt;&gt;</a></li>
+                                </c:if>
+                            </c:if>
+                        </ul>
+                    </div>
+                    <!-- 페이지네이션 바 끝 -->
+
                 </div>
                 <%--본문 콘텐츠 끝--%>
             </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>
+    <!--푸터-->
+    <jsp:include page="../include/footer.jsp"/>
 </div>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="${root}/resources/js/slider.js"></script>
+
 <script>
+
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const statusElements = document.querySelectorAll('.recruit-status');
+    //
+    //     statusElements.forEach(element => {
+    //         const status = element.innerText;
+    //
+    //         if (status === 'RECRUITING') {
+    //             element.innerText = '모집중';
+    //         } else if (status === 'CLOSED') {
+    //             element.innerText = '모집마감';
+    //         }
+    //     });
+    // });
+
+    // 페이지 로드 시 모집 중인 스터디만 표시
+    $(document).ready(function() {
+        filterStudies('RECRUITING');
+    });
+
+    <%--function redirectToStudyDetail(studyIdx) {--%>
+    <%--    var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;--%>
+    <%--    window.location.href = url;--%>
+    <%--}--%>
+
+
     document.addEventListener("DOMContentLoaded", function () {
-        const statusElements = document.querySelectorAll('.recruit-status');
-
-        statusElements.forEach(element => {
-            const status = element.innerText;
-
-            if (status === 'RECRUITING') {
-                element.innerText = '모집중';
-            } else if (status === 'CLOSED') {
-                element.innerText = '마감';
+        var searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchPosts();
             }
         });
+
+        const statusElements = document.querySelectorAll('.recruit-status');
+
+            statusElements.forEach(element => {
+                const status = element.innerText;
+
+                if (status === 'RECRUITING') {
+                    element.innerText = '모집중';
+                } else if (status === 'CLOSED') {
+                    element.innerText = '모집마감';
+                }
+            });
     });
+        // 페이지 로드 시 모집 중인 스터디만 표시
+        $(document).ready(function() {
+            filterStudies('RECRUITING');
+        });
 
     //검색 버튼
     function searchPosts() {
@@ -248,19 +356,26 @@
             });
         }
     }
-    document.addEventListener("DOMContentLoaded", function () {
-        var searchInput = document.getElementById("searchInput");
-        searchInput.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchPosts();
-            }
-        });
-    });
+
+    function loadMore() {
+        let searchKeyword = document.getElementById('searchInput').value;
+        let searchOption = document.getElementById('searchOption').value;
+        let limits = Number(document.getElementById('limits').value) ;
+
+        let totalCount = '${studies[0].TOTALCOUNT}'
+        if(limits >= Number(totalCount)){
+            alert('더이상 조회할 게시물이 없습니다.');
+
+        }else{
+            limits += 5;
+            location.href="${root}/studyRecruit/recruitList?searchKeyword="+searchKeyword + "&searchOption=" + searchOption + "&limits="+limits;
+        }
+    }
+
+
 </script>
+
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-<jsp:include page="../include/footer.jsp"/>
-<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

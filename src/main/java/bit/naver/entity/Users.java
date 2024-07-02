@@ -45,7 +45,6 @@ public class Users implements Serializable {
     private Double latitude;
     private Double longitude;
 
-
     private String gender; // String 타입 유지
 
     private String mobile; //휴대전화번호
@@ -55,8 +54,10 @@ public class Users implements Serializable {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private int totalStudyTime;
-    private int todayStudyTime;
+    private int totalStudyTime=0;
+    private int todayStudyTime=0;
+
+    private String gradeName;
 
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER

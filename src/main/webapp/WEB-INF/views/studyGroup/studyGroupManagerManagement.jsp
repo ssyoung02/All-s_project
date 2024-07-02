@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
-<c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="root" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,6 +50,37 @@
                 });
             }
         }
+
+
+        function updateStudyGroupInfo() {
+            var formData = new FormData();
+            formData.append('studyIdx', ${studyGroup.studyIdx});
+            formData.append('studyTitle', document.getElementById('studyTitle').value);
+            formData.append('description', document.getElementById('description').value);
+
+            $.ajax({
+                url: '${root}/studyGroup/updateStudyGroupInfo',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('${_csrf.headerName}', '${_csrf.token}');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert('스터디가 수정되었습니다.');
+                        location.reload();
+                    } else {
+                        alert('스터디 수정에 실패했습니다: ' + response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error updating study group:', jqXHR.responseText);
+                    alert('스터디 수정 중 오류가 발생했습니다.' + jqXHR.responseText);
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -90,27 +121,25 @@
                 <div class="tabInfo">
                     <div class="webInfo-itemfull">
                         <dt>모집글 제목</dt>
-                        <dd><input value="${studyGroup.studyTitle}" title="모집글 제목" style="width: 30em"></dd>
+                        <dd><input id="studyTitle" value="${studyGroup.studyTitle}" title="모집글 제목" style="width: 30em"></dd>
                     </div>
                     <div class="webInfo-itemfull">
                         <dt>모집글 내용</dt>
                         <dd>
-                            <textarea placeholder="스터디를 모집 내용을 입력해주세요" title="모집글 내용">${studyGroup.description}</textarea>
+                            <textarea id="description" placeholder="스터디 모집 내용을 입력해주세요" title="모집글 내용">${studyGroup.description}</textarea>
                         </dd>
                     </div>
                     <div class="webInfo-itemfull">
                         <dt>스터디 삭제</dt>
                         <dd>
-                            <a id="studyGroupDelete" href="#" onclick="deleteStudyGroup()">스터디 삭제하기</a>
+                            <a id="studyGroupDelete" href="#"onclick="deleteStudyGroup()" onclick="deleteStudyGroup()">스터디 삭제하기</a>
                         </dd>
                     </div>
                 </div>
                 <div class="board-bottom">
-                    <button class="secondary-default" onclick="location.href='${root}/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
-                    <button class="primary-default" onclick="modalOpen()">확인</button>
+                    <button class="primary-default" onclick="modalOpen()">수정</button>
                 </div>
             </div>
-
             <%--콘텐츠 끝--%>
         </main>
     </section>
@@ -120,7 +149,7 @@
         </div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
-                <h4>오류 메세지</h4>
+                <h4>확인 메세지</h4>
                 <button class="modal-close-x" aria-label="닫기" onclick="modalClose()"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center">
@@ -128,7 +157,7 @@
             </div>
             <div class="modal-bottom">
                 <button class="secondary-default" onclick="modalClose()">취소</button>
-                <button type="button" class="modal-close" data-dismiss="modal">확인</button>
+                <button type="button" class="modal-close" data-dismiss="modal" onclick="updateStudyGroupInfo()">확인</button>
             </div>
         </div>
     </div>

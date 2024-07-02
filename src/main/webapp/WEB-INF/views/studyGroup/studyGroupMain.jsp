@@ -14,7 +14,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
@@ -110,7 +109,7 @@
                 <div class="maxcontent">
                     <section class="group-header flex-between">
                         <div class="profile-header">
-                            <img src="" alt="">
+                            <img src="${root}${study.image}">
                             <div class="group-title">
                                 <h2>${study.descriptionTitle}</h2>
                                 <p>${study.description}</p>

@@ -67,6 +67,10 @@ function timeReStart(){
             $('#timeMin').text('00');
         }
     }, 1000);
+
+    // #time-reStart의 onclick을 지우고 클래스 변경
+    $('#time-reStart').removeAttr('onclick').removeClass('primary-default').addClass('button-disabled');
+
 }
 
 
@@ -92,6 +96,9 @@ function startTimer(){
 
     $('#time-start').hide();
     $('#time-reStart').show();
+
+    // #time-reStart의 onclick을 지우고 클래스 변경
+    $('#time-reStart').removeAttr('onclick').removeClass('primary-default').addClass('button-disabled');
 
     $.ajax({
         method: 'POST',
@@ -141,6 +148,10 @@ function pauseTimer() {
             console.error('응답 텍스트:', xhr.responseText);
         }
     })
+
+    // #time-reStart에 onclick을 다시 추가하고 클래스 변경
+    $('#time-reStart').attr('onclick', 'timeReStart()').removeClass('button-disabled').addClass('primary-default');
+
 }
 
 function endTimer() {

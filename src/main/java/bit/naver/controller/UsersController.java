@@ -376,17 +376,32 @@ public class UsersController {
 
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.POST) // GET 방식으로 변경
-    public String userInfo(Model model, Principal principal) {
+    public String userInfo(Model model, Principal principal, HttpSession session) {
         System.out.println("userInfo 메서드 실행");
-        log.info("내정보조회실패"); // 로그 추가
+        log.info("내 정보 조회 실패"); // 로그 추가
         String username = principal.getName();
+
+        log.debug("findByUsername 호출 전: username={}", username);
+
         Users user = usersMapper.findByUsername(username);
-        System.out.println(user.toString());
+
+        if (user == null) {
+            log.error("findByUsername 결과: 사용자 정보를 찾을 수 없습니다. (username: {})", username);
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        } else {
+            log.debug("findByUsername 결과: user={}", user); // user 객체 내용 로그 출력
+        }
+
+        //System.out.println(user.toString());
         if (user == null) {
             throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
         }
 
         model.addAttribute("userVo", user);
+        session.setAttribute("userVo", user); // 세션 업데이트
+
+        log.debug("세션 업데이트 후: userVo={}", session.getAttribute("userVo"));
+
         return "Users/userInfo";
     }
 

@@ -30,7 +30,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < 3; i++) {
@@ -187,7 +186,7 @@
                             </ul>
                             <ul class="userItem">
                                 <li><b>등급</b></li>
-                                <li>${userVo.gradeIdx}</li>
+                                <li>${userVo.gradeName}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>SNS 연동</b></li>

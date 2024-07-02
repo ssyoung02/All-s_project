@@ -117,6 +117,7 @@
     padding: 2em 2em;
     border: 1px solid #588159;
     border-radius: 5px;
+    margin-bottom: 1em;
 }
 
 .title-post{
@@ -166,6 +167,10 @@
     overflow: hidden;
 }
 
+#removeFileButton{
+    padding: 10px 20px;
+}
+
 /*관련 사이트 목록*/
 .siteTitle{
     margin-bottom: 1em;
@@ -203,6 +208,10 @@
     position: absolute;
     opacity: 0;
     overflow: hidden;
+}
+
+#file:hover{
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
 }
 
 .siteItem {
@@ -330,13 +339,13 @@
     font-weight: bold;
 }
 .taglist{
-    gap: 5px;
+    margin-top: 3em;
 }
 .taglist li{
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 3em;
+    margin-top: 1em;
     font-size: 13px;
 }
 .tag-title{
@@ -457,6 +466,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 1em;
 }
 
 .board-item-group {

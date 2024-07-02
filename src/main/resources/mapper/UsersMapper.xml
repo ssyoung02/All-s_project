@@ -24,14 +24,18 @@
         <result column="total_study_time" property="totalStudyTime"/>
         <result column="today_study_time" property="todayStudyTime"/>
         <result column="activity_status" property="activityStatus"/>
+        <result column="gradeName" property="gradeName"/>
     </resultMap>
 
     <select id="findById" resultMap="UsersResultMap">
         SELECT * FROM Users WHERE user_idx = #{userIdx}
     </select>
 
-    <select id="findByUsername" resultMap="UsersResultMap">
-        SELECT * FROM Users WHERE username = #{username}
+    <select id="findByUsername" resultMap="UsersResultMap" flushCache="true">
+        SELECT u.*, g.grade_name as gradeName
+        FROM Users u
+        LEFT JOIN Grades g ON u.total_study_time BETWEEN g.grade_min_time AND g.grade_max_time
+        WHERE u.username = #{username}
     </select>
 
     <select id="findAll" resultMap="UsersResultMap">
@@ -130,6 +134,10 @@
         DELETE FROM Todo WHERE user_idx = #{userId}
     </delete>
 
+    <delete id="deleteStudies" parameterType="Long">
+        DELETE FROM Studies WHERE study_leader_idx = #{userId}
+    </delete>
+
     <delete id="deleteUser" parameterType="Long">
         DELETE FROM Users WHERE user_idx = #{userId}
     </delete>
@@ -169,5 +177,11 @@
         WHERE u.username = a.username
         ORDER BY u.user_idx
         LIMIT ${limit} OFFSET ${offset}
+    </select>
+
+    <select id="findUsernameByUserIdx" resultType="java.lang.String">
+        SELECT username
+        FROM Users
+        WHERE user_idx = #{userIdx}
     </select>
 </mapper>

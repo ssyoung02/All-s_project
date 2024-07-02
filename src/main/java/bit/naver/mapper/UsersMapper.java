@@ -35,7 +35,7 @@ public interface UsersMapper {
 
     // username을 이용하여 사용자 정보를 조회합니다.
 //    @Select("SELECT * FROM Users WHERE username = #{username}")
-    Users findByUsername(String username);
+    Users findByUsername(@Param("username") String username);
 
     // 모든 사용자 정보를 조회합니다.
     //@Select("SELECT * FROM Users")
@@ -90,6 +90,8 @@ public interface UsersMapper {
 
     void deleteUserTodos(@Param("userId") Long userId);
 
+    void deleteStudies(@Param("userId") Long userId);
+
     void deleteUser(@Param("userId") Long userId);
 
 
@@ -107,4 +109,6 @@ public interface UsersMapper {
 
     @Update("UPDATE Users SET activity_status = #{activityStatus, typeHandler=org.apache.ibatis.type.EnumTypeHandler} WHERE user_idx = #{userIdx}")
     void updateActivityStatus(@Param("userIdx") Long userIdx, @Param("activityStatus") Users.ActivityStatus activityStatus);
+
+    String findUsernameByUserIdx(@Param("userIdx") Long userIdx);
 }

@@ -202,7 +202,7 @@
                             customButtons: { // 버튼 추가
                                 calendarLink: {
                                     text: '캘린더 바로가기',
-                                    click: function () {
+                                    click: function() {
                                         location.href = "${root}/calendar"; // 페이지 이동
                                     }
                                 }
@@ -249,6 +249,7 @@
 
 <body>
 <!-- 중앙 컨테이너 -->
+<jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <%-- 로그인 성공 모달 --%>
 <div id="modal-container-main" class="modal unstaged" style="z-index: 100">
@@ -290,8 +291,7 @@
                             <div class="service-info-left">
                                 <h3>서비스</h3>
                                 <h2>혼자 공부하기 힘든 분들을 위한 스터디 서비스!</h2>
-                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을
-                                    제공합니다</p>
+                                <p>다양한 학습 관리, 정보 제공, 취업 지원 기능을 통합하여 학습자가 효율적으로 자기계발과 목표 달성에 집중할 수 있도록 돕는 포괄적인 스터디 플랫폼을 제공합니다</p>
                             </div>
                             <div class="service-info-right flex-colum">
                                 <button class="secondary-default">공부노트<i class="bi bi-arrow-right"></i></button>
@@ -314,7 +314,7 @@
                              style="width:100%; height:250px;border-radius: 5px;"></div> <%-- 로그인 전 지도 컨테이너 --%>
                     </sec:authorize>
                     <script>
-                        $(document).ready(function () {
+                        $(document).ready(function() {
 
                             initializeMapAnonymous();
                             getLocationAndDisplayOnAnonymousMap();
@@ -454,6 +454,8 @@
         </main>
     </section>
 
+    <jsp:include page="include/footer.jsp"/>
+
 </div>
 <script>
     //주간 그래프
@@ -565,7 +567,6 @@
     var markerAnonymous;
     var zoomLevel = 6;
     var isWideView = false;
-
     // 인포윈도우 객체 배열 (로그인 안 한 상태)
     var infowindowAnonymouses = [];
 
@@ -1367,8 +1368,5 @@
 
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-
-<jsp:include page="include/footer.jsp"/>
-<jsp:include page="include/timer.jsp"/>
 </body>
 </html>
