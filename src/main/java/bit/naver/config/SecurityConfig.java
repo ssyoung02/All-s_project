@@ -15,25 +15,20 @@ package bit.naver.config;
 import bit.naver.security.CustomLogoutSuccessHandler;
 import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean; // Bean 등록 어노테이션
-import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
-import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
-import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 

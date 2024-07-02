@@ -57,7 +57,7 @@
                 },
                 beforeSend: function (xhr) {
                     console.log("Weather API Request URL:", url); // 요청 URL 출력
-                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                    //xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function (response) {
                     var iconUrl = response.icon;
