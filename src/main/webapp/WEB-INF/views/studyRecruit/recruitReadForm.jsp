@@ -52,7 +52,17 @@
                         <!--스터디 목록-->
                         <div class="imgtitle flex-row">
                             <div class="board-item flex-columleft">
-                                <h3 class="board-title">${study.studyTitle}</h3>
+                                <c:choose>
+                                    <c:when test="${isLeaderOrAccepted}">
+<%--                                        디자인 수정해야함!!!!!!--%>
+                                        <h3 class="board-title">
+                                            <a href="${root}/studyGroup/studyGroupMain?studyIdx=${study.studyIdx}">${study.studyTitle}</a>
+                                        </h3>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <h3 class="board-title">${study.studyTitle}</h3>
+                                    </c:otherwise>
+                                </c:choose>
                                 <p>작성자: ${study.leaderName} | 작성일:
                                     <script>
                                         var dateString = '${study.createdAt}'; // 서버에서 전송된 날짜 문자열

@@ -109,10 +109,14 @@ public class StudyRecruitController {
         boolean isMember = studyMapper.isMember(studyIdx, userIdx);
         boolean isPending = studyMapper.isPending(studyIdx, userIdx);
 
+
+        boolean isLeaderOrAccepted = study.getStudyLeaderIdx() == userIdx || isMember;
+
         model.addAttribute("study", study);
         model.addAttribute("members", members);
         model.addAttribute("isMember", isMember);
         model.addAttribute("isPending", isPending);
+        model.addAttribute("isLeaderOrAccepted", isLeaderOrAccepted);
 
 
         return "studyRecruit/recruitReadForm";
