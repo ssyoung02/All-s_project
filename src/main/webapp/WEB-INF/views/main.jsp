@@ -62,6 +62,20 @@
             xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
         });
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const statusElements = document.querySelectorAll('.recruit-status');
+
+            statusElements.forEach(element => {
+                const status = element.innerText;
+
+                if (status === 'RECRUITING') {
+                    element.innerText = '모집중';
+                } else if (status === 'CLOSED') {
+                    element.innerText = '모집마감';
+                }
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function () {
             // 캘린더 이벤트 데이터 가져오기
             let eventsData = [];
@@ -303,7 +317,14 @@
                                     </div>
                                     <div class="banner-item-top">
                                         <div class="banner-img">
-                                            <img src="${root}/resources/images/${study.image}" alt="스터디 그룹 로고"/>
+                                            <c:choose>
+                                                <c:when test="${study.image != null}">
+                                                    <img src="${root}${study.image}" alt="스터디 그룹 프로필"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${root}/resources/images/studyGroup.png" alt="스터디 그룹 프로필"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                         <div class="banner-title">
                                             <p class="banner-main-title">${study.studyTitle}</p>
@@ -964,7 +985,7 @@
                             <div class="studyMemberProfile">
                                 <a class="profile" href="#">
                                     <div class="study-profile-img">
-                                        <img src="${root}/resources/profileImages/user.png" alt="내 프로필">
+                                        <img src="${root}/resources/profile슬라이드s/user.png" alt="내 프로필">
                                     </div>
                                 </a>
                             </div>
