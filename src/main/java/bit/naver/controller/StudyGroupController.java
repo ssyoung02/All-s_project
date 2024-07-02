@@ -4,9 +4,14 @@ import bit.naver.entity.*;
 import bit.naver.mapper.NotificationMapper;
 import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyRecruitMapper;
+import bit.naver.mapper.UsersMapper;
+import bit.naver.service.StudyService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.io.File;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/studyGroup")
 public class StudyGroupController {
 
@@ -37,6 +40,12 @@ public class StudyGroupController {
 
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Autowired
+    private UsersMapper usersMapper;
+
+    @Autowired
+    private StudyService studyService;
 
     private static final Logger logger = LoggerFactory.getLogger(StudyGroupController.class);
 
@@ -69,13 +78,13 @@ public class StudyGroupController {
 
         // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
         List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx, searchKeyword, searchOption);
-       // List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
+        // List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
 
         // 모델에 검색어와 검색 옵션을 추가
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("searchOption", searchOption);
-        model.addAttribute("userIdx",userIdx );
-
+        model.addAttribute("userIdx", userIdx);
+        // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
         return "studyGroup/studyGroupList";
@@ -106,6 +115,7 @@ public class StudyGroupController {
                 break;
             }
         }
+        session.setAttribute("studyIdx", studyIdx); // 세션에 studyIdx 저장
 
         // 스터디 회원들을 공부 시간 기준으로 정렬하여 조회
         List<Map<String, Object>> rankedMembers = studyGroupMapper.getStudyMembersByStudyTime(studyIdx);
@@ -384,6 +394,7 @@ public class StudyGroupController {
         }
         return response;
     }
+
     // 알림 정보
     @ResponseBody
     @PostMapping("/getAlarmInfo")
@@ -405,5 +416,37 @@ public class StudyGroupController {
             e.printStackTrace();
             return "알림 삭제 중 오류가 발생했습니다.";
         }
+    }
+
+
+    @GetMapping("/studyGroupMain/members/{studyIdx}")
+    @ResponseBody
+    public ResponseEntity<List<StudyMemberStatus>> getStudyGroupMemberStatus(@PathVariable Long studyIdx, HttpSession session) {
+        Users user = (Users) session.getAttribute("userVo");
+        Long userIdx = user.getUserIdx();
+
+        // 현재 사용자가 스터디 멤버인지 확인
+        StudyMembers member = studyGroupMapper.getStudyMember(studyIdx, userIdx);
+        if (member == null || !member.getStatus().equals("ACCEPTED")) { // ACCEPTED 상태인지 확인
+            return ResponseEntity.ok(Collections.emptyList()); // 멤버가 아니면 빈 리스트 반환
+        }
+
+        // 스터디 멤버들의 activity_status 조회
+        List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+        List<StudyMemberStatus> memberStatusList = new ArrayList<>();
+        for (StudyMembers studyMember : members) {
+            Users memberUser = usersMapper.findById(studyMember.getUserIdx());
+            if (memberUser != null) {
+                StudyMemberStatus status = new StudyMemberStatus();
+                status.setUserIdx(memberUser.getUserIdx());
+                status.setUsername(memberUser.getUsername());
+                status.setName(memberUser.getName());
+                status.setActivityStatus(memberUser.getActivityStatus().getValue());
+                status.setProfile_image(memberUser.getProfileImage());
+                memberStatusList.add(status);
+            }
+        }
+
+        return ResponseEntity.ok(memberStatusList);
     }
 }

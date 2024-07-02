@@ -120,8 +120,6 @@ public class StudyReferencesController {
 
 		notificationMapper.createReferenceNotification(notification);
 
-		System.out.println(notification.toString());
-
 		return studyReferencesService.insertComment(content);
 	}
 

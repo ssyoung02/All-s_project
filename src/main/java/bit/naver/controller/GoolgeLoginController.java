@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -66,7 +67,7 @@ public class GoolgeLoginController {
     }
 
     @GetMapping("/login/oauth2/code/google")
-    public String handleGoogleAuthCode(@RequestParam String code, Model model) {
+    public String handleGoogleAuthCode(@RequestParam String code, Model model, HttpSession session) {
         try {
             // 구글 사용자 정보 가져오기
             GoogleUsersInfo userInfo = loginService.getUsersInfoFromGoogle(code);
@@ -92,6 +93,7 @@ public class GoolgeLoginController {
                         userDetails, null, userDetails.getAuthorities()
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                session.setAttribute("error", "로그인에 성공했습니다");
 
                 return "redirect:/main";
             } else {

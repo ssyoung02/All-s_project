@@ -96,21 +96,20 @@
                               AND lr.user_idx = #{userIdx}
         <where>
             sg.status IN ('RECRUITING', 'CLOSED')
-        <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
-            AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%'))
-        </if>
-        <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
-            AND study_title LIKE CONCAT('%', #{searchKeyword}, '%')
-        </if>
-        <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
-            AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
-        </if>
-        <if test="searchOption != null and searchOption == 'writer-post' and searchKeyword != null and searchKeyword != ''">
-            AND name LIKE CONCAT('%', #{searchKeyword}, '%')
-        </if>
+            <if test="searchOption != null and searchOption == 'all-post' and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR name LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'title-post' and searchKeyword != null and searchKeyword != ''">
+                AND study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
+            <if test="searchOption != null and searchKeyword != null and searchKeyword != ''">
+                AND (study_title LIKE CONCAT('%', #{searchKeyword}, '%') OR description LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="searchOption != null and searchOption == 'writer-post' and searchKeyword != null and searchKeyword != ''">
+                AND name LIKE CONCAT('%', #{searchKeyword}, '%')
+            </if>
         </where>
-    ORDER BY createdAt DESC
-
+        ORDER BY createdAt DESC
     </select>
 
     <select id="getStudyById" parameterType="java.lang.Long" resultType="bit.naver.entity.StudyGroup">
@@ -261,38 +260,56 @@
 
     <select id="getStudiesPaged" resultType="bit.naver.entity.StudyGroup">
         SELECT
-            sg.study_idx AS studyIdx,
-            sg.study_leader_idx AS studyLeaderIdx,
-            sg.study_title AS studyTitle,
-            sg.description_title AS descriptionTitle,
-            sg.likes_count AS likesCount,
-            sg.report_count AS reportCount,
-            sg.description AS description,
-            sg.category AS category,
-            sg.study_online AS studyOnline,
-            sg.meeting_time AS meetingTime,
-            sg.latitude AS latitude,
-            sg.longitude AS longitude,
-            sg.age AS age,
-            sg.capacity AS capacity,
-            sg.gender AS gender,
-            sg.start_date AS startDate,
-            sg.end_date AS endDate,
-            sg.image AS image,
-            sg.status AS status,
-            sg.created_at AS createdAt,
-            u.name AS leaderName,
-            IFNULL(lr.study_idx, 0) AS isLike
+        sg.study_idx AS studyIdx,
+        sg.study_leader_idx AS studyLeaderIdx,
+        sg.study_title AS studyTitle,
+        sg.description_title AS descriptionTitle,
+        sg.likes_count AS likesCount,
+        sg.report_count AS reportCount,
+        sg.description AS description,
+        sg.category AS category,
+        sg.study_online AS studyOnline,
+        sg.meeting_time AS meetingTime,
+        sg.latitude AS latitude,
+        sg.longitude AS longitude,
+        sg.age AS age,
+        sg.capacity AS capacity,
+        sg.gender AS gender,
+        sg.start_date AS startDate,
+        sg.end_date AS endDate,
+        sg.image AS image,
+        sg.status AS status,
+        sg.created_at AS createdAt,
+        u.name AS leaderName,
+        IFNULL(lr.study_idx, 0) AS isLike
         FROM
-            Studies sg
-                LEFT JOIN Users u ON sg.study_leader_idx = u.user_idx
-                LEFT JOIN LikeStudy lr ON sg.study_idx = lr.study_idx AND lr.user_idx = #{userIdx}
-        WHERE
-            sg.status = #{status} OR #{status} = 'ALL'
+        Studies sg
+        LEFT JOIN Users u ON sg.study_leader_idx = u.user_idx
+        LEFT JOIN LikeStudy lr ON sg.study_idx = lr.study_idx AND lr.user_idx = #{userIdx}
+        <where>
+            (sg.status = #{status} OR #{status} = 'ALL')
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchOption == 'all-post'">
+                        AND (sg.study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR sg.description LIKE CONCAT('%', #{searchKeyword}, '%'))
+                    </when>
+                    <when test="searchOption == 'title-post'">
+                        AND sg.study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+                    </when>
+                    <!-- 다른 옵션에 대한 조건 추가 가능 -->
+                    <otherwise>
+                        AND (sg.study_title LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR sg.description LIKE CONCAT('%', #{searchKeyword}, '%'))
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
         ORDER BY
-            sg.created_at DESC
+        sg.created_at DESC
         LIMIT #{offset}, #{limit}
     </select>
+
 
     <select id="countAllStudies" resultType="int">
         SELECT COUNT(*)

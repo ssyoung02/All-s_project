@@ -287,12 +287,13 @@
         }
 
         function changeNewMarkColor(hasAlarm) {
-            var newMark = document.getElementById('newMark');
+            var newMark = $("#newMark");
 
             if (hasAlarm) {
-                newMark.classList.add('alert');
+                newMark.addClass("alert");
             } else {
-                newMark.classList.remove('alert');
+                newMark.removeClass("alert");
+                newMark.text(""); // 내용을 비움
             }
         }
     });

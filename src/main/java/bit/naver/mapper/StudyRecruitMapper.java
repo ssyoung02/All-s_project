@@ -68,7 +68,9 @@ public interface StudyRecruitMapper {
     List<StudyGroup> getStudiesPaged(@Param("userIdx") long userIdx,
                                      @Param("status") String status,
                                      @Param("offset") int offset,
-                                     @Param("limit") int limit);
+                                     @Param("limit") int limit,
+                                     @Param("searchKeyword") String searchKeyword,
+                                     @Param("searchOption") String searchOption);
 
     // 전체 스터디 수
     int countAllStudies(@Param("userIdx") long userIdx, @Param("status") String status);
