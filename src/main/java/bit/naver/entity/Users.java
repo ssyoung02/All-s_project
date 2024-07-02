@@ -41,7 +41,6 @@ public class Users implements Serializable {
 
     private String profileImage ;
     private Boolean enabled;
-    private Long gradeIdx;
     private String provider;
     private Double latitude;
     private Double longitude;
@@ -77,10 +76,10 @@ public class Users implements Serializable {
     private ActivityStatus activityStatus;
 
     public enum ActivityStatus {
-        ACTIVE("온라인"),
-        STUDYING("공부 중"),
-        RESTING("쉬는 중"),
-        NOT_LOGGED_IN("오프라인");
+        ACTIVE("ACTIVE"),
+        STUDYING("STUDYING"),
+        RESTING("RESTING"),
+        NOT_LOGGED_IN("NOT_LOGGED_IN");
 
         private String value;
 

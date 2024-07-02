@@ -4,9 +4,13 @@ import bit.naver.entity.*;
 import bit.naver.mapper.NotificationMapper;
 import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyRecruitMapper;
+import bit.naver.mapper.UsersMapper;
+import bit.naver.service.StudyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +33,12 @@ public class StudyGroupController {
 
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Autowired
+    private UsersMapper usersMapper;
+
+    @Autowired
+    private StudyService studyService;
 
     private static final Logger logger = LoggerFactory.getLogger(StudyGroupController.class);
 
@@ -65,7 +75,7 @@ public class StudyGroupController {
         // 모델에 검색어와 검색 옵션을 추가
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("searchOption", searchOption);
-        model.addAttribute("userIdx",userIdx );
+        model.addAttribute("userIdx", userIdx);
         // 모델에 사용자 스터디 목록 추가
         model.addAttribute("myStudies", myStudies);
 
@@ -94,6 +104,7 @@ public class StudyGroupController {
                 break;
             }
         }
+        session.setAttribute("studyIdx", studyIdx); // 세션에 studyIdx 저장
 
         model.addAttribute("study", study);
         model.addAttribute("members", members);
@@ -286,4 +297,36 @@ public class StudyGroupController {
 
         return data;
     }
+
+    @GetMapping("/studyGroupMain/members/{studyIdx}")
+    @ResponseBody
+    public ResponseEntity<List<StudyMemberStatus>> getStudyGroupMemberStatus(@PathVariable Long studyIdx, HttpSession session) {
+        Users user = (Users) session.getAttribute("userVo");
+        Long userIdx = user.getUserIdx();
+
+        // 현재 사용자가 스터디 멤버인지 확인
+        StudyMembers member = studyGroupMapper.getStudyMember(studyIdx, userIdx);
+        if (member == null || !member.getStatus().equals("ACCEPTED")) { // ACCEPTED 상태인지 확인
+            return ResponseEntity.ok(Collections.emptyList()); // 멤버가 아니면 빈 리스트 반환
+        }
+
+        // 스터디 멤버들의 activity_status 조회
+        List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+        List<StudyMemberStatus> memberStatusList = new ArrayList<>();
+        for (StudyMembers studyMember : members) {
+            Users memberUser = usersMapper.findById(studyMember.getUserIdx());
+            if (memberUser != null) {
+                StudyMemberStatus status = new StudyMemberStatus();
+                status.setUserIdx(memberUser.getUserIdx());
+                status.setUsername(memberUser.getUsername());
+                status.setName(memberUser.getName());
+                status.setActivityStatus(memberUser.getActivityStatus().getValue());
+                status.setProfile_image(memberUser.getProfileImage());
+                memberStatusList.add(status);
+            }
+        }
+
+        return ResponseEntity.ok(memberStatusList);
+    }
+
 }

@@ -75,6 +75,7 @@ public class StudyRecruitController {
         model.addAttribute("study", study);
         model.addAttribute("members", members);
         model.addAttribute("isMember", isMember);
+        model.addAttribute("studyIdx", studyIdx); // studyIdx를 모델에 추가
 
         return "studyRecruit/recruitReadForm";
     }

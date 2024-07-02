@@ -19,6 +19,7 @@
         <result property="endDate" column="end_date" />
         <result property="status" column="status" />
         <result property="createdAt" column="created_at" />
+        <result property="distance" column="distance"/>
     </resultMap>
 
 <!--스터디 모집 테이블 데이터 삽입-->
@@ -91,7 +92,9 @@
             sm.join_reason AS joinReason,
             sm.created_at AS createdAt,
             sm.updated_at AS updatedAt,
-            u.name AS userName
+            u.name AS userName,
+            u.activity_status AS activityStatus  -- activity_status 컬럼 추가
+
         FROM
             StudyMembers sm
                 JOIN Users u ON sm.user_idx = u.user_idx
@@ -154,4 +157,28 @@
         ORDER BY distance ASC
         LIMIT #{limit}
     </select>
+
+    <select id="getAllStudies" resultMap="studyResultMap">
+        SELECT *,
+               (6371 * acos(cos(radians(#{userLatitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(#{userLongitude})) + sin(radians(#{userLatitude})) * sin(radians(latitude)))) AS distance
+        FROM Studies
+    </select>
+
+    <select id="getIStudies" parameterType="Long" resultMap="studyResultMap">
+        SELECT s.*
+        FROM StudyMembers sm
+                 JOIN Studies s ON sm.study_idx = s.study_idx
+        WHERE sm.user_idx = #{userIdx} AND sm.status = 'ACCEPTED'
+    </select>
+
+    <select id="getJoinedStudies" parameterType="map" resultMap="studyResultMap">
+        SELECT s.*,
+               (6371 * acos(cos(radians(#{userLatitude})) * cos(radians(latitude)) * cos(radians(longitude) - radians(#{userLongitude})) + sin(radians(#{userLatitude})) * sin(radians(latitude)))) AS distance
+        FROM Studies s
+                 JOIN StudyMembers sm ON s.study_idx = sm.study_idx
+        WHERE sm.user_idx = #{userIdx} AND sm.status = 'ACCEPTED'
+        ORDER BY distance ASC
+    </select>
+
+
 </mapper>

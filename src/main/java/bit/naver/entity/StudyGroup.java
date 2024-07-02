@@ -63,6 +63,7 @@ public class StudyGroup {
 
     private Long userIdx;
 
+    private Double distance;
 
     public String role;
 }

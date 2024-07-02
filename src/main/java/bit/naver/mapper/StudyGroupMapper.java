@@ -53,7 +53,7 @@ public interface StudyGroupMapper {
     void deleteStudyMembersByStudyIdx(Long studyIdx);
 //    void approveMember(Long studyIdx, Long userIdx);
 
-    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude,likes_count AS likesCount, currentParticipants, capacity FROM Studies") // 필요한 정보만 조회
+    @Select("SELECT study_idx as studyIdx, study_title AS studyTitle, category, latitude, longitude,likes_count AS likesCount, currentParticipants, capacity,distance FROM Studies") // 필요한 정보만 조회
     List<StudyGroup> findAllStudies();
 
     boolean isMember(@Param("studyIdx") Long studyIdx, @Param("userIdx") Long userIdx);
@@ -65,4 +65,8 @@ public interface StudyGroupMapper {
     Long getStudyLeaderIdx(Long studyIdx);
 
     List<StudyGroup> findNearestStudies(@Param("userLatitude") double userLatitude, @Param("userLongitude") double userLongitude, @Param("limit") int limit);
+    List<StudyGroup> getAllStudies(@Param("userLatitude") double userLatitude, @Param("userLongitude") double userLongitude);
+    List<StudyGroup> getIStudies(Long userIdx); // 사용자가 참여 중인 스터디 목록 조회 메서드 추가
+    List<StudyGroup> getJoinedStudies(@Param("userLatitude") Double userLatitude, @Param("userLongitude") Double userLongitude, @Param("userIdx") Long userIdx);
+
 }

@@ -58,7 +58,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 .userStudyGroupTitle h3{
     width: 115px;
@@ -76,7 +76,6 @@
 }
 .memberItem{
     display: flex;
-    gap: 10px;
     align-items: center;
 }
 .study-profile-img{

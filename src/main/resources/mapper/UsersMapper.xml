@@ -13,7 +13,6 @@
         <result column="birthdate" property="birthdate"/>
         <result column="profile_image" property="profileImage"/>
         <result column="enabled" property="enabled"/>
-        <result column="grade_idx" property="gradeIdx"/>
         <result column="provider" property="provider"/>
         <result column="latitude" property="latitude"/>
         <result column="longitude" property="longitude"/>
@@ -40,9 +39,9 @@
     </select>
 
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="userIdx">
-        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, grade_idx, provider, latitude, longitude, gender, social_login, created_at, updated_at, mobile)
+        INSERT INTO Users (username, password, email, name, birthdate, profile_image, enabled, provider, latitude, longitude, gender, social_login, created_at, updated_at, mobile)
         VALUES (#{username}, #{password}, #{email}, #{name}, #{birthdate}, #{profileImage},
-                #{enabled}, #{gradeIdx}, #{provider}, #{latitude}, #{longitude}, #{gender},
+                #{enabled}, #{provider}, #{latitude}, #{longitude}, #{gender},
                 #{socialLogin}, #{createdAt}, #{updatedAt}, #{mobile})
     </insert>
 
