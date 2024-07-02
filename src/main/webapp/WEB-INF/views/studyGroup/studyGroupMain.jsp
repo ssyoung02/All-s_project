@@ -109,7 +109,16 @@
                 <div class="maxcontent">
                     <section class="group-header flex-between">
                         <div class="profile-header">
-                            <img src="${root}${study.image}">
+                            <c:if test="${study.image != null}">
+                                <div class="studygroup-profile-s">
+                                    <img src="${root}${study.image}">
+                                </div>
+                            </c:if>
+                            <c:if test="${study.image == null}">
+                                <div class="studygroup-profile-s">
+                                    <img src="${root}/resources/images/studyGroup.png">
+                                </div>
+                            </c:if>
                             <div class="group-title">
                                 <h2>${study.descriptionTitle}</h2>
                                 <p>${study.description}</p>
@@ -158,54 +167,6 @@
                                         </div>
                                     </c:forEach>
                                 </div>
-                            </div>
-                                <div class="lank-list">
-                                    <div class="lank-item">
-                                        <div class="lanking-circle">
-                                            <div class="circle-number top3">
-                                                1
-                                            </div>
-                                        </div>
-                                        <p class="lank-id">Jihyeon</p>
-                                        <p class="lank-time">120h</p>
-                                    </div>
-                                    <div class="lank-item">
-                                        <div class="lanking-circle">
-                                            <div class="circle-number top3">
-                                                2
-                                            </div>
-                                        </div>
-                                        <p class="lank-id">Jihyeon</p>
-                                        <p class="lank-time">120h</p>
-                                    </div>
-                                    <div class="lank-item">
-                                        <div class="lanking-circle">
-                                            <div class="circle-number top3">
-                                                3
-                                            </div>
-                                        </div>
-                                        <p class="lank-id">Jihyeon</p>
-                                        <p class="lank-time">87h</p>
-                                    </div>
-                                    <div class="lank-item">
-                                        <div class="lanking-circle">
-                                            <div class="circle-number">
-                                                4
-                                            </div>
-                                        </div>
-                                        <p class="lank-id">Yeajoon</p>
-                                        <p class="lank-time">7h</p>
-                                    </div>
-                                    <div class="lank-item">
-                                        <div class="lanking-circle">
-                                            <div class="circle-number">
-                                                5
-                                            </div>
-                                        </div>
-                                        <p class="lank-id">Jeayung</p>
-                                        <p class="lank-time">7h</p>
-                                    </div>
-
                             </div>
                             <!--캘린더-->
                             <h2>스터디 일정</h2>

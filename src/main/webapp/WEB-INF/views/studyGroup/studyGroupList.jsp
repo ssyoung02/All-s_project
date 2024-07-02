@@ -95,11 +95,12 @@
                                             <div class="imgtitle flex-row">
                                                 <c:if test="${study.image != null}">
                                                     <div class="studygroup-profile-s">
-                                                        <img src="${root}${study.image}">  </div>
+                                                        <img src="${root}${study.image}">
+                                                    </div>
                                                 </c:if>
                                                 <c:if test="${study.image == null}">
                                                     <div class="studygroup-profile-s">
-                                                        <img src="${root}/images/logo.png">
+                                                        <img src="${root}/resources/images/studyGroup.png">
                                                     </div>
                                                 </c:if>
                                                 <div class="board-item flex-columleft">

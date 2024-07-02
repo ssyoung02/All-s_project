@@ -96,7 +96,14 @@
                                         </div>
                                         <div class="banner-item-top">
                                             <div class="banner-img">
-                                                <img src="${root}${study.image}" alt="스터디 그룹 프로필"/>
+                                                <c:choose>
+                                                    <c:when test="${study.image != null}">
+                                                        <img src="${root}${study.image}" alt="스터디 그룹 프로필"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src="${root}/resources/images/studyGroup.png" alt="스터디 그룹 프로필"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                             <div class="banner-title">
                                                 <p class="banner-main-title">${study.studyTitle}</p>
@@ -138,7 +145,14 @@
                                             onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="board-item flex-columleft">
                                             <div class="flex-row">
-                                                <img src="${root}${study.image}" alt="스터디 그룹 로고" style="width: 50px; height: 50px; margin-right: 10px;">
+                                                <c:choose>
+                                                    <c:when test="${study.image != null}">
+                                                        <img src="${root}${study.image}" alt="스터디 그룹 프로필" style="width: 50px; height: 50px; margin-right: 10px;"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <img src="${root}/resources/images/studyGroup.png" alt="스터디 그룹 프로필" style="width: 50px; height: 50px; margin-right: 10px;"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 <div>
                                                     <p class="study-tag">
                                                         <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
@@ -243,53 +257,6 @@
 <script src="${root}/resources/js/slider.js"></script>
 
 <script>
-
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     const statusElements = document.querySelectorAll('.recruit-status');
-    //
-    //     statusElements.forEach(element => {
-    //         const status = element.innerText;
-    //
-    //         if (status === 'RECRUITING') {
-    //             element.innerText = '모집중';
-    //         } else if (status === 'CLOSED') {
-    //             element.innerText = '모집마감';
-    //         }
-    //     });
-    // });
-
-    // 페이지 로드 시 모집 중인 스터디만 표시
-    $(document).ready(function() {
-        filterStudies('RECRUITING');
-    });
-
-    <%--function redirectToStudyDetail(studyIdx) {--%>
-    <%--    var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;--%>
-    <%--    window.location.href = url;--%>
-    <%--}--%>
-
-
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     var searchInput = document.getElementById("searchInput");
-    //     searchInput.addEventListener("keypress", function (event) {
-    //         if (event.key === "Enter") {
-    //             event.preventDefault();
-    //             searchPosts();
-    //         }
-    //     });
-    //
-    //     const statusElements = document.querySelectorAll('.recruit-status');
-    //
-    //         statusElements.forEach(element => {
-    //             const status = element.innerText;
-    //
-    //             if (status === 'RECRUITING') {
-    //                 element.innerText = '모집중';
-    //             } else if (status === 'CLOSED') {
-    //                 element.innerText = '모집마감';
-    //             }
-    //         });
-    // });
 
     document.addEventListener("DOMContentLoaded", function () {
         var searchInput = document.getElementById("searchInput");
