@@ -103,8 +103,12 @@
                             if (typeof locationName === 'undefined' || locationName === null || locationName === '') {
                                 locationName = "서초동";
                             }
+
                             var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + locationName + " " + temperature + "°C";
                             $("#weatherInfo").html(weatherInfo);
+
+                            localStorage.setItem("locationName", locationName);
+                            $("#studyLocation").prev("label").text(locationName);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             console.error("Geocoding AJAX Error:", textStatus, errorThrown);

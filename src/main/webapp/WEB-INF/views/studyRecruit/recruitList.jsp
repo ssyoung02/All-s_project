@@ -42,8 +42,8 @@
                 <div class="maxcontent">
                     <div class="list-title flex-between">
                         <div>
+                            <i class="bi bi-map"></i>
                             <label for="studyLocation">
-                                <i class="bi bi-map"></i>
                                 강남구
                             </label>
                             <input type="button" id="studyLocation" class="studyLocation" value="지도 선택">
@@ -241,7 +241,11 @@
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script src="${root}/resources/js/slider.js"></script>
-
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script src="${root}/resources/js/slider.js"></script>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
+</body>
 <script>
 
     // document.addEventListener("DOMContentLoaded", function () {
@@ -258,10 +262,6 @@
     //     });
     // });
 
-    // 페이지 로드 시 모집 중인 스터디만 표시
-    $(document).ready(function() {
-        filterStudies('RECRUITING');
-    });
 
     <%--function redirectToStudyDetail(studyIdx) {--%>
     <%--    var url = "${root}/studyRecruit/recruitReadForm?studyIdx=" + studyIdx;--%>
@@ -316,9 +316,15 @@
     });
 
     // 페이지 로드 시 모집 중인 스터디만 표시
-        $(document).ready(function() {
-            filterStudies('RECRUITING');
-        });
+    $(document).ready(function() {
+        filterStudies('RECRUITING');
+
+        // 지역 정보 가져와서 표시
+        var savedLocationName = localStorage.getItem("locationName");
+        if (savedLocationName) {
+            $("#studyLocation").prev("label").text(savedLocationName);
+        }
+    });
 
     //검색 버튼
     function searchPosts() {
@@ -389,10 +395,4 @@
         });
     });
 </script>
-
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script src="${root}/resources/js/slider.js"></script>
-<jsp:include page="../include/footer.jsp"/>
-<jsp:include page="../include/timer.jsp"/>
-</body>
 </html>
