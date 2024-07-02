@@ -29,7 +29,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import java.util.Arrays;
 
 
 @Configuration
@@ -121,7 +127,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                     .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
 
-
         http.sessionManagement()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
@@ -157,4 +162,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     }
 
     // BCryptPasswordEncoder를 Bean으로 등록하여 비밀번호 암호화에 사용합니다.
+
 }
