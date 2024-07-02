@@ -5,8 +5,8 @@
 }
 .swiper-slide {
     display: flex;
-    align-items: flex-start;  /* Align items to the top of the slide */
-    justify-content: flex-start; /* Align items to the left of the slide */
+    align-items: center;
+    justify-content: center;
     font-size: 20px;
     text-align: center;
 }
@@ -79,9 +79,6 @@
 .banner-content{
     text-align: left;
     height: 45px;
-    overflow: hidden; /* Hide overflow if text is too long */
-    text-overflow: ellipsis; /* Add ellipsis (...) to indicate overflow */
-    white-space: nowrap;  /* Prevent text from wrapping to multiple lines */
 }
 .control-button{
     position: absolute;
@@ -95,6 +92,82 @@
     width: 100%;
     padding: 15px;
     box-shadow: 0 3px 3px rgba(0, 0, 0, 0.1);
-    gap: 1em;
+    gap: 10px;
     margin-bottom: 1.5em;
 }
+
+/*메인 스터디그룹 슬라이더*/
+
+.userStudyGroup{
+ position: relative;
+}
+.loginUserInfoRight {
+    overflow: hidden; /* 슬라이더 컨테이너 넘침 방지 */
+}
+
+
+.userStudyGroupList .swiper-slide{
+    border-radius: 5px;
+    border: 1px solid #dad8cc;
+}
+
+.studyGroupTitle{
+    margin: 10px 0;
+    text-align: center;
+    font-size: 17px;
+}
+.userStudyGroupDetail{
+    width: 100%;
+}
+.userStudyGroupMemerList{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    min-height: 200px;
+    max-height: 250px;
+    overflow: hidden;
+}
+
+/*상태표시*/
+/* 추가 스타일 */
+.study-status{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.study-status.ACTIVE { /* 활동중 */
+    background-color: #8FC8EB;
+}
+.study-status.STUDYING { /* 공부중 */
+    background-color: #E99E75;
+}
+.study-status.RESTING { /* 쉬는중 */
+    background-color: #BBAAB8;
+}
+.study-status.NOT_LOGGED_IN { /* 미로그인 */
+    background-color: #697A98;
+}
+
+/*스터디 멤버 프로필*/
+.memberItem{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.study-profile-img{
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.study-profile-img img{
+    width: 100%;
+    height: 100%;
+}
+.study-status span{
+    position: absolute;
+    opacity: 0;
+}
+

@@ -43,6 +43,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -568,7 +569,37 @@ public class UsersController {
         return false;
     }
 
+    @GetMapping("/userLocation") // GET 방식으로 변경
+    @ResponseBody // JSON 형태로 응답
+    public Map<String, Object> userLocation(Principal principal) {
+        System.out.println("userLocation 메서드 실행"); // 이 부분은 삭제해도 무방합니다.
+        log.info("사용자 위치 정보 조회 시작 (username: {})", principal.getName());
 
+        Users user = usersMapper.findByUsername(principal.getName());
+
+        if (user == null) {
+            log.error("사용자 정보를 찾을 수 없습니다. (username: {})", principal.getName());
+            throw new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다.");
+        }
+
+        log.debug("DB에서 가져온 사용자 정보: {}", user); // 사용자 정보 전체 로그 출력
+
+        if (user.getLatitude() != null && user.getLongitude() != null) {
+            Map<String, Object> userLocation = new HashMap<>();
+            userLocation.put("latitude", user.getLatitude());
+            userLocation.put("longitude", user.getLongitude());
+            log.info("사용자 위치 정보 조회 성공 (latitude: {}, longitude: {})", user.getLatitude(), user.getLongitude());
+            return userLocation;
+        } else {
+            log.warn("사용자의 위도/경도 정보가 없습니다. (username: {})", principal.getName());
+
+            // 사용자 정보를 찾을 수 없거나 위도/경도 값이 없는 경우 기본 위치 반환
+            Map<String, Object> defaultLocation = new HashMap<>();
+            defaultLocation.put("latitude", 37.5665);
+            defaultLocation.put("longitude", 126.9780);
+            return defaultLocation;
+        }
+    }
     //------------------------------------------------------------------------------------------------------------------------
     // 접근 거부 페이지
     @GetMapping("/access-denied")

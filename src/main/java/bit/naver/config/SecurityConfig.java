@@ -15,15 +15,14 @@ package bit.naver.config;
 import bit.naver.security.CustomLogoutSuccessHandler;
 import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean; // Bean 등록 어노테이션
-import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
-import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -79,9 +78,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                         "/webapp/resources/js/**", "/", "/main", "/about", "/weather", "/include/**").permitAll()
                 .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
                         "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
-                        , "/access-denied").permitAll()
-                .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
-                .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
+                        , "/access-denied", "User/userLocation").permitAll()
+                    .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
                 // 그 외 모든 요청은 인증된 사용자만 접근 허용
                 .antMatchers("/calendar/**").authenticated()
                 .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
@@ -94,11 +93,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/Users/UsersLoginForm")
-                .loginProcessingUrl("/Users/Login")
-                .defaultSuccessUrl("/main")
-                .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
-                .permitAll()
+                    .loginPage("/Users/UsersLoginForm")
+                    .loginProcessingUrl("/Users/Login")
+                    .defaultSuccessUrl("/main")
+                    .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/Users/logout")
