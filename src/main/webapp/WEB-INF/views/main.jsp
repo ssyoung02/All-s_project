@@ -96,13 +96,14 @@
             width: 80%; /* 너비 */
             height: 335px; /* 높이 (원하는 값으로 조절) */
             overflow: hidden; /* 슬라이더 넘침 방지 */
+            vertical-align: middle ;
         }
         #studyGroup_.userStudyGroup {
             height: 300px; /* 높이 (원하는 값으로 조절) */
             width: 200px; /* 너비 */
             padding: 10px ;
             top: 30px;
-            vertical-align: center;
+            vertical-align: middle;
         }
 
         .userStudyGroup .swiper-wrapper { /* 슬라이드 래퍼 스타일 */

@@ -6,6 +6,7 @@ import bit.naver.mapper.StudyGroupMapper;
 import bit.naver.mapper.StudyRecruitMapper;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.service.StudyService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.io.File;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/studyGroup")
 public class StudyGroupController {
 
@@ -79,7 +78,7 @@ public class StudyGroupController {
 
         // DB에서 해당 사용자가 참여 중인 모든 스터디 목록 조회 (승인된 스터디와 승인 대기 중인 스터디 포함)
         List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx, searchKeyword, searchOption);
-       // List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
+        // List<StudyList> myStudies = studyGroupMapper.getAllMyStudies(userIdx);
 
         // 모델에 검색어와 검색 옵션을 추가
         model.addAttribute("searchKeyword", searchKeyword);
@@ -389,6 +388,7 @@ public class StudyGroupController {
         }
         return response;
     }
+
     // 알림 정보
     @ResponseBody
     @PostMapping("/getAlarmInfo")
@@ -411,7 +411,7 @@ public class StudyGroupController {
             return "알림 삭제 중 오류가 발생했습니다.";
         }
     }
-}
+
 
     @GetMapping("/studyGroupMain/members/{studyIdx}")
     @ResponseBody
@@ -443,5 +443,4 @@ public class StudyGroupController {
 
         return ResponseEntity.ok(memberStatusList);
     }
-
 }
