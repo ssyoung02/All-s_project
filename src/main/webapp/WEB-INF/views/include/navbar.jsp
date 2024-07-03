@@ -151,11 +151,8 @@
             </div>
         </div>
     </sec:authorize>
-
-
 </div>
 <script>
-
     // 컨텍스트 루트 및 현재 URI 설정
     const contextPath = 'http://localhost:8080/WEB-INF/views/';
     const currentURI = '${currentURI}';
@@ -210,11 +207,22 @@
             const totalStudyTime = data.totalStudyTime;
             const todayStudyTime = data.todayStudyTime;
 
+            console.log("totalStudyTime: "+totalStudyTime);
+            console.log("todayStudyTime: "+todayStudyTime)
+
             // HTML 요소에 데이터를 삽입
             document.querySelectorAll('.totalstudytime').forEach(element => {
-                element.innerText = formatTime(totalStudyTime);
+                if(totalStudyTime==0){
+                    element.innerText = "-";
+                }else {
+                    element.innerText = formatTime(totalStudyTime);
+                }
             });
-            document.getElementById('todaystudytime').innerText = formatTime(todayStudyTime);
+            if(todayStudyTime==0){
+                document.getElementById('todaystudytime').innerText = "-"
+            }else {
+                document.getElementById('todaystudytime').innerText = formatTime(todayStudyTime);
+            }
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);

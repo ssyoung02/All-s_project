@@ -28,9 +28,6 @@
 /*회원정보 스타일*/
 @import url(user.css);
 
-/*스케쥴러*/
-@import url(scheduler.css);
-
 /*카카오지도*/
 @import url(map.css);
 
