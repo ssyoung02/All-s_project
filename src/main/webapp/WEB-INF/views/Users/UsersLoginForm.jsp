@@ -64,7 +64,7 @@
     </div>
 
     <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged">
+    <div id="modal-container" class="modal unstaged" onclick="modalCloseBack()">
         <div class="modal-overlay">
         </div>
         <div class="modal-contents">
