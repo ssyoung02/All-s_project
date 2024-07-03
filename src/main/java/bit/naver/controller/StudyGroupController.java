@@ -332,6 +332,8 @@ public class StudyGroupController {
                                                 @RequestParam("gender") String gender,
                                                 @RequestParam("studyOnline") boolean studyOnline,
                                                 @RequestParam(value = "image", required = false) MultipartFile image,
+                                                @RequestParam("latitude") double latitude,
+                                                @RequestParam("longitude") double longitude,
                                                 HttpSession session, HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -343,6 +345,8 @@ public class StudyGroupController {
             studyGroup.setAge(age);
             studyGroup.setGender(gender);
             studyGroup.setStudyOnline(studyOnline);
+            studyGroup.setLatitude(latitude);  // 위치 정보 업데이트
+            studyGroup.setLongitude(longitude);  // 위치 정보 업데이트
 
             if (image != null && !image.isEmpty()) {
                 String savePath = request.getServletContext().getRealPath("/resources/studyGroupImages");

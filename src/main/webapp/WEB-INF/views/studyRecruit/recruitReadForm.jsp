@@ -196,19 +196,7 @@
                                 </div>
                             </dd>
                         </div>
-                        <div class="webInfo-itemfull">
-                            <dt>지역</dt>
-                            <dd>
-                                <div class="location-select">
-                                    <select id="state" title="광역시/도 선택">
-                                        <option>광역시/도</option>
-                                    </select>
-                                    <select id="district" title="지역 선택">
-                                        <option>지역 상세</option>
-                                    </select>
-                                </div>
-                            </dd>
-                        </div>
+
                         <div class="webInfo-itemfull">
                             <dt>모집분야</dt>
                             <dd>
