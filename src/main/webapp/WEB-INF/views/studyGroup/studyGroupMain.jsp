@@ -21,7 +21,7 @@
 
     <script>
         function openChatWindow(studyIdx) {
-            window.open('${root}/studyGroup/chat?studyIdx=' + studyIdx, 'ChatWindow', 'width=500,height=500,resizable=no');
+            window.open('${root}/studyGroup/chat?studyIdx=' + studyIdx, 'ChatWindow', 'width=500,height=750,resizable=no');
         }
         document.addEventListener('DOMContentLoaded', function () {
             let eventsData = [];
