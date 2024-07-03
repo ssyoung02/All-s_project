@@ -193,57 +193,46 @@
                                 <div class="lank-phase">
                                     <div class="lank-floor">
                                         <div class="">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                            </div>
-                                            <p class="memberId">
-                                                <i class="bi bi-award"></i>
-                                                ${rankedMembers[1].userName}</p>
-                                        </div>
-                                        <div class="records lank-second">
+                                            <p class="podiumId">
+                                                ${rankedMembers[1].userName}
+                                            </p>
                                             <p><c:set var="totalTime" value="${rankedMembers[1].totalStudyTime}"/>
                                                 <script>
                                                     document.write(formatTime(${totalTime}));
                                                 </script>
                                             </p>
+                                        </div>
+                                        <div class="records lank-second">
                                             <p class="lanking">2</p>
                                         </div>
                                     </div>
                                     <div class="lank-floor">
                                         <div class="">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                            </div>
-                                            <p class="memberId">
-                                                <i class="bi bi-award"></i>
+                                            <p class="podiumId">
                                                 ${rankedMembers[0].userName}
                                             </p>
-                                        </div>
-                                        <div class="records lank-first">
                                             <p><c:set var="totalTime" value="${rankedMembers[0].totalStudyTime}"/>
                                                 <script>
                                                     document.write(formatTime(${totalTime}));
                                                 </script>
                                             </p>
+                                        </div>
+                                        <div class="records lank-first">
                                             <p class="lanking">1</p>
                                         </div>
                                     </div>
                                     <div class="lank-floor">
                                         <div class="">
-                                            <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
-                                            </div>
-                                            <p class="memberId">
-                                                <i class="bi bi-award"></i>
+                                            <p class="podiumId">
                                                 ${rankedMembers[2].userName}
                                             </p>
-                                        </div>
-                                        <div class="records lank-third">
                                             <p><c:set var="totalTime" value="${rankedMembers[2].totalStudyTime}"/>
                                                 <script>
                                                     document.write(formatTime(${totalTime}));
                                                 </script>
                                             </p>
+                                        </div>
+                                        <div class="records lank-third">
                                             <p class="lanking">3</p>
                                         </div>
                                     </div>
