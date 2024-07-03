@@ -7,6 +7,8 @@ import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.CustomAccountDeletionService;
 import bit.naver.service.GoogleLoginService;
+import bit.naver.service.WeatherService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +55,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UsersController {
     //private static final Logger log = Logger.getLogger(UsersController.class); // Logger 객체 선언 및 초기화
+    @Autowired
+    private WeatherService weatherService;
 
     @Autowired
     private GoogleLoginService loginService;
@@ -69,6 +73,9 @@ public class UsersController {
 
     @Autowired
     private StudyGroupMapper studyGroupMapper;
+
+    @Value("${google.maps.api.key}")
+    private String googleMapsApiKey;
 
     @PostMapping("/updateLocation")
     @ResponseBody
@@ -203,7 +210,7 @@ public class UsersController {
                     user.setProfileImage(profileImage);
                 }
             } else {
-                user.setProfileImage("img.png");
+                user.setProfileImage("user.png");
             }
 
             ZoneId zoneId = ZoneId.of("Asia/Seoul"); // 서울 타임존 ID
@@ -252,7 +259,6 @@ public class UsersController {
     // 로그인 처리
     @RequestMapping("/Login")
     public String usersLogin(Users user, @RequestParam("loginState") String loginState, Model model,RedirectAttributes rttr, HttpSession session, Principal principal) {
-
 
         System.out.println("로그인 버튼 누른 후 작업");
 
@@ -321,7 +327,6 @@ public class UsersController {
                 StudyGroup currentStudy = myStudies.get(0);
                 session.setAttribute("study", currentStudy);
             }
-
             return "/main";
         } else {
             System.out.println("회원 정보 없음");
@@ -558,7 +563,6 @@ public class UsersController {
         return "redirect:/login?accountDeleted";
     }
 
-
     @GetMapping("/isAdmin")
     @ResponseBody
     public boolean isAdmin(Principal principal) {
@@ -568,7 +572,7 @@ public class UsersController {
         }
         return false;
     }
-
+/*
     @GetMapping("/userLocation") // GET 방식으로 변경
     @ResponseBody // JSON 형태로 응답
     public Map<String, Object> userLocation(Principal principal) {
@@ -599,7 +603,7 @@ public class UsersController {
             defaultLocation.put("longitude", 126.9780);
             return defaultLocation;
         }
-    }
+    }*/
     //------------------------------------------------------------------------------------------------------------------------
     // 접근 거부 페이지
     @GetMapping("/access-denied")

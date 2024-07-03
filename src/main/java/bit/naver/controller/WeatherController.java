@@ -24,11 +24,11 @@ import java.util.Map;
 @Controller
 public class WeatherController {
 
-    @Autowired
-    private WeatherService weatherService;
-
     @Value("${google.maps.api.key}")
     private String googleMapsApiKey;
+
+    @Autowired
+    private WeatherService weatherService;
 
     @GetMapping("/weather")
     public ResponseEntity<Map<String, Object>> getWeather(
@@ -44,7 +44,7 @@ public class WeatherController {
             } else {
                 weatherData = weatherService.getCurrentWeather("Seoul"); // 기본 위치: 서울
             }
-            weatherData.put("googleMapsApiKey", googleMapsApiKey);
+            weatherData.put("googleMapsApiKey", googleMapsApiKey); // Google Maps API 키 추가
         } catch (Exception e) {
             log.error("날씨 정보 가져오기 실패", e); // 에러 로그 기록
             weatherData = new HashMap<>();
@@ -54,5 +54,4 @@ public class WeatherController {
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return ResponseEntity.ok(weatherData);
     }
-
 }

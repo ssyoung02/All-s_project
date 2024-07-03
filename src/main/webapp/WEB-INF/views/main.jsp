@@ -6,6 +6,8 @@
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="study" value="${sessionScope.study}"/>
 <c:set var="myStudies" value="${sessionScope.myStudies}"/>
+<c:set var="weatherLatitude" value="${sessionScope.weatherLatitude}"/>
+<c:set var="weatherLongitude" value="${sessionScope.weatherLongitude}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -983,7 +985,7 @@
                 //swiperWrapper.append(swiperSlide);
                 studyGroupMemberContainer.append(swiperSlide);
 
-            // 스터디 멤버 정보 AJAX 요청
+                // 스터디 멤버 정보 AJAX 요청
                 $.ajax({
                     url: '/studyGroup/studyGroupMain/members/' + study.studyIdx,
                     type: 'GET',
@@ -1010,24 +1012,24 @@
 
 
 
-/*
-                        // Swiper 초기화 (처음 한 번만 실행)
-                        if (!memberswiper) {
-                            memberswiper = new Swiper('.userStudyGroupMember .member-swiper-container', {
-                                direction: 'horizontal', // 슬라이드 방향을 가로로 변경
-                                slidesPerView: 'auto',
-                                spaceBetween: 10,
-                                allowTouchMove: true, // 드래그 허용
-                                pagination: {
-                                    el: '.member-swiper-pagination',
-                                    type: 'bullets'
-                                }
-                            });
-                        } else {
-                            // 기존 Swiper 객체 업데이트
-                            memberswiper.update();
-                        }
-*/                      memberswiper.update();
+                        /*
+                                                // Swiper 초기화 (처음 한 번만 실행)
+                                                if (!memberswiper) {
+                                                    memberswiper = new Swiper('.userStudyGroupMember .member-swiper-container', {
+                                                        direction: 'horizontal', // 슬라이드 방향을 가로로 변경
+                                                        slidesPerView: 'auto',
+                                                        spaceBetween: 10,
+                                                        allowTouchMove: true, // 드래그 허용
+                                                        pagination: {
+                                                            el: '.member-swiper-pagination',
+                                                            type: 'bullets'
+                                                        }
+                                                    });
+                                                } else {
+                                                    // 기존 Swiper 객체 업데이트
+                                                    memberswiper.update();
+                                                }
+                        */                      memberswiper.update();
                     },
                     error: function (xhr, status, error) {
                         console.error('스터디 멤버 정보 조회 실패 (studyIdx: ' + study.studyIdx + '):', error);
