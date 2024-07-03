@@ -342,7 +342,7 @@ footer p{
     align-items : center;
     */
     transition : opacity 0.5s;
-    z-index: 3;
+    z-index: 10;
 }
 .modal.opaque{
     opacity : 1;
