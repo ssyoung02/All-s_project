@@ -26,6 +26,7 @@
     width: calc(100% - 2em);
     cursor: pointer;
     border-bottom: 1px solid #263238;
+    overflow: hidden;
 }
 .board-list{
     padding: 1em;
@@ -419,6 +420,11 @@
 /* 스터디 모집 목록 */
 .bi-map{
     margin: 0;
+}
+.recruitBoardTitle{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 .recruitmentStatus{
     display: flex;

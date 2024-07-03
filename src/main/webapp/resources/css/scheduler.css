@@ -182,6 +182,17 @@
     color: white;
 }
 
+/*일정 디테일*/
+#scheduleDetails{
+    margin-bottom: 1em;
+    width: 90%;
+}
+.calenderButton{
+    margin-top: 2em;
+}
+.calenderButton button{
+    width: 100px;
+}
 /*스터디 그룹 메인*/
 .study-group-calender{
     display: grid;

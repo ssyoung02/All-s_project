@@ -218,7 +218,7 @@
                                                         <img src="${root}/resources/images/studyGroup.png" alt="스터디 그룹 프로필" style="width: 50px; height: 50px; margin-right: 10px;"/>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <div>
+                                                <div class="recruitBoardTitle">
                                                     <p class="study-tag">
                                                         <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
                                                                 ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
