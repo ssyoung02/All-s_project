@@ -327,7 +327,6 @@ public class UsersController {
                 StudyGroup currentStudy = myStudies.get(0);
                 session.setAttribute("study", currentStudy);
             }
-
             return "/main";
         } else {
             System.out.println("회원 정보 없음");
@@ -564,7 +563,6 @@ public class UsersController {
         return "redirect:/login?accountDeleted";
     }
 
-
     @GetMapping("/isAdmin")
     @ResponseBody
     public boolean isAdmin(Principal principal) {
@@ -574,7 +572,7 @@ public class UsersController {
         }
         return false;
     }
-
+/*
     @GetMapping("/userLocation") // GET 방식으로 변경
     @ResponseBody // JSON 형태로 응답
     public Map<String, Object> userLocation(Principal principal) {
@@ -605,7 +603,7 @@ public class UsersController {
             defaultLocation.put("longitude", 126.9780);
             return defaultLocation;
         }
-    }
+    }*/
     //------------------------------------------------------------------------------------------------------------------------
     // 접근 거부 페이지
     @GetMapping("/access-denied")

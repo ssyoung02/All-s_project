@@ -4,6 +4,8 @@
 <c:set var="userVo" value="${sessionScope.userVo}"/>
 <c:set var="userVoUpdatedProfile" value="${sessionScope.userVoUpdated}"/>
 <c:set var="root" value="${pageContext.request.contextPath }"/>
+<c:set var="weatherLatitude" value="${sessionScope.weatherLatitude}"/>
+<c:set var="weatherLongitude" value="${sessionScope.weatherLongitude}"/>
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <!-- 헤더 영역 -->
@@ -11,113 +13,49 @@
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <script>
-
         $(document).ready(function () {
-            // 서버에서 사용자 정보 가져오기
-            $.ajax({
-                url: "${root}/Users/userLocation",
-                type: "GET",
-                headers: {
-                    "${_csrf.headerName}": "${_csrf.token}"
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                success: function (userData) {
-                    console.log(userData);
-                    var lat = userData.latitude;
-                    var lon = userData.longitude;
-                    console.log("latitude:", lat, "longitude:", lon);
-                    fetchWeather(lat, lon);
-                },
-                error: function () {
-                    console.error("사용자 정보를 가져오는 데 실패했습니다.");
-                    fetchWeather(); // 기본 위치로 날씨 정보 가져오기 (서울)
-                }
-            });
+            // localStorage에서 위도, 경도 정보 가져오기
+           let lat="${sessionScope.weatherLatitude}";
+           let lon="${sessionScope.weatherLongitude}";
+
+            console.log("latitude:", lat, "longitude:", lon);
+
+            // 가져온 위도, 경도 정보를 사용하여 날씨 정보 요청
+            fetchWeather(lat, lon);
         });
 
+
+        // 날씨 정보를 가져오는 AJAX 요청 함수
         function fetchWeather(lat, lon) {
             var url = "${root}/weather";
-            if (lat && lon && lat !== 0 && lon !== 0) { // 위도 경도 값이 0이 아닌 경우에만 사용
-                lat = Number(lat.toFixed(6)); // 숫자형으로 변환
-                lon = Number(lon.toFixed(6)); // 숫자형으로 변환
+            if (lat && lon && lat !== 0 && lon !== 0) {
                 url += "?lat=" + lat + "&lon=" + lon;
             } else {
-                url += "?lat=37.5665&lon=126.9780"; // 서울의 위도 경도 (기본값)
+                url += "?lat=37.5665&lon=126.9780"; // 서울 시청 근처의 위도 경도 (기본값)
             }
 
             $.ajax({
-                headers: {
-                    "${_csrf.headerName}": "${_csrf.token}"
-                },
                 url: url,
                 xhrFields: {
                     withCredentials: true
                 },
                 beforeSend: function (xhr) {
                     console.log("Weather API Request URL:", url); // 요청 URL 출력
-                    //xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function (response) {
+                    // 날씨 정보 표시
                     var iconUrl = response.icon;
-                    //var locationName = response.location;
-                    //var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> '+ locationName + " "+ Math.round(response.temperature) + "°C";
-                    //("#weatherInfo").html(weatherInfo);
                     var temperature = Math.round(response.temperature);
-                    var googleMapsApiKey = response.googleMapsApiKey;
+                    var locationName = response.location;
+                    // 지역 이름 변경 (jamwon-dong -> 서초동)
+                    if (locationName === "Jamwon-dong") {
+                        locationName = "서초동";
+                    }
 
-                    // Reverse Geocoding API 호출
-                    // URL 객체 생성
-                    var url = new URL("https://maps.googleapis.com/maps/api/geocode/json?");
-                    url.searchParams.append("latlng", lat + "," + lon);
-                    url.searchParams.append("key", googleMapsApiKey);
-
-                    $.ajax({
-                        url: url.toString(),
-                        success: function (geocodingResponse) {
-
-                            if (geocodingResponse.status === "OK" && geocodingResponse.results.length > 1) {
-                                var addressComponents = geocodingResponse.results[1].address_components;
-
-                                // "sublocality_level_2" 타입 우선 검색 (동 이름)
-                                var localityComponent = addressComponents.find(component => component.types.includes("sublocality_level_2"));
-
-                                if (!localityComponent) {
-                                    // "sublocality_level_2" 타입이 없으면 "sublocality_level_1" 타입 검색 (구 이름)
-                                    localityComponent = addressComponents.find(component => component.types.includes("sublocality_level_1"));
-                                }
-
-                                if (!localityComponent) {
-                                    // "sublocality_level_1" 타입도 없으면 "sublocality" 타입 검색 (일반적인 지역 이름)
-                                    localityComponent = addressComponents.find(component => component.types.includes("sublocality"));
-                                }
-
-                                if (localityComponent) {
-                                    locationName = localityComponent.long_name; // 지역 이름으로 업데이트
-                                }
-                            } else {
-                                console.error("Geocoding failed:", geocodingResponse.status);
-                            }
-                            // locationName이 undefined, null, 빈 문자열인 경우 "서초동"으로 설정
-                            if (typeof locationName === 'undefined' || locationName === null || locationName === '') {
-                                locationName = "서초동";
-                            }
-
-                            var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + locationName + " " + temperature + "°C";
-                            $("#weatherInfo").html(weatherInfo);
-
-                            localStorage.setItem("locationName", locationName);
-                            $("#studyLocation").prev("label").text(locationName);
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.error("Geocoding AJAX Error:", textStatus, errorThrown);
-
-                            // Geocoding API 호출 실패 시에도 OpenWeatherMap API 응답의 name 값 사용
-                            var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + response.name + " " + temperature + "°C";
-                            $("#weatherInfo").html(weatherInfo);
-                        }
-                    });
+                    var weatherInfo = '<img src="' + iconUrl + '" alt="Weather Icon"> ' + locationName + " " + temperature + "°C";
+                    localStorage.setItem("locationName", locationName);
+                    $("#weatherInfo").html(weatherInfo);
+                    $("#studyLocation").prev("label").text(locationName);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error("AJAX Error:", textStatus, errorThrown);
