@@ -527,8 +527,8 @@
                 formData.append('image', imageFile);
             }
 
-            var latitude = document.getElementById('latitude').value;
-            var longitude = document.getElementById('longitude').value;
+            var latitude = document.getElementById('latitudeInput').value;
+            var longitude = document.getElementById('longitudeInput').value;
             formData.append('latitude', latitude);
             formData.append('longitude', longitude);
 
