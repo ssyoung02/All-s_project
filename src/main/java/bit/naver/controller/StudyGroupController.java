@@ -433,17 +433,20 @@ public class StudyGroupController {
 
         // 스터디 멤버들의 activity_status 조회
         List<StudyMembers> members = studyGroupMapper.getStudyMembers(studyIdx);
+
         List<StudyMemberStatus> memberStatusList = new ArrayList<>();
         for (StudyMembers studyMember : members) {
-            Users memberUser = usersMapper.findById(studyMember.getUserIdx());
-            if (memberUser != null) {
-                StudyMemberStatus status = new StudyMemberStatus();
-                status.setUserIdx(memberUser.getUserIdx());
-                status.setUsername(memberUser.getUsername());
-                status.setName(memberUser.getName());
-                status.setActivityStatus(memberUser.getActivityStatus().getValue());
-                status.setProfile_image(memberUser.getProfileImage());
-                memberStatusList.add(status);
+            if ("ACCEPTED".equals(studyMember.getStatus())) { // ACCEPTED 상태인지 확인
+                Users memberUser = usersMapper.findById(studyMember.getUserIdx());
+                if (memberUser != null) {
+                    StudyMemberStatus status = new StudyMemberStatus();
+                    status.setUserIdx(memberUser.getUserIdx());
+                    status.setUsername(memberUser.getUsername());
+                    status.setName(memberUser.getName());
+                    status.setActivityStatus(memberUser.getActivityStatus().getValue());
+                    status.setProfile_image(memberUser.getProfileImage());
+                    memberStatusList.add(status); // List에 추가
+                }
             }
         }
 

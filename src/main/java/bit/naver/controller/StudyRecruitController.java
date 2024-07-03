@@ -7,6 +7,7 @@ import bit.naver.mapper.StudyRecruitMapper;
 import bit.naver.mapper.UsersMapper;
 import bit.naver.service.StudyRecruitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,10 @@ public class StudyRecruitController {
 
     @Autowired
     private NotificationMapper notificationMapper;
+
+    @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoMapApiKey;
+
 
     // 모집글 리스트
     @RequestMapping("/recruitList")
@@ -94,6 +99,7 @@ public class StudyRecruitController {
         }
         model.addAttribute("userIdx", userIdx);
         model.addAttribute("study_18", study_18);
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
 
         return "studyRecruit/recruitList"; // recruitList.jsp로 이동
     }
@@ -119,6 +125,7 @@ public class StudyRecruitController {
         model.addAttribute("members", members);
         model.addAttribute("isMember", isMember);
         model.addAttribute("studyIdx", studyIdx); // studyIdx를 모델에 추가
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
         model.addAttribute("isPending", isPending);
         model.addAttribute("isLeaderOrAccepted", isLeaderOrAccepted);
 
@@ -228,7 +235,7 @@ public class StudyRecruitController {
                 profileImage.transferTo(uploadFile);
                 studyGroup.setImage("/resources/uploads/" + fileName);
             }
-
+            model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
             studyMapper.updateStudyGroup(studyGroup);
             model.addAttribute("message", "수정이 완료되었습니다.");
         } catch (IOException e) {

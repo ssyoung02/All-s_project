@@ -599,8 +599,8 @@
 
                 var locPosition = new kakao.maps.LatLng(lat, lon);
                 marker.setPosition(locPosition);
-
-                mapAuthenticated.setCenter(locPosition);
+                mapAuthenticated.panTo(locPosition);
+                // mapAuthenticated.setCenter(locPosition);
                 // 로그인 여부 확인 후 위치 정보 전송
                 <sec:authorize access="isAuthenticated()">
                 sendLocationToServer(lat, lon);
@@ -623,7 +623,8 @@
                 var locPosition = new kakao.maps.LatLng(lat, lon);
                 markerAnonymous.setPosition(locPosition);
 
-                mapAnonymous.setCenter(locPosition);
+                mapAnonymous.panTo(locPosition);
+                // mapAnonymous.setCenter(locPosition);
 
             }, function (error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
@@ -650,7 +651,6 @@
                 console.error('위치 정보 업데이트 실패:', error);
             }
         });
-
     }
 
 
