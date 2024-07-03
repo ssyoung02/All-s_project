@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,9 @@ public class StudyGroupController {
     @Autowired
     private StudyService studyService;
 
+    @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoMapApiKey;
+
     private static final Logger logger = LoggerFactory.getLogger(StudyGroupController.class);
 
     // 스터디 관리 페이지로 이동
@@ -59,6 +63,8 @@ public class StudyGroupController {
         model.addAttribute("category", studyGroup.getCategory());
         model.addAttribute("gender", studyGroup.getGender());
         model.addAttribute("age", studyGroup.getAge());
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
+
 
         logger.info("Category: " + studyGroup.getCategory());
         logger.info("Gender: " + studyGroup.getGender());
@@ -94,6 +100,8 @@ public class StudyGroupController {
     @GetMapping("/studyGroupCreate")
     public String getStudyGroupCreate(Model model) {
         model.addAttribute("studyGroup", new StudyGroup());
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
+
         return "studyGroup/studyGroupCreate";
     }
 
@@ -124,6 +132,7 @@ public class StudyGroupController {
         model.addAttribute("study", study);
         model.addAttribute("members", members);
         model.addAttribute("rankedMembers", rankedMembers);
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
 
         return "studyGroup/studyGroupMain"; // 스터디 상세 정보를 보여줄 JSP 페이지
     }

@@ -166,6 +166,7 @@
                          style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> <%-- 로그인 후 지도 컨테이너 --%>
                         <div class="map-search-container">
                             <button id="cafeSearchButton" class="toggle-button-map">내 주변 카페 보기☕</button>
+                            <button type="button" id="cafeMarkerSearchButton" class="toggle-button-map">마커 주변 카페 보기☕</button>
                             <button id="myLocationButton" class="toggle-button-map">내 위치로 가기📍</button> <%-- 버튼 추가 --%>
 
                         </div>
@@ -427,12 +428,14 @@
 
     // 인포윈도우 객체 배열 (로그인 상태)
     var infowindows = [];
-
+    // 기존 인포윈도우 변수 선언
+    var currentInfowindow = null;
     var clusterer = new kakao.maps.MarkerClusterer({
         map: mapRecruitList, // 클러스터러를 적용할 지도 객체
         averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
         minLevel: 8 // 클러스터 할 최소 지도 레벨
     });
+    var latlng; // latlng 변수를 전역 변수로 선언
 
     // 마커 이미지 생성
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png'; // 마커 이미지 URL
@@ -481,7 +484,81 @@
             minLevel: 8
         });
 
+        // 주소-좌표 변환 객체를 생성합니다
+        var geocoder = new kakao.maps.services.Geocoder();
+
+
+
+
+        // 마커 클릭 이벤트 리스너 등록
+        kakao.maps.event.addListener(mapRecruitList, 'click', function(mouseEvent) {
+            // 클릭한 위도, 경도 정보를 가져옵니다
+            latlng = mouseEvent.latLng;
+            // 기존 인포윈도우 닫기
+            if (currentInfowindow) {
+                currentInfowindow.close();
+            }
+
+            var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+            message += '경도는 ' + latlng.getLng() + ' 입니다';
+            console.log(message);
+
+            // 주소-좌표 변환 객체를 이용하여 좌표를 주소로 변환
+            geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var address = result[0].address.address_name;
+
+                    // 기존 마커 제거
+                    if (marker) {
+                        marker.setMap(null);
+                    }
+
+                    // 마커 생성 및 표시
+                    marker = new kakao.maps.Marker({
+                        position: latlng,
+                        map: mapRecruitList
+                    });
+
+                    // 인포윈도우 생성 및 표시
+                    currentInfowindow = new kakao.maps.InfoWindow({ // currentInfowindow에 할당
+                        content: '<div style="width:fit-content; height:30px; text-align:center; align-content: center; padding:8px 20px;">' + address + '</div>',
+                        removable: true
+                    });
+                    currentInfowindow.open(mapRecruitList, marker);
+
+                    // Input 요소에 값 설정
+                    $('#latitudeInput').val(latlng.getLat());
+                    $('#longitudeInput').val(latlng.getLng());
+                } else {
+                    console.error('주소 변환 실패:', status);
+                }
+            });
+        });
+
     }
+
+
+    // 사용자 위치 가져오기 그러나 마커기준맵 중앙정렬 X
+    function getLocationAndDisplayOnMapNotCenter() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+
+                var locPosition = new kakao.maps.LatLng(lat, lon);
+
+                // 로그인 여부 확인 후 위치 정보 전송
+                <sec:authorize access="isAuthenticated()">
+                sendLocationToServer(lat, lon);
+                </sec:authorize>
+            }, function(error) {
+                console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
+            });
+        } else {
+            // Geolocation을 사용할 수 없을 때 처리 로직
+        }
+    }
+
 
     // 사용자 위치 가져오기 및 지도에 표시
     function getLocationAndDisplayOnMap() {
@@ -504,6 +581,8 @@
             // Geolocation을 사용할 수 없을 때 처리 로직
         }
     }
+
+
 
 
     // 위치 정보 서버 전송 함수
@@ -750,6 +829,12 @@
                 var locPosition = new kakao.maps.LatLng(lat, lon);
                 marker.setPosition(locPosition);
                 mapRecruitList.panTo(locPosition); // panTo 메서드 사용
+               infowindows.forEach(function(iw) {
+                    iw.close();
+                });
+                currentInfowindow.close(mapRecruitList, marker);
+                latlng = null;
+
                 // mapRecruitList.setCenter(locPosition); // 지도 중심을 현재 위치로 설정
             }, function(error) {
                 console.error('위치 정보를 가져오는 중 오류가 발생했습니다.', error);
@@ -782,7 +867,7 @@
             }
         });
         // 1초마다 위치 정보 업데이트
-        setInterval(getLocationAndDisplayOnMap, 1000);
+        setInterval(getLocationAndDisplayOnMapNotCenter, 1000);
         setInterval(getStudyListAndDisplayList,10000);
 
         // 토글 버튼 1 생성 및 추가 (지도 확대/축소)
@@ -795,6 +880,41 @@
         // 토글 버튼 클릭 이벤트 리스너 등록
         toggleButton.addEventListener('click', toggleMapView);
 
+        function searchCafesNearMapMarkerCenter(map) {
+
+            var locPosition = latlng;
+
+            if(locPosition==null){
+                alert("마커를 새로 지정 해주세요");
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+
+                    locPosition = new kakao.maps.LatLng(lat, lon);
+                    mapRecruitList.panTo(locPosition);
+                });
+            }
+
+
+            // 카페 검색 객체 생성 및 옵션 설정 (2km 반경 제한 추가)
+            var ps = new kakao.maps.services.Places(map);
+            var options = {
+                location: locPosition,
+                radius: 2000, // 2km 반경
+                category_group_code: 'CE7',
+                sort: kakao.maps.services.SortBy.DISTANCE
+            };
+
+            // 카페 검색 실행
+            ps.keywordSearch('카페', function (data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+                    displayCafeMarkers(map, data.slice(0, 15)); // 최대 15개만 표시
+                } else {
+                    console.error('카페 검색 실패:', status);
+                }
+            }, options);
+            mapRecruitList.panTo(locPosition);
+        }
 
         function searchCafesNearMapCenter(map) {
             // 현재 위치 정보 가져오기
@@ -863,7 +983,7 @@
                         '<a href="' + cafe.place_url + '" target="_blank" class="btn btn-primary" style="background-color: #dbe0d2;color: #000000;padding: 5px;border-radius: 5px;font-size: 10px;">상세 정보</a>' +
                         '</div>',
                     removable: true,
-                    yAnchor: 1 // 인포윈도우를 마커 아래쪽으로 이동
+                    yAnchor: -45 // 인포윈도우를 마커 아래쪽으로 이동
                 });
 
                 // 마커 클릭 이벤트 리스너 등록 (클로저 활용)
@@ -928,6 +1048,7 @@
                     iw.close();
                 });
                 infowindows=[];
+                currentInfowindow.close();
                 getLocationAndDisplayOnMap(); // 현재 위치로 지도 중심 이동
                 getStudyListAndDisplayList(); // 스터디 목록 다시 조회 및 표시
                 $.ajax({
@@ -949,9 +1070,41 @@
                 cafeSearchButton.textContent = '내 주변 카페 보기☕';
             }
         });
+
+
+
+    // 카페 검색 버튼 클릭 이벤트 처리
+    let cafeMarkerSearchButton = document.getElementById('cafeMarkerSearchButton');
+    // 토글 버튼 클릭 이벤트 처리
+    cafeMarkerSearchButton.addEventListener('click', function () {
+        var mapContainer = document.getElementById('map-recruitList');
+            clusterer.clear();
+            infowindows.forEach(function (iw) {
+                iw.close();
+            });
+            infowindows = [];
+            mapRecruitList.setLevel(3); // 지도 확대 레벨 설정
+            mapContainer.style.width = '100%';
+            mapContainer.style.height = '800px';
+            toggleButton.textContent = '🔍창 축소';
+        // 지도 크기 변경 후 relayout 호출 (setTimeout을 사용하여 렌더링 후 호출)
+            setTimeout(function () {
+                mapRecruitList.relayout();
+                // 딜레이 후 화면 중심을 지도 중심으로 이동
+                setTimeout(function () {
+                    window.scrollTo({
+                        top: mapContainer.offsetTop - (window.innerHeight - mapContainer.offsetHeight) / 2,
+                        left: mapContainer.offsetLeft - (window.innerWidth - mapContainer.offsetWidth) / 2,
+                        behavior: 'smooth'
+                    });
+                }, 500); // 0.5초 후에 실행 (딜레이 시간 조절 가능)
+            }, 500); // 0.5초 후에 relayout 호출 (transition 시간과 동일하게 설정)
+
+            searchCafesNearMapMarkerCenter(mapRecruitList);
+            mapRecruitList.setCenter(latlng);
+            latlng = null;
     });
-
-
+    });
     <%session.removeAttribute("error");%> <%-- 오류 메시지 제거 --%>
 </script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

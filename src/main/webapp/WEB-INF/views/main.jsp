@@ -288,6 +288,7 @@
                          style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> <%-- 로그인 후 지도 컨테이너 --%>
                         <div class="map-search-container">
                             <button id="cafeSearchButton" class="toggle-button-map">주변 카페 보기☕</button>
+                            <button class="toggle-button-map"  onclick="location.href='${root}/studyRecruit/recruitList'" >스터디 전체보기🗺 </button>
                         </div>
                     </div>
                     <div id="studyListContainer" style="display: block;"> <%-- display: block 추가 --%>
