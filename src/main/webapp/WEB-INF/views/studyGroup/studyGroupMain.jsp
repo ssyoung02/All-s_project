@@ -96,6 +96,7 @@
                     },
                     success: function (response) {
                         response.forEach(member => {
+                            console.log('Member status response:', response); // 응답 데이터 로그
                             const memberElement = $(`#member_${member.userIdx}`);
                             const statusElement = memberElement.find('.status');
                             statusElement.removeClass('ACTIVE STUDYING RESTING NOT_LOGGED_IN');
@@ -122,9 +123,12 @@
                 });
             }
 
+            // 초기 상태 업데이트 호출
+            updateMemberStatus();
             // 주기적으로 멤버 상태 업데이트
             setInterval(updateMemberStatus, 20000); // 20초마다 업데이트
-            updateMemberStatus(); // 초기 상태 업데이트 호출
+
+
         });
 
 
