@@ -244,6 +244,18 @@ public class StudyGroupController {
     public Map<String, Object> approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
         Map<String, Object> response = new HashMap<>();
         try {
+
+            Map<String, Integer> studyInfo = studyGroupMapper.getCurrentParticipantsAndCapacity(studyIdx);
+            int currentParticipants = studyInfo.get("currentParticipants");
+            int capacity = studyInfo.get("capacity");
+
+            if (currentParticipants >= capacity) {
+                response.put("success", false);
+                response.put("message", "모집인원이 마감되었습니다.");
+                return response;
+            }
+
+
             studyGroupMapper.approveMember(studyIdx, userIdx);
             studyGroupMapper.incrementCurrentParticipants(studyIdx);  // 멤버 승인 시 현재 참가자 수 증가
             response.put("success", true);
