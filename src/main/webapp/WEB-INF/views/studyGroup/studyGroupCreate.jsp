@@ -96,7 +96,7 @@
                                 </dd>
                             </div>
                             <h4>태그 선택</h4>
-                            <ul class="taglist">
+                            <ul class="taglist-create">
                                 <!-- 태그 항목 -->
                                 <li>
                                     <p class="tag-title">지역</p>

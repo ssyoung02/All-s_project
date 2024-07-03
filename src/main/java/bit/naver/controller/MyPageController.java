@@ -7,6 +7,7 @@ import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +46,9 @@ public class MyPageController {
     @Autowired
     private StudyRecruitMapper studyMapper;
 
+    @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoMapApiKey;
+
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     @RequestMapping("/myPageInfo")
@@ -77,6 +81,7 @@ public class MyPageController {
         List<StudyGroup> likedStudies = studyMapper.getUserLikedStudies(userIdx);
         model.addAttribute("likedStudies", likedStudies);
 
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
 
         return "/myPage/myPageInfo";
     }

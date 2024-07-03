@@ -32,7 +32,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
-    <script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=services"></script>
+
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < 3; i++) {
                 let fileInput = document.getElementById('uploadFile' + i);
@@ -129,6 +131,27 @@
             }
         }
     </script>
+        <script>
+            $(document).ready(function() {
+                const latitude = "${userVo.latitude}";
+                const longitude = "${userVo.longitude}";
+
+                if (latitude && longitude) {
+                    var geocoder = new kakao.maps.services.Geocoder();
+                    var coord = new kakao.maps.LatLng(latitude, longitude);
+
+                    geocoder.coord2Address(coord.getLng(), coord.getLat(), function(result, status) {
+                        if (status === kakao.maps.services.Status.OK) {
+                            const address = result[0].address.address_name;
+                            $("#location-info").text(address);
+                        } else {
+                            $("#location-info").text("주소를 가져올 수 없습니다.");
+                        }
+                    });
+                }
+            });
+        </script>
+
 
 </head>
 <body>
@@ -179,7 +202,6 @@
                                     </c:choose>
                                 </li>
                             </ul>
-
                             <ul class="longUserItem">
                                 <li><b>이메일</b></li>
                                 <li>${userVo.email}</li>
@@ -187,6 +209,10 @@
                             <ul class="userItem">
                                 <li><b>생년월일</b></li>
                                 <li>${userVo.birthdate}</li>
+                            </ul>
+                            <ul class="userItem">
+                                <li><b>위치정보</b></li>
+                                <li id="location-info">${userVo.latitude}, ${userVo.longitude}</li>
                             </ul>
                             <ul class="userItem">
                                 <li><b>등급</b></li>
@@ -209,7 +235,6 @@
                                     </c:choose>
                                 </li>
                             </ul>
-
                         </div>
                     </div>
                     <div class="total-activity flex-between">

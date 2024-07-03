@@ -100,6 +100,7 @@
 
 .userStudyGroup{
     position: relative;
+    overflow: hidden;
 }
 .loginUserInfoRight {
     overflow: hidden; /* 슬라이더 컨테이너 넘침 방지 */
@@ -109,6 +110,7 @@
 .userStudyGroupList .swiper-slide{
     border-radius: 5px;
     border: 1px solid #dad8cc;
+    margin-top: 1em;
 }
 
 .studyGroupTitle{
@@ -146,7 +148,7 @@
     background-color: #BBAAB8;
 }
 .study-status.NOT_LOGGED_IN { /* 미로그인 */
-    background-color: #697A98;
+    background-color: transparent;
 }
 
 /*스터디 멤버 프로필*/
