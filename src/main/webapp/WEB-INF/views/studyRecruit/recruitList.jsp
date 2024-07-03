@@ -3,6 +3,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="userVo" value="${sessionScope.userVo}"/>
 <c:set var="root" value="${pageContext.request.contextPath}"/>
+<c:set var="currentURI" value="${pageContext.request.requestURL}" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -177,11 +179,25 @@
                         </ul>
                     </div> <%-- 스터디 목록 컨테이너 추가 --%>
 
+<%--
                     <div class="recruitmentStatus">
                         <a class="recruitmentStatusSelect" href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a>
                         <a class="" href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
                     </div>
+--%>
 
+                    <%
+                        String status = request.getParameter("status");
+                        if (status == null) {
+                            status = "RECRUITING"; // 기본값 설정
+                        }
+                    %>
+                    <div class="recruitmentStatus">
+                        <a class="<%= "RECRUITING".equals(status) ? "recruitmentStatusSelect" : "" %>"
+                           href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a>
+                        <a class="<%= "CLOSED".equals(status) ? "recruitmentStatusSelect" : "" %>"
+                           href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
+                    </div>
                     <div class="recruitList">
                         <%-- 게시판 글 --%>
                         <c:forEach var="study" items="${studies}">
@@ -309,6 +325,14 @@
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
+        const contextPath = 'http://localhost:8080/WEB-INF/views/';
+        const currentURI = '${currentURI}';
+
+        console.log("현재 URL: "+currentURI)
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
         var searchInput = document.getElementById("searchInput");
         searchInput.addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
@@ -411,6 +435,7 @@
             }
         });
     });
+
 </script>
 <script>
 

@@ -127,35 +127,6 @@
         }
     </script>
 
-    <style>
-        /* Delete button style */
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 1px 1px; /* 패딩 조정 */
-            margin-left: 5px; /* 좌측 여백 줄임 */
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        .delete-btn i {
-            margin-right: 3px; /* 아이콘과 텍스트 사이 간격 줄임 */
-        }
-
-        .new-mark {
-            transition: color 0.3s ease;
-            color: initial; /* 기본 색상 */
-        }
-
-        .new-mark.alert {
-            color: red !important; /* 경고 시 색상 */
-        }
-    </style>
 
     <!--스킵 내비게이션-->
     <div id="skipnav">
@@ -301,7 +272,7 @@
                             }
                             msg += '<li>' +
                                 '<a class="dropdown-item" id="' + res[i].notificationIdx + '" href="' + link + '">' + text + '</a>' +
-                                '<button class="delete-btn" data-notification-idx="' + res[i].notificationIdx + '">삭제</button>' +
+                                '<button class="delete-btn" data-notification-idx="' + res[i].notificationIdx + '">X</button>' +
                                 '</li>';
                         }
                         alarmList.html(msg);
@@ -316,7 +287,7 @@
                         });
 
                     } else {
-                        alarmList.html("<li style='margin-left:20px;'>알람이 없습니다.</li>");
+                        alarmList.html("<li style='justify-content: center;'>알람이 없습니다.</li>");
                         changeNewMarkColor(false); // 알림이 없을 때 기본 색상으로 변경
                     }
                 },
@@ -374,7 +345,11 @@
     })
         .then(gradeIcon => {
         console.log('Received gradeIcon:', gradeIcon); // 응답 데이터를 로그에 출력합니다.
-        document.getElementById('user-grade-icon').src = gradeIcon+".png";
+        if(gradeIcon==""){
+            document.getElementById('user-grade-icon').src = "/resources/profileImages/user_01.seed.png";
+        }else {
+            document.getElementById('user-grade-icon').src = gradeIcon+".png";
+        }
     })
         .catch(error => console.error('Error fetching user grade icon:', error));
     }
