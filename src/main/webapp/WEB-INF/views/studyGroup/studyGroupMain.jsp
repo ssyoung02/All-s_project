@@ -11,6 +11,7 @@
     <title>스터디그룹 메인 > 내 스터디 > 스터디 > 공부 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
+    <link rel="stylesheet" href="${root}/resources/css/slider.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
@@ -84,7 +85,48 @@
                     alert('이벤트를 불러오는 중 오류가 발생했습니다.');
                 }
             });
+
+            // 멤버 상태 업데이트 함수
+            function updateMemberStatus() {
+                $.ajax({
+                    url: "${root}/studyGroup/getMemberStatus/" + studyIdx,
+                    type: "GET",
+                    headers: {
+                        "${_csrf.headerName}": "${_csrf.token}"
+                    },
+                    success: function (response) {
+                        response.forEach(member => {
+                            const memberElement = $(`#member_${member.userIdx}`);
+                            const statusElement = memberElement.find('.status');
+                            statusElement.removeClass('ACTIVE STUDYING RESTING NOT_LOGGED_IN');
+                            statusElement.addClass(member.status);
+                            switch (member.status) {
+                                case 'ACTIVE':
+                                    statusElement.text('접속중');
+                                    break;
+                                case 'STUDYING':
+                                    statusElement.text('공부중');
+                                    break;
+                                case 'RESTING':
+                                    statusElement.text('쉬는중');
+                                    break;
+                                case 'NOT_LOGGED_IN':
+                                    statusElement.text('미접속');
+                                    break;
+                            }
+                        });
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error('Error fetching member status:', errorThrown);
+                    }
+                });
+            }
+
+            // 주기적으로 멤버 상태 업데이트
+            setInterval(updateMemberStatus, 20000); // 20초마다 업데이트
+            updateMemberStatus(); // 초기 상태 업데이트 호출
         });
+
 
         // 숫자 계산
         function formatTime(seconds) {
@@ -96,6 +138,7 @@
             const sDisplay = s > 0 ? s + '초' : '';
             return hDisplay + mDisplay + sDisplay;
         }
+
     </script>
 </head>
 <body>
@@ -239,12 +282,12 @@
                             <div class="group-memberList">
                                 <c:forEach var="member" items="${members}">
                                     <c:if test="${member.status == 'ACCEPTED'}">
-                                        <div class="group-memberItem">
+                                        <div class="group-memberItem" id="member_${member.userIdx}">
                                             <div class="profile-imgGroup">
                                                 <div class="profile-img">
                                                     <img src="${root}/resources/images/user.png" alt="프로필 이미지">
                                                 </div>
-                                                <div class="status"><span class="status">접속중</span></div>
+                                                <div class="study-status ACTIVE ${member.activityStatus}"><span class="status">${member.activityStatus == 'ACTIVE' ? '접속중' : (member.activityStatus == 'STUDYING' ? '공부중' : (member.activityStatus == 'RESTING' ? '쉬는중' : '미접속'))}</span></div>
                                             </div>
                                             <p class="memberId">${member.userName}</p>
                                         </div>
