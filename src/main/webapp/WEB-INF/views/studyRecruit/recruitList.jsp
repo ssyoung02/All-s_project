@@ -108,7 +108,10 @@
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="banner-bottom flex-between">
                                             <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">${study.status}</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
+                                                                ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
+                                                                <span class="recruitNum">(${study.currentParticipants}/${study.capacity})&nbsp;</span>
+                                                </span>
                                                 <span class="department">${study.category}</span>
                                             </p>
                                             <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
@@ -702,7 +705,15 @@
                             // span 요소 생성 및 내용 설정
                             const statusSpan = document.createElement('span');
                             statusSpan.className = 'recruit-status ' + (study.status === 'CLOSED' ? 'closed' : 'open');
-                            statusSpan.textContent = study.status;
+                            statusSpan.textContent = study.status === 'CLOSED' ? '모집마감' : '모집중';
+
+
+                            // 모집 인원 정보 추가
+                            const recruitNumSpan = document.createElement('span');
+                            recruitNumSpan.className = 'recruitNum';
+                            recruitNumSpan.textContent = ' '+'('+study.currentParticipants+'/'+study.capacity+')' +' ';
+
+                            statusSpan.appendChild(recruitNumSpan);
                             studyTag.appendChild(statusSpan);
 
                             const categorySpan = document.createElement('span');
