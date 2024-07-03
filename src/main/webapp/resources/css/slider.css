@@ -100,6 +100,7 @@
 
 .userStudyGroup{
     position: relative;
+    overflow: hidden;
 }
 .loginUserInfoRight {
     overflow: hidden; /* 슬라이더 컨테이너 넘침 방지 */
@@ -109,6 +110,7 @@
 .userStudyGroupList .swiper-slide{
     border-radius: 5px;
     border: 1px solid #dad8cc;
+    margin-top: 1em;
 }
 
 .studyGroupTitle{
