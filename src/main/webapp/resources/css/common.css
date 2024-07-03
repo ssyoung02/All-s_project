@@ -13,9 +13,6 @@
 /*스케쥴러*/
 @import url(scheduler.css);
 
-/*모바일 스타일*/
-@import url(moblie.css);
-
 /*로그인, 회원가입 스타일*/
 @import url(login.css);
 
@@ -27,6 +24,9 @@
 
 /*회원정보 스타일*/
 @import url(user.css);
+
+/*모바일 스타일*/
+@import url(moblie.css);
 
 /*카카오지도*/
 @import url(map.css);

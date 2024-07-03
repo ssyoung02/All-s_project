@@ -158,11 +158,11 @@
                                         <i class="bi bi-plus-lg"></i>
                                         <img id="profilePreview" src="${study.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
                                     </label>
+                                    <div class="profile-change">
+                                        <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
+                                        <p>(300px X 300px / 500kb 미만)</p>
+                                    </div>
                                 </form>
-                                <div class="profile-change">
-                                    <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
-                                    <p>(300px X 300px / 500kb 미만)</p>
-                                </div>
                             </dd>
                         </div>
                         <div class="webInfo-itemfull">

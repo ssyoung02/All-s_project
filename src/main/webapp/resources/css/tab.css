@@ -131,6 +131,7 @@
 }
 .manager-table tr{
     border-bottom: 1px solid #898989;
+    height: 56px;
 }
 .manager-table caption {
     opacity: 0;

@@ -132,7 +132,7 @@
 .alarm{
     width: 220px;
     position: absolute;
-    top: 80px;
+    top: 90px;
     gap: 5px;
     padding: 20px;
     border-radius: 5px;
@@ -188,8 +188,8 @@
     color: initial; /* 기본 색상 */
 }
 
-.new-mark.alert {
-    color: red !important; /* 경고 시 색상 */
+#newMark i {
+    color: #ff9116 !important; /* 경고 시 색상 */
 }
 
 /*main*/
