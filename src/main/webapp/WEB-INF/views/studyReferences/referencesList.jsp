@@ -85,26 +85,6 @@
             });
         });
     </script>
-    <style>
-        .editor-content p{
-            max-height: 10vw;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .editor-content img {
-            display: none;
-        }
-
-        /* 첫 번째 이미지 보이기 */
-        .editor-content img:first-of-type:not(p img), .editor-content p:first-of-type img{
-            display: block;
-            max-width: 100%; /* 부모 요소의 너비를 넘지 않도록 */
-            height: auto; /* 원본 비율 유지 */
-            max-height: 10vw; /* 최대 높이를 15vw로 제한 */
-            width: auto; /* 원본 비율 유지 */
-        }
-    </style>
 </head>
 <body>
 <jsp:include page="../include/header.jsp" />
