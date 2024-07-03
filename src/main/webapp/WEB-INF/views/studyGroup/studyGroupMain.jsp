@@ -85,6 +85,17 @@
                 }
             });
         });
+
+        // 숫자 계산
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            const hDisplay = h > 0 ? h + '시간 ' : '';
+            const mDisplay = m > 0 ? m + '분 ' : '';
+            const sDisplay = s > 0 ? s + '초' : '';
+            return hDisplay + mDisplay + sDisplay;
+        }
     </script>
 </head>
 <body>
@@ -148,19 +159,9 @@
                                         </div>
                                         <div class="records lank-second">
                                             <p><c:set var="totalTime" value="${rankedMembers[1].totalStudyTime}"/>
-                                                <c:choose>
-                                                    <c:when test="${totalTime >= 3600}">
-                                                        <c:set var="hours" value="${totalTime / 3600}"/>
-                                                        ${hours}h
-                                                    </c:when>
-                                                    <c:when test="${totalTime >= 60}">
-                                                        <c:set var="minutes" value="${totalTime / 60}"/>
-                                                        ${minutes}m
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        ${totalTime}s
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <script>
+                                                    document.write(formatTime(${totalTime}));
+                                                </script>
                                             </p>
                                             <p class="lanking">2</p>
                                         </div>
@@ -177,19 +178,9 @@
                                         </div>
                                         <div class="records lank-first">
                                             <p><c:set var="totalTime" value="${rankedMembers[0].totalStudyTime}"/>
-                                                <c:choose>
-                                                    <c:when test="${totalTime >= 3600}">
-                                                        <c:set var="hours" value="${totalTime / 3600}"/>
-                                                        ${hours}h
-                                                    </c:when>
-                                                    <c:when test="${totalTime >= 60}">
-                                                        <c:set var="minutes" value="${totalTime / 60}"/>
-                                                        ${minutes}m
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        ${totalTime}s
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <script>
+                                                    document.write(formatTime(${totalTime}));
+                                                </script>
                                             </p>
                                             <p class="lanking">1</p>
                                         </div>
@@ -206,19 +197,9 @@
                                         </div>
                                         <div class="records lank-third">
                                             <p><c:set var="totalTime" value="${rankedMembers[2].totalStudyTime}"/>
-                                                <c:choose>
-                                                    <c:when test="${totalTime >= 3600}">
-                                                        <c:set var="hours" value="${totalTime / 3600}"/>
-                                                        ${hours}h
-                                                    </c:when>
-                                                    <c:when test="${totalTime >= 60}">
-                                                        <c:set var="minutes" value="${totalTime / 60}"/>
-                                                        ${minutes}m
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        ${totalTime}s
-                                                    </c:otherwise>
-                                                </c:choose>
+                                                <script>
+                                                    document.write(formatTime(${totalTime}));
+                                                </script>
                                             </p>
                                             <p class="lanking">3</p>
                                         </div>
@@ -235,19 +216,9 @@
                                                 </div>
                                                 <p class="lank-id">${member.userName}</p>
                                                 <p class="lank-time"><c:set var="totalTime" value="${member.totalStudyTime}"/>
-                                                    <c:choose>
-                                                        <c:when test="${totalTime >= 3600}">
-                                                            <c:set var="hours" value="${totalTime / 3600}"/>
-                                                            ${hours}h
-                                                        </c:when>
-                                                        <c:when test="${totalTime >= 60}">
-                                                            <c:set var="minutes" value="${totalTime / 60}"/>
-                                                            ${minutes}m
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            ${totalTime}s
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                    <script>
+                                                        document.write(formatTime(${totalTime}));
+                                                    </script>
                                                 </p>
                                             </div>
                                         </c:if>
