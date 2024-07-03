@@ -960,7 +960,15 @@
                 studyGroupMemberContainer.append(emptySlide);
             }
 
+            // studyIdx를 저장할 Set 생성 (중복 제거)
+            const studyIdxSet = new Set();
+
             studyData.forEach(study => {
+                if (studyIdxSet.has(study.studyIdx)) {
+                    return; // 중복된 studyIdx면 다음 반복으로 넘어감
+                }
+                studyIdxSet.add(study.studyIdx); // studyIdx 추가
+
                 // 슬라이드 아이템 생성
                 const swiperSlide = $('<div class="swiper-slide"></div>');
                 const studyGroupDiv = $(`<div class="userStudyGroupDetail" id="studyGroup_${study.studyIdx}"></div>`);
