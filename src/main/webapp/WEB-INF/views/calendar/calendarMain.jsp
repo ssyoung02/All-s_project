@@ -25,8 +25,10 @@
         // 전역 변수
         let currentModalId = null;
         let calendar; // 전역 변수로 선언
-        // 캘린더 일정 색상 옵션 (10가지 색상) -> 전역 변수로 선언
-        const colors = ["#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784", "#aed581"];
+
+        // 캘린더 일정 색상 옵션
+        const colors = ["#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784", "#aed581", "#ffb74d", "#ff8a65",
+            "#e91e63", "#9c27b0" ];
 
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
