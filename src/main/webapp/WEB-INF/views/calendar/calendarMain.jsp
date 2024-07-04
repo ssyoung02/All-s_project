@@ -241,7 +241,7 @@
                     .css('display', 'none'); // display 속성을 none으로 변경
             });
 
-            $('#view-modal-close').click(function () {
+            $('#viewScheduleModal').click(function () {
                 $('#viewScheduleModal')
                     .removeClass('opaque')
                     .addClass('unstaged')
@@ -418,39 +418,39 @@
                         <form id="editScheduleForm">
                             <input type="hidden" id="editScheduleId" name="scheduleIdx">
                             <div class="modal-inputbox">
-                                <label class="modal-label for="editTitle"">일정 제목<span class="essential">*</span></label>
+                                <label class="modal-label" for="editTitle">일정 제목<span class="essential">*</span></label>
                                 <div class="modal-input">
                                     <input type="text" id="editTitle" name="title" required maxlength="20">
                                 </div>
                             </div>
                             <div class="modal-inputbox">
-                                <label class="modal-label for="editDescription">일정 내용</label>
+                                <label class="modal-label" for="editDescription">일정 내용</label>
                                 <div class="modal-input">
                                 <textarea id="editDescription" name="description" maxlength="255"></textarea>
                                 </div>
                             </div>
                             <div class="modal-inputbox">
-                                <label class="modal-label for="editLocation">장소</label>
+                                <label class="modal-label" for="editLocation">장소</label>
                                 <div class="modal-input">
                                     <input type="text" id="editLocation" name="location">
                                 </div>
                             </div>
                             <div class="modal-inputbox">
-                                <label class="modal-label for="editStartDate">시작 날짜<span class="essential">*</span></label>
+                                <label class="modal-label" for="editStartDate">시작 날짜<span class="essential">*</span></label>
                                 <div class="modal-input">
                                     <input type="date" id="editStartDate" name="startDate" required>
                                     <input type="time" id="editStartTime" name="startTime">
                                 </div>
                             </div>
                             <div class="modal-inputbox">
-                                <label class="modal-label for="editEndDate">종료 날짜</label>
+                                <label class="modal-label" for="editEndDate">종료 날짜</label>
                                 <div class="modal-input">
                                     <input type="date" id="editEndDate" name="endDate">
                                     <input type="time" id="editEndTime" name="endTime">
                                 </div>
                             </div>
                             <div class="modal-inputbox">
-                                <label class="modal-label for="editReminder">알림</label>
+                                <label class="modal-label" for="editReminder">알림</label>
                                 <div class="modal-input">
                                     <input type="datetime-local" id="editReminder" name="reminder">
                                 </div>
