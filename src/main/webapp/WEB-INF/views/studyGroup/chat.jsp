@@ -21,7 +21,7 @@
 <body>
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section class="mainContainer">
+    <section class="chatSection">
         <!-- 메뉴 영역 -->
         <!-- 본문 영역 -->
         <main>
@@ -31,26 +31,16 @@
                 <div class="chat-header">
                     <h1>${study.descriptionTitle}</h1>
                 </div>
-                <!-- 멤버 목록 -->
-                <div class="members-list">
-                    <div class="members">
-                        <div class="member">
-                            <p>
-                                <c:forEach var="member" items="${members}" varStatus="loop">
-                                    ${member.name}
-                                    <c:if test="${not loop.last}"> </c:if>
-                                </c:forEach>
-                            </p>
-                        </div>
-                    </div>
-                </div>
                 <!-- 채팅 메시지 영역 -->
                 <div id="chatMessages" class="chat-messages">
                     <c:forEach var="message" items="${messages}">
                         <div class="message ${message.userName == userVo.name ? 'right' : 'left'}">
                             <span class="name">${message.userName}</span>
-                            <div class="bubble">
-                                <p>${message.messageContent}</p>
+
+                            <div class="messageBox">
+                                <div class="bubble">
+                                    <p>${message.messageContent}</p>
+                                </div>
                                 <span class="regDate">${message.messageRegdate}</span>
                             </div>
                         </div>
@@ -58,11 +48,9 @@
                 </div>
             </div>
             <!-- 채팅 입력창 -->
-            <div class="chat-input">
-                <div class="input-container">
-                    <textarea id="messageInput" placeholder="메시지를 입력하세요." cols="40" rows="1"></textarea>
-                    <button class="send-button">전송</button>
-                </div>
+            <div class="input-container">
+                <textarea id="messageInput" placeholder="메시지를 입력하세요." cols="75" rows="1"></textarea>
+                <button class="send-button">전송</button>
             </div>
             <!-- JavaScript -->
             <script>

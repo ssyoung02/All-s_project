@@ -3,7 +3,11 @@
         margin: 0 3em;
     }
 }
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
+    /*레이아웃*/
+    header {
+        grid-template-columns: repeat(4, 1fr);
+    }
     /*메인메뉴 medium사이즈*/
     nav{
         display: none;
@@ -40,7 +44,7 @@
         width: 20em;
     }
     .time-area p{
-        font-size: 90px;
+        font-size: 70px;
     }
 
     .lnb-open{
@@ -71,7 +75,7 @@
         max-height: 300px;
     }
     .userStudyGroup{
-        width: 350px;
+        width: 100%;
     }
 
     /*회원정보 수정 모바일*/
@@ -95,6 +99,10 @@
         margin-left: -4em;
     }
 
+    .userItem{
+        width: 14em;
+    }
+
 }
 
 @media (max-width: 1250px) {
@@ -104,11 +112,23 @@
 }
 
 @media (max-width: 1050px) {
-    #studyTimeChart{
+    #studyTimeChart {
         max-width: 600px;
+    }
+
+    .group-main {
+        display: block;
+    }
+    .group-member{
+        margin-top: 1em;
     }
 }
 @media (max-width: 850px) {
+    /*레이아웃*/
+    header {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
     /*메인*/
     .loginMain{
         flex-direction: column;
@@ -126,7 +146,16 @@
         font-size: 3em;
     }
 
+    .time-area p{
+        font-size: 50px;
+    }
+
     #studyTimeChart{
         max-width: 500px;
+    }
+
+    /*스터디그룹 메인*/
+    .lank-item {
+        width: 250px;
     }
 }

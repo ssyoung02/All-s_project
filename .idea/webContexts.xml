@@ -15,6 +15,15 @@
                        value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/myPage" />
                 <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyRecruit/recruitList.jsp"
                        value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyRecruit" />
+                <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/myPage/myPageInfo.jsp"
+                       value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/myPage" />
+                <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyGroup/studyGroupCreate.jsp"
+                       value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyGroup" />
+                <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyNote/noteWrite.jsp"
+                       value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyNote" />
+                <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyGroup/studyGroupMain.jsp"
+                       value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/studyGroup" />
+
             </map>
         </option>
     </component>

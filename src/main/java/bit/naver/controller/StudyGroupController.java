@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,9 @@ public class StudyGroupController {
     @Autowired
     private StudyService studyService;
 
+    @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoMapApiKey;
+
     private static final Logger logger = LoggerFactory.getLogger(StudyGroupController.class);
 
     // 스터디 관리 페이지로 이동
@@ -59,6 +63,8 @@ public class StudyGroupController {
         model.addAttribute("category", studyGroup.getCategory());
         model.addAttribute("gender", studyGroup.getGender());
         model.addAttribute("age", studyGroup.getAge());
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
+
 
         logger.info("Category: " + studyGroup.getCategory());
         logger.info("Gender: " + studyGroup.getGender());
@@ -94,6 +100,8 @@ public class StudyGroupController {
     @GetMapping("/studyGroupCreate")
     public String getStudyGroupCreate(Model model) {
         model.addAttribute("studyGroup", new StudyGroup());
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
+
         return "studyGroup/studyGroupCreate";
     }
 
@@ -124,6 +132,7 @@ public class StudyGroupController {
         model.addAttribute("study", study);
         model.addAttribute("members", members);
         model.addAttribute("rankedMembers", rankedMembers);
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
 
         return "studyGroup/studyGroupMain"; // 스터디 상세 정보를 보여줄 JSP 페이지
     }
@@ -244,6 +253,18 @@ public class StudyGroupController {
     public Map<String, Object> approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
         Map<String, Object> response = new HashMap<>();
         try {
+
+            Map<String, Integer> studyInfo = studyGroupMapper.getCurrentParticipantsAndCapacity(studyIdx);
+            int currentParticipants = studyInfo.get("currentParticipants");
+            int capacity = studyInfo.get("capacity");
+
+            if (currentParticipants >= capacity) {
+                response.put("success", false);
+                response.put("message", "모집인원이 마감되었습니다.");
+                return response;
+            }
+
+
             studyGroupMapper.approveMember(studyIdx, userIdx);
             studyGroupMapper.incrementCurrentParticipants(studyIdx);  // 멤버 승인 시 현재 참가자 수 증가
             response.put("success", true);
@@ -332,6 +353,8 @@ public class StudyGroupController {
                                                 @RequestParam("gender") String gender,
                                                 @RequestParam("studyOnline") boolean studyOnline,
                                                 @RequestParam(value = "image", required = false) MultipartFile image,
+                                                @RequestParam("latitude") double latitude,
+                                                @RequestParam("longitude") double longitude,
                                                 HttpSession session, HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -343,6 +366,8 @@ public class StudyGroupController {
             studyGroup.setAge(age);
             studyGroup.setGender(gender);
             studyGroup.setStudyOnline(studyOnline);
+            studyGroup.setLatitude(latitude);  // 위치 정보 업데이트
+            studyGroup.setLongitude(longitude);  // 위치 정보 업데이트
 
             if (image != null && !image.isEmpty()) {
                 String savePath = request.getServletContext().getRealPath("/resources/studyGroupImages");

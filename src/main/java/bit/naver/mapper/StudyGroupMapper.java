@@ -101,4 +101,7 @@ public interface StudyGroupMapper {
     List<StudyGroup> getIStudies(Long userIdx); // 사용자가 참여 중인 스터디 목록 조회 메서드 추가
     List<StudyGroup> getJoinedStudies(@Param("userLatitude") Double userLatitude, @Param("userLongitude") Double userLongitude, @Param("userIdx") Long userIdx);
 
+    // 현재 모집 인원과 정원
+    @Select("SELECT currentParticipants, capacity FROM Studies WHERE study_idx = #{studyIdx}")
+    Map<String, Integer> getCurrentParticipantsAndCapacity(Long studyIdx);
 }

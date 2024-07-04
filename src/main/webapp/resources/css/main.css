@@ -77,7 +77,6 @@
 #studyTimeChart{
     max-width: 200px;
     max-height: 150px;
-    margin-bottom: 1em;
 }
 
 /*스터디 그룹 메인*/
@@ -134,13 +133,25 @@
     gap: 1em;
 }
 .lank-phase{
+    position: relative;
     display: flex;
     flex-direction: row;
     gap: 5px;
     height: 200px;
+    width: 280px;
     margin: 0 1em;
+    background-image: url("/resources/images/bookRank.png");
+    background-size: cover;
+    isolation: isolate;
 }
-
+.lank-phase:after {
+    content: '';
+    position: absolute;
+    background: white;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.4;
+}
 .lank-floor{
     display: flex;
     flex-direction: column;
@@ -148,10 +159,28 @@
     text-align: center;
     width: 90px;
     gap: 5px;
+    background: transparent;
 }
 .lanking{
+    font-size: 2.5em;
+    font-weight: bold;
+}
+.podiumId{
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
     font-size: 1.3em;
     font-weight: bold;
+    background: rgb(255,255,255,0.5);;
+}
+.podiumId +p{
+    font-size: 14px;
+}
+
+.memberId{
+    font-size: 1em;
 }
 
 .records{
@@ -164,16 +193,15 @@
 }
 .lank-first{
     height: 60%;
-    background-color: #3b593f;
-    color: #fff;
+    justify-content: flex-end
 }
 .lank-second{
     height: 40%;
-    background-color: #588159;
+    justify-content: flex-end
 }
 .lank-third{
-    height: 20%;
-    background-color: #A2B18A;
+    height: 25%;
+    justify-content: flex-end
 }
 
 .lank-item{
@@ -191,7 +219,7 @@
     flex: 3;
 }
 .lank-time{
-    flex: 1;
+    flex: 2;
     text-align: right;
 }
 .circle-number{
@@ -203,10 +231,12 @@
     display: inline-block;
     text-align: center;
     font-weight: bold;
-    background-color: #898989;
+    background-image: url(/resources/images/rankSecond.png);
+    background-size: cover;
 }
 .top3{
-    background-color: #ffcc4c;
+    background-image: url("/resources/images/rankFirst.png");
+    background-size: cover;
 }
 
 /*캘린더*/

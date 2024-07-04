@@ -6,6 +6,8 @@
 <c:set var="userVo" value="${sessionScope.userVo}"/> <%-- 세션에서 userVo 가져오기 --%>
 <c:set var="study" value="${sessionScope.study}"/>
 <c:set var="myStudies" value="${sessionScope.myStudies}"/>
+<c:set var="weatherLatitude" value="${sessionScope.weatherLatitude}"/>
+<c:set var="weatherLongitude" value="${sessionScope.weatherLongitude}"/>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 <%--이제 필요없는 코드 --%>
 <!DOCTYPE html>
@@ -153,7 +155,7 @@
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <%-- 로그인 성공 모달 --%>
-<div id="modal-container-main" class="modal unstaged" style="z-index: 100">
+<div id="modal-container-main" class="modal unstaged" style="z-index: 100" onclick="modalCloseBack()">
     <div class="modal-overlay">
     </div>
     <div class="modal-contents">
@@ -288,6 +290,7 @@
                          style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> <%-- 로그인 후 지도 컨테이너 --%>
                         <div class="map-search-container">
                             <button id="cafeSearchButton" class="toggle-button-map">주변 카페 보기☕</button>
+                            <button class="toggle-button-map"  onclick="location.href='${root}/studyRecruit/recruitList'" >스터디 전체보기🗺 </button>
                         </div>
                     </div>
                     <div id="studyListContainer" style="display: block;"> <%-- display: block 추가 --%>
@@ -308,7 +311,10 @@
                                      onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                     <div class="banner-bottom flex-between">
                                         <p class="study-tag">
-                                            <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : 'open'}">${study.status}</span>
+                                            <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
+                                                                ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
+                                                                <span class="recruitNum">(${study.currentParticipants}/${study.capacity})&nbsp;</span>
+                                            </span>
                                             <span class="department">${study.category}</span>
                                         </p>
                                         <button class="banner-like" aria-label="좋아요">
@@ -852,7 +858,15 @@
                             // span 요소 생성 및 내용 설정
                             const statusSpan = document.createElement('span');
                             statusSpan.className = 'recruit-status ' + (study.status === 'CLOSED' ? 'closed' : 'open');
-                            statusSpan.textContent = study.status;
+                            statusSpan.textContent = study.status === 'CLOSED' ? '모집마감' : '모집중';
+
+
+                            // 모집 인원 정보 추가
+                            const recruitNumSpan = document.createElement('span');
+                            recruitNumSpan.className = 'recruitNum';
+                            recruitNumSpan.textContent = ' '+'('+study.currentParticipants+'/'+study.capacity+')' +' ';
+
+                            statusSpan.appendChild(recruitNumSpan);
                             studyTag.appendChild(statusSpan);
 
                             const categorySpan = document.createElement('span');
@@ -972,7 +986,7 @@
                 //swiperWrapper.append(swiperSlide);
                 studyGroupMemberContainer.append(swiperSlide);
 
-            // 스터디 멤버 정보 AJAX 요청
+                // 스터디 멤버 정보 AJAX 요청
                 $.ajax({
                     url: '/studyGroup/studyGroupMain/members/' + study.studyIdx,
                     type: 'GET',
@@ -999,24 +1013,24 @@
 
 
 
-/*
-                        // Swiper 초기화 (처음 한 번만 실행)
-                        if (!memberswiper) {
-                            memberswiper = new Swiper('.userStudyGroupMember .member-swiper-container', {
-                                direction: 'horizontal', // 슬라이드 방향을 가로로 변경
-                                slidesPerView: 'auto',
-                                spaceBetween: 10,
-                                allowTouchMove: true, // 드래그 허용
-                                pagination: {
-                                    el: '.member-swiper-pagination',
-                                    type: 'bullets'
-                                }
-                            });
-                        } else {
-                            // 기존 Swiper 객체 업데이트
-                            memberswiper.update();
-                        }
-*/                      memberswiper.update();
+                        /*
+                                                // Swiper 초기화 (처음 한 번만 실행)
+                                                if (!memberswiper) {
+                                                    memberswiper = new Swiper('.userStudyGroupMember .member-swiper-container', {
+                                                        direction: 'horizontal', // 슬라이드 방향을 가로로 변경
+                                                        slidesPerView: 'auto',
+                                                        spaceBetween: 10,
+                                                        allowTouchMove: true, // 드래그 허용
+                                                        pagination: {
+                                                            el: '.member-swiper-pagination',
+                                                            type: 'bullets'
+                                                        }
+                                                    });
+                                                } else {
+                                                    // 기존 Swiper 객체 업데이트
+                                                    memberswiper.update();
+                                                }
+                        */                      memberswiper.update();
                     },
                     error: function (xhr, status, error) {
                         console.error('스터디 멤버 정보 조회 실패 (studyIdx: ' + study.studyIdx + '):', error);

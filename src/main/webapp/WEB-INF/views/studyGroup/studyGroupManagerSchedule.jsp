@@ -27,8 +27,9 @@
         let calendar; // 전역 변수로 선언
         const studyIdx = ${studyGroup.studyIdx};
 
-        // 캘린더 일정 색상 옵션 (10가지 색상) -> 전역 변수로 선언
-        const colors = ["#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784", "#aed581"];
+        // 캘린더 일정 색상 옵션
+        const colors = ["#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784", "#aed581", "#ffb74d", "#ff8a65",
+            "#e91e63", "#9c27b0" ];
 
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
@@ -363,51 +364,61 @@
                             <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
                         </div>
                         <form id="addScheduleForm">
-                            <div class="inputbox">
-                                <label for="title">일정 제목<span class="essential">*</span></label>
-                                <input type="text" id="title" name="title" required maxlength="20">
+                            <div class="modal-inputbox">
+                                <label class="modal-label" for="title">일정 제목<span class="essential">*</span></label>
+                                <div class="modal-input">
+                                    <input type="text" id="title" name="title" required maxlength="20">
+                                </div>
                             </div>
-                            <div class="inputbox">
-                                <label for="description">일정 내용</label>
-                                <textarea id="description" name="description" maxlength="255"></textarea>
+                            <div class="modal-inputbox">
+                                <label class="modal-label" for="description">일정 내용</label>
+                                <div class="modal-input">
+                                    <textarea id="description" name="description" maxlength="255"></textarea>
+                                </div>
                             </div>
-                            <div class="inputbox">
-                                <label for="location">장소</label>
-                                <input type="text" id="location" name="location">
+                            <div class="modal-inputbox">
+                                <label class="modal-label" for="location">장소</label>
+                                <div class="modal-input">
+                                    <input type="text" id="location" name="location">
+                                </div>
                             </div>
-                            <div class="inputbox flex-between">
-                                <div class="date-time">
-                                    <label for="startDate">시작 날짜<span class="essential">*</span></label>
+                            <div class="modal-inputbox">
+                                    <label class="modal-label" for="startDate">시작 날짜<span class="essential">*</span></label>
+                                <div class="modal-input">
                                     <input type="date" id="startDate" name="startDate" required>
                                     <input type="time" id="startTime" name="startTime">
                                 </div>
-                                <div class="date-time">
-                                    <label for="endDate">종료 날짜</label>
+                            </div>
+                            <div class="modal-inputbox">
+                                <label class="modal-label" for="endDate">종료 날짜</label>
+                                <div class="modal-input">
                                     <input type="date" id="endDate" name="endDate">
                                     <input type="time" id="endTime" name="endTime">
                                 </div>
                             </div>
-                            <div class="inputbox">
-                                <label for="reminder">알림</label>
-                                <input type="datetime-local" id="reminder" name="reminder">
+                            <div class="modal-inputbox">
+                                <label class="modal-label" for="reminder">알림</label>
+                                <div class="modal-input">
+                                    <input type="datetime-local" id="reminder" name="reminder">
+                                </div>
                             </div>
-                            <div class="inputbox">
-                                <label>종일 여부<span class="essential">*</span></label>
-                                <div class="radio-group">
+                            <div class="modal-inputbox">
+                                <label class="modal-label">종일 여부<span class="essential">*</span></label>
+                                <div class="modal-input">
                                     <input type="radio" id="allDayYes" name="allDay" value="1">
                                     <label for="allDayYes">예</label>
                                     <input type="radio" id="allDayNo" name="allDay" value="0" checked>
                                     <label for="allDayNo">아니오</label>
                                 </div>
                             </div>
-                            <div class="inputbox">
-                                <label>배경색<span class="essential">*</span></label>
+                            <div class="modal-inputbox">
+                                <label class="modal-label">배경색<span class="essential">*</span></label>
                                 <div class="color-picker">
                                 </div>
                                 <input type="hidden" id="backgroundColorInput" name="backgroundColor" value="#A2B18A">
                             </div>
-                            <button class="primary-default" type="submit">추가</button>
                         </form>
+                        <button class="primary-default" type="submit" form="addScheduleForm">추가</button>
                     </div>
                 </div>
 
@@ -422,52 +433,65 @@
                         <div id="scheduleDetails">
                             <form id="editScheduleForm">
                                 <input type="hidden" id="editTeamScheduleId" name="teamScheduleIdx">
-                                <div class="inputbox">
-                                    <label for="editTitle">일정 제목<span class="essential">*</span></label>
-                                    <input type="text" id="editTitle" name="title" required maxlength="20">
-                                </div>
-                                <div class="inputbox">
-                                    <label for="editDescription">일정 내용</label>
-                                    <textarea id="editDescription" name="description" maxlength="255"></textarea>
-                                </div>
-                                <div class="inputbox">
-                                    <label for="editLocation">장소</label>
-                                    <input type="text" id="editLocation" name="location">
-                                </div>
-                                <div class="inputbox flex-between">
-                                    <div class="date-time">
-                                        <label for="editStartDate">시작 날짜<span class="essential">*</span></label>
-                                        <input type="date" id="editStartDate" name="startDate" required>
-                                        <input type="time" id="editStartTime" name="startTime">
+                                <div class="modal-inputbox">
+                                    <label class="modal-label" for="editTitle">일정 제목<span class="essential">*</span></label>
+                                    <div class="modal-input">
+                                        <input type="text" id="editTitle" name="title" required maxlength="20">
                                     </div>
-                                    <div class="date-time">
-                                        <label for="editEndDate">종료 날짜</label>
+                                </div>
+                                <div class="modal-inputbox">
+                                    <label class="modal-label" for="editDescription">일정 내용</label>
+                                    <div class="modal-input">
+                                        <textarea id="editDescription" name="description" maxlength="255"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-inputbox">
+                                    <label class="modal-label" for="editLocation">장소</label>
+                                    <div class="modal-input">
+                                        <input type="text" id="editLocation" name="location">
+                                    </div>
+                                </div>
+                                <div class="modal-inputbox">
+                                        <label class="modal-label" for="editStartDate">시작 날짜<span class="essential">*</span></label>
+                                        <div class="modal-input">
+                                            <input type="date" id="editStartDate" name="startDate" required>
+                                            <input type="time" id="editStartTime" name="startTime">
+                                        </div>
+                                </div>
+                                <div class="modal-inputbox">
+                                    <label class="modal-label" for="editEndDate">종료 날짜</label>
+                                    <div class="modal-input">
                                         <input type="date" id="editEndDate" name="endDate">
                                         <input type="time" id="editEndTime" name="endTime">
                                     </div>
                                 </div>
-                                <div class="inputbox">
-                                    <label for="editReminder">알림</label>
-                                    <input type="datetime-local" id="editReminder" name="reminder">
+
+                                <div class="modal-inputbox">
+                                    <label class="modal-label" for="editReminder">알림</label>
+                                    <div class="modal-input">
+                                        <input type="datetime-local" id="editReminder" name="reminder">
+                                    </div>
                                 </div>
-                                <div class="inputbox">
-                                    <label>종일 여부<span class="essential">*</span></label>
-                                    <div class="radio-group">
+                                <div class="modal-inputbox">
+                                    <label class="modal-label">종일 여부<span class="essential">*</span></label>
+                                    <div class="modal-input">
                                         <input type="radio" id="editAllDayYes" name="allDay" value="1">
                                         <label for="editAllDayYes">예</label>
                                         <input type="radio" id="editAllDayNo" name="allDay" value="0">
                                         <label for="editAllDayNo">아니오</label>
                                     </div>
                                 </div>
-                                <div class="inputbox">
-                                    <label>배경색<span class="essential">*</span></label>
+                                <div class="modal-inputbox">
+                                    <label class="modal-label">배경색<span class="essential">*</span></label>
                                     <div class="color-picker">
                                     </div>
                                     <input type="hidden" id="editBackgroundColorInput" name="backgroundColor"
                                            value="#A2B18A">
                                 </div>
-                                <button class="primary-default" type="submit">수정</button>
-                                <button class="primary-default" id="deleteButton" type="button">삭제</button>
+                                <div class="buttonBox calenderButton">
+                                    <button class="primary-default" type="submit">수정</button>
+                                    <button class="primary-default" id="deleteButton" type="button">삭제</button>
+                                </div>
                             </form>
                         </div>
                     </div>

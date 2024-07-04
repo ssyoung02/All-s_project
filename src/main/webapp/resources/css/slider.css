@@ -65,10 +65,15 @@
 .banner-main-title{
     text-align: left;
     font-weight: bold;
+    width: 210px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 15px;
 }
 .banner-id{
     text-align: left;
-    font-size: 0.9em;
+    font-size: 13px;
 }
 .banner-tag{
     border: 1px solid #A2B18A;
@@ -100,6 +105,8 @@
 
 .userStudyGroup{
     position: relative;
+    overflow: hidden;
+    margin-top: 1em;
 }
 .loginUserInfoRight {
     overflow: hidden; /* 슬라이더 컨테이너 넘침 방지 */
@@ -115,6 +122,11 @@
     margin: 10px 0;
     text-align: center;
     font-size: 17px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    padding: 0 10px;
 }
 .userStudyGroupDetail{
     width: 100%;

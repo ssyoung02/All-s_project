@@ -67,7 +67,8 @@ public class MainController {
             session.setAttribute("myStudies", myStudies);
             model.addAttribute("myStudies", myStudies); // myStudies를 model에 추가
 
-
+            session.setAttribute("weatherLatitude", user.getLatitude());
+            session.setAttribute("weatherLongitude", user.getLongitude());
             // 참여 중인 스터디가 있는 경우 첫 번째 스터디 정보를 세션에 추가
             if (!myStudies.isEmpty()) {
                 StudyGroup currentStudy = myStudies.get(0);
@@ -86,7 +87,8 @@ public class MainController {
             Long userIdx = Long.valueOf(users != null ? users.getUserIdx() : 59);
             List<StudyGroup> study_18 = studyMapper.getAllStudy_9(userIdx);
             model.addAttribute("study_18", study_18);
-
+            session.setAttribute("weatherLatitude", userVo.getLatitude());
+            session.setAttribute("weatherLongitude", userVo.getLongitude());
             // 사용자가 참여 중인 스터디 목록 조회
             List<StudyGroup> myStudies = studyGroupMapper.getJoinedStudies(userVo.getLatitude(), userVo.getLongitude(), userIdx);
             session.setAttribute("myStudies", myStudies);
@@ -119,14 +121,17 @@ public class MainController {
             Users userVo = (Users) session.getAttribute("userVo");
             System.out.println(userVo);
             session.setAttribute("userVo", userVo);
-
+            session.setAttribute("weatherLatitude", userVo.getLatitude());
+            session.setAttribute("weatherLongitude", userVo.getLongitude());
         }else {
             String username = principal.getName();
             Users user = usersMapper.findByUsername(username);
             model.addAttribute("user", user);
             session.setAttribute("userVo", user);
-
+            session.setAttribute("weatherLatitude", user.getLatitude());
+            session.setAttribute("weatherLongitude", user.getLongitude());
             Long userIdx = user.getUserIdx();
+
         }
         model.addAttribute("googleMapsApiKey", googleMapsApiKey);
         return "/include/header";

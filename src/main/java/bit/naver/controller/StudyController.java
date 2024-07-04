@@ -5,8 +5,10 @@ import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -15,6 +17,9 @@ public class StudyController {
     private static final Logger log = Logger.getLogger(StudyController.class); // Logger 객체 선언 및 초기화
     @Autowired
     private UsersMapper usersMapper;
+
+    @Value("${kakao.map.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoMapApiKey;
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -98,7 +103,8 @@ public class StudyController {
 
     //내 스터디 - 그룹 관리 - 스터디 정보
     @RequestMapping("/studyGroup/studyGroupManagerInfo")
-    public String StudyGroupManagerInfo() {
+    public String StudyGroupManagerInfo(Model model) {
+        model.addAttribute("kakaoMapApiKey", kakaoMapApiKey); // API 키를 모델에 추가
         return "studyGroup/studyGroupManagerInfo";
     }
 

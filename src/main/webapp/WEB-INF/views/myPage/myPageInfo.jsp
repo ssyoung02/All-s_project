@@ -202,7 +202,7 @@
                                     </c:choose>
                                 </li>
                             </ul>
-                            <ul class="longUserItem">
+                            <ul class="userItem">
                                 <li><b>이메일</b></li>
                                 <li>${userVo.email}</li>
                             </ul>

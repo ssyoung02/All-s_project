@@ -18,36 +18,6 @@
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
-    <style>  .cafe-info-window {
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        width: 200px;
-    }
-
-    .map-search-container {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 2; /* 지도 위에 표시되도록 설정 */
-    }
-
-    .map-search-container input[type="text"] {
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        z-index: 2;
-    }
-
-    .map-search-container button {
-        padding: 8px 12px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-        z-index: 2;
-    }</style>
 </head>
 <body>
 <jsp:include page="../include/header.jsp"/>
@@ -154,7 +124,7 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-
+                </div>
                 <div class="board-bottom">
                     <c:if test="${userVo.userIdx == study.studyLeaderIdx}">
                         <button class="secondary-default" onclick="showEditForm()">수정</button>
@@ -162,7 +132,6 @@
                     </c:if>
                     <button class="secondary-default" onclick="location.href='${root}/studyRecruit/recruitList'">목록</button>
                 </div>
-            </div>
             <%-- 수정 폼 영역 --%>
             <div id="editFormContainer" style="display:none;">
                 <form id="updateForm" action="${root}/studyRecruit/updateStudyGroup" method="post" enctype="multipart/form-data">
@@ -189,26 +158,14 @@
                                         <i class="bi bi-plus-lg"></i>
                                         <img id="profilePreview" src="${study.image}" alt="스터디 그룹 프로필" width="100px" height="100px">
                                     </label>
+                                    <div class="profile-change">
+                                        <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
+                                        <p>(300px X 300px / 500kb 미만)</p>
+                                    </div>
                                 </form>
-                                <div class="profile-change">
-                                    <p>우리 스터디를 표현할 아이콘을 등록해주세요.</p>
-                                    <p>(300px X 300px / 500kb 미만)</p>
-                                </div>
                             </dd>
                         </div>
-                        <div class="webInfo-itemfull">
-                            <dt>지역</dt>
-                            <dd>
-                                <div class="location-select">
-                                    <select id="state" title="광역시/도 선택">
-                                        <option>광역시/도</option>
-                                    </select>
-                                    <select id="district" title="지역 선택">
-                                        <option>지역 상세</option>
-                                    </select>
-                                </div>
-                            </dd>
-                        </div>
+
                         <div class="webInfo-itemfull">
                             <dt>모집분야</dt>
                             <dd>

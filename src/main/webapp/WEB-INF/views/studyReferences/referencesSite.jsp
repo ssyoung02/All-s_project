@@ -112,7 +112,7 @@
                                 <a href="https://techblog.woowahan.com/">
                                     <img src="/resources/images/08.%20ouahan.png" alt="MySQL"></a>
                             </div>
-                            <h3>우아한형제들 기술블로그</h3>
+                            <h3>우아한형제들 기술 블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
@@ -121,7 +121,7 @@
                                 <a href="https://medium.com/daangn">
                                     <img src="/resources/images/09.%20carrot.png" alt="VS Code"></a>
                             </div>
-                            <h3>당근 테크 블로그</h3>
+                            <h3>당근 테크<br>블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
@@ -130,7 +130,7 @@
                                 <a href="https://helloworld.kurly.com/">
                                     <img src="/resources/images/10.%20kurly.png" alt="Git Bash"></a>
                             </div>
-                            <h3>컬리 기술블로그</h3>
+                            <h3>컬리 기술<br>블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
@@ -139,7 +139,7 @@
                                 <a href="https://blog.banksalad.com/tech/">
                                     <img src="/resources/images/11.%20banksalad.png" alt="Git Bash"></a>
                             </div>
-                            <h3>뱅크샐러드 블로그</h3>
+                            <h3>뱅크샐러드<br>블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
