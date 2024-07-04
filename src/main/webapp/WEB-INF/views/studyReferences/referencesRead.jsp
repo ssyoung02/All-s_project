@@ -276,7 +276,7 @@
                                     <div class="comment-user flex-between">
                                         <div class="flex-row">
                                             <div class="profile-img">
-                                                <img src="${root}/resources/images/manggom.png" alt="내 프로필">
+                                                <img src="${root}/resources/images/user.png" alt="내 프로필">
                                             </div>
                                             <div class="comment-profile">
                                                 <p class="comment-userId">
