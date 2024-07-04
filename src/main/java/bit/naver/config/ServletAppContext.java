@@ -22,13 +22,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 // 해당 클래스를 Spring 설정 클래스로 지정하여 빈(Bean) 등록 및 설정을 처리합니다.
 @EnableWebMvc
 // Spring MVC를 활성화하고 기본적인 웹 MVC 설정을 자동으로 구성합니다.
-@ComponentScan(basePackages = {"bit.naver.controller"})
+@ComponentScan(basePackages = {"bit.naver.controller", "bit.naver.service", "bit.naver.entity"})
 // bit.naver.controller 패키지 내의 컴포넌트들을 스캔하여 Spring 컨테이너에 빈으로 등록합니다. 주로 @Controller 어노테이션이 붙은 클래스들이 컨트롤러로 등록됩니다.
 
 public class ServletAppContext implements WebMvcConfigurer {
@@ -77,6 +82,14 @@ public class ServletAppContext implements WebMvcConfigurer {
     @Override
     public Validator getValidator() {
         return validator();
+    }
+    
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+        // 파일 업로드 최대 크기 설정 (바이트 단위, 10MB로 설정 예시)
+        resolver.setMaxUploadSize(10485760);
+        return resolver;
     }
 
 }

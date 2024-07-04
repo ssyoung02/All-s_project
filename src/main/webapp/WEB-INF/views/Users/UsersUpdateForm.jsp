@@ -1,6 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%
+    response.setHeader("Cache-Control","no-store");
+    response.setHeader("Pragma","no-cache");
+    response.setDateHeader("Expires",0);
+    if (request.getProtocol().equals("HTTP/1.1"))
+        response.setHeader("Cache-Control", "no-cache");
+%>
+
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <c:set var="userVo"
        value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>
@@ -10,6 +19,7 @@
 <html>
 <head>
     <title>회원 정보 수정</title>
+    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -21,7 +31,7 @@
 </head>
 <body>
 <h2>회원 정보 수정</h2>
-<form:form method="POST" action="${root}/Users/UsersUpdate" id="updateForm" modelAttribute="userVo">
+<form:form method="POST" action="${root}/Users/UsersUpdate" id="updateForm" sessionAttribute="userVo">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <div>
         <form:label path="username">아이디:</form:label>

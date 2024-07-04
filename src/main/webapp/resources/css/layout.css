@@ -1,35 +1,43 @@
-/*레이아웃*/
+p, span{
+    font-size: 90%;
+}
 body {
     height: 100vh;
     margin: 0;
 }
-
-section {
-    display: flex;
-    padding: 0 2em;
-    gap: 20px;
+#container{
+    min-height: calc(100% - 416px);
 }
-
+.mainContainer{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 2em;
+    grid-auto-rows: auto;
+}
 nav {
-    flex: 1;
-    max-width: 300px;
+    grid-column: 1 / 1;
+    grid-row: 1;
 }
 
 main {
-    flex: 3;
+    grid-column: 2 / 6;
+    grid-row: 1;
 }
 
 header{
-    display: flex;
-    padding: 2em;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 2em;
+    grid-auto-rows: auto;
+    padding: 2em 0;
 }
 .logoarea{
-    flex: 1;
-    max-width: 300px;
+    grid-column: 1 / 1;
+    grid-row: 1;
 }
 .r-header{
-    flex: 3;
+    grid-column: 2 / 6;
+    grid-row: 1;
 }
 
 /*flex 공통*/
@@ -57,4 +65,9 @@ header{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+header, section{
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1em 4em;
 }

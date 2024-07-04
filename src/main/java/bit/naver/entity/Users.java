@@ -1,51 +1,110 @@
 package bit.naver.entity;
 
+import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.apache.ibatis.mapping.FetchType;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.List;
 
 @Data
-public class Users {
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+public class Users implements Serializable {
 
     private Long userIdx;
 
-    @NotBlank(message = "아이디는 필수 입력 값입니다.")
-    @Size(min = 4, max = 12, message = "아이디는 4~12자 사이여야 합니다.")
     private String username;
 
-    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-    @Size(min = 8, max = 16, message = "비밀번호는 8~16자 사이여야 합니다.")
     private String password;
 
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String email;
 
-    @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
 
-    @NotNull(message = "생년월일은 필수 입력 값입니다.")
-    @PastOrPresent(message = "생년월일은 오늘 이전의 날짜여야 합니다.")
     private LocalDate birthdate;
 
-    private String profileImage = "기본이미지.gif";
+    private String profileImage ;
+
     private Boolean enabled;
-    private Long gradeIdx;
+
     private String provider;
+
     private Double latitude;
+
     private Double longitude;
 
-    @NotBlank(message = "성별은 필수 입력 값입니다.")
     private String gender; // String 타입 유지
 
-    private Boolean socialLogin = false;
+    private String mobile; //휴대전화번호
+
+    private Boolean socialLogin;
+//    private String socialLogin; // 소셜 로그인 방식 ("KAKAO" 또는 "GOOGLE" 등)
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
+
+    private int totalStudyTime=0;
+
+    private int todayStudyTime=0;
+
+    private String gradeName;
 
     public enum Gender { // Gender 열거형 유지
         M, F, OTHER
     }
+
+    private String authorityName;
+
+    private String formattedCreatedAt;
+
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+        if (createdAt != null) {
+            this.formattedCreatedAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        } else {
+            this.formattedCreatedAt = "";
+        }
+    }
+    private ActivityStatus activityStatus;
+
+    public enum ActivityStatus {
+        ACTIVE("ACTIVE"),
+        STUDYING("STUDYING"),
+        RESTING("RESTING"),
+        NOT_LOGGED_IN("NOT_LOGGED_IN");
+
+        private String value;
+
+        ActivityStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static ActivityStatus fromValue(String value) {
+            for (ActivityStatus status : ActivityStatus.values()) {
+                if (status.value.equals(value)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Invalid ActivityStatus value: " + value);
+        }
+    }
+
 }

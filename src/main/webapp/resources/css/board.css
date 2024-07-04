@@ -16,38 +16,93 @@
 }
 
 /*내 스터디 목록*/
+.boardContent{
+    gap: 1em;
+    margin-bottom: 2em;
+    width: 100%;
+}
+.board-listline{
+    padding: 1em;
+    width: calc(100% - 2em);
+    cursor: pointer;
+    border-bottom: 1px solid #263238;
+    overflow: hidden;
+}
 .board-list{
     padding: 1em;
     border-radius: 5px;
+    width: calc(100% - 2em);
+    cursor: pointer;
+}
+.board-listBoarder{
+    padding: 1em;
+    border-radius: 5px;
     border: 1px solid #bbbbbb;
-    margin-bottom: 2em;
+    width: calc(100% - 2em);
+    cursor: pointer;
+}
+.green {
+    color: #588159;
+    height: 2px;
+    width: 100%;
+    background-color: #588159;
+    margin: 10px 0;
 }
 .imgtitle{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
     gap: 1em;
 }
 .studygroup-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     gap: 1em;
+    margin-bottom: 1em;
+}
+.studygroup-item + button{
+    width: 100%;
+}
+
+.studygroup-item img{
+    width: 100px;
+}
+.studygroup-item p{
+    text-align: left;
 }
 .studygroup-profile-s{
     width: 50px;
     height: 50px;
     border-radius: 5px;
     overflow: hidden;
-    background-color: gray;
 }
 .studygroup-profile-s img{
     width: 100%;
+    height: 100%;
 }
 .board-item{
-    gap: 3px;
+    gap: 5px;
 }
 .board-title{
     font-weight: bold;
+    text-align: left;
+}
+.board-title a{
+    font-size: 1em;
 }
 .operate{
     padding: 10px;
     border-radius: 5px;
+}
+
+/*내 공부노트*/
+.list-title{
+    width: 100%;
 }
 
 /*게시판 하위*/
@@ -56,4 +111,440 @@
     flex-direction: row;
     justify-content: flex-end;
     width: 100%;
+    gap: 1em
+}
+.board-bottom button{
+    padding: 1em 3em;
+}
+
+/*글쓰기*/
+.post-area{
+    padding: 2em 2em;
+    border: 1px solid #588159;
+    border-radius: 5px;
+    margin-bottom: 1em;
+}
+
+.title-post{
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid #588159;
+    padding: 1em 0;
+}
+.title-post::placeholder{
+    font-size: 1.5em;
+}
+
+#smarteditor{
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+.board-textarea{
+    width: 100%;
+    height: 200px;
+    margin: 1em 0;
+}
+
+.upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 50%;
+    color: #999999;
+    background: #eeeeee;
+}
+
+.upload-name + label {
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #588159;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+}
+
+#removeFileButton{
+    padding: 10px 20px;
+}
+
+/*관련 사이트 목록*/
+.siteTitle{
+    margin-bottom: 1em;
+}
+.siteList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    padding: 1em;
+    margin-bottom: 1em;
+}
+
+.upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+    width: 50%;
+    color: #999999;
+    background: #eeeeee;
+}
+
+.upload-name + label {
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #588159;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file {
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+}
+
+#file:hover{
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.siteItem {
+    width: 120px;
+    box-sizing: border-box;
+    text-align: center;/
+}
+
+.siteItem a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.siteItem img {
+    width: 100%;
+    height: auto;
+}
+
+.siteItem .img-container {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+}
+
+.siteItem .img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.siteItem h3 {
+    margin-top: 10px;
+}
+
+
+/*게시글 상세*/
+.board-button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.report{
+    padding: 0;
+    border: none;
+}
+.board-content{
+    width: 100%;
+    text-align: left;
+    border:none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.editor-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-list{
+    margin: 1em 0;
+}
+.comment-item{
+    border-bottom: 1px solid #588159;
+    margin: 1em 0;
+}
+.board-detail{
+    width: 100%;
+    margin-top: 2em;
+    min-height: 200px;
+    border:none;
+}
+.comment-area{
+    display: flex;
+    gap: 1em;
+}
+#input-comment{
+    flex: 9;
+}
+.comment-area button{
+    flex: 1;
+}
+.comment-profile{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    margin-left: 1em;
+}
+.comment-userId{
+    font-weight: bold;
+}
+.comment-detail{
+    margin: 1em 0;
+}
+.post-content{
+    margin-top: 1em;
+}
+
+/*스터디모집 글쓰기*/
+.studyTag{
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+.studyTagLine{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+}
+.studyTag input[type="text"]{
+    width: 300px;
+    height: 5px;
+}
+#locationTag{
+    background: #eeeeee;
+}
+.studyTag-title{
+    width: 7em;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.taglist{
+    margin-top: 3em;
+}
+.taglist li{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 1em;
+    font-size: 13px;
+}
+.taglist-create{
+    margin: 0;
+}
+.taglist-create li{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 1em;
+    font-size: 13px;
+}
+.taglist-create +textarea{
+    margin: 1em 0;
+}
+.tag-title{
+    width: 7em;
+}
+.todo-label{
+    padding: 0;
+}
+.studyTagLocation{
+    color: #A2B18A;
+    background: white;
+    border: 1px solid #A2B18A;
+    border-radius: 5px;
+    padding: 5px 8px;
+    cursor: pointer;
+}
+.tag-details{
+    width: 7em;
+}
+.duplicate-study {
+    padding: 0.5em;
+    background-color: #3b593f;
+    color: #f5f5f5;
+}
+
+
+/*스터디그룹 태그 목록*/
+.tagitem{
+    border-radius: 5px;
+    border: 1px solid #588159;
+    padding: 1px;
+}
+.ing{
+    background: dodgerblue;
+    color: white;
+    border: none;
+}
+.studyField{
+    background: #EFF5FF;
+    color: dodgerblue;
+    border: none;
+}
+
+.studyLocation{
+    color: #A2B18A;
+    background: white;
+    border: 1px solid #A2B18A;
+    border-radius: 5px;
+    padding: 1px 2px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+/* 스터디 모집 목록 */
+.bi-map{
+    margin: 0;
+}
+.recruitBoardTitle{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.recruitmentStatus{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    gap: 10px;
+}
+.recruitmentStatus a{
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #588159;
+}
+.recruitmentStatusSelect{
+    background: #588159;
+    color: white;
+}
+.recruitList{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.recruitItem{
+    padding: 1em;
+    border: 1px solid #898989;
+    border-radius: 5px;
+}
+.recruitListItem{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.study-tag{
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    overflow: hidden;
+}
+.recruit-status{
+    padding: 3px;
+    border-radius: 5px;
+    background: #0094FF;
+    color: #ffffff;
+    border: none;
+    white-space: nowrap;
+}
+.closed{
+    background: #717171;
+    color: #ffffff;
+}
+.recruitNum{
+    color: white;
+}
+.department{
+    padding: 3px;
+    border-radius: 5px;
+    background: #EFF5FF;
+    color: #1D56BC;
+    white-space: nowrap;
+}
+.study-tagItem{
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid #898989;
+    white-space: nowrap;
+}
+
+/*study Group List*/
+.pending {
+    color: #3C578C;
+    font-style: italic;
+}
+
+.rejected {
+    color: darkred;
+    font-style: italic;
+}
+
+.no-studies {
+    text-align: center;
+    color: gray;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+.studygroup-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1em;
+}
+
+.board-item-group {
+    flex-grow: 1;
+    gap: 5px;
+}
+
+.status-text {
+    margin-left: auto;
+    margin-right: 20px;
+    text-align: right;
+}
+
+/* 공부자료 */
+.editor-content p{
+    max-height: 10vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+.editor-content img {
+    display: none;
+}
+
+/* 첫 번째 이미지 보이기 */
+.editor-content img:first-of-type:not(p img), .editor-content p:first-of-type img{
+    display: block;
+    max-width: 100%; /* 부모 요소의 너비를 넘지 않도록 */
+    height: auto; /* 원본 비율 유지 */
+    max-height: 10vw; /* 최대 높이를 15vw로 제한 */
+    width: auto; /* 원본 비율 유지 */
 }

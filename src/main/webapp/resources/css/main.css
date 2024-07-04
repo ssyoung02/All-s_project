@@ -6,17 +6,15 @@
     margin-bottom: 3em;
 }
 .service-info{
-    padding: 2em;
+    padding: 1em 2em;
     display: flex;
-    gap: 1em;
-}
-.service-info-left{
-    display: flex;
-    flex-direction: column;
     gap: 1em;
 }
 .service-info-right{
     gap: 5px;
+}
+.service-info-left h2, .service-info-left h3{
+    margin: 1em 0;
 }
 .service-info-left p{
     line-height: 200%;
@@ -34,3 +32,292 @@
     width: 100%;
 }
 
+/*로그인 영역*/
+/*레이아웃*/
+.loginMain{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+.loginUserInfoLeft{
+    grid-column: 1 / 6;
+    grid-row: 1;
+}
+.loginUserInfoRight{
+    grid-column: 5;
+    grid-row: 1;
+}
+/*스터디 그룹원 상태*/
+.userStudyGroup{
+    padding: 1em;
+    border-radius: 5px;
+    border: 1px solid #dad8cc;
+    min-height: 280px;
+}
+.userStudyGroupTitle{
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 1.2em;
+}
+.userStudyGroupTitle h3{
+    width: 115px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.slide-button-group button{
+    padding: 3px;
+}
+.userStudyGroupMember{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+#studyTimeChart{
+    max-width: 200px;
+    max-height: 150px;
+}
+
+/*스터디 그룹 메인*/
+/*스터디 메인*/
+.maxcontent section{
+    padding: 0
+}
+.group-header{
+    width: 100%;
+}
+
+.profile-header{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap:1em;
+    margin-bottom: 2em;
+}
+.profile-header img{
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+}
+.group-title h2{
+    margin-bottom: 10px;
+}
+.profile-link{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1em;
+}
+.profile-link button{
+    width: 100px;
+}
+
+.group-main{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2em;
+}
+.group-content{
+    grid-column: 1 / 1;
+    grid-row: 1;
+}
+.group-content h2{
+    margin-bottom: 1em;
+}
+/*랭킹*/
+.group-lank{
+    display: flex;
+    margin-bottom: 1em;
+    gap: 1em;
+}
+.lank-phase{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    height: 200px;
+    width: 280px;
+    margin: 0 1em;
+    background-image: url("/resources/images/bookRank.png");
+    background-size: cover;
+    isolation: isolate;
+}
+.lank-phase:after {
+    content: '';
+    position: absolute;
+    background: white;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.4;
+}
+.lank-floor{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: center;
+    width: 90px;
+    gap: 5px;
+    background: transparent;
+}
+.lanking{
+    font-size: 2.5em;
+    font-weight: bold;
+}
+.podiumId{
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+    font-size: 1.3em;
+    font-weight: bold;
+    background: rgb(255,255,255,0.5);;
+}
+.podiumId +p{
+    font-size: 14px;
+}
+
+.memberId{
+    font-size: 1em;
+}
+
+.records{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+.lank-first{
+    height: 60%;
+    justify-content: flex-end
+}
+.lank-second{
+    height: 40%;
+    justify-content: flex-end
+}
+.lank-third{
+    height: 25%;
+    justify-content: flex-end
+}
+
+.lank-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: .5em;
+    width: 400px;
+}
+.lanking-circle{
+    flex: 1;
+    text-align: center;
+}
+.lank-id{
+    flex: 3;
+}
+.lank-time{
+    flex: 2;
+    text-align: right;
+}
+.circle-number{
+    width: 1em;
+    border-radius: 3em;
+    padding: 0.4em  .5em .5em .5em;
+    padding: 0.4em  .5em .5em .5em;
+    line-height: 1.25em;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    background-image: url(/resources/images/rankSecond.png);
+    background-size: cover;
+}
+.top3{
+    background-image: url("/resources/images/rankFirst.png");
+    background-size: cover;
+}
+
+/*캘린더*/
+.group-calender{
+    width: 100%;
+}
+
+/*맴버리스트*/
+.group-member{
+    grid-column: 2 / 2;
+    grid-row: 1;
+    height: 500px;
+    padding: 1em;
+    border: 1px solid;
+    border-radius: 10px;
+    background: #FFFEF8;
+    display: flex;
+    justify-content: flex-start;
+    gap: 1em;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+}
+.group-memberList{
+    width: 100%;
+}
+.group-memberItem{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+.profile-imgGroup{
+    display: flex;
+}
+
+/*맵 관련*/
+.cafe-info-window {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 200px;
+}
+
+.map-search-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2; /* 지도 위에 표시되도록 설정 */
+}
+
+.map-search-container input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+.map-search-container button {
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#studyListContainer {
+    margin-top: 10px;
+}
+
+#studyListHi {
+    list-style: none;
+    padding: 5px;
+}
+
+#studyListHi li {
+    margin-bottom: 5px;
+}
+#studyListHi .recruitItem{
+    margin-bottom: 1em;
+}

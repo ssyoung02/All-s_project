@@ -12,24 +12,30 @@
 //          BCryptPasswordEncoder를 사용하여 비밀번호를 안전하게 암호화합니다.
 package bit.naver.config;
 
+import bit.naver.security.CustomLogoutSuccessHandler;
 import bit.naver.security.UsersUserDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean; // Bean 등록 어노테이션
-import org.springframework.context.annotation.Configuration; // Spring 설정 클래스 어노테이션
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder; // 인증 관리 설정
-import org.springframework.security.config.annotation.web.builders.HttpSecurity; // HTTP 요청 보안 설정
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity; // Spring Security 활성화
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter; // Spring Security 설정 어댑터
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCrypt 비밀번호 암호화
-import org.springframework.security.crypto.password.PasswordEncoder; // 비밀번호 암호화 인터페이스
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import java.util.Arrays;
 
 
 @Configuration
@@ -38,6 +44,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 // Spring Security를 활성화하고 웹 보안 설정을 구성합니다.
 @RequiredArgsConstructor // Lombok 어노테이션: final 필드에 대한 생성자 자동 생성
 public class SecurityConfig extends WebSecurityConfigurerAdapter  {
+
+
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     private final UsersUserDetailsService usersUserDetailsService;
 
@@ -60,51 +69,57 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
 
     @Override
     public void configure(WebSecurity web) throws Exception {  //리소스 파일들을 시큐리티와 관계없이 통과시키기위한 메소드
-        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**");
+        web.ignoring().antMatchers("/webapp/resources/**","/resources/**","/webapp/resources/images/**","/webapp/resources/css/**",
+                "/studies/listOnAnonymousMap","/detail/{studyIdx}",
+                "/Users/checkDuplicate","/Users/UsersImageUpdate", "/studyGroup/studyGroupCreate", "/studyGroup/updateStudyGroup","/studyRecruit/updateStudyGroup");
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests() //권한등급에 따른 엑세스 제한 - 권한 설정 후 주석 제거
-//                .antMatchers("/admin/ ** ").hasRole("ROLE_ADMIN")
-//                                                                  /admin/ ** 패턴의 URL은 ROLE_ADMIN 권한을 소요한 사용자만 요청할 수 있다는 설정이다.
-//                                                                  로그인된 현재 사용자가 ROLE_ADMIN 권한을 소유하고 있지 않다면
-//                                                                  /admin/ ** 패턴의 URL 요청은 spring security 엔진에 의해서 거부된다.
-//                .antMatchers("/professor/ ** ").hasRole("ROLE_PROFESSOR")
-//                .antMatchers("/user/ ** ").authenticated() ;
+        http
+                .cors().configurationSource(corsConfigurationSource());
         http
                 .authorizeRequests()
-                // 모든 사용자 접근 허용 경로
-//                    .antMatchers("/Users/userInfo").authenticated()
-                    .antMatchers("/resources/**","/webapp/resources/css/**",
-                        "/webapp/resources/js/**", "/", "/main", "/about").permitAll()
-                    .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
-                          "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
-                        , "/access-denied").permitAll()
-        // 그 외 모든 요청은 인증된 사용자만 접근 허용
-                    .antMatchers("/Users/userInfoProcess").authenticated()
-                    .antMatchers("/Users/userInfo").authenticated()
-                    .anyRequest().authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 제한
+                .antMatchers("/resources/**","/webapp/resources/css/**",
+                        "/webapp/resources/js/**", "/", "/main", "/about", "/weather", "/include/**").permitAll()
+                .antMatchers("/Users/checkDuplicate", "/Users/UsersRegister",
+                        "/Users/Join", "/Users/Login", "/Users/UsersLoginForm"
+                        , "/access-denied", "User/userLocation").permitAll()
+                    .antMatchers("/kakao/login/alls", "/login/kakao", "/Users/Join").permitAll()
+                    .antMatchers("/login/naver", "/login/oauth2/code/naver", "/include/**").permitAll()
+                // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                .antMatchers("/calendar/**").authenticated()
+                .antMatchers("/login/oauth2/code/google",  "/login/google").permitAll() //"/login/oauth2/authorization/google"
+                // 그 외 모든 요청은 인증된 사용자만 접근 허용
+                .antMatchers("/Users/userInfoProcess").authenticated()
+                .antMatchers("/Users/userInfo").authenticated()
+                .antMatchers("/calendar/*").authenticated()
+                .antMatchers("/Users/updateLocation").authenticated()
+                .antMatchers(HttpMethod.POST, "/calendar/addSchedule").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/Users/UsersLoginForm")
                     .loginProcessingUrl("/Users/Login")
                     .defaultSuccessUrl("/main")
-                   .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
+                    .failureUrl("/Users/UsersLoginForm?error=true") // 로그인 실패 시 에러 파라미터와 함께 로그인 페이지로 이동
                     .permitAll()
                 .and()
                 .logout()
-                    .logoutUrl("/Users/logout")
-                    .logoutSuccessUrl("/main")
-                    .invalidateHttpSession(true)
-                    .permitAll()
+                .logoutUrl("/Users/logout")
+                .logoutSuccessUrl("/main")
+                .logoutSuccessHandler(customLogoutSuccessHandler)
+                .invalidateHttpSession(true)
+                .permitAll()
                 .and()
                 .csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // CSRF 토큰을 쿠키에 저장 (JavaScript에서 접근 가능)
-                .ignoringAntMatchers("/Users/checkDuplicate")
+                .ignoringAntMatchers("/Users/checkDuplicate", "/Users/updateLocation", "/include/start", "/include/pause", "/include/updateTime", "/include/updateMemo", "/calendar/**", "/admin/**", "/Users/UsersImageUpdate", "/studyGroup/studyGroupCreate", "/studyGroup/updateStudyGroup", "/studyRecruit/updateStudyGroup", "/weather","/studies/nearestStudies")
                 .and()
                 .sessionManagement() // 세션 관리 설정 시작
+//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
                 .maximumSessions(1) // 최대 허용 가능한 세션 수 (1로 설정하면 단일 로그인만 허용)
                 .maxSessionsPreventsLogin(false) // 최대 세션 수 초과 시 로그인 차단 여부 (false로 설정하면 기존 세션 만료)
                 .expiredUrl("/Users/UsersLoginForm?expired") // 세션 만료 시 이동할 URL(만료 메시지 표시)
@@ -114,30 +129,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .and()
                     .addFilterBefore(new CharacterEncodingFilter("UTF-8", true), CsrfFilter.class);//csrf 활성화
 
-        http.addFilterAfter(new CharacterEncodingFilter("UTF-8", true), SecurityContextPersistenceFilter.class);
-        //
-
-
-
-                /*
-                    .and()
-                    .oauth2Login() // OAuth2 로그인 설정 (현재는 주석 처리)
-                        .loginPage("/login")  //(폼 로그인과 동일한 페이지 사용 가능)
-                        .userInfoEndpoint()
-                            .userService(customOAuth2UserService) // OAuth2 사용자 정보 처리 서비스 (구현 필요) (customOAuth2UserService는 직접 구현해야 함)->로그인성공 후 사용자정보 가져오는 서비스
-                    .and()
-                        .successHandler(oAuth2LoginSuccessHandler) // OAuth2 로그인 성공시 핸들러 (구현 필요)
-                        .failureHandler(oAuth2LoginFailureHandler); // OAuth2 로그인 실패시 핸들러 (구현 필요)
-                    */
-                /*
-                추가적으로 필요한 작업:
-
-                OAuth2 클라이언트 등록: Google, Naver, Kakao 등 소셜 로그인 제공 업체에 애플리케이션을 등록하고 클라이언트 ID, 클라이언트 시크릿 등 정보를 발급받아야 합니다.
-                CustomOAuth2UserService 구현: OAuth2 로그인 성공 후 사용자 정보를 가져와서 애플리케이션에 맞게 처리하는 로직을 구현해야 합니다. (예: 사용자 정보를 DB에 저장하거나 세션에 저장)
-                OAuth2LoginSuccessHandler, OAuth2LoginFailureHandler 구현: OAuth2 로그인 성공/실패 시 처리할 로직을 구현해야 합니다. (예: 로그인 성공 시 메인 페이지로 이동, 실패 시 에러 페이지로 이동)
-                현재 상태:
-                주석 처리된 부분을 제외하면 기존의 폼 로그인 방식으로 동작합니다. 추후 OAuth2 소셜 로그인 기능을 추가할 때 주석을 해제하고 필요한 클래스들을 구현하면 됩니다.
-                 */
         http.sessionManagement()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)
@@ -153,13 +144,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
             세션 이벤트 리스너: sessionManagement().sessionEventPublisher(new HttpSessionEventPublisher()) 등을 사용하여 세션 생성, 만료 등 이벤트 발생 시 처리 로직을 추가할 수 있습니다.
 
         */
-            /*
-            로그인 페이지 이후 페이지 에서 csrf 코드 추가 필요
-            <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-            <form method="POST" action="/member/login">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-            </form>
-             */
 
         // SecurityContextHolder 설정 (기존 코드 유지)
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
@@ -180,4 +164,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     }
 
     // BCryptPasswordEncoder를 Bean으로 등록하여 비밀번호 암호화에 사용합니다.
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // 허용할 출처 (포트 번호까지 정확하게)
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS")); // OPTIONS 메서드 추가
+        configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+
 }

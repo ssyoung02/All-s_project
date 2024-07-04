@@ -1,6 +1,6 @@
 /*로그인*/
 .loginbg{
-    background-image: url(../img/loginbg.jpg);
+    background-image: url(../images/loginBG.png);
     background-size: 100% auto;
     background-position: bottom center;
     background-repeat: no-repeat;
@@ -21,6 +21,10 @@
     margin: 3em 10em;
     background-color: rgba(255,255,255,0.7);
 }
+.loginbox form{
+    display: flex;
+    flex-direction: column;
+}
 .underline{
     text-decoration: underline;
 }
@@ -30,6 +34,7 @@
 }
 .inputbox label{
     margin-bottom: 0.5em;
+    margin-right: 1em;
 }
 .idpwsearch{
     display: flex;
@@ -40,7 +45,7 @@
     margin: 1em 0;
 }
 .orline p{
-    margin: 0 20px;
+    margin: 2em;
 }
 .orline hr{
     border: 1px solid #A2B18A;
@@ -49,7 +54,7 @@
 .snsloginarea{
     display: flex;
     justify-content: center;
-    gap: 2em;
+    gap: 4em;
 }
 
 /*회원가입*/
@@ -64,7 +69,7 @@
 .input-row{
     gap: 10px;
 }
-#username{
+#registerForm #username{
     width: 100%;
 }
 .double-check{
@@ -83,8 +88,11 @@
     font-weight: bold;
     margin: 0.3em 0 0 0;
 }
+#passwordCheckResult{
+ color: red;
+}
 
-/*내 공부노트*/
-.list-title{
-    width: 100%;
+/*회원 탈퇴*/
+#userEditForm .buttonBox{
+    margin: 1em;
 }

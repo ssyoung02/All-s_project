@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bit.naver.mapper.TimerMapper">
+
+    <resultMap id="TimerEntityMap" type="bit.naver.entity.TimerEntity">
+        <result property="record_idx" column="record_idx" />
+        <result property="user_idx" column="user_idx" />
+        <result property="date" column="date" />
+        <result property="start_time" column="start_time" />
+        <result property="end_time" column="end_time" />
+        <result property="study_time" column="study_time" />
+        <result property="memo" column="memo" />
+    </resultMap>
+
+
+    <insert id="insertStartTime" useGeneratedKeys="true" keyColumn="record_idx" keyProperty="record_idx">
+        INSERT INTO StudyRecords (user_idx, date, start_time)
+        VALUES (#{user_idx}, now(), now())
+    </insert>
+
+    <update id="updateEndTime">
+        UPDATE StudyRecords
+        SET end_time = now(), study_time = #{study_time}
+        WHERE user_idx = #{user_idx} and record_idx = #{record_idx}
+    </update>
+
+    <update id="updateMemo">
+        UPDATE StudyRecords
+        SET memo = #{memo}
+        WHERE user_idx = #{user_idx} and record_idx = #{record_idx}
+    </update>
+
+    <select id="totalStudyTime">
+        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx}
+    </select>
+
+    <select id="todayStudyTime">
+        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = curdate()
+    </select>
+
+    <select id="getStudyTimeBetweenDates" resultMap="TimerEntityMap">
+        SELECT date, SUM(study_time) AS study_time
+        FROM StudyRecords
+        WHERE user_idx = #{userIdx}
+          AND date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY date
+    </select>
+
+    <select id="getMonthlyStudyTime" parameterType="map" resultMap="TimerEntityMap" resultType="bit.naver.entity.TimerEntity">
+        SELECT date, COALESCE(SUM(study_time), 0) AS study_time
+        FROM StudyRecords
+        WHERE user_idx = #{userIdx}
+          AND date BETWEEN #{startOfMonth} AND #{endOfMonth}
+        GROUP BY date
+        ORDER BY date ASC
+    </select>
+
+    <select id="getGradeIconByTotalStudyTime" resultType="string">
+        SELECT grade_icon
+        FROM Grades
+        WHERE (SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{userIdx}) BETWEEN grade_min_time AND grade_max_time;    </select>
+</mapper>

@@ -16,6 +16,7 @@
 .lnb > ul{
     padding: 0;
 }
+
 .menu-top{
     font-weight: bold;
     margin-top: 3px;
@@ -33,6 +34,7 @@
 .dropdown-menu{
     padding-left: 1em;
 }
+
 .menu-area{
     padding: 0.7em 1em;
     border-radius: 5px;
@@ -40,6 +42,7 @@
 .menu-area a{
     display: inline-block;
     width: 100%;
+    font-size: 1em;
 }
 .menu-select{
     background-color: #f5f5f5;
@@ -50,6 +53,15 @@
 .m-size-nav{
     display: none;
 }
+.studyTime{
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border-radius: 10px;
+    border: 1px solid #dad8cc;
+    background: #FFFFFF;
+}
 
 /*header*/
 #skipnav{
@@ -59,7 +71,7 @@
     background-color: #3b593f;
     text-align: center;
     padding: 1em;
-    width: 100%;
+    width: 0;
     opacity: 0;
 }
 #skipnav a{
@@ -78,10 +90,21 @@
     justify-content: flex-end;
     gap: 1em;
     padding: 1em 0;
-    font-size: 1.2em;
 }
 .topmenu i{
     margin-right: 0.3em;
+}
+#weatherInfo{
+    display: flex;
+    align-items: center;
+}
+#weatherInfo img{
+    width: 60px;
+}
+
+/*프로필 이미지*/
+.profile{
+    display: flex;
 }
 .profile-img{
     display: inline-block;
@@ -95,23 +118,35 @@
     width: 100%;
     height: 100%;
 }
-.new-mark{
-    float: right;
-    color:#FFF500;
+.status{
+    border-radius: 50%;
+    width: 0.6em;
+    height: 0.6em;
+    background-color: yellow;
 }
-.alarm{
+.status span{
     position: absolute;
-    right: 4%; 
-    top: 120px;
+    opacity: 0;
+}
+/*알림 목록*/
+.alarm{
+    width: 220px;
+    position: absolute;
+    top: 90px;
     gap: 5px;
     padding: 20px;
     border-radius: 5px;
     border: 1px solid #588159;
     background-color: white;
     box-shadow: 0 3px 3px rgba(0,0,0,0.3);
+    z-index: 2;
 }
 .profile-username{
     margin: 5px 0 10px 0;
+    text-align: center;
+}
+.alarmList{
+    width: 100%;
 }
 .alarmList ul{
     padding: 5px;
@@ -119,12 +154,42 @@
 }
 .alarmList li{
     margin: 7px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.alarm button{
-    width: 100%;
-}
+
 .alarm h3{
     margin: 5px;
+}
+
+/* Delete button style */
+.delete-btn {
+    background-color: #ff8795;
+    color: #ffffff;
+    border: none;
+    padding: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    width: 20px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.delete-btn i {
+    margin-right: 3px; /* 아이콘과 텍스트 사이 간격 줄임 */
+}
+
+.new-mark {
+    transition: color 0.3s ease;
+    color: initial; /* 기본 색상 */
+}
+
+#newMark i {
+    color: #ff9116 !important; /* 경고 시 색상 */
 }
 
 /*main*/
@@ -150,6 +215,7 @@ footer {
     justify-content: center;
     flex-wrap: wrap;
     gap: 6%;
+    margin-bottom: 1em;
 }
 
 footer p{
@@ -197,6 +263,7 @@ footer p{
 }
 .time-area p{
     margin: 0 0.4em;
+    font-size: 100px;
 }
 .time-button{
     width: 100%;
@@ -233,58 +300,170 @@ footer p{
     margin: 2em 0.2em;
 }
 
-/*타이머 영역*/
-#timer{
-    display: none;
+.timer-close{
+    position: absolute;
+    top: 2em;
+    right: 2em;
+    background: none;
+}
+.timer-close i{
+    color: #f0f0f0;
+}
+.timer-content{
+    width: 100%;
+}
+.timer-recode{
+    width: 100%;
+    height: 50px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    resize: none;
+}
+
+/*할 일 목록*/
+.todolist{
+    position: relative;
+}
+.todolist li{
+    margin: 5px 0;
+}
+
+/*모달*/
+.modal{
+    opacity : 0;
     position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    color: white;
-}
-.time-area{
-    flex-wrap: wrap;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-80%);
-    font-size: 7em;
-    width: 50%;
-}
-.time-area p{
-    margin: 0 0.4em;
-}
-.time-button{
-    width: 100%;
-}
-.time-button button{
-    width: 100%;
-    margin: 2em 0.3em;
-    font-size: medium;
-    font-weight: bold;
-}
-#time-stop{
-    background-color: #D0D8C4;
-    color: #545454;
-}
-#time-pause{
-    background-color: #A2B18A;
-    color: #222222;
-}
-.unfinished-todo{
-    color: #898989;
-    width: 80%;
-    text-align: left;
-    position: absolute;
-    bottom: 0%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-}
-.unfinished-todo .todolist{
+    top: 0px; left: 0;
+    width: 100%; height: 100%;
+    max-width : 100%;
+    max-height : 100%;
+    /*
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 2em;
-    font-size: 1.2em;
-    margin: 2em 0.2em;
+    justify-content: center;
+    align-items : center;
+    */
+    transition : opacity 0.5s;
+    z-index: 10;
+}
+.modal.opaque{
+    opacity : 1;
+    transition : opacity 0.5s;
+}
+.modal.unstaged {
+    top:-100px;
+    height : 0;
+}
+
+.modal-overlay{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : RGBA(0, 0, 0, 0.6);
+}
+
+.modal-contents{
+    display:flex;
+    min-width: 300px;
+    flex-direction : column;
+    align-items : center;
+    position: relative;
+    padding: 1em 2em;
+    background-color: rgb(255,255,255);
+    border-radius: 5px;
+    margin: 2em 0;
+}
+
+.modal-text{
+    gap: 7em;
+    width: 100%;
+}
+
+.modal-bottom .modal-close{
+    color: white;
+    background-color : #3b593f;
+    border-radius: 5px;
+}
+.modal-close:hover{
+    color: white;
+    background-color : #3b593f;
+}
+.modal-center{
+    margin: 2em 0;
+}
+
+#modal-container button{
+    padding: 1em 2em;
+}
+#modal-container .modal-close-x{
+    padding: 1em 0 1em 1em;
+}
+
+/*타이머 모달*/
+.timer-modal{
+    opacity : 0;
+    position: fixed;
+    top: 0px; left: 0;
+    width: 100%; height: 100%;
+    max-width : 100%;
+    max-height : 100%;
+    display: flex;
+    justify-content: center;
+    align-items : center;
+    transition : opacity 0.5s;
+}
+.timer-modal.opaque{
+    opacity : 1;
+    transition : opacity 0.5s;
+}
+.timer-modal.unstaged {
+    top:-100px;
+    height : 0;
+}
+
+.timer-modal-overlay{
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    background-color : RGBA(0, 0, 0, 0.6);
+}
+
+.timer-modal-contents{
+    width: 20em;
+    display:flex;
+    flex-direction : column;
+    align-items : center;
+    position: relative;
+    padding: 1em 2em;
+    background-color: rgb(255,255,255);
+    border-radius: 5px;
+    margin: 2em 0;
+}
+
+.timer-modal-text{
+    gap: 7em;
+    width: 100%;
+}
+
+.timer-modal-bottom .timer-modal-close{
+    color: white;
+    background-color : #3b593f;
+    border-radius: 5px;
+}
+.timer-modal-close:hover{
+    color: white;
+    background-color : #3b593f;
+}
+.timer-modal-center{
+    margin: 1em 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3em;
+}
+
+#timer-modal-container button{
+    padding: 1em 2em;
+}
+#timer-modal-container .modal-close-x{
+    padding: 1em 0 1em 1em;
 }
