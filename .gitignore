@@ -77,4 +77,6 @@ Temporary Items
 
 **/src/main/resources/db.properties
 
+src/main/resources/db.properties
 /src/main/resources/db.properties
+/src/main/webapp/resources/db.properties
