@@ -2,13 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%
-    response.setHeader("Cache-Control","no-store");
-    response.setHeader("Pragma","no-cache");
-    response.setDateHeader("Expires",0);
-    if (request.getProtocol().equals("HTTP/1.1"))
-        response.setHeader("Cache-Control", "no-cache");
-%>
+<%--<%--%>
+<%--    response.setHeader("Cache-Control","no-store");--%>
+<%--    response.setHeader("Pragma","no-cache");--%>
+<%--    response.setDateHeader("Expires",0);--%>
+<%--    if (request.getProtocol().equals("HTTP/1.1"))--%>
+<%--        response.setHeader("Cache-Control", "no-cache");--%>
+<%--%>--%>
 
 <c:set var="root" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -785,7 +785,7 @@
                         </div>
                     </div>
                     <div class="board-bottom">
-                        <button type="button" class="secondary-default" onclick="location.href='${root}/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
+                        <button type="button" class="secondary-default" onclick="location.href='${root}/studyGroup/studyGroupMain?studyIdx=${studyGroup.studyIdx}'">취소</button>
                         <button type="button" class="primary-default" onclick="modalOpen()">수정</button>
                     </div>
                 </div>
