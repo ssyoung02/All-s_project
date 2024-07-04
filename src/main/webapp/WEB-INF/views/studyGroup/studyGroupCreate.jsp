@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%
+    response.setHeader("Cache-Control","no-store");
+    response.setHeader("Pragma","no-cache");
+    response.setDateHeader("Expires",0);
+    if (request.getProtocol().equals("HTTP/1.1"))
+        response.setHeader("Cache-Control", "no-cache");
+%>
 
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <!DOCTYPE html>
@@ -197,7 +204,7 @@
 
                         <textarea class="board-textarea" name="description" placeholder="내용을 입력해주세요" required></textarea>
                         <div class="buttonBox">
-                            <button type="reset" class="updatebutton secondary-default" onclick="location.href='studyGroupList.jsp'">취소</button>
+                            <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyGroup/studyGroupList'">취소</button>
                             <button type="submit" class="updatebutton primary-default">작성</button>
                         </div>
                     </div>

@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%
+    response.setHeader("Cache-Control","no-store");
+    response.setHeader("Pragma","no-cache");
+    response.setDateHeader("Expires",0);
+    if (request.getProtocol().equals("HTTP/1.1"))
+        response.setHeader("Cache-Control", "no-cache");
+%>
+
 <c:set var="root" value="${pageContext.request.contextPath}"/>
 <c:set var="userVo" value="${sessionScope.userVo}"/>
 <!DOCTYPE html>
@@ -101,17 +109,19 @@
                 openModal('scheduleModal', '일정 추가', '추가', 'addScheduleForm');
             });
 
-            // 모달 닫기 버튼 및 오버레이 클릭 이벤트 핸들러
-            $(document).on('click', '#modal-close, #view-modal-close, .modal-overlay', function () {
+            // 모달 닫기 버튼 및 오버레이, 수정/삭제 버튼 클릭 이벤트 핸들러
+            $(document).on('click', '#modal-close, #view-modal-close, .modal-overlay, #deleteButton', function () {
                 const $modal = $(this).closest('.modal');
                 $modal.removeClass('opaque').addClass('unstaged');
+                $modal.css('display', 'none'); // display 속성을 none으로 변경
 
                 // 현재 닫힌 모달이 일정 추가/수정 모달인 경우에만 캘린더 갱신
                 if (currentModalId === 'scheduleModal' || currentModalId === 'viewScheduleModal') {
-                    calendar.refetchEvents();
+                    calendar.refetchEvents(); // 캘린더 다시 렌더링
                     $('#' + currentModalId + ' form')[0].reset();
                 }
             });
+
             // 월/주/일 전환 버튼 클릭 이벤트 핸들러
             $('#btnMonth, #btnWeek, #btnList').click(function() {
                 const viewName = this.id === 'btnMonth' ? 'dayGridMonth' : (this.id === 'btnWeek' ? 'timeGridWeek' : 'listDay');
@@ -208,23 +218,23 @@
                 const colorPicker = $('#' + modalId + ' .color-picker');
                 colorPicker.empty(); // 기존 버튼 제거
 
-            colors.forEach(color => {
-                const button = $('<button>').attr('type', 'button')
-                    .addClass('color-button')
-                    .css('background-color', color);
+                colors.forEach(color => {
+                    const button = $('<button>').attr('type', 'button')
+                        .addClass('color-button')
+                        .css('background-color', color);
 
-                if (eventData && eventData.backgroundColor === color) {
-                    button.addClass('selected');
-                }
+                    if (eventData && eventData.backgroundColor === color) {
+                        button.addClass('selected');
+                    }
 
-                button.click(() => {
-                    colorPicker.find('.selected').removeClass('selected');
-                    button.addClass('selected');
-                    $('#' + (modalId === 'scheduleModal' ? 'backgroundColorInput' : 'editBackgroundColorInput')).val(color); // ID 값 수정
+                    button.click(() => {
+                        colorPicker.find('.selected').removeClass('selected');
+                        button.addClass('selected');
+                        $('#' + (modalId === 'scheduleModal' ? 'backgroundColorInput' : 'editBackgroundColorInput')).val(color); // ID 값 수정
+                    });
+
+                    colorPicker.append(button);
                 });
-
-                colorPicker.append(button);
-            });
 
                 // 모달 열기
                 $('#' + modalId)
@@ -232,7 +242,7 @@
                     .addClass('opaque')
                     .css('display', 'block');
             }
-
+            /*
             // 모달 닫기 버튼 클릭 이벤트 핸들러 수정
             $('#modal-close').click(function () {
                 $('#scheduleModal')
@@ -246,7 +256,7 @@
                     .removeClass('opaque')
                     .addClass('unstaged')
                     .css('display', 'none'); // display 속성을 none으로 변경
-            });
+            });*/
         });
         // 폼 제출 이벤트 처리 (추가 및 수정)
         $(document).on('submit', '#addScheduleForm, #editScheduleForm', function (event) {
@@ -283,32 +293,32 @@
             let formData = $(this).serialize();
             formData += "&start=" + start + (end ? "&end=" + end : ""); // start, end 값 추가
 
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-                    headers: {
-                        "${_csrf.headerName}": "${_csrf.token}"
-                    },
-                    data: formData,
-                    success: function (response) {
-                        if (response && response.result === 'success') {
-                            alert(isEdit ? "일정이 수정되었습니다." : "일정이 추가되었습니다.");
-                            $('#' + (isEdit ? 'viewScheduleModal' : 'scheduleModal')).removeClass('opaque').addClass('unstaged');
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                headers: {
+                    "${_csrf.headerName}": "${_csrf.token}"
+                },
+                data: formData,
+                success: function (response) {
+                    if (response && response.result === 'success') {
+                        alert(isEdit ? "일정이 수정되었습니다." : "일정이 추가되었습니다.");
+                        $('#' + (isEdit ? 'viewScheduleModal' : 'scheduleModal')).removeClass('opaque').addClass('unstaged');
+                        calendar.refetchEvents();
+                        if (response.refetch) { // refetch 값 확인 후 캘린더 갱신
                             calendar.refetchEvents();
-                            if (response.refetch) { // refetch 값 확인 후 캘린더 갱신
-                                calendar.refetchEvents();
-                            }
-                        } else {
-                            alert((isEdit ? "일정 수정" : "일정 추가") + "에 실패했습니다: " + response.error);
                         }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error(errorThrown);
-                        alert((isEdit ? "일정 수정" : "일정 추가") + " 중 오류가 발생했습니다.");
+                    } else {
+                        alert((isEdit ? "일정 수정" : "일정 추가") + "에 실패했습니다: " + response.error);
                     }
-                });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error(errorThrown);
+                    alert((isEdit ? "일정 수정" : "일정 추가") + " 중 오류가 발생했습니다.");
+                }
             });
+        });
     </script>
 </head>
 <body>
@@ -426,7 +436,7 @@
                             <div class="modal-inputbox">
                                 <label class="modal-label" for="editDescription">일정 내용</label>
                                 <div class="modal-input">
-                                <textarea id="editDescription" name="description" maxlength="255"></textarea>
+                                    <textarea id="editDescription" name="description" maxlength="255"></textarea>
                                 </div>
                             </div>
                             <div class="modal-inputbox">

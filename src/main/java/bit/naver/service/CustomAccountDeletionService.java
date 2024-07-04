@@ -61,6 +61,7 @@ public class CustomAccountDeletionService {
         usersMapper.deleteUserComments(userId);
         usersMapper.deleteUserLikeReferences(userId);
         usersMapper.deleteUserTodos(userId);
+        usersMapper.deleteStudies(userId);
 
         // Delete user data
         usersMapper.deleteUser(userId);
