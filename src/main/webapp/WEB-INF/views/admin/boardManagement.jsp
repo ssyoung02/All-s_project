@@ -91,6 +91,11 @@
             }
         }
     </script>
+    <style>
+        form{
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="../include/header.jsp" />
