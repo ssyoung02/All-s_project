@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%
+    response.setHeader("Cache-Control","no-store");
+    response.setHeader("Pragma","no-cache");
+    response.setDateHeader("Expires",0);
+    if (request.getProtocol().equals("HTTP/1.1"))
+        response.setHeader("Cache-Control", "no-cache");
+%>
+
 <c:set var="userVo" value="${sessionScope.userVo}"/>
 <c:set var="root" value="${pageContext.request.contextPath}"/>
 <c:set var="currentURI" value="${pageContext.request.requestURL}" />
@@ -219,7 +227,7 @@
                                                         <img src="${root}/resources/images/studyGroup.png" alt="스터디 그룹 프로필" style="width: 50px; height: 50px; margin-right: 10px;"/>
                                                     </c:otherwise>
                                                 </c:choose>
-                                                <div>
+                                                <div class="recruitBoardTitle">
                                                     <p class="study-tag">
                                                         <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
                                                                 ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}

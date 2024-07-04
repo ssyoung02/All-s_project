@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    response.setHeader("Cache-Control","no-store");
+    response.setHeader("Pragma","no-cache");
+    response.setDateHeader("Expires",0);
+    if (request.getProtocol().equals("HTTP/1.1"))
+        response.setHeader("Cache-Control", "no-cache");
+%>
+
 <c:set var="root" value="${pageContext.request.contextPath }"/>
 <%--SPRING_SECURITY_CONTEXT.authentication.principal은 Spring Security에서 인증된 사용자 정보를 담고 있는 객체입니다.
 하지만, 이 객체의 타입은 UserDetails 인터페이스를 구현한 객체입니다.--%>
@@ -64,7 +72,7 @@
     </div>
 
     <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged">
+    <div id="modal-container" class="modal unstaged" onclick="modalCloseBack()">
         <div class="modal-overlay">
         </div>
         <div class="modal-contents">

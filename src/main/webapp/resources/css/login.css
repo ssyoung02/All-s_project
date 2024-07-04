@@ -88,7 +88,9 @@
     font-weight: bold;
     margin: 0.3em 0 0 0;
 }
-
+#passwordCheckResult{
+ color: red;
+}
 
 /*회원 탈퇴*/
 #userEditForm .buttonBox{
