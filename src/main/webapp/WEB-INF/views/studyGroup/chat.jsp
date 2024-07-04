@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -17,6 +18,9 @@
     <!-- jQuery 및 Socket.io -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="http://localhost:82/socket.io/socket.io.js"></script>
+    <style>
+
+    </style>
 </head>
 <body>
 <!-- 중앙 컨테이너 -->
@@ -40,7 +44,10 @@
                                 <div class="bubble">
                                     <p>${message.messageContent}</p>
                                 </div>
-                                <span class="regDate">${message.messageRegdate}</span>
+                                <div class="messageTimestamp">
+                                    <span class="regDate">${fn:substring(message.messageRegdate, 0, 10)}</span><br>
+                                    <span class="regTime">${fn:substring(message.messageRegdate, 11, 16)}</span>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>
@@ -56,33 +63,20 @@
                 $(document).ready(function () {
                     var socket = io("http://localhost:82");
                     var messageContainer = document.getElementById('chatMessages');
-                    var enterPressed = false; // 플래그 추가
+                    var enterPressed = false;
 
                     function formatDate(dateString) {
                         var date = new Date(dateString);
                         var year = date.getFullYear();
-                        var month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
+                        var month = ('0' + (date.getMonth() + 1)).slice(-2);
                         var day = ('0' + date.getDate()).slice(-2);
                         var hours = ('0' + date.getHours()).slice(-2);
                         var minutes = ('0' + date.getMinutes()).slice(-2);
-                        return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+                        return {
+                            regDate: year + '-' + month + '-' + day,
+                            regTime: hours + ':' + minutes
+                        };
                     }
-
-                    function addMessageToChat(message) {
-                        var formattedDateTime = formatDate(message.messageRegdate);
-                        var newMessageHTML = '<div class="message ' + (message.userName === '${userVo.name}' ? 'right' : 'left')
-                            + '"><span class="name">' + message.userName + '</span><div class="messageBox"><div class="bubble"><p>'
-                            + message.messageContent + '</p></div><span class="regDateTime">' + formattedDateTime + '</span></div></div>';
-                        messageContainer.insertAdjacentHTML('afterbegin', newMessageHTML);  // 메시지를 맨 위에 추가
-                        messageContainer.scrollTop = messageContainer.scrollHeight;  // 스크롤을 맨 아래로 이동
-                    }
-
-                    // 기존 메시지 날짜 포맷팅
-                    $("#chatMessages .message .regDate").each(function () {
-                        var originalDate = $(this).text();
-                        var formattedDate = formatDate(originalDate);
-                        $(this).text(formattedDate);
-                    });
 
                     function getQueryParam(param) {
                         var urlParams = new URLSearchParams(window.location.search);
@@ -115,7 +109,6 @@
                             success: function (response) {
                                 console.log('Message sent successfully');
                                 messageInput.val('');
-                                // 메시지를 서버에 보내기
                                 socket.emit('send_msg', {
                                     messageContent: message,
                                     userName: '${userVo.name}',
@@ -131,14 +124,14 @@
                     $("#messageInput").off('keydown').on('keydown', function (event) {
                         if (event.key === 'Enter' && !event.shiftKey) {
                             event.preventDefault();
-                            if (!enterPressed) { // Enter 키가 여러 번 눌리지 않도록
+                            if (!enterPressed) {
                                 enterPressed = true;
                                 sendMessage();
                             }
                         }
                     }).on('keyup', function (event) {
                         if (event.key === 'Enter' && !event.shiftKey) {
-                            enterPressed = false; // Enter 키가 떼어졌을 때 플래그 초기화
+                            enterPressed = false;
                         }
                     });
 
@@ -146,10 +139,27 @@
                         sendMessage();
                     });
 
-                    // 이벤트 리스너 등록
                     socket.on("send_msg", function (data) {
-                        console.log(data); // 메시지를 로그로 출력하여 확인
+                        console.log(data);
                         addMessageToChat(data);
+                    });
+
+                    function addMessageToChat(message) {
+                        var formattedDateTime = formatDate(message.messageRegdate);
+                        var newMessageHTML = '<div class="message ' + (message.userName === '${userVo.name}' ? 'right' : 'left')
+                            + '"><span class="name">' + message.userName + '</span><div class="messageBox"><div class="bubble"><p>'
+                            + message.messageContent + '</p></div><div class="messageTimestamp"><span class="regDate">'
+                            + formattedDateTime.regDate + '</span><br><span class="regTime">' + formattedDateTime.regTime
+                            + '</span></div></div></div>';
+                        messageContainer.insertAdjacentHTML('afterbegin', newMessageHTML);
+                        messageContainer.scrollTop = messageContainer.scrollHeight;
+                    }
+
+                    $(".regDate").each(function () {
+                        var originalDate = $(this).text();
+                        var formattedDate = formatDate(originalDate);
+                        $(this).text(formattedDate.regDate);
+                        $(this).next(".regTime").text(formattedDate.regTime);
                     });
                 });
             </script>
