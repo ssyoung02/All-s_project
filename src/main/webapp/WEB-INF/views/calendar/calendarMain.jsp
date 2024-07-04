@@ -109,17 +109,19 @@
                 openModal('scheduleModal', '일정 추가', '추가', 'addScheduleForm');
             });
 
-            // 모달 닫기 버튼 및 오버레이 클릭 이벤트 핸들러
-            $(document).on('click', '#modal-close, #view-modal-close, .modal-overlay', function () {
+            // 모달 닫기 버튼 및 오버레이, 수정/삭제 버튼 클릭 이벤트 핸들러
+            $(document).on('click', '#modal-close, #view-modal-close, .modal-overlay, #deleteButton', function () {
                 const $modal = $(this).closest('.modal');
                 $modal.removeClass('opaque').addClass('unstaged');
+                $modal.css('display', 'none'); // display 속성을 none으로 변경
 
                 // 현재 닫힌 모달이 일정 추가/수정 모달인 경우에만 캘린더 갱신
                 if (currentModalId === 'scheduleModal' || currentModalId === 'viewScheduleModal') {
-                    calendar.refetchEvents();
+                    calendar.refetchEvents(); // 캘린더 다시 렌더링
                     $('#' + currentModalId + ' form')[0].reset();
                 }
             });
+
             // 월/주/일 전환 버튼 클릭 이벤트 핸들러
             $('#btnMonth, #btnWeek, #btnList').click(function() {
                 const viewName = this.id === 'btnMonth' ? 'dayGridMonth' : (this.id === 'btnWeek' ? 'timeGridWeek' : 'listDay');
@@ -240,7 +242,7 @@
                     .addClass('opaque')
                     .css('display', 'block');
             }
-
+            /*
             // 모달 닫기 버튼 클릭 이벤트 핸들러 수정
             $('#modal-close').click(function () {
                 $('#scheduleModal')
@@ -254,7 +256,7 @@
                     .removeClass('opaque')
                     .addClass('unstaged')
                     .css('display', 'none'); // display 속성을 none으로 변경
-            });
+            });*/
         });
         // 폼 제출 이벤트 처리 (추가 및 수정)
         $(document).on('submit', '#addScheduleForm, #editScheduleForm', function (event) {
