@@ -197,7 +197,7 @@
 
                         <textarea class="board-textarea" name="description" placeholder="내용을 입력해주세요" required></textarea>
                         <div class="buttonBox">
-                            <button type="reset" class="updatebutton secondary-default" onclick="location.href='studyGroupList.jsp'">취소</button>
+                            <button type="reset" class="updatebutton secondary-default" onclick="location.href='${root}/studyGroup/studyGroupList'">취소</button>
                             <button type="submit" class="updatebutton primary-default">작성</button>
                         </div>
                     </div>
