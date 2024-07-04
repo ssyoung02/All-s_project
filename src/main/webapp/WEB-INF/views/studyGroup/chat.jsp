@@ -44,7 +44,6 @@
                     <c:forEach var="message" items="${messages}">
                         <div class="message ${message.userName == userVo.name ? 'right' : 'left'}">
                             <span class="name">${message.userName}</span>
-
                             <div class="messageBox">
                                 <div class="bubble">
                                     <p>${message.messageContent}</p>
@@ -58,7 +57,7 @@
             <!-- 채팅 입력창 -->
             <div class="input-container">
                 <textarea id="messageInput" placeholder="메시지를 입력하세요." cols="75" rows="1"></textarea>
-                <button class="send-button">전송</button>
+                <button id="sendButton" class="send-button">전송</button>
             </div>
             <!-- JavaScript -->
             <script>
@@ -67,11 +66,31 @@
                     var messageContainer = document.getElementById('chatMessages');
                     var enterPressed = false; // 플래그 추가
 
-                    function addMessageToChat(message) {
-                        var newMessageHTML = '<div class="message ' + (message.userName === '${userVo.name}' ? 'right' : 'left')
-                            + '"><span class="name">' + message.userName + '</span><div class="bubble"><p>' + message.messageContent + '</p><span class="regDate">' + message.messageRegdate + '</span></div></div>';
-                        messageContainer.insertAdjacentHTML('afterbegin', newMessageHTML);  // 메시지를 맨 위에 추가
+                    function formatDate(dateString) {
+                        var date = new Date(dateString);
+                        var year = date.getFullYear();
+                        var month = ('0' + (date.getMonth() + 1)).slice(-2); // 월은 0부터 시작하므로 +1
+                        var day = ('0' + date.getDate()).slice(-2);
+                        var hours = ('0' + date.getHours()).slice(-2);
+                        var minutes = ('0' + date.getMinutes()).slice(-2);
+                        return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
                     }
+
+                    function addMessageToChat(message) {
+                        var formattedDateTime = formatDate(message.messageRegdate);
+                        var newMessageHTML = '<div class="message ' + (message.userName === '${userVo.name}' ? 'right' : 'left')
+                            + '"><span class="name">' + message.userName + '</span><div class="messageBox"><div class="bubble"><p>'
+                            + message.messageContent + '</p></div><span class="regDateTime">' + formattedDateTime + '</span></div></div>';
+                        messageContainer.insertAdjacentHTML('afterbegin', newMessageHTML);  // 메시지를 맨 위에 추가
+                        messageContainer.scrollTop = messageContainer.scrollHeight;  // 스크롤을 맨 아래로 이동
+                    }
+
+                    // 기존 메시지 날짜 포맷팅
+                    $("#chatMessages .message .regDate").each(function () {
+                        var originalDate = $(this).text();
+                        var formattedDate = formatDate(originalDate);
+                        $(this).text(formattedDate);
+                    });
 
                     function getQueryParam(param) {
                         var urlParams = new URLSearchParams(window.location.search);
@@ -108,7 +127,7 @@
                                 socket.emit('send_msg', {
                                     messageContent: message,
                                     userName: '${userVo.name}',
-                                    messageRegdate: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                                    messageRegdate: new Date().toISOString()
                                 });
                             },
                             error: function (xhr, status, error) {
@@ -131,7 +150,7 @@
                         }
                     });
 
-                    $(".send-button").off('click').on('click', function () {
+                    $("#sendButton").off('click').on('click', function () {
                         sendMessage();
                     });
 
@@ -147,4 +166,3 @@
 </div>
 </body>
 </html>
-
