@@ -1,30 +1,95 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: ilove
-  Date: 2024-06-14
-  Time: 오전 11:11
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
+<c:set var="root" value="${pageContext.request.contextPath }"/>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시판 관리 > 관리자 > All's</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="${root}/resources/css/pagenation.css">
     <link rel="stylesheet" href="${root}/resources/css/common.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="${root}/resources/js/common.js" charset="UTF-8" defer></script>
     <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
-    <title>Title</title>
+    <script>
+        function deleteSelectedReferences() {
+            const selectedReferenceIds = [];
+            $('input[name="selectedReferenceIds"]:checked').each(function () { // name 속성 수정
+                selectedReferenceIds.push($(this).val());
+            });
+
+            if (selectedReferenceIds.length === 0) {
+                alert("삭제할 게시글을 선택해주세요.");
+                return;
+            }
+
+            if (confirm("선택한 게시글을 삭제하시겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteReferences',
+                    type: 'DELETE',
+                    data: JSON.stringify({referenceIds: selectedReferenceIds}),
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken // CSRF 토큰 헤더 추가
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            alert("선택한 게시글이 삭제되었습니다.");
+                            location.reload(); // 페이지 새로고침
+                        } else {
+                            const errorMessage = result.error || "게시글 삭제에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function (error) {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+        function deleteReference(referenceIdx) {
+            if (confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeaderName = $('meta[name="_csrf_header"]').attr('content');
+
+                $.ajax({
+                    url: '${root}/admin/deleteReference',
+                    type: 'DELETE',
+                    data: JSON.stringify({ referenceIdx: referenceIdx }), // JSON 데이터로 전송
+                    contentType: 'application/json',
+                    headers: {
+                        [csrfHeaderName]: csrfToken
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            alert("게시글이 삭제되었습니다.");
+                            location.reload(); // 페이지 새로고침
+                        } else {
+                            // 추가적인 예외 정보를 받을 경우 처리
+                            const errorMessage = result.error || "게시글 삭제에 실패했습니다.";
+                            alert(errorMessage);
+                        }
+                    },
+                    error: function() {
+                        alert("요청 중 오류가 발생했습니다.");
+                    }
+                });
+            }
+        }
+    </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
-    <section>
+    <section class="mainContainer">
         <!-- 메뉴 영역 -->
         <nav>
             <jsp:include page="../include/navbar.jsp" />
@@ -41,7 +106,7 @@
                 <%--탭 메뉴--%>
                 <div class="tapMenu">
                     <div class="tapItem">
-                        <a href="${root}admin/websiteInfo">웹사이트 정보</a>
+                        <a href="${root}/admin/websiteInfo">웹사이트 정보</a>
                     </div>
                     <div class="tapItem">
                         <a href="${root}/admin/userManagement">회원 관리</a>
@@ -55,16 +120,9 @@
                 </div>
                 <%--탭 메뉴 끝--%>
                 <div class="list-title flex-between">
-                    <h3>신고 게시글 수(5)</h3>
+                    <h3>신고 게시글</h3>
                     <fieldset class="search-box flex-row">
-                        <button class="secondary-default">선택 게시글 삭제</button>
-                        <p class="search-field">
-                            <input type="text" name="searchWrd" placeholder="검색어를 입력해주세요">
-                            <button type="submit">
-                                <span class="hide">검색</span>
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </p>
+                        <button class="secondary-default" onclick="deleteSelectedReferences()">선택 게시글 삭제</button>
                     </fieldset>
                 </div>
                 <table class="manager-table">
@@ -75,50 +133,61 @@
                         <th scope="col" class="trname">작성자명</th>
                         <th scope="col">게시글 제목</th>
                         <th scope="col" class="trtime">작성날짜</th>
+                        <th scope="col" class="trcount">신고 횟수</th>
                         <th scope="col" class="trbutton">관리</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="tableList">
-                        <td>
-                            <input type="checkbox" id="todolist1" class="todo-checkbox">
-                            <label for="todolist1" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                            </label>
-                        </td>
-                        <td>Saeyung</td>
-                        <td>11. 메소드 return형과 메소드 오버로드</td>
-                        <td>2024.06.10</td>
-                        <td>
-                            <button class="secondary-default">게시글 삭제</button>
-                        </td>
-                    </tr>
-                    <tr class="tableList">
-                        <td>
-                            <input type="checkbox" id="todolist1" class="todo-checkbox">
-                            <label for="todolist1" class="todo-label">
-                                <span class="checkmark"><i class="bi bi-square"></i></span>
-                            </label>
-                        </td>
-                        <td>Jaeyung</td>
-                        <td>11. 메소드 return형과 메소드 오버로드</td>
-                        <td>2024.06.10</td>
-                        <td>
-                            <button class="secondary-default">게시글 삭제</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="reference" items="${reportedReferences}">
+                        <tr class="tableList">
+                            <td>
+                                <input type="checkbox" id="todolist${reference.referenceIdx}" class="todo-checkbox"  name="selectedReferenceIds" value="${reference.referenceIdx}">
+                                <label for="todolist${reference.referenceIdx}" class="todo-label">
+                                    <span class="checkmark"><i class="bi bi-square"></i></span>
+                                </label>
+                            </td>
+                            <td>${reference.username}</td>
+                            <td>${reference.title}</td>
+                            <td>${reference.createdAt}</td>
+                            <td>${reference.reportCount}</td>
+                            <td>
+                                <button class="secondary-default" onclick="deleteReference(${reference.referenceIdx})">게시글 삭제</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
 
-
-
-
+                <!-- 페이지네이션 바 시작 -->
+                <div class="pagination">
+                    <ul>
+                        <c:if test="${startPage > 1}">
+                            <li><a href="?page=1">&lt;&lt;</a></li>
+                        </c:if>
+                        <c:if test="${currentPage > 1}">
+                            <li><a href="?page=${currentPage - 1}">&lt;</a></li>
+                        </c:if>
+                        <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+                            <li class="${pageNum == currentPage ? 'active' : ''}">
+                                <a href="?page=${pageNum}">${pageNum}</a>
+                            </li>
+                        </c:forEach>
+                        <c:if test="${currentPage < totalPages}">
+                            <li><a href="?page=${currentPage + 1}">&gt;</a></li>
+                        </c:if>
+                        <c:if test="${endPage < totalPages}">
+                            <li><a href="?page=${totalPages}">&gt;&gt;</a></li>
+                        </c:if>
+                    </ul>
+                </div>
+                <!-- 페이지네이션 바 끝 -->
             </div>
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

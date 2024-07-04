@@ -21,21 +21,21 @@ function countCharacters(textarea) {
 function timerAllClose(){
     let timerClose = confirm("공부 내용을 기록하지 않겠습니까?");
     if(timerClose){
-        timermadalClose();
+        timermodalClose();
         timeStop();
     }
 }
 
 //타이머 모달
 function timermodalOpen() {
-    let modalContainer = document.getElementById('modal-container');
+    let modalContainer = document.getElementById('timer-modal-container');
     modalContainer.classList.toggle('opaque'); // 모달 활성화
     modalContainer.classList.toggle('unstaged');
-    document.getElementById('modal-close').focus();
+    document.getElementById('timer-modal-close').focus();
 }
 
-function timermadalClose(){
-    let modalContainer = document.getElementById('modal-container');
+function timermodalClose(){
+    let modalContainer = document.getElementById('timer-modal-container');
     modalContainer.classList.toggle('opaque'); // 모달 활성화
     modalContainer.classList.toggle('unstaged');
     location.reload();
@@ -67,11 +67,15 @@ function timeReStart(){
             $('#timeMin').text('00');
         }
     }, 1000);
+
+    // #time-reStart의 onclick을 지우고 클래스 변경
+    $('#time-reStart').removeAttr('onclick').removeClass('primary-default').addClass('button-disabled');
+
 }
 
 
 //ajax 영역
-const hiddentext = $('#hiddent').val();
+const hiddentext = $('#hiddenId').val();
 
 //csrf토큰 변수 저장
 const csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -92,6 +96,9 @@ function startTimer(){
 
     $('#time-start').hide();
     $('#time-reStart').show();
+
+    // #time-reStart의 onclick을 지우고 클래스 변경
+    $('#time-reStart').removeAttr('onclick').removeClass('primary-default').addClass('button-disabled');
 
     $.ajax({
         method: 'POST',
@@ -141,6 +148,10 @@ function pauseTimer() {
             console.error('응답 텍스트:', xhr.responseText);
         }
     })
+
+    // #time-reStart에 onclick을 다시 추가하고 클래스 변경
+    $('#time-reStart').attr('onclick', 'timeReStart()').removeClass('button-disabled').addClass('primary-default');
+
 }
 
 function endTimer() {
@@ -190,7 +201,7 @@ function updateMemo() {
         success: function(response) {
             console.log('메모 저장 성공:', response);
             alert('메모가 작성되었습니다.');
-            timermadalClose();
+            timermodalClose();
             timeStop();
         },
         error: function(xhr, status, error) {

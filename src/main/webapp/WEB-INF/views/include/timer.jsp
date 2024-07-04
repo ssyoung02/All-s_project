@@ -7,7 +7,7 @@
 
 
 <div id="timer">
-    <input type="hidden" id="hiddent" value="${userVo.userIdx}">
+    <input type="hidden" id="hiddenId" value="${userVo.userIdx}">
     <div class="modal-text flex-between">
         <button class="timer-close" aria-label="타이머 닫기" onclick="timeStop()"><i class="bi bi-x-lg"></i></button>
     </div>
@@ -25,22 +25,23 @@
     </div>
 
     <%--  모달 --%>
-    <div id="modal-container" class="modal unstaged">
-        <div class="modal-overlay">
+    <div id="timer-modal-container" class="timer-modal unstaged">
+        <div class="timer-modal-overlay">
         </div>
-        <div class="modal-contents">
-            <div class="modal-text flex-between">
+        <div class="timer-modal-contents">
+            <div class="timer-modal-text flex-between">
                 <h4>타이머 기록</h4>
-                <button id="modal-close" class="modal-close-x" aria-label="닫기" onclick="timerAllClose()"><i class="bi bi-x-lg"></i></button>
+                <button id="timer-modal-close" class="modal-close-x" aria-label="닫기" onclick="timerAllClose()"><i class="bi bi-x-lg"></i></button>
             </div>
-            <div id="messageContent" class="modal-center timer-content">
+            <div class="timer-modal-center">
                 <textarea class="timer-recode" placeholder="공부 내용을 입력해주세요" required maxlength="20" oninput="countCharacters(this)"></textarea>
                 <div id="charCount">0 / 20</div>
             </div>
-            <div class="modal-bottom">
+            <div class="timer-modal-bottom">
                 <button type="button" class="button-disabled" data-dismiss="modal" onclick="timerAllClose()">취소</button>
                 <button type="button" class="primary-default" data-dismiss="modal" onclick="updateMemo()">기록</button>
             </div>
         </div>
     </div>
 </div>
+

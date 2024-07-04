@@ -6,86 +6,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-            font-size: 14px;
-        }
-
-        #calendar {
-            max-width: 1100px;
-            margin: 40px auto;
-        }
-
-        /* 모달 스타일 */
-        #scheduleModal, #viewScheduleModal {
-            display: none; /* 기본적으로 숨김 */
-            position: fixed; /* 화면에 고정 */
-            z-index: 100; /* z-index 값을 높임 */
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        #scheduleModal.opaque, #viewScheduleModal.opaque {
-            display: block;
-        }
-
-        .modal-contents {
-            background-color: #fefefe;
-            padding: 20px;
-            width: 450px; /* 모달 너비 500px로 변경 */
-            border: 1px solid #888;
-            overflow: auto; /* 내용이 넘칠 경우 스크롤바 추가 */
-            left: 50%; /* 화면 왼쪽에서 50% 위치 */
-            top: 50%; /* 화면 위쪽에서 50% 위치 */
-            transform: translate(-50%, -50%); /* 자신의 크기만큼 왼쪽, 위쪽으로 이동하여 정중앙 배치 */
-        }
-
-        /* 모달 제목 스타일 */
-        .modal-text h3 {
-            text-align: center; /* 텍스트 가운데 정렬 */
-        }
-
-        /* 색상 선택 버튼 스타일 */
-        .color-button {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: none;
-            margin: 5px;
-            cursor: pointer;
-        }
-
-        .color-button.selected { /* 선택된 버튼 스타일 */
-            border: 2px solid gray; /* 테두리 추가 */
-        }
-
-        #btnMonth { /* 월 버튼에 기본적으로 선택된 스타일 적용 */
-            background-color: #3B593F; /* 녹색 배경 */
-            color: white;
-            border: 1px solid #A2B18A;
-        }
-        /* 커스텀 버튼 스타일 */
-        #calendar-header .fc-button {
-            margin: 0 5px; /* 버튼 간 간격 조절 */
-            border: 1px solid #A2B18A; /* 버튼 테두리 추가 */
-        }
-
-        #calendar-header .fc-button.fc-button-active { /* 선택된 버튼 스타일 */
-            background-color: #3B593F; /* 녹색 배경 */
-            color: white;
-        }
-        .fc .fc-toolbar-chunk .fc-prev-button, .fc .fc-toolbar-chunk .fc-next-button {
-            background-color: #f0f0f0 !important;
-            border: none !important; /* 테두리 제거 */
-        }
-
-        .fc .fc-toolbar-chunk .fc-prev-button.fc-button, .fc .fc-toolbar-chunk .fc-next-button.fc-button {
-            border: none !important; /* 테두리 제거 */
-        }
-
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>캘린더 > All's</title>
@@ -99,13 +19,16 @@
     <script src="${root}/resources/js/fullcalendar/core/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/daygrid/index.global.js"></script>
     <script src="${root}/resources/js/fullcalendar/timegrid/index.global.js"></script>
+    <script src="${root}/resources/js/fullcalendar/list/index.global.js"></script>
 
     <script>
         // 전역 변수
         let currentModalId = null;
         let calendar; // 전역 변수로 선언
-        // 캘린더 일정 색상 옵션 (10가지 색상) -> 전역 변수로 선언
-        const colors = ["#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784", "#aed581"];
+
+        // 캘린더 일정 색상 옵션
+        const colors = ["#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784", "#aed581", "#ffb74d", "#ff8a65",
+            "#e91e63", "#9c27b0" ];
 
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
@@ -189,23 +112,18 @@
                     $('#' + currentModalId + ' form')[0].reset();
                 }
             });
-            // 월/주 전환 버튼 클릭 이벤트 핸들러
-            $('#btnMonth, #btnWeek').click(function() {
-                const viewName = this.id === 'btnMonth' ? 'dayGridMonth' : 'timeGridWeek';
+            // 월/주/일 전환 버튼 클릭 이벤트 핸들러
+            $('#btnMonth, #btnWeek, #btnList').click(function() {
+                const viewName = this.id === 'btnMonth' ? 'dayGridMonth' : (this.id === 'btnWeek' ? 'timeGridWeek' : 'listDay');
                 calendar.changeView(viewName);
 
-                // 버튼 스타일 업데이트 (활성화된 버튼에만 selected 클래스 추가)
+                // 버튼 스타일 업데이트
                 $('#calendar-header .fc-button').removeClass('fc-button-active');
                 $(this).addClass('fc-button-active');
 
-                // 월 버튼 스타일 수정
-                if (this.id === 'btnMonth') {
-                    $('#btnMonth').css('background-color', '#3B593F').css('color', 'white');
-                    $('#btnWeek').css('background-color', 'white').css('color', '#3B593F');
-                } else {
-                    $('#btnWeek').css('background-color', '#3B593F').css('color', 'white');
-                    $('#btnMonth').css('background-color', 'white').css('color', '#3B593F');
-                }
+                // 월/주/일 버튼 배경색 및 글자색 설정
+                $('#btnMonth, #btnWeek, #btnList').css('background-color', 'white').css('color', '#3B593F');
+                $(this).css('background-color', '#3B593F').css('color', 'white');
             });
 
             // 일정 삭제 버튼 클릭 이벤트 처리
@@ -394,7 +312,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -415,6 +332,7 @@
                 <div id="calendar-header">
                     <button id="btnMonth" class="fc-button fc-button-primary">월</button>
                     <button id="btnWeek" class="fc-button fc-button-primary">주</button>
+                    <button id="btnList" class="fc-button fc-button-primary">일</button>
                 </div>
                 <div id='calendar' style="position: relative"></div>
             </div>
@@ -430,51 +348,61 @@
                         <button id="modal-close" class="modal-close" aria-label="닫기"><i class="bi bi-x-lg"></i></button>
                     </div>
                     <form id="addScheduleForm">
-                        <div class="inputbox">
-                            <label for="title">일정 제목<span class="essential">*</span></label>
-                            <input type="text" id="title" name="title" required maxlength="20">
+                        <div class="modal-inputbox">
+                            <label for="title" class="modal-label">일정 제목<span class="essential">*</span></label>
+                            <div class="modal-input">
+                                <input type="text" id="title" name="title" required maxlength="20">
+                            </div>
                         </div>
-                        <div class="inputbox">
-                            <label for="description">일정 내용</label>
-                            <textarea id="description" name="description" maxlength="255"></textarea>
+                        <div class="modal-inputbox">
+                            <label for="description" class="modal-label">일정 내용</label>
+                            <div class="modal-input">
+                                <textarea id="description" name="description" maxlength="255"></textarea>
+                            </div>
                         </div>
-                        <div class="inputbox">
-                            <label for="location">장소</label>
-                            <input type="text" id="location" name="location">
+                        <div class="modal-inputbox">
+                            <label for="location" class="modal-label">장소</label>
+                            <div class="modal-input">
+                                <input type="text" id="location" name="location">
+                            </div>
                         </div>
-                        <div class="inputbox flex-between">
-                            <div class="date-time">
-                                <label for="startDate">시작 날짜<span class="essential">*</span></label>
+                        <div class="modal-inputbox">
+                            <label for="startDate" class="modal-label">시작 날짜<span class="essential">*</span></label>
+                            <div class="modal-input">
                                 <input type="date" id="startDate" name="startDate" required>
                                 <input type="time" id="startTime" name="startTime">
                             </div>
-                            <div class="date-time">
-                                <label for="endDate">종료 날짜</label>
+                        </div>
+                        <div class="modal-inputbox">
+                            <label for="endDate" class="modal-label">종료 날짜</label>
+                            <div class="modal-input">
                                 <input type="date" id="endDate" name="endDate">
                                 <input type="time" id="endTime" name="endTime">
                             </div>
                         </div>
-                        <div class="inputbox">
-                            <label for="reminder">알림</label>
-                            <input type="datetime-local" id="reminder" name="reminder">
+                        <div class="modal-inputbox">
+                            <label for="reminder" class="modal-label">알림</label>
+                            <div class="modal-input">
+                                <input type="datetime-local" id="reminder" name="reminder">
+                            </div>
                         </div>
-                        <div class="inputbox">
-                            <label>종일 여부<span class="essential">*</span></label>
-                            <div class="radio-group">
+                        <div class="modal-inputbox">
+                            <label class="modal-label">종일 여부<span class="essential">*</span></label>
+                            <div class="modal-input">
                                 <input type="radio" id="allDayYes" name="allDay" value="1">
                                 <label for="allDayYes">예</label>
                                 <input type="radio" id="allDayNo" name="allDay" value="0" checked>
                                 <label for="allDayNo">아니오</label>
                             </div>
                         </div>
-                        <div class="inputbox">
-                            <label>배경색<span class="essential">*</span></label>
+                        <div class="modal-inputbox">
+                            <label class="modal-label">배경색<span class="essential">*</span></label>
                             <div class="color-picker">
                             </div>
                             <input type="hidden" id="backgroundColorInput" name="backgroundColor" value="#A2B18A">
                         </div>
-                        <button class="primary-default" type="submit">추가</button>
                     </form>
+                    <button class="primary-default" type="submit" form="addScheduleForm">추가</button>
                 </div>
             </div>
 
@@ -489,59 +417,75 @@
                     <div id="scheduleDetails">
                         <form id="editScheduleForm">
                             <input type="hidden" id="editScheduleId" name="scheduleIdx">
-                            <div class="inputbox">
-                                <label for="editTitle">일정 제목<span class="essential">*</span></label>
-                                <input type="text" id="editTitle" name="title" required maxlength="20">
+                            <div class="modal-inputbox">
+                                <label class="modal-label for="editTitle"">일정 제목<span class="essential">*</span></label>
+                                <div class="modal-input">
+                                    <input type="text" id="editTitle" name="title" required maxlength="20">
+                                </div>
                             </div>
-                            <div class="inputbox">
-                                <label for="editDescription">일정 내용</label>
+                            <div class="modal-inputbox">
+                                <label class="modal-label for="editDescription">일정 내용</label>
+                                <div class="modal-input">
                                 <textarea id="editDescription" name="description" maxlength="255"></textarea>
+                                </div>
                             </div>
-                            <div class="inputbox">
-                                <label for="editLocation">장소</label>
-                                <input type="text" id="editLocation" name="location">
+                            <div class="modal-inputbox">
+                                <label class="modal-label for="editLocation">장소</label>
+                                <div class="modal-input">
+                                    <input type="text" id="editLocation" name="location">
+                                </div>
                             </div>
-                            <div class="inputbox flex-between">
-                                <div class="date-time">
-                                    <label for="editStartDate">시작 날짜<span class="essential">*</span></label>
+                            <div class="modal-inputbox">
+                                <label class="modal-label for="editStartDate">시작 날짜<span class="essential">*</span></label>
+                                <div class="modal-input">
                                     <input type="date" id="editStartDate" name="startDate" required>
                                     <input type="time" id="editStartTime" name="startTime">
                                 </div>
-                                <div class="date-time">
-                                    <label for="editEndDate">종료 날짜</label>
+                            </div>
+                            <div class="modal-inputbox">
+                                <label class="modal-label for="editEndDate">종료 날짜</label>
+                                <div class="modal-input">
                                     <input type="date" id="editEndDate" name="endDate">
                                     <input type="time" id="editEndTime" name="endTime">
                                 </div>
                             </div>
-                            <div class="inputbox">
-                                <label for="editReminder">알림</label>
-                                <input type="datetime-local" id="editReminder" name="reminder">
+                            <div class="modal-inputbox">
+                                <label class="modal-label for="editReminder">알림</label>
+                                <div class="modal-input">
+                                    <input type="datetime-local" id="editReminder" name="reminder">
+                                </div>
                             </div>
-                            <div class="inputbox">
-                                <label>종일 여부<span class="essential">*</span></label>
-                                <div class="radio-group">
+                            <div class="modal-inputbox">
+                                <label class="modal-label">종일 여부<span class="essential">*</span></label>
+                                <div class="modal-input">
                                     <input type="radio" id="editAllDayYes" name="allDay" value="1">
                                     <label for="editAllDayYes">예</label>
                                     <input type="radio" id="editAllDayNo" name="allDay" value="0">
                                     <label for="editAllDayNo">아니오</label>
                                 </div>
                             </div>
-                            <div class="inputbox">
-                                <label>배경색<span class="essential">*</span></label>
+                            <div class="modal-inputbox">
+                                <label class="modal-label">
+                                    배경색
+                                    <span class="essential">*</span>
+                                </label>
                                 <div class="color-picker">
                                 </div>
                                 <input type="hidden" id="editBackgroundColorInput" name="backgroundColor"
                                        value="#A2B18A">
                             </div>
-                            <button class="primary-default" type="submit">수정</button>
-                            <button class="primary-default" id="deleteButton" type="button">삭제</button>
+                            <div class="buttonBox calenderButton">
+                                <button class="secondary-default" type="submit">수정</button>
+                                <button class="primary-default" id="deleteButton" type="button">삭제</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </main>
     </section>
-    <jsp:include page="../include/footer.jsp"/>
 </div>
+<jsp:include page="../include/footer.jsp"/>
+<jsp:include page="../include/timer.jsp"/>
 </body>
 </html>

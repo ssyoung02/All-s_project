@@ -1,6 +1,6 @@
 /*로그인*/
 .loginbg{
-    background-image: url(../images/loginbg.jpg);
+    background-image: url(../images/loginBG.png);
     background-size: 100% auto;
     background-position: bottom center;
     background-repeat: no-repeat;
@@ -88,7 +88,9 @@
     font-weight: bold;
     margin: 0.3em 0 0 0;
 }
-
+#passwordCheckResult{
+ color: red;
+}
 
 /*회원 탈퇴*/
 #userEditForm .buttonBox{

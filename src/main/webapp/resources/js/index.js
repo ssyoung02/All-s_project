@@ -107,15 +107,24 @@ function modalOpen() {
     document.getElementById('modal-close').focus();
 }
 
-function madalClose(){
+function modalClose(){
     let modalContainer = document.getElementById('modal-container');
     modalContainer.classList.toggle('opaque'); // 모달 활성화
     modalContainer.classList.toggle('unstaged');
     document.getElementById('modal-close').focus();
 }
 
+function modalCloseBack(){
+    let modalContainer = document.getElementById('modal-container');
+    modalContainer.classList.toggle('opaque'); // 모달 활성화
+    modalContainer.classList.toggle('unstaged');
+    document.getElementById('modal-close').focus();
+
+}
+
+
+
 $("#file").on('change',function(){
     let fileName = $("#file").val();
     $(".upload-name").val(fileName);
 });
-

@@ -37,7 +37,7 @@
     </select>
 
     <select id="todayStudyTime">
-        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = now()
+        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = curdate()
     </select>
 
     <select id="getStudyTimeBetweenDates" resultMap="TimerEntityMap">
@@ -56,4 +56,9 @@
         GROUP BY date
         ORDER BY date ASC
     </select>
+
+    <select id="getGradeIconByTotalStudyTime" resultType="string">
+        SELECT grade_icon
+        FROM Grades
+        WHERE (SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{userIdx}) BETWEEN grade_min_time AND grade_max_time;    </select>
 </mapper>

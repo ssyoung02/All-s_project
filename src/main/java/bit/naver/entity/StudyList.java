@@ -11,5 +11,11 @@ public class StudyList {
 
     private String studyTitle;
 
+    private String descriptionTitle;
+
     private String description;
+
+    private String status;
+
+    private String image;
 }

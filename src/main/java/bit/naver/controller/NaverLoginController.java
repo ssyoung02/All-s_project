@@ -10,19 +10,23 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @PropertySource("classpath:application.properties")
 @Controller
@@ -54,20 +58,31 @@ public class NaverLoginController {
     }
 
     @RequestMapping("/login/oauth2/code/naver")
-    public String handleNaverAuthCode(@RequestParam String code, @RequestParam String state, Model model) {
+    public String handleNaverAuthCode(@RequestParam String code, @RequestParam String state, Model model, HttpSession session) {
         try {
             NaverUsersInfo userInfo = naverLoginService.getUsersInfoFromNaver(code, state);
 
             boolean userExists = usersMapper.findByEmail(userInfo.getEmail());
 
             if (userExists) {
+                // 2-1. 사용자가 이미 존재하는 경우: 로그인 처리 (기존 로직 유지)
                 Users existingUser = usersMapper.findUserByEmail(userInfo.getEmail());
-                UserDetails userDetails = new UsersUser(existingUser);
+                // 사용자의 권한 정보 조회
+                List<String> authorities = usersMapper.findAuthoritiesByUsername(existingUser.getUsername());
+                // SimpleGrantedAuthority로 변환
+                List<GrantedAuthority> grantedAuthorities = authorities.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+                // UsersUser 객체 생성 (UserDetails 구현체)
+                UsersUser userDetails = new UsersUser(existingUser, grantedAuthorities);
 
+                // 인증 객체 생성
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                session.setAttribute("error", "로그인에 성공했습니다");
+
                 return "redirect:/main";
             } else {
                 model.addAttribute("naverUserInfo", userInfo);

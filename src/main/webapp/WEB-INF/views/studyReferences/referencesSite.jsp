@@ -19,7 +19,6 @@
     </script>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -44,7 +43,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/01.%20eclipse.png" alt="Eclipse">
+                                <a href="https://www.eclipse.org/">
+                                    <img src="/resources/images/01.%20eclipse.png" alt="Eclipse"></a>
                             </div>
                             <h3>Eclipse</h3>
                         </a>
@@ -52,7 +52,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/02.%20intellij.png" alt="IntelliJ">
+                                <a href="https://www.jetbrains.com/ko-kr/idea/">
+                                    <img src="/resources/images/02.%20intellij.png" alt="IntelliJ"></a>
                             </div>
                             <h3>IntelliJ</h3>
                         </a>
@@ -60,7 +61,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/03.%20mysql.png" alt="MySQL">
+                                <a href="https://www.mysql.com/">
+                                    <img src="/resources/images/03.%20mysql.png" alt="MySQL"></a>
                             </div>
                             <h3>MySQL</h3>
                         </a>
@@ -68,7 +70,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/04.%20vscode.png" alt="VS Code">
+                                <a href="https://code.visualstudio.com/">
+                                    <img src="/resources/images/04.%20vscode.png" alt="VS Code"></a>
                             </div>
                             <h3>VS Code</h3>
                         </a>
@@ -76,7 +79,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/05.%20gitbash.png" alt="Git Bash">
+                                <a href="https://git-scm.com/">
+                                    <img src="/resources/images/05.%20gitbash.png" alt="Git Bash"></a>
                             </div>
                             <h3>Git Bash</h3>
                         </a>
@@ -87,7 +91,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/06.%20github.png" alt="Eclipse">
+                                <a href="https://github.com/">
+                                    <img src="/resources/images/06.%20github.png" alt="Eclipse"></a>
                             </div>
                             <h3>Git Hub</h3>
                         </a>
@@ -95,7 +100,8 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/07.%20kakaotech.png" alt="IntelliJ">
+                                <a href="https://tech.kakao.com/">
+                                    <img src="/resources/images/07.%20kakaotech.png" alt="IntelliJ"></a>
                             </div>
                             <h3>kakao Tech</h3>
                         </a>
@@ -103,47 +109,53 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/08.%20ouahan.png" alt="MySQL">
+                                <a href="https://techblog.woowahan.com/">
+                                    <img src="/resources/images/08.%20ouahan.png" alt="MySQL"></a>
                             </div>
-                            <h3>우아한형제들 기술블로그</h3>
+                            <h3>우아한형제들 기술 블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/09.%20carrot.png" alt="VS Code">
+                                <a href="https://medium.com/daangn">
+                                    <img src="/resources/images/09.%20carrot.png" alt="VS Code"></a>
                             </div>
-                            <h3>당근태크 블로그</h3>
+                            <h3>당근 테크<br>블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/10.%20kurly.png" alt="Git Bash">
+                                <a href="https://helloworld.kurly.com/">
+                                    <img src="/resources/images/10.%20kurly.png" alt="Git Bash"></a>
                             </div>
-                            <h3>컬리 기술블로그</h3>
+                            <h3>컬리 기술<br>블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/11.%20banksalad.png" alt="Git Bash">
+                                <a href="https://blog.banksalad.com/tech/">
+                                    <img src="/resources/images/11.%20banksalad.png" alt="Git Bash"></a>
                             </div>
-                            <h3>뱅크샐러드 블로그</h3>
+                            <h3>뱅크샐러드<br>블로그</h3>
                         </a>
                     </div>
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/12.%20line.png" alt="Git Bash">
+                                <a href="https://engineering.linecorp.com/ko">
+                                    <img src="/resources/images/12.%20line.png" alt="Git Bash"></a>
                             </div>
-                            <h3>LINE Enginearing</h3>
+                            <h3>LINE Engineering</h3>
                         </a>
                     </div>
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/13.%20nhncloud.png" alt="Git Bash">
+                                <a href="https://www.nhncloud.com/kr">
+                                    <img src="/resources/images/13.%20nhncloud.png" alt="Git Bash"></a>
                             </div>
                             <h3>NHN Cloud</h3>
                         </a>
@@ -151,17 +163,19 @@
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/14.%20aws.png" alt="Git Bash">
+                                <a href="https://aws.amazon.com/ko/">
+                                    <img src="/resources/images/14.%20aws.png" alt="Git Bash"></a>
                             </div>
-                            <h3>W3C schools</h3>
+                            <h3>Amazon Web Services</h3>
                         </a>
                     </div>
                     <div class="siteItem">
                         <a href="#">
                             <div class="img-container">
-                                <img src="/resources/images/15.%20mdn.png" alt="Git Bash">
+                                <a href="https://developer.mozilla.org/ko/">
+                                    <img src="/resources/images/15.%20mdn.png" alt="Git Bash"></a>
                             </div>
-                            <h3>mdn wec docs</h3>
+                            <h3>MDN Web Docs</h3>
                         </a>
                     </div>
                 </div>
@@ -170,8 +184,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>

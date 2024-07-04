@@ -1,13 +1,17 @@
 package bit.naver.security;
 
+import bit.naver.entity.Users;
+import bit.naver.mapper.UsersMapper;
 import bit.naver.service.GoogleLoginService;
 import bit.naver.service.KakaoLoginService;
 import bit.naver.service.NaverLoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -16,11 +20,11 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
 
 @Component
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
-
+    @Autowired
+    private UsersMapper usersMapper;
     private final NaverLoginService naverLoginService;
     private final KakaoLoginService kakaoLoginService;
     private final GoogleLoginService googleLoginService;
@@ -33,9 +37,13 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        if (authentication != null) {
+        String username = null;
+
         if (authentication.getPrincipal() instanceof OAuth2User) {
             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
             String registrationId = (String) oauth2User.getAttributes().get("registration_id");
+
 
             switch (registrationId) {
                 case "google":
@@ -56,8 +64,21 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
                 default:
                     break;
             }
+            username = oauth2User.getName(); // 소셜 로그인 사용자 이름 가져오기
+            }else if (authentication.getPrincipal() instanceof UserDetails) {
+            // 폼 로그인 처리
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            username = userDetails.getUsername();
         }
-
+            // activityStatus 업데이트 (공통 로직)
+            if (username != null) {
+                Users user = usersMapper.findByUsername(username);
+                if (user != null) {
+                    user.setActivityStatus(Users.ActivityStatus.NOT_LOGGED_IN);
+                    usersMapper.updateActivityStatus(user.getUserIdx(), user.getActivityStatus());
+                }
+            }
+        }
         response.sendRedirect("/login?logout");
     }
 

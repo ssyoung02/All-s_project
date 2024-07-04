@@ -3,25 +3,24 @@
         margin: 0 3em;
     }
 }
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
+    /*레이아웃*/
+    header {
+        grid-template-columns: repeat(4, 1fr);
+    }
     /*메인메뉴 medium사이즈*/
     nav{
         display: none;
     }
-    main {
-        grid-column: 1 / 5;
-        grid-row: 1;
-    }
-    .mainContaner{
-        margin: 0 3em;
+    .mainContainer{
+        display: block;
     }
     .m-menu-area{
         display: none;
         position: absolute;
-        right: 8%;
-        top: 11em;
+        right: 5%;
         width: 300px;
-        z-index: 1;
+        z-index: 4;
     }
     .m-size-nav{
         display: flex;
@@ -38,12 +37,16 @@
     .timestart{
         display: none;
     }
-    #m-timestart{
+    .m-timestart{
         display: inline-block;
         width: 100%;
         padding: 0.8em;
         width: 20em;
     }
+    .time-area p{
+        font-size: 70px;
+    }
+
     .lnb-open{
         display: inline-block;
         background-color: white;
@@ -54,6 +57,25 @@
     }
     .lnb-open ul{
         padding: 0;
+    }
+
+    /*메인 모바일*/
+    .loginMain{
+        display: block;
+    }
+    .loginUserInfoLeft{
+        width: 100%;
+    }
+    .loginUserInfoRight{
+        display: flex;
+        gap: 1em;
+    }
+    #studyTimeChart{
+        max-width: 500px;
+        max-height: 300px;
+    }
+    .userStudyGroup{
+        width: 100%;
     }
 
     /*회원정보 수정 모바일*/
@@ -77,6 +99,10 @@
         margin-left: -4em;
     }
 
+    .userItem{
+        width: 14em;
+    }
+
 }
 
 @media (max-width: 1250px) {
@@ -84,7 +110,25 @@
         font-size: 4em;
     }
 }
+
+@media (max-width: 1050px) {
+    #studyTimeChart {
+        max-width: 600px;
+    }
+
+    .group-main {
+        display: block;
+    }
+    .group-member{
+        margin-top: 1em;
+    }
+}
 @media (max-width: 850px) {
+    /*레이아웃*/
+    header {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
     /*메인*/
     .loginMain{
         flex-direction: column;
@@ -100,5 +144,18 @@
 
     .time-area{
         font-size: 3em;
+    }
+
+    .time-area p{
+        font-size: 50px;
+    }
+
+    #studyTimeChart{
+        max-width: 500px;
+    }
+
+    /*스터디그룹 메인*/
+    .lank-item {
+        width: 250px;
     }
 }

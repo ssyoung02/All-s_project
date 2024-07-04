@@ -135,7 +135,7 @@
             user_idx,
             title,
             isPrivate,
-            <if test="fileAttachments != null">
+        <if test="fileAttachments != null and fileAttachments != ''">
             file_attachments,
             file_name,
             </if>
@@ -147,7 +147,7 @@
                 #{userIdx},
                 #{title},
                 #{isPrivate},
-        <if test="fileAttachments != null">
+        <if test="fileAttachments != null and fileAttachments != ''">
             #{fileAttachments},
             #{fileName},
         </if>
@@ -174,7 +174,14 @@
 
     <update id="updatePost">
         UPDATE StudyReferences
-        SET title = #{title}, content = #{content}, isPrivate = #{isPrivate}
+        SET
+            title = #{title},
+            content = #{content},
+            isPrivate = #{isPrivate},
+            updated_at = now(),
+            file_attachments = CASE WHEN #{fileAttachments} IS NOT NULL THEN #{fileAttachments} ELSE file_attachments END,
+            file_name = CASE WHEN #{fileName} IS NOT NULL THEN #{fileName} ELSE file_name END
         WHERE reference_idx = #{referenceIdx}
     </update>
+
 </mapper>

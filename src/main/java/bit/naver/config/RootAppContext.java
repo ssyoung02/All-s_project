@@ -83,4 +83,5 @@ public class RootAppContext {
         return new SqlSessionTemplate(sessionFactory());
         // 앞서 생성한 SqlSessionFactory를 사용하여 SqlSessionTemplate을 생성하고 반환합니다.
     }
+
 }

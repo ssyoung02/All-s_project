@@ -35,94 +35,48 @@
 /*로그인 영역*/
 /*레이아웃*/
 .loginMain{
-    display: flex;
-    gap: 2em;
-    margin-bottom: 2em;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
 }
 .loginUserInfoLeft{
-    flex: 2.5;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
+    grid-column: 1 / 6;
+    grid-row: 1;
 }
 .loginUserInfoRight{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1em;
+    grid-column: 5;
+    grid-row: 1;
 }
-
-/*캘린더 영역*/
-.sceduler-area{
-    display: flex;
-    gap: 1em;
-    justify-content: space-between;
-    align-items: center;
-}
-.sceduler{
-    width: 100%;
-    height: 100%;
-    flex: 1;
-    width: 100%;
-    background-color: bisque;
-}
-.todo h3{
-    margin-bottom: 1em;
-}
-.achieve, .todoList{
-    display: flex;
-    gap: 1em;
-}
-
-.todoTitle{
-    width: 3em;
-    text-align: justify;
-    font-weight: bold;
-}
-.todoTitle:after{
-    content: '';
-    display: inline-block;
-    width: 100%;
-}
-.todoList ul{
-    margin: 0;
-}
-.todo{
-    display: flex;
-    flex-direction: column;
-}
-.weekly{
-    width: 100%;
-    height: 100%;
-    background-color: lightgrey;
-}
-.studyTime{
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-}
-.studyTime div{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-.studyTime, .userStudyGroup{
-    width: 100%;
+/*스터디 그룹원 상태*/
+.userStudyGroup{
+    padding: 1em;
+    border-radius: 5px;
+    border: 1px solid #dad8cc;
+    min-height: 280px;
 }
 .userStudyGroupTitle{
-    width: 100%;
-    margin-bottom: 1em;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 1.2em;
 }
-#totalstudytime, #todaystudytime{
-    padding-right: 20px;
+.userStudyGroupTitle h3{
+    width: 115px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-.memberItem{
+.slide-button-group button{
+    padding: 3px;
+}
+.userStudyGroupMember{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px 10px 10px;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+#studyTimeChart{
+    max-width: 200px;
+    max-height: 150px;
 }
 
 /*스터디 그룹 메인*/
@@ -145,7 +99,6 @@
     width: 80px;
     height: 80px;
     border-radius: 10px;
-    border: 1px solid #898989;
 }
 .group-title h2{
     margin-bottom: 10px;
@@ -170,7 +123,7 @@
     grid-column: 1 / 1;
     grid-row: 1;
 }
-.group-content h3{
+.group-content h2{
     margin-bottom: 1em;
 }
 /*랭킹*/
@@ -180,13 +133,25 @@
     gap: 1em;
 }
 .lank-phase{
+    position: relative;
     display: flex;
     flex-direction: row;
     gap: 5px;
     height: 200px;
+    width: 280px;
     margin: 0 1em;
+    background-image: url("/resources/images/bookRank.png");
+    background-size: cover;
+    isolation: isolate;
 }
-
+.lank-phase:after {
+    content: '';
+    position: absolute;
+    background: white;
+    z-index: -1;
+    inset: 0;
+    opacity: 0.4;
+}
 .lank-floor{
     display: flex;
     flex-direction: column;
@@ -194,10 +159,28 @@
     text-align: center;
     width: 90px;
     gap: 5px;
+    background: transparent;
 }
 .lanking{
+    font-size: 2.5em;
+    font-weight: bold;
+}
+.podiumId{
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
     font-size: 1.3em;
     font-weight: bold;
+    background: rgb(255,255,255,0.5);;
+}
+.podiumId +p{
+    font-size: 14px;
+}
+
+.memberId{
+    font-size: 1em;
 }
 
 .records{
@@ -210,16 +193,15 @@
 }
 .lank-first{
     height: 60%;
-    background-color: #3b593f;
-    color: #fff;
+    justify-content: flex-end
 }
 .lank-second{
     height: 40%;
-    background-color: #588159;
+    justify-content: flex-end
 }
 .lank-third{
-    height: 20%;
-    background-color: #A2B18A;
+    height: 25%;
+    justify-content: flex-end
 }
 
 .lank-item{
@@ -237,28 +219,29 @@
     flex: 3;
 }
 .lank-time{
-    flex: 1;
+    flex: 2;
     text-align: right;
 }
 .circle-number{
     width: 1em;
     border-radius: 3em;
     padding: 0.4em  .5em .5em .5em;
+    padding: 0.4em  .5em .5em .5em;
     line-height: 1.25em;
     display: inline-block;
     text-align: center;
     font-weight: bold;
-    background-color: #898989;
+    background-image: url(/resources/images/rankSecond.png);
+    background-size: cover;
 }
 .top3{
-    background-color: #ffcc4c;
+    background-image: url("/resources/images/rankFirst.png");
+    background-size: cover;
 }
 
 /*캘린더*/
 .group-calender{
     width: 100%;
-    height: 200px;
-    background-color: #588159;
 }
 
 /*맴버리스트*/
@@ -289,4 +272,52 @@
 }
 .profile-imgGroup{
     display: flex;
+}
+
+/*맵 관련*/
+.cafe-info-window {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    width: 200px;
+}
+
+.map-search-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2; /* 지도 위에 표시되도록 설정 */
+}
+
+.map-search-container input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+.map-search-container button {
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#studyListContainer {
+    margin-top: 10px;
+}
+
+#studyListHi {
+    list-style: none;
+    padding: 5px;
+}
+
+#studyListHi li {
+    margin-bottom: 5px;
+}
+#studyListHi .recruitItem{
+    margin-bottom: 1em;
 }

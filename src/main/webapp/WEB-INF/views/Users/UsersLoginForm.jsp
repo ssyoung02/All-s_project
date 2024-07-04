@@ -40,13 +40,15 @@
                     <input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요" required >
                 </div>
             </div>
+<%--
             <div class="idpwsearch">
                 <a href="#">아이디/비밀번호 찾기</a>
             </div>
             <div class="remember-me">
                 <input type="checkbox" id="remember-me" name="remember-me">
-                <label for="remember-me">로그인 상태 유지</label> <%-- Remember-Me 체크박스 추가 --%>
+                <label for="remember-me">로그인 상태 유지</label> &lt;%&ndash; Remember-Me 체크박스 추가 &ndash;%&gt;
             </div>
+--%>
             <button class="loginbutton primary-default" type="submit">로그인</button>
             <div class="orline flex-row">
                 <hr>
@@ -62,13 +64,13 @@
     </div>
 
     <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged">
+    <div id="modal-container" class="modal unstaged" onclick="modalCloseBack()">
         <div class="modal-overlay">
         </div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -93,13 +95,13 @@
             $('.modal-close-x').focus();
 
 
-            <c:if test="${not empty sessionScope.loginusername}">
+                <c:if test="${not empty sessionScope.loginusername}">
 
-            var loginusername = "${sessionScope.loginusername}"; // 세션에서 값 가져오기
-            console.log("Username: " + loginusername);
-            $("#username").val(loginusername);
+                var loginusername = "${sessionScope.loginusername}"; // 세션에서 값 가져오기
+                console.log("Username: " + loginusername);
+                $("#username").val(loginusername);
 
-            </c:if>
+                </c:if>
             </c:if>
         });
     </script>

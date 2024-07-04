@@ -47,6 +47,10 @@ public class TimerService {
     }
 
     public List<TimerEntity> getWeeklyStudyTime(Long userIdx, LocalDate startDate, LocalDate endDate) {
+        System.out.println(userIdx);
+        System.out.println(startDate);
+        System.out.println(endDate);
+
         return timerMapper.getStudyTimeBetweenDates(userIdx, startDate, endDate);
     }
 
@@ -76,5 +80,10 @@ public class TimerService {
         return timerMapper.getMonthlyStudyTime(userIdx, startOfMonth, endOfMonth);
     }
 
+    public String getGradeIconByUserIdx(int userIdx) {
+        String gradeIcon = timerMapper.getGradeIconByTotalStudyTime(userIdx);
+        System.out.println("gradeIcon: "+gradeIcon);
+        return gradeIcon;
+    }
 
 }

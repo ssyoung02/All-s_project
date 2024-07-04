@@ -21,7 +21,7 @@
     padding: 1.5em;
 }
 .userItem{
-    width: 10em;
+    width: 16em;
 }
 
 .longUserItem{
@@ -42,7 +42,7 @@
     text-align: left;
 }
 .activity-title + p {
-    width: 4em;
+    /*width: 4em;*/
     text-align: right;
 }
 /*내정보 - 이력서*/
@@ -101,6 +101,9 @@
     margin: 0 auto;
     padding: 2em;
 }
+.updateForm h3{
+    margin: 10px 0;
+}
 .buttonBox{
     display: flex;
     flex-direction: row;
@@ -127,13 +130,31 @@
 .userinputbox label, .userinputbox dt{
     margin-bottom: 0.5em;
     margin-right: 1em;
-    width: 10em;
+    width: 11em;
 }
 .userinputbox input[type="text"], .userinputbox input[type="password"], .userinputbox input[type="email"]{
     width: 100%;
 }
 .profile-chage{
     margin-left: 0;
+}
+#userEditForm{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.profile-change-user{
+    width: 180px;
+}
+
+.div-img-box{
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
 }
 /*회원정보 수정 모바일*/
 @media (max-width: 1200px) {

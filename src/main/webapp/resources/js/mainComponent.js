@@ -2,11 +2,13 @@ const skipnavLink = document.querySelector('#skipnav a');
 skipnavLink.addEventListener('focus', function () {
     const skipnav = document.querySelector('#skipnav');
     skipnav.style.opacity = 1;
+    skipnav.style.width = "100%";
 });
 
 skipnavLink.addEventListener('blur', function () {
     const skipnav = document.querySelector('#skipnav');
     skipnav.style.opacity = 0;
+    skipnav.style.width = 0;
 });
 
 //화면 위치에 따라 TOP 버튼 보이게

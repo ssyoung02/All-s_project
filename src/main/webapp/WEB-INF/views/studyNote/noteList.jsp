@@ -7,7 +7,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <sec:csrfMetaTags /> <%-- CSRF 토큰 자동 포함 --%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>내 공부노트 > 공부 > All's</title>
@@ -82,9 +81,30 @@
             });
         });
     </script>
+
+    <style>
+        .link-button p{
+            max-height: 10vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+        }
+        .link-button img {
+            display: none;
+        }
+
+        /* 첫 번째 이미지 보이기 */
+        .link-button img:first-of-type:not(p img), .link-button p:first-of-type img{
+            display: block;
+            max-width: 100%; /* 부모 요소의 너비를 넘지 않도록 */
+            height: auto; /* 원본 비율 유지 */
+            max-height: 10vw; /* 최대 높이를 15vw로 제한 */
+            width: auto; /* 원본 비율 유지 */
+        }
+    </style>
 </head>
 <body>
-<jsp:include page="../include/timer.jsp" />
 <jsp:include page="../include/header.jsp" />
 <!-- 중앙 컨테이너 -->
 <div id="container">
@@ -180,8 +200,9 @@
             <%--콘텐츠 끝--%>
         </main>
     </section>
-    <!--푸터-->
-    <jsp:include page="../include/footer.jsp" />
 </div>
+<!--푸터-->
+<jsp:include page="../include/footer.jsp" />
+<jsp:include page="../include/timer.jsp" />
 </body>
 </html>
