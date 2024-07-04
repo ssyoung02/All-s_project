@@ -78,6 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().configurationSource(corsConfigurationSource());
+        http
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 제한
                 .antMatchers("/resources/**","/webapp/resources/css/**",
@@ -162,5 +164,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
     }
 
     // BCryptPasswordEncoder를 Bean으로 등록하여 비밀번호 암호화에 사용합니다.
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080")); // 허용할 출처 (포트 번호까지 정확하게)
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS")); // OPTIONS 메서드 추가
+        configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
 }

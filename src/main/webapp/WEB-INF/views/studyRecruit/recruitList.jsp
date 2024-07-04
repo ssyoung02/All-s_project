@@ -3,6 +3,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <c:set var="userVo" value="${sessionScope.userVo}"/>
 <c:set var="root" value="${pageContext.request.contextPath}"/>
+<c:set var="currentURI" value="${pageContext.request.requestURL}" />
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -106,7 +108,10 @@
                                          onclick="location.href='${root}/studyRecruit/recruitReadForm?studyIdx=${study.studyIdx}'">
                                         <div class="banner-bottom flex-between">
                                             <p class="study-tag">
-                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">${study.status}</span>
+                                                <span class="recruit-status ${study.status eq 'CLOSED' ? 'closed' : ''}">
+                                                                ${study.status eq 'CLOSED' ? '모집마감' : '모집중'}
+                                                                <span class="recruitNum">(${study.currentParticipants}/${study.capacity})&nbsp;</span>
+                                                </span>
                                                 <span class="department">${study.category}</span>
                                             </p>
                                             <!-- 페이지 새로고침해도 좋아요된것은 유지되도록 -->
@@ -178,11 +183,25 @@
                         </ul>
                     </div> <%-- 스터디 목록 컨테이너 추가 --%>
 
+<%--
                     <div class="recruitmentStatus">
                         <a class="recruitmentStatusSelect" href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a>
                         <a class="" href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
                     </div>
+--%>
 
+                    <%
+                        String status = request.getParameter("status");
+                        if (status == null) {
+                            status = "RECRUITING"; // 기본값 설정
+                        }
+                    %>
+                    <div class="recruitmentStatus">
+                        <a class="<%= "RECRUITING".equals(status) ? "recruitmentStatusSelect" : "" %>"
+                           href="${root}/studyRecruit/recruitList?status=RECRUITING">모집 중</a>
+                        <a class="<%= "CLOSED".equals(status) ? "recruitmentStatusSelect" : "" %>"
+                           href="${root}/studyRecruit/recruitList?status=CLOSED">모집 마감</a>
+                    </div>
                     <div class="recruitList">
                         <%-- 게시판 글 --%>
                         <c:forEach var="study" items="${studies}">
@@ -310,6 +329,14 @@
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
+        const contextPath = 'http://localhost:8080/WEB-INF/views/';
+        const currentURI = '${currentURI}';
+
+        console.log("현재 URL: "+currentURI)
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
         var searchInput = document.getElementById("searchInput");
         searchInput.addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
@@ -412,6 +439,7 @@
             }
         });
     });
+
 </script>
 <script>
 
@@ -756,7 +784,15 @@
                             // span 요소 생성 및 내용 설정
                             const statusSpan = document.createElement('span');
                             statusSpan.className = 'recruit-status ' + (study.status === 'CLOSED' ? 'closed' : 'open');
-                            statusSpan.textContent = study.status;
+                            statusSpan.textContent = study.status === 'CLOSED' ? '모집마감' : '모집중';
+
+
+                            // 모집 인원 정보 추가
+                            const recruitNumSpan = document.createElement('span');
+                            recruitNumSpan.className = 'recruitNum';
+                            recruitNumSpan.textContent = ' '+'('+study.currentParticipants+'/'+study.capacity+')' +' ';
+
+                            statusSpan.appendChild(recruitNumSpan);
                             studyTag.appendChild(statusSpan);
 
                             const categorySpan = document.createElement('span');

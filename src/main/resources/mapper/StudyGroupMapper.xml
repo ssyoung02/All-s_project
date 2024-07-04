@@ -184,7 +184,9 @@
             age = #{age},
             gender = #{gender},
             study_online = #{studyOnline},
-            image = #{image}
+            image = #{image},
+            latitude = #{latitude},
+            longitude = #{longitude}
         WHERE study_idx = #{studyIdx}
     </update>
 

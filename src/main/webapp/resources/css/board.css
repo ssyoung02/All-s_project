@@ -91,6 +91,9 @@
     font-weight: bold;
     text-align: left;
 }
+.board-title a{
+    font-size: 1em;
+}
 .operate{
     padding: 10px;
     border-radius: 5px;
@@ -139,6 +142,7 @@
 .board-textarea{
     width: 100%;
     height: 200px;
+    margin: 1em 0;
 }
 
 .upload-name {
@@ -216,7 +220,7 @@
 }
 
 .siteItem {
-    width: 100px;
+    width: 120px;
     box-sizing: border-box;
     text-align: center;/
 }
@@ -516,4 +520,25 @@
     margin-left: auto;
     margin-right: 20px;
     text-align: right;
+}
+
+/* 공부자료 */
+.editor-content p{
+    max-height: 10vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+.editor-content img {
+    display: none;
+}
+
+/* 첫 번째 이미지 보이기 */
+.editor-content img:first-of-type:not(p img), .editor-content p:first-of-type img{
+    display: block;
+    max-width: 100%; /* 부모 요소의 너비를 넘지 않도록 */
+    height: auto; /* 원본 비율 유지 */
+    max-height: 10vw; /* 최대 높이를 15vw로 제한 */
+    width: auto; /* 원본 비율 유지 */
 }

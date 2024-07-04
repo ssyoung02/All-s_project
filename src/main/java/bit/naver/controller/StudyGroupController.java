@@ -253,6 +253,18 @@ public class StudyGroupController {
     public Map<String, Object> approveMember(@RequestParam("studyIdx") Long studyIdx, @RequestParam("userIdx") Long userIdx) {
         Map<String, Object> response = new HashMap<>();
         try {
+
+            Map<String, Integer> studyInfo = studyGroupMapper.getCurrentParticipantsAndCapacity(studyIdx);
+            int currentParticipants = studyInfo.get("currentParticipants");
+            int capacity = studyInfo.get("capacity");
+
+            if (currentParticipants >= capacity) {
+                response.put("success", false);
+                response.put("message", "모집인원이 마감되었습니다.");
+                return response;
+            }
+
+
             studyGroupMapper.approveMember(studyIdx, userIdx);
             studyGroupMapper.incrementCurrentParticipants(studyIdx);  // 멤버 승인 시 현재 참가자 수 증가
             response.put("success", true);
@@ -341,6 +353,8 @@ public class StudyGroupController {
                                                 @RequestParam("gender") String gender,
                                                 @RequestParam("studyOnline") boolean studyOnline,
                                                 @RequestParam(value = "image", required = false) MultipartFile image,
+                                                @RequestParam("latitude") double latitude,
+                                                @RequestParam("longitude") double longitude,
                                                 HttpSession session, HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
         try {
@@ -352,6 +366,8 @@ public class StudyGroupController {
             studyGroup.setAge(age);
             studyGroup.setGender(gender);
             studyGroup.setStudyOnline(studyOnline);
+            studyGroup.setLatitude(latitude);  // 위치 정보 업데이트
+            studyGroup.setLongitude(longitude);  // 위치 정보 업데이트
 
             if (image != null && !image.isEmpty()) {
                 String savePath = request.getServletContext().getRealPath("/resources/studyGroupImages");

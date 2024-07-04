@@ -130,9 +130,9 @@
 }
 /*알림 목록*/
 .alarm{
-    width: 200px;
+    width: 220px;
     position: absolute;
-    top: 70px;
+    top: 90px;
     gap: 5px;
     padding: 20px;
     border-radius: 5px;
@@ -154,12 +154,42 @@
 }
 .alarmList li{
     margin: 7px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.alarm button{
-    width: 100%;
-}
+
 .alarm h3{
     margin: 5px;
+}
+
+/* Delete button style */
+.delete-btn {
+    background-color: #ff8795;
+    color: #ffffff;
+    border: none;
+    padding: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    width: 20px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.delete-btn i {
+    margin-right: 3px; /* 아이콘과 텍스트 사이 간격 줄임 */
+}
+
+.new-mark {
+    transition: color 0.3s ease;
+    color: initial; /* 기본 색상 */
+}
+
+#newMark i {
+    color: #ff9116 !important; /* 경고 시 색상 */
 }
 
 /*main*/
@@ -312,7 +342,7 @@ footer p{
     align-items : center;
     */
     transition : opacity 0.5s;
-    z-index: 3;
+    z-index: 10;
 }
 .modal.opaque{
     opacity : 1;

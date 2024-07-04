@@ -37,7 +37,7 @@
     </select>
 
     <select id="todayStudyTime">
-        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = now()
+        SELECT SUM(study_time) FROM StudyRecords WHERE user_idx = #{user_idx} and date = curdate()
     </select>
 
     <select id="getStudyTimeBetweenDates" resultMap="TimerEntityMap">

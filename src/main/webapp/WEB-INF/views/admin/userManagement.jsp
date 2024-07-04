@@ -86,6 +86,15 @@
                 });
             }
         }
+
+        // 서버에서 전달받은 학습 시간(초)을 시:분:초 형태로 변환하는 함수
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return `${h > 0 ? h + '시간 ' : ''}${m > 0 ? m + '분 ' : ''}${s}초`;
+        }
+
     </script>
 </head>
 <body>
@@ -152,7 +161,11 @@
                             <td>${user.username}</td>
                             <td>${user.authorityName}</td>
                             <td>${user.formattedCreatedAt}</td>
-                            <td>${user.totalStudyTime} 시간</td>
+                            <td>
+                                <script>
+                                    document.write(formatTime(${user.totalStudyTime})); // user.totalStudyTime을 formatTime 함수에 전달
+                                </script>
+                            </td>
                             <td>
                                 <button class="secondary-default" onclick="deleteUser(${user.userIdx})">강제 탈퇴</button>
                             </td>
