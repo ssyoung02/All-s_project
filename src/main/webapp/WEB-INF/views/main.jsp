@@ -982,6 +982,9 @@
                 const memberItemDiv = $("<div class='userStudyGroupMemerList'></div>");
 
                 studyGroupDiv.append(studyTitle, memberItemDiv);
+                studyGroupDiv.on('click', function() {
+                    location.href = `${root}/studyGroup/studyGroupMain?studyIdx=` + study.studyIdx;
+                });
                 swiperSlide.append(studyGroupDiv);
                 //swiperWrapper.append(swiperSlide);
                 studyGroupMemberContainer.append(swiperSlide);
