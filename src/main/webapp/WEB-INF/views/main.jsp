@@ -176,7 +176,7 @@
             <%-- 메시지 내용이 여기에 표시됩니다. --%>
         </div>
         <div class="modal-bottom">
-            <button type="button" class="modal-close" data-dismiss="modal" onclick="MainModalClose(event)">닫기</button>
+            <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
         </div>
     </div>
 </div>

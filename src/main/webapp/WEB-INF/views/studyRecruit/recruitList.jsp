@@ -175,6 +175,8 @@
                         <div class="swiper-button-next"></div>
                     </div>
                     <%--슬라이더 끝--%>
+
+
                     <div id="map-recruitList"
                          style="width:100%; height:250px;border-radius: 5px; margin: 1em 0"> <%-- 로그인 후 지도 컨테이너 --%>
                         <div class="map-search-container">
