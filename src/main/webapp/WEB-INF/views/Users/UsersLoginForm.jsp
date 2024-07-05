@@ -72,13 +72,13 @@
     </div>
 
     <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged" onclick="modalCloseBack()">
+    <div id="modal-container" class="modal unstaged" onclick="modalClose(event)">
         <div class="modal-overlay">
         </div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()">
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose(event)">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -88,7 +88,7 @@
                 </c:if>
             </div>
             <div class="modal-bottom">
-                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+                <button type="button" class="modal-close" data-dismiss="modal" onclick="modalClose(event)">닫기</button>
             </div>
         </div>
     </div>

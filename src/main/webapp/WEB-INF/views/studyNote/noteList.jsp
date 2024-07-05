@@ -191,7 +191,7 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
-                                <button class="link-button flex-between" onclick="location.href='${root}/studyNote/noteRead?referenceIdx=${data.referenceIdx}'">
+                                <button class="editor-content link-button" onclick="location.href='${root}/studyNote/noteRead?referenceIdx=${data.referenceIdx}'">
                                         ${data.content}
                                     <img/>
                                 </button>

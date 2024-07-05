@@ -107,21 +107,12 @@ function modalOpen() {
     document.getElementById('modal-close').focus();
 }
 
-function modalClose(){
+function modalClose(event) {
+    event.stopPropagation(); // 이벤트 전파 중지
     let modalContainer = document.getElementById('modal-container');
-    modalContainer.classList.toggle('opaque'); // 모달 활성화
-    modalContainer.classList.toggle('unstaged');
-    document.getElementById('modal-close').focus();
+    modalContainer.classList.remove('opaque');
+    modalContainer.classList.add('unstaged');
 }
-
-function modalCloseBack(){
-    let modalContainer = document.getElementById('modal-container');
-    modalContainer.classList.toggle('opaque'); // 모달 활성화
-    modalContainer.classList.toggle('unstaged');
-    document.getElementById('modal-close').focus();
-
-}
-
 
 
 $("#file").on('change',function(){
