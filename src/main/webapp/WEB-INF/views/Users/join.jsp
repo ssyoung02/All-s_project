@@ -212,7 +212,7 @@
                     <input type="text" id="email" name="email" value="${naverUserInfo.email}" readonly>
                 </c:when>
                 <c:otherwise>
-                    <input type="text" id="email" name="email" placeholder="이메일을 입력해주세요" required>
+                    <input type="email" id="email" name="email" placeholder="이메일을 입력해주세요" required>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -221,13 +221,13 @@
 </div>
 
 <%-- 오류 메세지 모달 --%>
-<div id="modal-container" class="modal unstaged" onclick="modalCloseBack()">
+<div id="modal-container" class="modal unstaged" onclick="modalClose(event)">
     <div class="modal-overlay">
     </div>
     <div class="modal-contents">
         <div class="modal-text flex-between">
             <h4>오류 메세지</h4>
-            <button class="modal-close-x" aria-label="닫기" onclick="madalClose()">
+            <button class="modal-close-x" aria-label="닫기" onclick="modalClose(event)">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
@@ -238,10 +238,11 @@
             </c:if>
         </div>
         <div class="modal-bottom">
-            <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+            <button type="button" class="modal-close" data-dismiss="modal" onclick="modalClose(event)">닫기</button>
         </div>
     </div>
 </div>
+
 </body>
 <script>
     $(document).ready(function () {

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+f<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     response.setHeader("Cache-Control","no-store");
@@ -78,7 +78,7 @@
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h4>오류 메세지</h4>
-                <button class="modal-close-x" aria-label="닫기" onclick="modalClose()">
+                <button class="modal-close-x" aria-label="닫기" onclick="modalClose(event)">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -88,7 +88,7 @@
                 </c:if>
             </div>
             <div class="modal-bottom">
-                <button type="button" class="modal-close" data-dismiss="modal">닫기</button>
+                <button type="button" class="modal-close" data-dismiss="modal" onclick="modalClose(event)">닫기</button>
             </div>
         </div>
     </div>
@@ -112,6 +112,8 @@
                 </c:if>
             </c:if>
         });
+
+        <%session.removeAttribute("error");%>
     </script>
 
 

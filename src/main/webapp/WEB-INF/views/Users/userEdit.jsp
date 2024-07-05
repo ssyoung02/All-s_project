@@ -83,7 +83,8 @@
         document.getElementById('modal-close').focus();
     }
 
-    function UserEditModalClose() {
+    function UserEditModalClose(event) {
+        event.stopPropagation();
         let userEditModalContainerClose = document.getElementById('modal-container-userEdit');
         userEditModalContainerClose.classList.toggle('opaque'); // 모달 활성화
         userEditModalContainerClose.classList.toggle('unstaged');
@@ -98,7 +99,8 @@
         document.getElementById('modal-close').focus();
     }
 
-    function profileModalClose() {
+    function profileModalClose(event) {
+        event.stopPropagation();
         let modalContainer = document.getElementById('profile-modal-container');
         modalContainer.classList.toggle('opaque'); // 모달 활성화
         modalContainer.classList.toggle('unstaged');
@@ -277,13 +279,13 @@
 
 
             <%-- 프로필 업로드 모달 --%>
-            <div id="profile-modal-container" class="modal unstaged">
+            <div id="profile-modal-container" class="modal unstaged" onclick="profileModalClose(event)">
                 <div class="modal-overlay">
                 </div>
                 <div class="modal-contents">
                     <div class="modal-text flex-between">
                         <h4>프로필 업로드</h4>
-                        <button class="modal-close-x" aria-label="닫기" onclick="profileModalClose()">
+                        <button class="modal-close-x" aria-label="닫기" onclick="profileModalClose(event)">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
@@ -301,7 +303,7 @@
                     </div>
                     <div class="modal-bottom">
                         <button type="button" class="secondary-default" data-dismiss="modal"
-                                onclick="profileModalClose()">닫기
+                                onclick="profileModalClose(event)">닫기
                         </button>
                     </div>
                 </div>
@@ -309,13 +311,13 @@
 
 
             <%-- 오류 메세지 모달 --%>
-            <div id="modal-container-userEdit" class="modal unstaged">
+            <div id="modal-container-userEdit" class="modal unstaged" onclick="UserEditModalClose(event)">
                 <div class="modal-overlay">
                 </div>
                 <div class="modal-contents">
                     <div class="modal-text flex-between">
                         <h4>메세지</h4>
-                        <button class="modal-close-x-userEdit" aria-label="닫기" onclick="UserEditModalClose()">
+                        <button class="modal-close-x-userEdit" aria-label="닫기" onclick="UserEditModalClose(event)">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
@@ -324,7 +326,7 @@
                         </div>
                     </div>
                     <div class="modal-bottom">
-                        <button type="button" class="modal-close" data-dismiss="modal" onclick="UserEditModalClose()">닫기
+                        <button type="button" class="modal-close" data-dismiss="modal" onclick="UserEditModalClose(event)">닫기
                         </button>
                     </div>
                 </div>

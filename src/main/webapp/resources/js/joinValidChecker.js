@@ -14,16 +14,16 @@ $("#registerForm").submit(function(event) {
 });
 
 //close modal
-document.querySelectorAll(".modal-close").forEach(function (modalClose) {
-    modalClose.addEventListener("click", function () {
-        document.getElementById('modal-container').classList.toggle('opaque');
+//document.querySelectorAll(".modal-close").forEach(function (modalClose) {
+//    modalClose.addEventListener("click", function () {
+//        document.getElementById('modal-container').classList.toggle('opaque');
 
-        document.getElementById('modal-container').addEventListener('transitionend', function(e){
-            this.classList.toggle('unstaged');
-            this.removeEventListener('transitionend',arguments.callee);
-        });
-    });
-});
+//        document.getElementById('modal-container').addEventListener('transitionend', function(e){
+//            this.classList.toggle('unstaged');
+//            this.removeEventListener('transitionend',arguments.callee);
+//        });
+//    });
+//});
 
 
 $("#userEditForm").submit(function(event) {
