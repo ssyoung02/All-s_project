@@ -60,11 +60,11 @@
             document.getElementById('modal-close').focus();
         }
 
-        function MainModalClose() {
+        function MainModalClose(event) {
+            event.stopPropagation(); // 이벤트 전파 중지
             let mainModalContainerClose = document.getElementById('modal-container-main');
             mainModalContainerClose.classList.toggle('opaque'); // 모달 활성화
             mainModalContainerClose.classList.toggle('unstaged');
-            document.getElementById('modal-close').focus();
         }
     </script>
     <script>
@@ -163,23 +163,25 @@
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <%-- 로그인 성공 모달 --%>
-<div id="modal-container-main" class="modal unstaged" style="z-index: 100" onclick="modalCloseBack()">
+<%-- 로그인 성공 모달 --%>
+<div id="modal-container-main" class="modal unstaged" style="z-index: 100" onclick="MainModalClose(event)">
     <div class="modal-overlay">
     </div>
     <div class="modal-contents">
         <div class="modal-text flex-between">
             <h4>알림</h4>
-            <button id="modal-close" class="modal-close" aria-label="닫기" onclick="MainModalClose()"><i
+            <button id="modal-close" class="modal-close" aria-label="닫기" onclick="MainModalClose(event)"><i
                     class="bi bi-x-lg"></i></button>
         </div>
         <div id="messageContent-main" class="modal-center">
             <%-- 메시지 내용이 여기에 표시됩니다. --%>
         </div>
         <div class="modal-bottom">
-            <button type="button" class="modal-close" data-dismiss="modal" onclick="MainModalClose()">닫기</button>
+            <button type="button" class="modal-close" data-dismiss="modal" onclick="MainModalClose(event)">닫기</button>
         </div>
     </div>
 </div>
+
 <div id="container">
     <section class="mainContainer">
         <!-- 메뉴 영역 -->
