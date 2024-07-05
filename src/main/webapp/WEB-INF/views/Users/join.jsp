@@ -249,27 +249,33 @@
 
     function checkDuplicate() {
         const username = $("#username").val();
-        $.ajax({
-            url: "/Users/checkDuplicate",
-            type: "POST",
-            data: {username: username},
-            success: function (response) {
-                if (response === 0) {
-                    $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
-                    $("#usernameCheckResult").removeClass("error").addClass("success");
-                } else {
-                    $("#usernameCheckResult").text("이미 사용 중인 아이디입니다.");
+        const whitespaceRegex = /\s/;
+
+        if (username.length < 4 || whitespaceRegex.test(username)) {
+            $("#usernameCheckResult").text("아이디는 공백없이 4글자 이상 입력해주세요");
+            $("#usernameCheckResult").removeClass("success").addClass("error");
+        } else {
+            $.ajax({
+                url: "/Users/checkDuplicate",
+                type: "POST",
+                data: {username: username},
+                success: function (response) {
+                    if (response === 0) {
+                        $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
+                        $("#usernameCheckResult").removeClass("error").addClass("success");
+                    } else {
+                        $("#usernameCheckResult").text("이미 사용 중인 아이디입니다.");
+                        $("#usernameCheckResult").removeClass("success").addClass("error");
+                    }
+
+                },
+                error: function () { // AJAX 요청 실패 시
+                    $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
                     $("#usernameCheckResult").removeClass("success").addClass("error");
                 }
-
-            },
-            error: function () { // AJAX 요청 실패 시
-                $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
-                $("#usernameCheckResult").removeClass("success").addClass("error");
-            }
-        });
+            });
+        }
     }
-
     function modalClose() {
         $('#modal-container').removeClass('opaque').addClass('unstaged');
     }
