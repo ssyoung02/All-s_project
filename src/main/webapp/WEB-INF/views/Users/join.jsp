@@ -6,7 +6,7 @@
 <c:set var="googleUserInfo" value="${googleUserInfo}"/>
 <c:set var="kakaoUserInfo" value="${kakaoUserInfo}"/>
 <c:set var="naverUserInfo" value="${naverUserInfo}"/>
-<c:set var="error" value="${requestScope.error}"/>
+<c:set var="error" value="${sessionScope.error}"/>
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 
@@ -205,7 +205,7 @@
                     <input type="text" id="email" name="email" value="${naverUserInfo.email}" readonly>
                 </c:when>
                 <c:otherwise>
-                    <input type="text" id="email" name="email" placeholder="이메일을 입력해주세요" required>
+                    <input type="email" id="email" name="email" placeholder="이메일을 입력해주세요" required>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -227,7 +227,7 @@
         <div class="modal-center">
             <%-- 메시지 내용이 여기에 표시됩니다. --%>
             <c:if test="${not empty param.error}">
-                <p>${requestScope.error}</p>
+                <p>${sessionScope.error}</p>
             </c:if>
         </div>
         <div class="modal-bottom">
@@ -240,7 +240,7 @@
     $(document).ready(function () {
 // 회원가입 결과 메시지 처리 (모달 표시)
         <c:if test="${not empty param.error}">
-        $("#messageContent").text("${requestScope.error}");
+        $("#messageContent").text("${sessionScope.error}");
         $('#modal-container').toggleClass('opaque'); //모달 활성화
         $('#modal-container').toggleClass('unstaged');
         $('.modal-close-x').focus();
@@ -273,5 +273,7 @@
     function modalClose() {
         $('#modal-container').removeClass('opaque').addClass('unstaged');
     }
+    <%session.removeAttribute("error");%> <%-- 오류 메시지 제거 --%>
+
 </script>
 </html>

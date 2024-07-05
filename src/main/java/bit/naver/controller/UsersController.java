@@ -150,25 +150,25 @@ public class UsersController {
 
         // 입력 값 유효성 검사 (직접 구현)
         if (username.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || birthdateStr.isEmpty() || gender.isEmpty() || mobile.isEmpty()) {
-            rttr.addFlashAttribute("error", "모든 필드를 입력해주세요.");
+           session.setAttribute("error", "모든 필드를 입력해주세요.");
             return "redirect:/Users/Join?error=true";
         }
 
         // 이메일 중복 검사
         if (usersMapper.findByEmail(email)) { // UsersMapper에 findByEmail 메서드 추가 필요
-            rttr.addFlashAttribute("error", "이미 사용 중인 이메일입니다.");
+            session.setAttribute("error", "이미 사용 중인 이메일입니다.");
             return "redirect:/Users/Join?error=true";
         }
 
         // 아이디 길이 검사
         if (username.length() < 4 ) {
-            rttr.addFlashAttribute("error", "아이디는 4~12자 사이여야 합니다.");
+            session.setAttribute("error", "아이디는 4~12자 사이여야 합니다.");
             return "redirect:/Users/Join?error=true";
         }
 
         // 비밀번호 길이 검사
         if (password.length() < 8 || password.length() > 16) {
-            rttr.addFlashAttribute("error", "비밀번호는 8~16자 사이여야 합니다.");
+            session.setAttribute("error", "비밀번호는 8~16자 사이여야 합니다.");
             return "redirect:/Users/Join?error=true";
         }
 
@@ -180,11 +180,11 @@ public class UsersController {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 birthdate = LocalDate.parse(birthdateStr, formatter);
                 if(birthdate.isAfter(LocalDate.now())){
-                    rttr.addFlashAttribute("error", "생년월일은 오늘 이전의 날짜여야 합니다.");
+                    session.setAttribute("error", "생년월일은 오늘 이전의 날짜여야 합니다.");
                     return "redirect:/Users/Join?error?true";
                 }
             } catch (DateTimeParseException e) {
-                rttr.addFlashAttribute("error", "올바른 생년월일 형식이 아닙니다.");
+                session.setAttribute("error", "올바른 생년월일 형식이 아닙니다.");
                 return "redirect:/Users/Join?error=true";
             }
 
