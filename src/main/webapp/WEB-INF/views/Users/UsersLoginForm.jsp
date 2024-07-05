@@ -72,7 +72,7 @@ f<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="U
     </div>
 
     <%-- 오류 메세지 모달 --%>
-    <div id="modal-container" class="modal unstaged" onclick="modalCloseBack()">
+    <div id="modal-container" class="modal unstaged" onclick="modalClose(event)">
         <div class="modal-overlay">
         </div>
         <div class="modal-contents">

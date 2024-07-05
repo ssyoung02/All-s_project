@@ -106,12 +106,12 @@ function modalOpen() {
     modalContainer.classList.toggle('unstaged');
     document.getElementById('modal-close').focus();
 }
+
 function modalClose(event) {
-    event.stopPropagation(); // 이벤트 전파 중지
+    event.stopPropagation();
     let modalContainer = document.getElementById('modal-container');
     modalContainer.classList.remove('opaque');
     modalContainer.classList.add('unstaged');
-    console.log('modalClose called'); // 로그 출력
 }
 
 

@@ -294,13 +294,13 @@
         </main>
     </section>
     <%-- 가입 신청 모달 --%>
-    <div id="modal-container" class="modal unstaged">
+    <div id="modal-container" class="modal unstaged" onclick="modalClose(event)">
         <div class="modal-overlay"></div>
         <div class="modal-contents">
             <div class="modal-text flex-between">
                 <h3>${study.studyTitle}</h3>
-                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="madalClose()"><i
-                        class="bi bi-x-lg"></i></button>
+                <button id="modal-close" class="modal-close" aria-label="닫기" onclick="modalClose(event)">
+                    <i class="bi bi-x-lg"></i></button>
             </div>
             <div class="modal-center" style="width: 100%">
                 <form id="joinForm" method="post" action="${root}/studyRecruit/apply">
@@ -315,7 +315,7 @@
                 </form>
             </div>
             <div class="modal-bottom">
-                <button type="button" class="secondary-default" onclick="modalClose()">취소</button>
+                <button type="button" class="secondary-default" onclick="modalClose(event)">취소</button>
                 <button type="button" class="primary-default" onclick="submitApplication()">신청</button>
             </div>
         </div>

@@ -67,6 +67,8 @@
 }
 .studygroup-item + button{
     width: 100%;
+    max-height: 100px;
+    overflow: hidden;
 }
 
 .studygroup-item img{
@@ -269,6 +271,7 @@
 }
 .board-content{
     width: 100%;
+    max-height: 60px;
     text-align: left;
     border:none;
     overflow: hidden;

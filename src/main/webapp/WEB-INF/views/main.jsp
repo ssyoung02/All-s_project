@@ -163,7 +163,6 @@
 <jsp:include page="include/timer.jsp"/>
 <jsp:include page="include/header.jsp"/>
 <%-- 로그인 성공 모달 --%>
-<%-- 로그인 성공 모달 --%>
 <div id="modal-container-main" class="modal unstaged" style="z-index: 100" onclick="MainModalClose(event)">
     <div class="modal-overlay">
     </div>
