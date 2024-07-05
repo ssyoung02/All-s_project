@@ -88,8 +88,10 @@
     font-weight: bold;
     margin: 0.3em 0 0 0;
 }
+
 #passwordCheckResult{
- color: red;
+    color: red;
+    font-weight: bold;
 }
 
 /*회원 탈퇴*/

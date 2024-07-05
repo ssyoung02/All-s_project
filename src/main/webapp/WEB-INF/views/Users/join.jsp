@@ -13,7 +13,7 @@
 <c:set var="googleUserInfo" value="${googleUserInfo}"/>
 <c:set var="kakaoUserInfo" value="${kakaoUserInfo}"/>
 <c:set var="naverUserInfo" value="${naverUserInfo}"/>
-<c:set var="error" value="${requestScope.error}"/>
+<c:set var="error" value="${sessionScope.error}"/>
 <%--<c:set var="userVo" value="${SPRING_SECURITY_CONTEXT.authentication.principal }"/>--%>
 <%--<c:set var="auth" value="${SPRING_SECURITY_CONTEXT.authentication.authorities }" />--%>
 
@@ -234,7 +234,7 @@
         <div class="modal-center">
             <%-- 메시지 내용이 여기에 표시됩니다. --%>
             <c:if test="${not empty param.error}">
-                <p>${requestScope.error}</p>
+                <p>${sessionScope.error}</p>
             </c:if>
         </div>
         <div class="modal-bottom">
@@ -248,7 +248,7 @@
     $(document).ready(function () {
 // 회원가입 결과 메시지 처리 (모달 표시)
         <c:if test="${not empty param.error}">
-        $("#messageContent").text("${requestScope.error}");
+        $("#messageContent").text("${sessionScope.error}");
         $('#modal-container').toggleClass('opaque'); //모달 활성화
         $('#modal-container').toggleClass('unstaged');
         $('.modal-close-x').focus();
@@ -257,29 +257,37 @@
 
     function checkDuplicate() {
         const username = $("#username").val();
-        $.ajax({
-            url: "/Users/checkDuplicate",
-            type: "POST",
-            data: {username: username},
-            success: function (response) {
-                if (response === 0) {
-                    $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
-                    $("#usernameCheckResult").removeClass("error").addClass("success");
-                } else {
-                    $("#usernameCheckResult").text("이미 사용 중인 아이디입니다.");
+        const whitespaceRegex = /\s/;
+
+        if (username.length < 4 || whitespaceRegex.test(username)) {
+            $("#usernameCheckResult").text("아이디는 공백없이 4글자 이상 입력해주세요");
+            $("#usernameCheckResult").removeClass("success").addClass("error");
+        } else {
+            $.ajax({
+                url: "/Users/checkDuplicate",
+                type: "POST",
+                data: {username: username},
+                success: function (response) {
+                    if (response === 0) {
+                        $("#usernameCheckResult").text("사용 가능한 아이디입니다.");
+                        $("#usernameCheckResult").removeClass("error").addClass("success");
+                    } else {
+                        $("#usernameCheckResult").text("이미 사용 중인 아이디입니다.");
+                        $("#usernameCheckResult").removeClass("success").addClass("error");
+                    }
+
+                },
+                error: function () { // AJAX 요청 실패 시
+                    $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
                     $("#usernameCheckResult").removeClass("success").addClass("error");
                 }
-
-            },
-            error: function () { // AJAX 요청 실패 시
-                $("#usernameCheckResult").text("중복 확인 중 오류가 발생했습니다.");
-                $("#usernameCheckResult").removeClass("success").addClass("error");
-            }
-        });
+            });
+        }
     }
-
     function modalClose() {
         $('#modal-container').removeClass('opaque').addClass('unstaged');
     }
+    <%session.removeAttribute("error");%> <%-- 오류 메시지 제거 --%>
+
 </script>
 </html>
