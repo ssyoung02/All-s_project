@@ -543,7 +543,7 @@ public class UsersController {
 
 
     @PostMapping("/delete")
-    public String deleteAccount(RedirectAttributes rttr) {
+    public String deleteAccount(RedirectAttributes rttr,HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             String username = authentication.getName();
@@ -558,9 +558,9 @@ public class UsersController {
             System.out.println("username :" + username + "registration_id"+provider + "access_token"+accessToken);
             customAccountDeletionService.deleteUserAccount(username, provider, accessToken);
             SecurityContextHolder.clearContext();
-            rttr.addFlashAttribute("msg", "회원 탈퇴가 성공적으로 처리되었습니다.");
+            session.setAttribute("error", "회원 탈퇴가 성공적으로 처리되었습니다.");
         }
-        return "redirect:/login?accountDeleted";
+        return "redirect:/main?error=true";
     }
 
     @GetMapping("/isAdmin")

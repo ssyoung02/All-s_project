@@ -64,8 +64,7 @@ f<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="U
                 <hr>
             </div>
             <div class="snsloginarea">
-                <a href="https://kauth.kakao.com/oauth/authorize?client_id=5c4145fbf492994409e12f3277ead754&redirect_uri=http://localhost:8080/kakao/login/alls&response_type=code"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>
-                <a href="${root}/login/naver"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
+                <a href="https://kauth.kakao.com/oauth/authorize?client_id=78180039709b2c1a976f10b5b9ce0d24&redirect_uri=http://localhost:8080/kakao/login/alls&response_type=code"><img src="${root}/resources/images/sns-kakao.png" alt="카카오 로그인"></a>                <a href="${root}/login/naver"><img src="${root}/resources/images/sns-naver.png" alt="네이버 로그인"></a>
                 <a href="${root}/login/google"><img src="${root}/resources/images/sns-google.png" alt="구글 로그인"></a>
             </div>
         </form>
