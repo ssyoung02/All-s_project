@@ -7,6 +7,7 @@ import bit.naver.mapper.UsersMapper;
 import bit.naver.security.UsersUserDetailsService;
 import bit.naver.service.CustomAccountDeletionService;
 import bit.naver.service.GoogleLoginService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UsersController {
     //private static final Logger log = Logger.getLogger(UsersController.class); // Logger 객체 선언 및 초기화
+
+    @Value("${kakao.login.api.key}") // application.properties에서 API 키 값 가져오기
+    private String kakaoLoginApiKey;
 
     @Autowired
     private GoogleLoginService loginService;
@@ -244,6 +248,7 @@ public class UsersController {
 
         // 모델에 상태 파라미터 추가
         model.addAttribute("loginState", loginState);
+        session.setAttribute("kakaoLoginApiKey", kakaoLoginApiKey);
 
         return "Users/UsersLoginForm";
     }
